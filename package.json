@@ -1,0 +1,14 @@
+{
+  "name": "nexus-stats-api",
+  "version": "0.0.1",
+  "description": "HTTP/Socket.io adapter for api.nexus-stats.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Kaptard",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io-client": "^1.7.3"
+  }
+}
