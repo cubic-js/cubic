@@ -72,7 +72,7 @@ class Authentication {
                     // Set Options
                     let data = {
                         scope: user.scope,
-                        sub: user.user_key
+                        sub: user.user_id
                     }
 
                     // Get Tokens
@@ -118,7 +118,7 @@ class Authentication {
             {
                 let data = {
                     scope: user.scope,
-                    sub: user.user_key
+                    sub: user.user_id
                 }
 
                 // Get Tokens
@@ -149,7 +149,7 @@ class Authentication {
         cli.log('Auth', 'ok', req.ip + ': register', 'in')
 
         // Save User w/ default values (+higher rate limit)
-        user.user_id = 'none'
+        user.user_id = 'unidentified-' + randtoken.uid(16)
         user.user_key = user_key
         user.user_secret = this.syncHash(user_secret)
         user.scope = 'default'
@@ -160,7 +160,7 @@ class Authentication {
 
             // Log IP
             this.saveIP(user_key, req.ip, 'register', true)
-            cli.log('Auth', 'ok', 'New user. Key: ' + user_key, 'out')
+            cli.log('Auth', 'ok', 'New user. ID: ' + user.user_id, 'out')
 
             // Send Credentials to user
             return (res.status(200).json({
@@ -254,7 +254,7 @@ class Authentication {
                     }
                 }, {
                     upsert: true
-                })
+                }).then()
             }
         })
 
