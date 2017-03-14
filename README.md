@@ -19,7 +19,6 @@
 You can then use these credentials in the following steps.
 
 <br>
-<br>
 
 **POST /auth**: 
 - Accepts Credentials like this:
