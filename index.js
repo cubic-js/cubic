@@ -1,26 +1,27 @@
-/**
- * Listen to API socket server
- */
 const extend = require('deep-extend')
 const Connection = require('./lib/connection.js')
+const EventEmitter = require('event-emitter-es6')
 
-class Nexus {
+class Nexus extends EventEmitter {
 
     /**
      * Merge default options with client options
      */
-    constructor(options) {
+    constructor(options, callback) {
+        super()
 
         this.options = extend({
             game_name: 'warframe',
+            api_version: 'v1',
+            use_socket: true,
             user_key: null,
-            user_secret: null,
-            connection_type: 'socket',
+            user_secret: null
         }, options)
 
-        this.connection = new Connection(this.options.connection_type)
-
-        this.connection.config(this.options)
+        this.connection = new Connection()
+        this.connection.setup(options).then(() => {
+            this.emit('ready')
+        })
     }
 
 
@@ -28,6 +29,7 @@ class Nexus {
      * Sample method to get all stats for specific item
      */
     getItem(query) {
+
         query = extend({
             name: null,
             component: null,
@@ -37,7 +39,7 @@ class Nexus {
 
         return new Promise((resolve, reject) => {
             this.connection.get({
-                resource: 'items/' + query.name,
+                resource: this.options.game_name + '/' + this.options.api_version + '/items/' + query.name,
                 query: 'statistics',
                 params: {
                     component: query.component,

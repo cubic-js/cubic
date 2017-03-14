@@ -9,6 +9,9 @@
   "author": "Kaptard",
   "license": "ISC",
   "dependencies": {
+    "deep-extend": "^0.4.1",
+    "event-emitter-es6": "^1.1.5",
+    "request": "^2.79.0",
     "socket.io-client": "^1.7.3"
   }
 }
