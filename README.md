@@ -28,7 +28,6 @@ You can then use these credentials in the following steps.
     user_secret: <user_secret>
 }
 ``` 
-<br>
 and returns access-and refresh tokens:
 ```
 {
