@@ -5,7 +5,6 @@
 const fs = require('fs')
 
 // Databases
-process.env['redis_port'] = 6379
 process.env['mongo_port'] = 27017
 
 // Issuer (self)
