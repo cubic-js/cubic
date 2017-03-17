@@ -18,10 +18,14 @@ class Nexus extends EventEmitter {
             user_secret: null
         }, options)
 
+        // Establish connection to resource server w/ options
         this.connection = new Connection()
         this.connection.setup(options).then(() => {
             this.emit('ready')
         })
+
+        // Listen to Socket Events and pass outside of module
+        if(this.options.use_socket) this.listen()
     }
 
 
@@ -48,6 +52,10 @@ class Nexus extends EventEmitter {
                 }
             }, resolve, reject)
         })
+    }
+
+    listen() {
+
     }
 }
 
