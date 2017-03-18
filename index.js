@@ -42,7 +42,7 @@ class Nexus extends EventEmitter {
         }, query)
 
         return new Promise((resolve, reject) => {
-            this.connection.get({
+            this.connection.req('GET', {
                 resource: this.options.game_name + '/' + this.options.api_version + '/items/' + query.name,
                 query: 'statistics',
                 params: {
@@ -50,7 +50,9 @@ class Nexus extends EventEmitter {
                     timeStart: query.timeStart,
                     timeEnd: query.timeEnd
                 }
-            }, resolve, reject)
+            }).then((res) => {
+                resolve(res.body)
+            })
         })
     }
 
