@@ -30,6 +30,7 @@ You can then use these credentials in the following steps.
 }
 ```
 <br>
+
 - To get a new access token after the 1h expiration POST this:
 ```
 {
