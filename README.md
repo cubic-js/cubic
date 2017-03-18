@@ -22,14 +22,7 @@ You can then use these credentials in the following steps.
 <br>
 
 **POST /auth**: 
-- Accepts Credentials like this:
-```
-{
-    user_key: <user_key>
-    user_secret: <user_secret>
-}
-``` 
-and returns access-and refresh tokens:
+- Accepts Credentials in the above format and returns access-and refresh tokens:
 ```
 {
     access_token: <JWT>
