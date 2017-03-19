@@ -54,41 +54,42 @@ class Authentication {
             user_key: req.body.user_key
         })
 
-            .then((user) => {
+        .then((user) => {
 
             // No User Found
             if (!user) {
                 this.unauthorized(res, req.body.user_key, req.ip, 'credentials');
             } else
 
-                // Password Mismatch
-                if (!this.isValidSecret(req.body.user_secret, user.user_secret)) {
-                    this.unauthorized(res, req.body.user_key, req.ip, 'credentials');
-                } else {
+            // Password Mismatch
+            if (!this.isValidSecret(req.body.user_secret, user.user_secret)) {
+                this.unauthorized(res, req.body.user_key, req.ip, 'credentials');
+            } else {
 
-                    // Valid User Found
-                    this.saveIP(user.user_key, req.ip, 'credentials', true)
+                // Valid User Found
+                this.saveIP(user.user_key, req.ip, 'credentials', true)
 
-                    // Set Options
-                    let data = {
-                        scope: user.scope,
-                        sub: user.user_id
-                    }
-
-                    // Get Tokens
-                    let accessToken = this.getAccessToken(data)
-                    let refreshToken = this.getRefreshToken(user.user_key)
-
-                    cli.log('Auth', 'ok', '<JWT>', 'out')
-
-                    return res.json({
-                        access_token: accessToken,
-                        refresh_token: refreshToken
-                    })
+                // Set Options
+                let data = {
+                    scp: user.scope,
+                    uid: user.user_id,
+                    lim: user.rate_limit
                 }
+
+                // Get Tokens
+                let accessToken = this.getAccessToken(data)
+                let refreshToken = this.getRefreshToken(user.user_key)
+
+                cli.log('Auth', 'ok', '<JWT>', 'out')
+
+                return res.json({
+                    access_token: accessToken,
+                    refresh_token: refreshToken
+                })
+            }
         })
 
-            .catch((err) => {
+        .catch((err) => {
             cli.log('Auth', 'err', err, 'out')
             this.unauthorized(res, req.body.user_key, req.ip, 'credentials')
         })
@@ -106,23 +107,26 @@ class Authentication {
             refresh_token: req.body.refresh_token
         })
 
-            .then((user) => {
+        .then((user) => {
 
             // No Refresh Token found
             if (!user) {
-                console.log('one')
                 this.unauthorized(res)
-            } else
+            }
 
-                // Valid User Found > Send token
-            {
+            // Valid User Found > Send token
+            else {
                 let data = {
-                    scope: user.scope,
-                    sub: user.user_id
+                    scp: user.scope,
+                    uid: user.user_id,
+                    lim: user.rate_limit
                 }
 
                 // Get Tokens
                 let accessToken = this.getAccessToken(data)
+
+                // Save IP
+                this.saveIP(user.user_key, req.ip, 'refresh_token', true)
 
                 cli.log('Auth', 'ok', '<JWT>', 'out')
                 return res.status(200).json({
@@ -131,7 +135,7 @@ class Authentication {
             }
         })
 
-            .catch((err) => {
+        .catch((err) => {
             cli.log('Auth', 'err', err, 'out')
             return err
         })
@@ -207,7 +211,7 @@ class Authentication {
         })
 
         // Error Handling
-            .catch((err) => {
+        .catch((err) => {
             cli.log('Auth', 'err', err, 'out')
             return err
         })
@@ -227,7 +231,7 @@ class Authentication {
         })
 
         // Generate new array and save in db
-            .then((user) => {
+        .then((user) => {
             if (user) {
                 let arr_max = 5
                 let arr_new = []
@@ -243,6 +247,7 @@ class Authentication {
                     success: authorized,
                     accessed: new Date().toISOString()
                 })
+
                 arr_new = arr_exs
 
                 // Save new array to db
@@ -259,7 +264,7 @@ class Authentication {
         })
 
         // Error Handling
-            .catch((err) => {
+        .catch((err) => {
             cli.log('Auth', 'err', err, 'out')
             return err
         })
