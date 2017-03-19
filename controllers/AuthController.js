@@ -73,7 +73,6 @@ class Authentication {
                 let data = {
                     scp: user.scope,
                     uid: user.user_id,
-                    lim: user.rate_limit
                 }
 
                 // Get Tokens
@@ -119,7 +118,6 @@ class Authentication {
                 let data = {
                     scp: user.scope,
                     uid: user.user_id,
-                    lim: user.rate_limit
                 }
 
                 // Get Tokens
