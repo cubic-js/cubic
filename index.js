@@ -11,7 +11,7 @@ class Nexus extends EventEmitter {
         super()
 
         this.options = extend({
-            game_name: 'warframe',
+            game: 'warframe',
             api_version: 'v1',
             use_socket: true,
             user_key: null,
@@ -20,12 +20,12 @@ class Nexus extends EventEmitter {
 
         // Establish connection to resource server w/ options
         this.connection = new Connection()
-        this.connection.setup(options).then(() => {
-            this.emit('ready')
-        })
+        this.connection.setup(options)
+            .then(() => this.emit('ready'))
+
 
         // Listen to Socket Events and pass outside of module
-        if(this.options.use_socket) this.listen()
+        if (this.options.use_socket) this.listen()
     }
 
 
@@ -42,17 +42,16 @@ class Nexus extends EventEmitter {
         }, query)
 
         return new Promise((resolve, reject) => {
-            this.connection.req('GET', {
-                resource: this.options.game_name + '/' + this.options.api_version + '/items/' + query.name,
-                query: 'statistics',
-                params: {
-                    component: query.component,
-                    timeStart: query.timeStart,
-                    timeEnd: query.timeEnd
-                }
-            }).then((res) => {
-                resolve(res.body)
-            })
+            this.connection.request('GET', {
+                    resource: this.options.game + '/' + this.options.api_version + '/items/' + query.name,
+                    query: 'statistics',
+                    params: {
+                        component: query.component,
+                        timeStart: query.timeStart,
+                        timeEnd: query.timeEnd
+                    }
+                })
+                .then(res => resolve(res.body))
         })
     }
 
