@@ -15,7 +15,8 @@ class Nexus extends EventEmitter {
             api_version: 'v1',
             use_socket: true,
             user_key: null,
-            user_secret: null
+            user_secret: null,
+            ignore_limiter: false
         }, options)
 
         // Establish connection to resource server w/ options
