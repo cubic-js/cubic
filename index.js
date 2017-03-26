@@ -31,28 +31,85 @@ class Nexus extends EventEmitter {
 
 
     /**
+     * RESTful methods for manual interaction
+     */
+    get(query) {
+        return new Promise((resolve, reject) => {
+            this.connection.request('GET', query)
+                .then(res => resolve(res.body))
+        })
+    }
+
+    post(query) {
+        return new Promise((resolve, reject) => {
+            this.connection.request('POST', query)
+                .then(res => resolve(res.body))
+        })
+    }
+
+    put(query) {
+        return new Promise((resolve, reject) => {
+            this.connection.request('PUT', query)
+                .then(res => resolve(res.body))
+        })
+    }
+
+    delete(query) {
+        return new Promise((resolve, reject) => {
+            this.connection.request('DELETE', query)
+                .then(res => resolve(res.body))
+        })
+    }
+
+
+    /**
+     * Query method to easily create url from given params
+     */
+    query(verb, query) {
+
+        let url = "http://localhost:3400/"
+
+        // Generate Base URL
+        url += this.options.game + '/'
+        url += this.options.api_version + '/'
+        url += query.resource + '/'
+        url += query.method
+
+        // Dynamically generate rest of URL
+        let prefix = "?"
+        for (var param in query) {
+            if (param !== "resource" && param !== "method") {
+                url += prefix + param + '=' + query[param]
+                prefix = "&"
+            }
+        }
+
+        // Replace saces with standard encoding
+        url = url.replace(" ", "%20")
+
+        // Send Request
+        return new Promise((resolve, reject) => {
+            this.connection.request(verb, url)
+                .then(res => resolve(res))
+        })
+    }
+
+
+    /**
      * Sample method to get all stats for specific item
      */
-    getItem(query) {
+    getItem(name, options) {
+        let query = {}
 
-        query = extend({
-            name: null,
-            component: null,
-            timeStart: null,
-            timeEnd: null
-        }, query)
+        // Required Query Values
+        query.resource = 'items/' + name
+        query.method = "statistics"
+
+        // Extend  with options if provided
+        if (options) query = extend(query, options)
 
         return new Promise((resolve, reject) => {
-            this.connection.request('GET', {
-                    resource: this.options.game + '/' + this.options.api_version + '/items/' + query.name,
-                    query: 'statistics',
-                    params: {
-                        component: query.component,
-                        timeStart: query.timeStart,
-                        timeEnd: query.timeEnd
-                    }
-                })
-                .then(res => resolve(res.body))
+            this.query('GET', query).then(res => resolve(res))
         })
     }
 
