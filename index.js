@@ -23,10 +23,6 @@ class Nexus extends EventEmitter {
         this.connection = new Connection()
         this.connection.setup(options)
             .then(() => this.emit('ready'))
-
-
-        // Listen to Socket Events and pass outside of module
-        if (this.options.use_socket) this.listen()
     }
 
 
@@ -84,7 +80,7 @@ class Nexus extends EventEmitter {
             }
         }
 
-        // Replace saces with standard encoding
+        // Replace spaces with standard encoding
         url = url.replace(" ", "%20")
 
         // Send Request
@@ -103,7 +99,7 @@ class Nexus extends EventEmitter {
 
         // Required Query Values
         query.resource = 'items/' + name
-        query.method = "statistics"
+        query.method = "getItemStats"
 
         // Extend  with options if provided
         if (options) query = extend(query, options)
@@ -111,10 +107,6 @@ class Nexus extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.query('GET', query).then(res => resolve(res))
         })
-    }
-
-    listen() {
-
     }
 }
 
