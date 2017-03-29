@@ -1,3 +1,5 @@
+'use strict'
+
 const extend = require('deep-extend')
 const Connection = require('./lib/connection.js')
 const EventEmitter = require('event-emitter-es6')
