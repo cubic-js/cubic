@@ -32,28 +32,28 @@ class Nexus extends EventEmitter {
     get(query) {
         return new Promise((resolve, reject) => {
             this.connection.request('GET', query)
-                .then(res => resolve(res.body))
+                .then(res => resolve(res))
         })
     }
 
     post(query) {
         return new Promise((resolve, reject) => {
             this.connection.request('POST', query)
-                .then(res => resolve(res.body))
+                .then(res => resolve(res))
         })
     }
 
     put(query) {
         return new Promise((resolve, reject) => {
             this.connection.request('PUT', query)
-                .then(res => resolve(res.body))
+                .then(res => resolve(res))
         })
     }
 
     delete(query) {
         return new Promise((resolve, reject) => {
             this.connection.request('DELETE', query)
-                .then(res => resolve(res.body))
+                .then(res => resolve(res))
         })
     }
 
