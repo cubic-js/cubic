@@ -5,7 +5,7 @@
 /**
  * Connect to mongodb
  */
-const db = require('mongoose').connect('mongodb://localhost/nexus-stats')
+const db = require('mongoose').connect(process.env.mongo_url)
 db.Promise = global.Promise;
 
 
@@ -20,13 +20,6 @@ const randtoken = require('rand-token')
  * Secret Secrecy
  */
 const bcrypt = require('bcryptjs')
-
-// NOTE: Also create default user containing all specifications
-// EVERYONE WITHOUT AUTH will be using default user specifications
-// RATE LIMITING for unauthenticated users will be IP-based
-// AUTHENTICATED USERS will have their role merged with default
-
-
 
 
 /**
@@ -94,6 +87,7 @@ class Authentication {
         })
     }
 
+
     /**
      * Validates Refresh token, sends new access token
      */
@@ -156,7 +150,6 @@ class Authentication {
         user.user_secret = this.syncHash(user_secret)
         user.scope = 'default'
         user.refresh_token = null
-        user.rate_limit = 150
         user.last_ip = []
         user.save().then((user) => {
 
@@ -279,7 +272,6 @@ class Authentication {
             user_secret: String,
             scope: String,
             refresh_token: String,
-            rate_limit: db.Schema.Types.Mixed,
             last_ip: Array
         }, {
             collection: 'users'
