@@ -16,6 +16,7 @@ class Nexus extends EventEmitter {
             game: 'warframe',
             api_version: 'v1',
             use_socket: true,
+            namespace: '/',
             user_key: null,
             user_secret: null,
             ignore_limiter: false
@@ -23,7 +24,7 @@ class Nexus extends EventEmitter {
 
         // Establish connection to resource server w/ options
         this.connection = new Connection()
-        this.connection.setup(options)
+        this.connection.setup(this.options)
             .then(() => this.emit('ready'))
     }
 
@@ -101,7 +102,7 @@ class Nexus extends EventEmitter {
 
         // Required Query Values
         query.resource = 'items/' + name
-        query.method = "getItemStats"
+        query.method = "statistics"
 
         // Extend  with options if provided
         if (options) query = extend(query, options)
