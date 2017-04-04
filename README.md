@@ -5,13 +5,14 @@
 <br>
 
 ## Usage
-1. Generate an RSA key pair called private.pem & public.pem and put it in /config/certs
+1. Generate an RSA key pair called private.pem & public.pem and put it in /config/certs (You can also use the existing ones for development)
 2. Make sure you're running an instance of mongodb on :27017
-3. `npm install && npm start`
+3. Run `mongoimport -d nexus-stats -c users --file ./user_sample.json` inside your mongo shell.
+4. `npm install && npm start`
 <br>
 <br>
 
-**GET /register**: 
+**GET /register**:
 - Use this to create new users. Server will return:
 ```
     user_key: <user_key>
@@ -21,7 +22,7 @@ You can then use these credentials in the following steps.
 
 <br>
 
-**POST /auth**: 
+**POST /auth**:
 - Accepts Credentials in the above format and returns access-and refresh tokens:
 ```
 {

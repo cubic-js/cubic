@@ -1,0 +1,73 @@
+{
+    "_id": {
+        "$oid": "58e23c60fd2e8f20e00285c6"
+    },
+    "refresh_token": "ywezQ3ZV6xPdtJLO90PJXvgMmzy5smPGm7vqqrs5whTzD194XFUp3Vx8r2j1UhB4bPWeOt721l5YVS92ls13Ha9VCDb7JTdytwegskZODgJrV9JQ1ebLPujFjLFSGQvb4l3bKHb7gWi5DkhQ2cQmFLBcrjP0XkutPb7xjo8LcDT6mol7wk6bz9RRkqyj9SzGAphZ0pvJvUiQHmCmRneaZCj3JKyIrsuSVBEzpntBKymsNRCbZPVX6ec6m04i0OXR",
+    "scope": "default",
+    "user_secret": "$2a$10$Na5Q64JHxAm4cuUudlbXJ.Yc6nBpjOQs55qn0qJtNmLIvembmRQR6",
+    "user_key": "P4dE2whXjcCobnv8vdifPPEstOSBPXBjyRSY0I9HVJFAeJg5ag239zJdmwmEIQMN",
+    "user_id": "unidentified-rZk7jMQqJLEPUEBC",
+    "last_ip": [{
+        "accessed": "2017-04-04T08:01:35.578Z",
+        "success": true,
+        "grant_type": "refresh_token",
+        "ip": "::ffff:127.0.0.1"
+    }, {
+        "ip": "::ffff:127.0.0.1",
+        "grant_type": "refresh_token",
+        "success": true,
+        "accessed": "2017-04-04T08:01:20.789Z"
+    }, {
+        "accessed": "2017-04-04T08:01:10.346Z",
+        "success": true,
+        "grant_type": "credentials",
+        "ip": "::ffff:127.0.0.1"
+    }, {
+        "ip": "::ffff:127.0.0.1",
+        "grant_type": "credentials",
+        "success": true,
+        "accessed": "2017-04-04T08:00:50.379Z"
+    }, {
+        "accessed": "2017-04-04T08:00:45.148Z",
+        "success": true,
+        "grant_type": "credentials",
+        "ip": "::ffff:127.0.0.1"
+    }],
+    "__v": 0
+} {
+    "_id": {
+        "$oid": "58e23cabfd2e8f20e00285c7"
+    },
+    "refresh_token": "rDcWblSHrmtfYih647tqiOx4UP3aCi3xd5UJVJNS3fHgSlu8Y3qfs7lLWnjwi2vyUifjgcKkbvKAhfzLuTDw5RKdyLCggim0SbEqwcUi3eUYGO3CkA13d4Swi5tVwgisuubwMPopGsoSTwKUZdwLVtcnGUuiksqgZyqj9iDoaAE2b7x989FO9WXP5uqYqV8q4QGKXZZ9lzNOvauRj5L71fp7vehLhlaJdTOpQ7ScKD7rFSRgYNsD7NkNBunmJtL0",
+    "scope": "root-read-write",
+    "user_secret": "$2a$10$b7bfplXmcjo5jbhX7YXSPOHuL5/oere6rfAk4UlOF1Dm7QXN.muLK",
+    "user_key": "Vf9W14UqTOceb6p6hTarH9LCbJCIKpY1PLUFHFj68cpWnLM91S2pzELKUc8bGn9I",
+    "user_id": "core-local",
+    "last_ip": [{
+        "accessed": "2017-04-04T08:01:10.691Z",
+        "success": true,
+        "grant_type": "credentials",
+        "ip": "::ffff:127.0.0.1"
+    }, {
+        "ip": "::ffff:127.0.0.1",
+        "grant_type": "credentials",
+        "success": true,
+        "accessed": "2017-04-04T08:00:45.800Z"
+    }, {
+        "accessed": "2017-04-04T08:00:33.567Z",
+        "success": true,
+        "grant_type": "credentials",
+        "ip": "::ffff:127.0.0.1"
+    }, {
+        "ip": "::ffff:127.0.0.1",
+        "grant_type": "credentials",
+        "success": true,
+        "accessed": "2017-04-04T07:57:32.502Z"
+    }, {
+        "accessed": "2017-04-04T07:57:27.659Z",
+        "success": true,
+        "grant_type": "credentials",
+        "ip": "::ffff:127.0.0.1"
+    }],
+    "__v": 0
+}

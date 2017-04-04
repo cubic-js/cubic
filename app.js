@@ -11,7 +11,7 @@ cli.time('Root', 'Set up Auth Node in')
 /**
  * Dependencies
  */
-const auth = require('./controllers/AuthController.js')
+const auth = require('./controllers/auth.js')
 
 /**
  * Set up express server
