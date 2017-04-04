@@ -7,7 +7,7 @@
 ## Usage
 1. Generate an RSA key pair called private.pem & public.pem and put it in /config/certs (You can also use the existing ones for development)
 2. Make sure you're running an instance of mongodb on :27017
-3. Run `mongoimport -d nexus-stats -c users --file ./user_sample.json` inside your mongo shell.
+3. Run `mongoimport -d nexus-stats -c users --file /path/to/user_sample.json` to add the default test users used on the nexus-stats dev branch
 4. `npm install && npm start`
 <br>
 <br>
