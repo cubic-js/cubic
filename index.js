@@ -25,7 +25,13 @@ class Nexus extends EventEmitter {
         // Establish connection to resource server w/ options
         this.connection = new Connection()
         this.connection.setup(this.options)
-            .then(() => this.emit('ready'))
+
+        // Open up client to higher level
+        .then(() => {
+            if (this.options.use_socket) this.client = this.connection.client.socket
+        })
+        .then(() => this.emit('ready'))
+
     }
 
 
