@@ -108,11 +108,10 @@ class Nexus extends EventEmitter {
      * Sample method to get all stats for specific item
      */
     getItem(name, options) {
-        let query = {}
-
-        // Required Query Values
-        query.resource = 'items/' + name
-        query.method = "statistics"
+        let query = {
+            resource: "items/" + name,
+            method: "statistics"
+        }
 
         // Extend  with options if provided
         if (options) query = extend(query, options)
