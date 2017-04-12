@@ -31,7 +31,6 @@ class Nexus extends EventEmitter {
             if (this.options.use_socket) this.client = this.connection.client.socket
         })
         .then(() => this.emit('ready'))
-
     }
 
 
@@ -42,6 +41,7 @@ class Nexus extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.connection.request('GET', query)
                 .then(res => resolve(res))
+                .catch(err => reject(err))
         })
     }
 
@@ -49,6 +49,7 @@ class Nexus extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.connection.request('POST', query)
                 .then(res => resolve(res))
+                .catch(err => reject(err))
         })
     }
 
@@ -56,6 +57,7 @@ class Nexus extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.connection.request('PUT', query)
                 .then(res => resolve(res))
+                .catch(err => reject(err))
         })
     }
 
@@ -63,6 +65,7 @@ class Nexus extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.connection.request('DELETE', query)
                 .then(res => resolve(res))
+                .catch(err => reject(err))
         })
     }
 
@@ -96,6 +99,7 @@ class Nexus extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.connection.request(verb, url)
                 .then(res => resolve(res))
+                .catch(err => reject(err))
         })
     }
 
