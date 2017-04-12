@@ -118,7 +118,9 @@ class Nexus extends EventEmitter {
         if (options) query = extend(query, options)
 
         return new Promise((resolve, reject) => {
-            this.query('GET', query).then(res => resolve(res))
+            this.query('GET', query)
+                .then(res => resolve(res))
+                .catch(err => reject(err))
         })
     }
 }
