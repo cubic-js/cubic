@@ -1,8 +1,7 @@
-# nexus-auth
-**Simple JWT auth server used for [nexus-stats](https://github.com/Kaptard/nexus-stats).**<br><br>
-[![Supported by Warframe Community Developers](https://github.com/Warframe-Community-Developers/banner/blob/master/banner.png)](https://github.com/Warframe-Community-Developers)
+![Nexus-Stats Authentication Server v1.0.0](/banner.png)
+
 - - - -
-<br>
+**Simple JWT auth server used for [nexus-stats](https://github.com/Kaptard/nexus-stats).**<br><br>
 
 ## Usage
 1. Generate an RSA key pair called private.pem & public.pem and put it in /config/certs (You can also use the existing ones for development)
@@ -39,3 +38,8 @@ You can then use these credentials in the following steps.
 }
 ```
 which will return a new `access_token`
+
+<br>
+<br>
+
+[![Supported by Warframe Community Developers](https://github.com/Warframe-Community-Developers/banner/blob/master/banner.png)](https://github.com/Warframe-Community-Developers)
