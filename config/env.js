@@ -10,6 +10,7 @@ process.env['mongo_url'] = 'mongodb://localhost/nexus-stats'
 
 // Issuer (self)
 process.env['iss'] = 'http://localhost:7119'
+process.env.port = 7119
 
 // Secrets
 process.env['cert'] = fs.readFileSync('./config/certs/private.pem')

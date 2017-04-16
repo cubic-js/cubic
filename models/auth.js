@@ -1,6 +1,4 @@
-/**
- * Token based authentication using JWT & Passport
- */
+"use strict"
 
 /**
  * Connect to mongodb
@@ -23,14 +21,12 @@ const bcrypt = require('bcryptjs')
 
 
 /**
- * Describes interactions with mongo/redis for auth
+ * Describes interactions with mongo for auth
  */
 class Authentication {
 
     constructor() {
-
         this.setSchema()
-
         this.users = db.model('User', this.userSchema)
     }
 
@@ -40,14 +36,12 @@ class Authentication {
      */
     matchCredentials(req, res, next) {
 
-        cli.log('Auth', 'ok', req.ip + ': ' + JSON.stringify('user_key: ' + req.body.user_key), 'in')
-
         // find user in db
         this.users.findOne({
             user_key: req.body.user_key
         })
 
-        .then((user) => {
+        .then(user => {
 
             // No User Found
             if (!user) {
@@ -72,8 +66,6 @@ class Authentication {
                 let accessToken = this.getAccessToken(data)
                 let refreshToken = this.getRefreshToken(user.user_key)
 
-                cli.log('Auth', 'ok', '<JWT>', 'out')
-
                 return res.json({
                     access_token: accessToken,
                     refresh_token: refreshToken
@@ -81,8 +73,7 @@ class Authentication {
             }
         })
 
-        .catch((err) => {
-            cli.log('Auth', 'err', err, 'out')
+        .catch(err => {
             this.unauthorized(res, req.body.user_key, req.ip, 'credentials')
         })
     }
@@ -93,14 +84,12 @@ class Authentication {
      */
     matchRefreshToken(req, res, next) {
 
-        cli.log('Auth', 'ok', req.ip + ': <refresh>', 'in')
-
         // Find refresh token in db
         this.users.findOne({
             refresh_token: req.body.refresh_token
         })
 
-        .then((user) => {
+        .then(user => {
 
             // No Refresh Token found
             if (!user) {
@@ -120,15 +109,13 @@ class Authentication {
                 // Save IP
                 this.saveIP(user.user_key, req.ip, 'refresh_token', true)
 
-                cli.log('Auth', 'ok', '<JWT>', 'out')
                 return res.status(200).json({
                     access_token: accessToken
                 })
             }
         })
 
-        .catch((err) => {
-            cli.log('Auth', 'err', err, 'out')
+        .catch(err => {
             return err
         })
     }
@@ -142,8 +129,6 @@ class Authentication {
         let user_secret = randtoken.uid(64)
         let user = new this.users()
 
-        cli.log('Auth', 'ok', req.ip + ': register', 'in')
-
         // Save User w/ default values (+higher rate limit)
         user.user_id = 'unidentified-' + randtoken.uid(16)
         user.user_key = user_key
@@ -151,11 +136,10 @@ class Authentication {
         user.scope = 'default'
         user.refresh_token = null
         user.last_ip = []
-        user.save().then((user) => {
+        user.save().then(user => {
 
             // Log IP
             this.saveIP(user_key, req.ip, 'register', true)
-            cli.log('Auth', 'ok', 'New user. ID: ' + user.user_id, 'out')
 
             // Send Credentials to user
             return (res.status(200).json({
@@ -255,8 +239,7 @@ class Authentication {
         })
 
         // Error Handling
-        .catch((err) => {
-            cli.log('Auth', 'err', err, 'out')
+        .catch(err => {
             return err
         })
     }
@@ -300,18 +283,12 @@ class Authentication {
      */
     unauthorized(res, user_key, ip, grant_type) {
 
-        cli.log('Auth', 'err', '401. Unauthorized.', 'out')
-
         // Log IP if provided
         if (user_key && ip) this.saveIP(user_key, ip, grant_type, false)
 
         // Throttle spammers
         setTimeout(() => {
-            return res.status(401).json({
-                status: 'error',
-                code: 'unauthorized',
-                message: 'credentials mismatch or token expired'
-            })
+            return res.status(401).send("Unauthorized")
         }, 3000)
     }
 }
