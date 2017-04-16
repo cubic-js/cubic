@@ -87,7 +87,7 @@ class Logger {
 
         // Refresh token auth
         else if (req.body.refresh_token) {
-            this.body = "[refresh token+]"
+            this.body = "[refresh token]"
         }
 
         // Unhandled body type
