@@ -38,8 +38,14 @@ You can then use these credentials in the following steps.
 }
 ```
 which will return a new `access_token`
+<br>
+<br>
+
+## License
+[MIT](/LICENSE.md)
 
 <br>
-<br>
+
+- - - -
 
 [![Supported by Warframe Community Developers](https://github.com/Warframe-Community-Developers/banner/blob/master/banner.png)](https://github.com/Warframe-Community-Developers)
