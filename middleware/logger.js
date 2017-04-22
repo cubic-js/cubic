@@ -69,7 +69,8 @@ class Logger {
 
         res.send = function(body) {
             _send.call(this, body)
-            console.log(prefix + chalk.grey("> " + (process.hrtime()[1] - timestart[1]) / 1000000 + "ms"))
+            let diff = process.hrtime(timestart)
+            console.log(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1])/1e6} ms`))
             console.log(" ")
         }
     }
