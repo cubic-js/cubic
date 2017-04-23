@@ -17,7 +17,7 @@ class Logger {
 
         // Actual Console Output
         console.log(this.prefix + chalk.grey(":: " + new Date()))
-        console.log(`${this.prefix}< ${req.ip}: ${req.method} ${req.url} ${this.body}`)
+        console.log(`${this.prefix}< ${req.headers['x-forwarded-for'] || req.connection.remoteAddress}: ${req.method} ${req.url} ${this.body}`)
         next()
     }
 
