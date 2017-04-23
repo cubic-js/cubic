@@ -21,7 +21,7 @@ You can then use these credentials in the following steps.
 
 <br>
 
-**POST /auth**:
+**POST /token**:
 - Accepts Credentials in the above format and returns access-and refresh tokens:
 ```
 {
