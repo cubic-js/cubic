@@ -75,7 +75,7 @@ class Nexus extends EventEmitter {
      */
     query(verb, query) {
 
-        let url = "http://localhost:3400/"
+        let url = "http://api.nexus-stats.com/"
 
         // Generate Base URL
         url += this.options.game + '/'
