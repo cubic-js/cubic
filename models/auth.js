@@ -133,7 +133,7 @@ class Authentication {
         user.user_id = 'unidentified-' + randtoken.uid(16)
         user.user_key = user_key
         user.user_secret = this.syncHash(user_secret)
-        user.scope = 'default'
+        user.scope = 'basic-read'
         user.refresh_token = null
         user.last_ip = []
         user.save().then(user => {
@@ -285,11 +285,7 @@ class Authentication {
 
         // Log IP if provided
         if (user_key && ip) this.saveIP(user_key, ip, grant_type, false)
-
-        // Throttle spammers
-        setTimeout(() => {
-            return res.status(401).send("Unauthorized")
-        }, 3000)
+        return res.status(401).send("Unauthorized")
     }
 }
 
