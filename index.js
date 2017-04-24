@@ -13,10 +13,18 @@ class Nexus extends EventEmitter {
         super()
 
         this.options = extend({
+
+            // Resource Config
+            api_url: "https://api.nexus-stats.com/",
+            auth_url: "https://auth.nexus-stats.com/",
             game: 'warframe',
             api_version: 'v1',
+
+            // Connection Config
             use_socket: true,
-            namespace: '/',
+            namespace: '',
+
+            // Authorization Config
             user_key: null,
             user_secret: null,
             ignore_limiter: false
@@ -74,8 +82,7 @@ class Nexus extends EventEmitter {
      * Query method to easily create url from given params
      */
     query(verb, query) {
-
-        let url = "http://api.nexus-stats.com/"
+        let url = this.options.api_url
 
         // Generate Base URL
         url += this.options.game + '/'
