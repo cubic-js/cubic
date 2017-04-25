@@ -1,7 +1,7 @@
-[![Nexus-Stats Authentication Server](/banner.png)](https://github.com/nexus-devs)
+[![blitz.js Authentication Server](/banner.png)](https://github.com/nexus-devs)
 
 - - - -
-**Simple JWT auth server used for [nexus-stats](https://github.com/Kaptard/nexus-stats).**<br><br>
+**Simple JWT auth server used for [blitz.js](https://github.com/nexus-devs/blitz.js).**<br><br>
 
 ## Usage
 1. Generate an RSA key pair called private.pem & public.pem and put it in /config/certs (You can also use the existing ones for development)
@@ -43,9 +43,3 @@ which will return a new `access_token`
 
 ## License
 [MIT](/LICENSE.md)
-
-<br>
-
-- - - -
-
-[![Supported by Warframe Community Developers](https://github.com/Warframe-Community-Developers/banner/blob/master/banner.png)](https://github.com/Warframe-Community-Developers)
