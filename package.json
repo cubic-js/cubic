@@ -1,11 +1,11 @@
 {
-  "name": "nexus-stats-api",
+  "name": "nexus-api",
   "version": "0.0.3",
   "description": "HTTP/Socket.io adapter for api.nexus-stats.com",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kaptard/npm-nexus-stats-api"
+    "url": "https://github.com/nexus-devs/npm-nexus-api"
   },
   "scripts": {
     "test": "test"
@@ -16,7 +16,6 @@
     "deep-extend": "^0.4.1",
     "event-emitter-es6": "^1.1.5",
     "request": "^2.79.0",
-    "socket.io-client": "^1.7.3",
-    "socketio-wildcard": "^0.4.0"
+    "socket.io-client": "^1.7.3"
   }
 }
