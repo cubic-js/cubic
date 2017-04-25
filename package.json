@@ -1,6 +1,6 @@
 {
   "name": "blitz-api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "HTTP/Socket.io adapter for the blitz.js framework",
   "main": "index.js",
   "repository": {
