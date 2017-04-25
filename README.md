@@ -3,10 +3,6 @@
 - - - -
 <br>
 
-⚡ Ultra Modular Nodejs Framework
-<br>
-<br>
-
 ## Wat dis?
 Instant API deployment. Built on Express and Socket.io. Ridiculously modular.
 
@@ -18,7 +14,7 @@ Coming Soon™
 <br>
 
 ## API Packages
-We provide packages to connect to the API, so you can focus on real code! <br>
+Check out our packages to connect to any blitz.js API, so you can focus on real code! <br>
 **npm:** [npm-blitz-api](https://www.npmjs.com/package/blitz-api)
 
 <br>
