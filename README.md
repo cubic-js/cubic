@@ -8,7 +8,7 @@
 <br>
 
 ## Wat dis?
-Instant API deployment and documentation. Built on Express and Socket.io. Ridiculously modular.
+Instant API deployment. Built on Express and Socket.io. Ridiculously modular.
 
 <br>
 
