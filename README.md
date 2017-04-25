@@ -18,7 +18,7 @@ Coming Soon™
 <br>
 
 ## API Packages
-We provide packages to connect to the API, so you can focus on real code!
+We provide packages to connect to the API, so you can focus on real code! <br>
 **npm:** [npm-blitz-api](https://www.npmjs.com/package/blitz-api)
 
 <br>
