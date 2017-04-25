@@ -3,7 +3,6 @@
 - - - -
 <br>
 
-**Still in early development.**
-This will only work with the current development nexus-stats stack.<br>
+Nodejs package to connect to [blitz.js](https://github.com/nexus-devs/blitz.js) frameworks.<br>
 - - - -
 <br>

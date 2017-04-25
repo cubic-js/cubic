@@ -1,7 +1,7 @@
 {
-  "name": "nexus-api",
-  "version": "0.0.4",
-  "description": "HTTP/Socket.io adapter for api.nexus-stats.com",
+  "name": "blitz-api",
+  "version": "0.0.3",
+  "description": "HTTP/Socket.io adapter for the blitz.js framework",
   "main": "index.js",
   "repository": {
     "type": "git",
