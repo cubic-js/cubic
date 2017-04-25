@@ -3,7 +3,7 @@
 - - - -
 <br>
 
-⚡ Ultra Modular Nodejs Backend Framework
+⚡ Ultra Modular Nodejs Framework
 <br>
 <br>
 
