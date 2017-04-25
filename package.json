@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "blitz-api": "0.0.5",
     "body-parser": "^1.16.1",
     "chalk": "^1.1.3",
     "express": "~4.14.1",
@@ -17,7 +18,6 @@
     "mongodb": "^2.2.25",
     "mongoose": "^4.9.3",
     "multi-cluster": "^1.0.1",
-    "nexus-api": "0.0.4",
     "raven": "^1.2.1",
     "redis": "^2.6.5",
     "require-reload": "^0.2.2",

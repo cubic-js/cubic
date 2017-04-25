@@ -5,7 +5,9 @@
 const fs = require('fs');
 
 // Environment
+process.env['NODE_ENV'] = 'development'
 process.env['version'] = 'v0.1.0'
+process.env['app_name'] = 'blitz.js'
 
 // Sentry
 process.env['raven_url'] = "https://014cba089bca4e9f879bf5517f9dbb62@sentry.io/158565"

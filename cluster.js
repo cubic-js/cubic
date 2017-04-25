@@ -21,7 +21,7 @@ const Logger = require('./config/logger.js')
  * Setup Clusters
  * Single process & watch for development.
  */
-if (process.env.environment === 'development') {
+if (process.env.NODE_ENV === 'development') {
     let api = new Cluster('./api/node.js', 1)
     api.watch('./api')
 
