@@ -1,4 +1,4 @@
-![Nexus-Stats Authentication Server v1.0.0](/banner.png)
+[![Nexus-Stats Authentication Server](/banner.png)](https://github.com/nexus-devs)
 
 - - - -
 **Simple JWT auth server used for [nexus-stats](https://github.com/Kaptard/nexus-stats).**<br><br>
