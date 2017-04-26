@@ -15,8 +15,8 @@ class Blitz extends EventEmitter {
         this.options = extend({
 
             // Resource Config
-            api_url: "https://localhost:3400/",
-            auth_url: "https://localhost:7119/",
+            api_url: "https://localhost:3010/",
+            auth_url: "https://localhost:3030/",
 
             // Connection Config
             use_socket: true,
