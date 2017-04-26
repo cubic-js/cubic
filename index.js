@@ -6,7 +6,7 @@
  */
 const Server = require('./connections/server.js')
 const local = require('./config/local.js')
-const extend = require('deep-extend')
+const _ = require('lodash')
 
 
 /**
@@ -21,7 +21,7 @@ class API {
         blitz.config.api = {}
         
         // Add config to global blitz.config
-        let config = extend(local, options)
+        let config = _.merge(local, options)
         this.setConfig(config)
         
         // Load up API Server
