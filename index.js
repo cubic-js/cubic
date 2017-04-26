@@ -28,6 +28,16 @@ class API {
         // Add config to global blitz.config
         this.setConfig(options)
 
+        // Launch Cluster
+        this.setupCluster()
+    }
+
+
+    /**
+     * Set up Cluster
+     */
+    setupCluster() {
+        
         // Fork Workers
         if(cluster.isMaster) {
             for (let i = 0; i < blitz.config.api.cores; i++) cluster.fork()
