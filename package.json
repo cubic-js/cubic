@@ -1,11 +1,11 @@
 {
-  "name": "blitz-api",
+  "name": "blitz-js-query",
   "version": "0.0.6",
-  "description": "HTTP/Socket.io adapter for the blitz.js framework",
+  "description": "HTTP/Socket.io query adapter for the blitz.js framework",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nexus-devs/npm-blitz-api"
+    "url": "https://github.com/nexus-devs/npm-blitz-query"
   },
   "scripts": {
     "test": "test"
