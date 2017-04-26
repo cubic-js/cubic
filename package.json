@@ -1,10 +1,14 @@
 {
-  "name": "blitz.js",
-  "version": "0.1.0",
+  "name": "blitz-js",
+  "version": "0.0.0",
   "description": "",
-  "main": "cluster.js",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexus-devs/blitz.js"
+  },
   "scripts": {
-    "start": "node ./cluster.js"
+    "start": "node ./index.js"
   },
   "author": "",
   "license": "MIT",
