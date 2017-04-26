@@ -1,4 +1,5 @@
-const fs = require('fs');
+const fs = require('fs')
+const os = require('os')
 
 module.exports = {
 
@@ -11,7 +12,7 @@ module.exports = {
     /**
      * Current Node Information
      */
-    port: 3400,
+    port: 3010,
     routes: require("./endpoints/routes.js"),
     events: require("./endpoints/events.js"),
 
@@ -27,7 +28,7 @@ module.exports = {
      * Databases
      */
     mongoPort: 27017,
-    mongoURL: "mongodb://localhost/nexus-stats",
+    mongoURL: "mongodb://localhost/blitz",
     redisPort: 6379,
 
 
@@ -35,5 +36,11 @@ module.exports = {
      * Authorization properties
      */
     authCert: fs.readFileSync(__dirname + "/certs/auth_public.pem"),
-    authScopes: require("./auth/scopes.js")
+    authScopes: require("./auth/scopes.js"),
+
+
+    /**
+     * Cluster config
+     */
+    cores: os.cpus().length
 }

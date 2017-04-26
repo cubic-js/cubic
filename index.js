@@ -2,11 +2,17 @@
 
 
 /**
- * Middleware Functions
+ * Dependencies
  */
 const Server = require('./connections/server.js')
 const local = require('./config/local.js')
 const _ = require('lodash')
+
+
+/**
+ * Cluster Dependencies
+ */
+const cluster = require("cluster")
 
 
 /**
@@ -18,24 +24,37 @@ class API {
      * Load config. Then Boot up server
      */
     constructor(options) {
-        blitz.config.api = {}
-        
+
         // Add config to global blitz.config
-        let config = _.merge(local, options)
-        this.setConfig(config)
-        
-        // Load up API Server
-        this.server = new Server()
+        this.setConfig(options)
+
+        // Fork Workers
+        if(cluster.isMaster) {
+            for (let i = 0; i < blitz.config.api.cores; i++) cluster.fork()
+        }
+
+        // Worker Setup
+        else {
+            blitz.log.verbose(":: " + new Date())
+            blitz.log.info("API-Node-Worker started [PID: " + process.pid + "]")
+
+            // Load up API Server
+            this.server = new Server()
+        }
     }
 
 
     /**
      * Automatically attach config to global blitz object
      */
-    setConfig(config) {
-         for (var property in config) {
-             blitz.config.api[property] = config[property]
-         }
+    setConfig(options) {
+        blitz.config.api = {}
+        let config = _.merge(local, options)
+
+        // Add each key to global blitz object
+        for (var property in config) {
+            blitz.config.api[property] = config[property]
+        }
     }
 
 
@@ -48,4 +67,4 @@ class API {
 }
 
 
-module.exports = new API()
+module.exports = API

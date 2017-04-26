@@ -23,8 +23,8 @@ class Logger {
         this.addTimer(res)
 
         // Actual Console Output
-        console.log(this.prefix + chalk.grey(":: " + new Date()))
-        console.log(`${this.prefix}< ${this.user.uid}: ${req.method} ${req.url}`)
+        blitz.log.info(this.prefix + chalk.grey(":: " + new Date()))
+        blitz.log.info(`${this.prefix}< ${this.user.uid}: ${req.method} ${req.url}`)
         next()
     }
 
@@ -66,7 +66,7 @@ class Logger {
         next = (err) => {
             _next(err)
             if (err) {
-                console.log(this.prefix + chalk.red("> ") + err)
+                blitz.log.info(this.prefix + chalk.red("> ") + err)
             }
         }
     }
@@ -91,7 +91,7 @@ class Logger {
                 io = chalk.red(io)
             }
 
-            console.log(prefix + io + res.statusCode + ": " + body.slice(0, 100) + (body.length > 100 ? "..." : ""))
+            blitz.log.info(prefix + io + res.statusCode + ": " + body.slice(0, 100) + (body.length > 100 ? "..." : ""))
         }
     }
 
@@ -116,7 +116,7 @@ class Logger {
 
                 // Time Logging
                 let diff = process.hrtime(timestart)
-                console.log(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`))
+                blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`))
                 console.log(" ")
             }
         }
