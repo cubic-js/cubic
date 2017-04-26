@@ -1,4 +1,4 @@
-[![Warframe-Nexus](/banner.png)](https://github.com/nexus-devs)
+[![blitz.js](/banner.png)](https://github.com/nexus-devs)
 
 - - - -
 <br>
