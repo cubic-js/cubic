@@ -5,7 +5,8 @@
  * Middleware Functions
  */
 const Server = require('./connections/server.js')
-const config = require('./config/local.js')
+const local = require('./config/local.js')
+const extend = require('deep-extend')
 
 
 /**
@@ -16,17 +17,22 @@ class API {
     /**
      * Load config. Then Boot up server
      */
-    constructor() {
+    constructor(options) {
         blitz.config.api = {}
-        this.config()
+        
+        // Add config to global blitz.config
+        let config = extend(local, options)
+        this.setConfig(config)
+        
+        // Load up API Server
         this.server = new Server()
     }
 
 
     /**
-     * Automatically set local config
+     * Automatically attach config to global blitz object
      */
-    config() {
+    setConfig(config) {
          for (var property in config) {
              blitz.config.api[property] = config[property]
          }
