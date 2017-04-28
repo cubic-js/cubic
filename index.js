@@ -22,9 +22,6 @@ class api {
             provided: options
         }
 
-        // Temporarily restrict max cores to 1 due to clusterfuck
-        this.config.provided.cores = 1
-
         // Path to module to be forked
         this.appPath = __dirname + "/connections/server.js"
     }
