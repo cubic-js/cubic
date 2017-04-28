@@ -43,7 +43,7 @@ class Server {
                 this.setRequestClient()
 
                 // Log Worker info
-                blitz.log.verbose("API-Node-Worker started [PID: " + process.pid + "]")
+                blitz.log.verbose("api-node worker started [PID: " + process.pid + "]")
             }
         })
     }
