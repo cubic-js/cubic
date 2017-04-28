@@ -26,11 +26,15 @@ class Client {
 
                 // blitz-js-query options
                 let options = {
+
+                    // Connection Settings
                     api_url: blitz.config.core.apiURL,
                     auth_url: blitz.config.core.authURL,
                     use_socket: true,
                     namespace: 'root',
                     ignore_limiter: true,
+
+                    // Authentication Settings
                     user_key: blitz.config.core.user_key,
                     user_secret: blitz.config.core.user_secret
                 }
@@ -43,7 +47,7 @@ class Client {
                     this.sendEndpoints()
 
                     // Log Worker info
-                    blitz.log.verbose("Core-Node-Worker started [PID: " + process.pid + "]")
+                    blitz.log.verbose("core-node worker started [PID: " + process.pid + "]")
                 })
             }
         })
