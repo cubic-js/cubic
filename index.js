@@ -78,7 +78,7 @@ class Blitz {
         blitz.nodes[id].workers = []
 
         // Fork Workers
-        for (let i = 0; i < cores; i++) {
+        for (let i = 0; i < 1; i++) { // Use `cores` instead of 1 once cluster works
 
             // Add to node's worker list to be accessible globally
             blitz.nodes[id].workers.push(fork(appPath))
