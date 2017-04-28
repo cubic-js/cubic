@@ -72,13 +72,13 @@ class Blitz {
      * Cluster given blitz module
      */
     cluster(id, appPath) {
-        let cores = blitz.config[id].cores
+        let cores = 1 //blitz.config[id].cores
 
         // Initialize array to push workers into
         blitz.nodes[id].workers = []
 
         // Fork Workers
-        for (let i = 0; i < 1; i++) { // Use `cores` instead of 1 once cluster works
+        for (let i = 0; i < cores; i++) {
 
             // Add to node's worker list to be accessible globally
             blitz.nodes[id].workers.push(fork(appPath))
