@@ -6,6 +6,10 @@
   "scripts": {
     "start": "node ./index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexus-devs/blitz.js-api"
+  },
   "author": "",
   "license": "MIT",
   "dependencies": {
