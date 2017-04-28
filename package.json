@@ -1,7 +1,7 @@
 {
   "name": "blitz-js-api",
   "version": "0.0.0",
-  "description": "",
+  "description": "⚡ API Node for blitz.js framework",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js"
