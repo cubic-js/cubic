@@ -1,6 +1,12 @@
 "use strict"
 
 /**
+ * Dependencies
+ */
+const Blitz = require("../controllers/blitz.js")
+
+
+/**
  * Middleware Functions
  */
 const bodyParser = require("body-parser")
@@ -20,14 +26,26 @@ class Server {
      */
     constructor() {
 
-        // Build up Server
-        this.setupHttpServer()
-        this.setupSockets()
+        // When config received, launch server
+        process.on("message", (m) => {
 
-        // Config Express & Sockets.io
-        this.applyMiddleware()
-        this.applyRoutes()
-        this.setRequestClient()
+            if (m.global) {
+
+                new Blitz(m.global)
+
+                // Build up Server
+                this.setupHttpServer()
+                this.setupSockets()
+
+                // Config Express & Sockets.io
+                this.applyMiddleware()
+                this.applyRoutes()
+                this.setRequestClient()
+
+                // Log Worker info
+                blitz.log.verbose("API-Node-Worker started [PID: " + process.pid + "]")
+            }
+        })
     }
 
 
@@ -104,4 +122,4 @@ class Server {
     }
 }
 
-module.exports = Server
+module.exports = new Server()

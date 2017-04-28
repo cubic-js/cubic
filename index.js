@@ -1,70 +1,32 @@
-'use strict'
-
+"use strict"
 
 /**
  * Dependencies
  */
-const Server = require('./connections/server.js')
-const local = require('./config/local.js')
-const _ = require('lodash')
-
-
-/**
- * Cluster Dependencies
- */
-const cluster = require("cluster")
-
+const local = require("./config/local.js")
 
 /**
  * Parent Class for API-Node
  */
-class API {
+class api {
 
     /**
-     * Load config. Then Boot up server
+     * Set config for blitz.js to merge
+     * @constructor
      */
     constructor(options) {
 
-        // Add config to global blitz.config
-        this.setConfig(options)
-
-        // Launch Cluster
-        this.setupCluster()
-    }
-
-
-    /**
-     * Set up Cluster
-     */
-    setupCluster() {
-        
-        // Fork Workers
-        if(cluster.isMaster) {
-            for (let i = 0; i < blitz.config.api.cores; i++) cluster.fork()
+        // Config which is called by blitz.js on blitz.use()
+        this.config = {
+            local: local,
+            provided: options
         }
 
-        // Worker Setup
-        else {
-            blitz.log.verbose(":: " + new Date())
-            blitz.log.info("API-Node-Worker started [PID: " + process.pid + "]")
+        // Temporarily restrict max cores to 1 due to clusterfuck
+        this.config.provided.cores = 1
 
-            // Load up API Server
-            this.server = new Server()
-        }
-    }
-
-
-    /**
-     * Automatically attach config to global blitz object
-     */
-    setConfig(options) {
-        blitz.config.api = {}
-        let config = _.merge(local, options)
-
-        // Add each key to global blitz object
-        for (var property in config) {
-            blitz.config.api[property] = config[property]
-        }
+        // Path to module to be forked
+        this.appPath = __dirname + "/connections/server.js"
     }
 
 
@@ -77,4 +39,4 @@ class API {
 }
 
 
-module.exports = API
+module.exports = api

@@ -4,12 +4,6 @@ const os = require('os')
 module.exports = {
 
     /**
-     * URL for sentry.io error logging
-     */
-    ravenURL: "https://014cba089bca4e9f879bf5517f9dbb62@sentry.io/158565",
-
-
-    /**
      * Current Node Information
      */
     port: 3010,
@@ -35,7 +29,7 @@ module.exports = {
     /**
      * Authorization properties
      */
-    authCert: fs.readFileSync(__dirname + "/certs/auth_public.pem"),
+    authCert: fs.readFileSync(__dirname + "/certs/auth_public.pem", "utf-8"),
     authScopes: require("./auth/scopes.js"),
 
 
