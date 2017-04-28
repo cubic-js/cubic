@@ -14,8 +14,13 @@ Coming Soon™
 <br>
 
 ## API Packages
-Check out our packages to connect to any blitz.js API, so you can focus on real code! <br>
-**npm:** [npm-blitz-api](https://www.npmjs.com/package/blitz-api)
+We also provide client packages to connect to any blitz.js API, so you can focus on real code! <br>
+
+| Package Mangager        | Link           | Source Code  |
+| ------------- |-------------| -----|
+| **npm**       | [npm-blitz-query](https://www.npmjs.com/package/blitz-js-query) | [[Repo]](https://github.com/nexus-devs/pip-blitz-query) |
+| **pip**       | [pip-blitz-query](https://pypi.python.org/pypi?:action=display&name=blitzjs-query)      |  [[Repo]](https://github.com/nexus-devs/npm-blitz-query) |
+
 
 <br>
 
