@@ -4,7 +4,7 @@
  * Dependencies
  */
 const Blitz = require("../controllers/blitz.js")
-const BlitzQuery = require('../../npm-blitz-query/index.js')
+const BlitzQuery = require('blitz-js-query')
 const MethodHandler = require('../MethodHandler.js')
 
 /**
