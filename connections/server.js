@@ -3,7 +3,7 @@
 /**
  * Dependencies
  */
-const Blitz = require("../controllers/blitz.js")
+const BlitzUtil = require("blitz-js-util")
 
 
 /**
@@ -31,7 +31,7 @@ class Server {
 
             if (m.global) {
 
-                new Blitz(m.global)
+                BlitzUtil.generateBlitzGlobal(m.global)
 
                 // Build up Server
                 this.setupHttpServer()
