@@ -3,7 +3,7 @@
 /**
  * Dependencies
  */
-const Blitz = require("../controllers/blitz.js")
+const BlitzUtil = require("blitz-js-util")
 const BlitzQuery = require('blitz-js-query')
 const MethodHandler = require('../MethodHandler.js')
 
@@ -22,7 +22,8 @@ class Client {
 
             if (m.global) {
 
-                new Blitz(m.global)
+                // Set global blitz object
+                BlitzUtil.generateBlitzGlobal(m.global)
 
                 // blitz-js-query options
                 let options = {
