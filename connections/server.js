@@ -99,8 +99,8 @@ class Server {
      * Apply Routes/Events after Middleware for correct order
      */
     applyRoutes() {
-        blitz.config.api.routes(this.http)
-        blitz.config.api.events(this.sockets, this.http)
+        require(blitz.config.api.routes)(this.http)
+        require(blitz.config.api.events)(this.sockets, this.http)
     }
 
 

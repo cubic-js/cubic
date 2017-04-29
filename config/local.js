@@ -7,8 +7,8 @@ module.exports = {
      * Current Node Information
      */
     port: 3010,
-    routes: require("./endpoints/routes.js"),
-    events: require("./endpoints/events.js"),
+    routes: __dirname + "/endpoints/routes.js",
+    events: __dirname + "/endpoints/events.js",
 
 
     /**
