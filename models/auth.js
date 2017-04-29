@@ -1,13 +1,6 @@
 "use strict"
 
 /**
- * Connect to mongodb
- */
-const db = require('mongoose').connect(process.env.mongo_url)
-db.Promise = global.Promise;
-
-
-/**
  * JSON Web Tokens module to generate tokens
  */
 const jwt = require('jsonwebtoken')
@@ -26,8 +19,14 @@ const bcrypt = require('bcryptjs')
 class Authentication {
 
     constructor() {
+
+        // Connect to mongodb
+        this.db = require('mongoose').connect(blitz.config.auth.mongoURL)
+        this.db.Promise = global.Promise
+
+        // Config models
         this.setSchema()
-        this.users = db.model('User', this.userSchema)
+        this.users = this.db.model('User', this.userSchema)
     }
 
 
@@ -45,12 +44,12 @@ class Authentication {
 
             // No User Found
             if (!user) {
-                this.unauthorized(res, req.body.user_key, req.ip, 'credentials');
+                this.unauthorized(res, req.body.user_key, req.ip, 'credentials')
             } else
 
             // Password Mismatch
             if (!this.isValidSecret(req.body.user_secret, user.user_secret)) {
-                this.unauthorized(res, req.body.user_key, req.ip, 'credentials');
+                this.unauthorized(res, req.body.user_key, req.ip, 'credentials')
             } else {
 
                 // Valid User Found
@@ -159,10 +158,10 @@ class Authentication {
         let options = {
             expiresIn: '10s',
             algorithm: 'RS256',
-            issuer: process.env.iss
+            issuer: blitz.config.auth.issuer
         }
 
-        return jwt.sign(data, process.env.cert, options);
+        return jwt.sign(data, blitz.config.auth.cert, options)
     }
 
 
@@ -249,7 +248,7 @@ class Authentication {
      * Sets up auth Schema
      */
     setSchema() {
-        this.userSchema = db.Schema({
+        this.userSchema = this.db.Schema({
             user_id: String,
             user_key: String,
             user_secret: String,
@@ -289,4 +288,4 @@ class Authentication {
     }
 }
 
-module.exports = new Authentication()
+module.exports = Authentication

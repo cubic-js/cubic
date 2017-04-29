@@ -3,16 +3,17 @@
 /**
  * Dependencies
  */
+const BlitzUtil = require("blitz-js-util")
+const Auth = require('../models/auth.js')
 const express = require('express')
 const bodyParser = require('body-parser')
 const http = require('http')
-const port = process.env.port
-const auth = require('../models/auth.js')
+
 
 /**
  * Middleware
  */
- const logger = require('../middleware/logger.js')
+const logger = require('../middleware/logger.js')
 
 
 /**
@@ -24,15 +25,32 @@ class Server {
      * Load up Express
      */
     constructor() {
-        this.app = express()
-        this.app.set('port', process.env.port)
-        this.app.use(bodyParser.urlencoded({extended: false})).use(bodyParser.json())
-        this.http = http.createServer(this.app)
-        this.http.listen(process.env.port)
 
-        // Express modifications
-        this.configMiddleware()
-        this.configRoutes()
+        // When config received, launch client
+        process.on("message", (m) => {
+
+            if (m.global) {
+
+                // Set global blitz object
+                BlitzUtil.generateBlitzGlobal(m.global)
+
+                // Build up Server
+                this.app = express()
+                this.app.set('port', blitz.config.auth.port)
+                this.app.use(bodyParser.urlencoded({
+                    extended: false
+                })).use(bodyParser.json())
+                this.http = http.createServer(this.app)
+                this.http.listen(blitz.config.auth.port)
+
+                // Load up authentication models
+                this.auth = new Auth()
+
+                // Express modifications
+                this.configMiddleware()
+                this.configRoutes()
+            }
+        })
     }
 
     /**
@@ -46,7 +64,7 @@ class Server {
      * Routing
      */
     configRoutes() {
-        require('../config/routes.js')(this.app, auth)
+        require(blitz.config.auth.routes)(this.app, this.auth)
     }
 }
 

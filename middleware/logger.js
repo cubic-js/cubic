@@ -9,15 +9,16 @@ class Logger {
     log(req, res, next) {
 
         // Prepare output
-        this.prefix = chalk.grey("Nexus-OAuth | ")
+        this.prefix = chalk.grey("OAuth     | ")
         this.setBody(req)
         this.logErr(next)
         this.logRes(res)
         this.addTimer(res)
 
         // Actual Console Output
-        console.log(this.prefix + chalk.grey(":: " + new Date()))
-        console.log(`${this.prefix}< ${req.headers['x-forwarded-for'] || req.connection.remoteAddress}: ${req.method} ${req.url} ${this.body}`)
+        console.log(" ")
+        blitz.log.info(this.prefix + chalk.grey(":: " + new Date()))
+        blitz.log.info(`${this.prefix}< ${req.headers['x-forwarded-for'] || req.connection.remoteAddress}: ${req.method} ${req.url} ${this.body}`)
         next()
     }
 
@@ -30,7 +31,7 @@ class Logger {
         next = (err) => {
             _next(err)
             if (err) {
-                console.log(this.prefix + chalk.red("> ") + err)
+                blitz.log.info(this.prefix + chalk.red("> ") + err)
             }
         }
     }
@@ -50,10 +51,10 @@ class Logger {
             // Output is error?
             if (res.statusCode.toString()[0] < 4) {
                 io = chalk.green(io)
-                console.log(prefix + io + res.statusCode + ": [token]")
+                blitz.log.info(prefix + io + res.statusCode + ": [token]")
             } else {
                 io = chalk.red(io)
-                console.log(prefix + io + res.statusCode + ": " + body)
+                blitz.log.info(prefix + io + res.statusCode + ": " + body)
             }
         }
     }
@@ -70,8 +71,7 @@ class Logger {
         res.send = function(body) {
             _send.call(this, body)
             let diff = process.hrtime(timestart)
-            console.log(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1])/1e6} ms`))
-            console.log(" ")
+            blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1])/1e6} ms`))
         }
     }
 
