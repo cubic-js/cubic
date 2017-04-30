@@ -50,7 +50,7 @@ For configuration of individual nodes, check out their repositories below.
 <br>
 
 ## API Packages
-We also provide client packages to connect to any blitz.js API, so you needn't worry about making your API accessible to developers! <br>
+We also provide client packages to connect to any blitz.js API, so you needn't worry about accessibility for developers! <br>
 
 
 >**npm**: [blitz-js-query](https://www.npmjs.com/package/blitz-js-query)<br>
