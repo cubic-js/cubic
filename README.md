@@ -5,7 +5,7 @@
 
 <br>
 
-### Example
+## Example
 
 ```javascript
 require("blitz-js")()
@@ -23,7 +23,7 @@ Now visit `localhost:3010/foo` to get your `bar`.
 
 <br>
 
-### Configuration
+## Configuration
 ```javascript
 require("blitz-js")({ key: value })
 ```
@@ -41,7 +41,7 @@ For configuration of individual nodes, check out their repositories below.
 
 <br>
 
-### Available Nodes
+## Available Nodes
 | Repo          | Package       | Description   |
 | ------------- | ------------- | ------------- |
 | [blitz.js-api](https://github.com/nexus-devs/blitz.js-api) | [blitz-js-api](https://www.npmjs.com/package/blitz-js-api) | RESTful API with WebSocket support which authorizes and distributes requests to the resource node. |
@@ -49,7 +49,7 @@ For configuration of individual nodes, check out their repositories below.
 | [blitz.js-auth](https://github.com/nexus-devs/blitz.js-auth) | [blitz-js-auth](https://www.npmjs.com/package/blitz-js-auth) | Authentication Server for creating users and providing JSON Web Tokens to grant authorization on the API node.
 <br>
 
-### API Packages
+## API Packages
 We also provide client packages to connect to any blitz.js API, so you needn't worry about making your API accessible to developers! <br>
 
 | Package Mangager        | Link           | Source Code  |
@@ -59,10 +59,10 @@ We also provide client packages to connect to any blitz.js API, so you needn't w
 
 <br>
 
-### Further Documentation
+## Further Documentation
 Coming soon
 
 <br>
 
-### License
+## License
 [MIT](/LICENSE)
