@@ -52,11 +52,9 @@ For configuration of individual nodes, check out their repositories below.
 ## API Packages
 We also provide client packages to connect to any blitz.js API, so you needn't worry about making your API accessible to developers! <br>
 
-| Package Mangager        | Link           | Source Code  |
-| ------------- |-------------| -----|
-| **npm**       | [blitz-js-query](https://www.npmjs.com/package/blitz-js-query) | [[Repo]](https://github.com/nexus-devs/npm-blitz-query) |
-| **pip**       | [blitz-js-query](https://pypi.python.org/pypi?:action=display&name=blitz-js-query)      |  [[Repo]](https://github.com/nexus-devs/pip-blitz-query) |
 
+>**npm**: [blitz-js-query](https://www.npmjs.com/package/blitz-js-query)
+>**pip**: [blitz-js-query](https://pypi.python.org/pypi?:action=display&name=blitz-js-query)
 <br>
 
 ## Further Documentation
