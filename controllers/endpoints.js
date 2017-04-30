@@ -1,6 +1,7 @@
 "use strict";
 
 const mongodb = require("mongodb").MongoClient
+const _ = require("lodash")
 
 /**
  * Endpoint Controller for managing Endpoints from resource nodes
@@ -26,23 +27,26 @@ class EndpointController {
     /**
      * Saves endpoints from core node to db
      */
-    saveEndpoints(endpoints, http) {
-        let config = {
-            type: "endpoints",
-            data: endpoints,
-        }
+    saveEndpoints(endpoints, adapter) {
+        return new Promise((resolve, reject) => {
+            let config = {
+                type: "endpoints",
+                data: endpoints,
+            }
 
-        // Save in db
-        this.db.config.updateOne({
-            type: "endpoints"
-        }, {
-            $set: config
-        }, {
-            upsert: true
+            // Save in db
+            this.db.config.updateOne({
+                type: "endpoints"
+            }, {
+                $set: config
+            }, {
+                upsert: true
+            })
+            .then(() => resolve())
+
+            // Save locally
+            this.saveSchema(config, adapter)
         })
-
-        // Save locally
-        this.saveSchema(config, http)
     }
 
 
@@ -76,13 +80,14 @@ class EndpointController {
     compareSchema(adapter) {
         if (new Date() - adapter.request.schema.uat > 60000 || !adapter.request.schema.endpoints) {
             this.db.config.findOne({
-                type: "endpoints"
-            }, (err, config) => {
-                if (config) {
-                    this.convertSchema(config.data)
-                    this.saveSchema(config, adapter)
-                }
-            })
+                    type: "endpoints"
+                })
+                .then((err, config) => {
+                    if (config) {
+                        this.convertSchema(config.data)
+                        this.saveSchema(config, adapter)
+                    }
+                })
         }
     }
 
