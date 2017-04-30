@@ -1,20 +1,56 @@
 [![blitz.js](/banner.png)](https://github.com/nexus-devs)
+<p align="center">Instant API deployment. Built on Express and Socket.io. Ridiculously modular.</p>
 
-- - - -
-<br>
-
-## Wat dis?
-Instant API deployment. Built on Express and Socket.io. Ridiculously modular.
+##  
 
 <br>
 
-## Documentation
-Coming Soon™
+## Example
 
+```javascript
+require("blitz-js")()
+
+const Auth = require("blitz-js-auth")
+blitz.use(new Auth()) // Authentication server which generates user tokens
+
+const API = require("blitz-js-api")
+blitz.use(new API()) // Public api node which will get data from the resource node below
+
+const Core = require("blitz-js-core")
+blitz.use(new Core()) // Resource node which authenticates as root and sends available endpoints to api node
+```
+Now visit `localhost:3010/foo` to get your `bar`.
+
+<br>
+
+## Configuration
+```javascript
+require("blitz-js")({ key: value })
+```
+
+| Key           | Value         | Description   |
+| ------------- | ------------- | ------------- |
+| environment   | development   | / | 
+| environment   | production    | / | 
+| logLevel      | info          | Default log level. Logs limited information about the node status. |
+| logLevel      | error         | Error Log Level. Helpful for automated tests. |
+| logLevel      | verbose       | Verbose log level. Includes Request Timestamps, Socket Connections, Config events, etc. |
+| logLevel      | silly         | Silly log level. Includes internal information on which routes are being bound, diagnostics and lifecycle details. |
+
+For configuration of individual nodes, check out their repositories below.
+
+<br>
+
+## Available Nodes
+| Repo          | Package       | Description   |
+| ------------- | ------------- | ------------- |
+| [blitz.js-api](https://github.com/nexus-devs/blitz.js-api) | [blitz-js-api](https://www.npmjs.com/package/blitz-js-api) | RESTful API with WebSocket support which authorizes and distributes requests to the resource node. |
+| [blitz.js-core](https://github.com/nexus-devs/blitz.js-core) | [blitz-js-core](https://www.npmjs.com/package/blitz-js-core) | Resource Server for simple endpoint implementation to the API node. |
+| [blitz.js-auth](https://github.com/nexus-devs/blitz.js-auth) | [blitz-js-auth](https://www.npmjs.com/package/blitz-js-auth) | Authentication Server for creating users and providing JSON Web Tokens to grant authorization on the API node.
 <br>
 
 ## API Packages
-We also provide client packages to connect to any blitz.js API, so you can focus on real code! <br>
+We also provide client packages to connect to any blitz.js API, so you needn't worry about making your API accessible to developers! <br>
 
 | Package Mangager        | Link           | Source Code  |
 | ------------- |-------------| -----|
