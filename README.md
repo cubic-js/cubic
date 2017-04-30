@@ -45,3 +45,14 @@ params: [
 
 ### Authorization
 You can also choose which minimum scopes to grant access to, e.g. `scope: "elevated-read-write"`. The API node will automatically include any higher scopes in the permission hierarchy.
+
+### Database indexes
+```javascript
+// Single indexes
+db.collection.createIndex({'item': 1})
+db.collection.createIndex({'component': 1})
+db.collection.createIndex({'timestamp': -1})
+
+// Compound index
+db.collection.createIndex({'timestamp': -1, 'item': 1})
+```
