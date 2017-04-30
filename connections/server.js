@@ -49,6 +49,9 @@ class Server {
                 // Express modifications
                 this.configMiddleware()
                 this.configRoutes()
+
+                // Log Worker info
+                blitz.log.verbose("auth-node worker started [PID: " + process.pid + "]")
             }
         })
     }
