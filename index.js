@@ -48,6 +48,36 @@ class Blitz {
 
 
     /**
+     * Hook functions to be executed before specific node is clustered while making node config available to the Hook
+     */
+     hook(node, fn) {
+         let nodeid = node.name
+
+         // Create global node obj if not existing
+         if (!blitz.nodes[nodeid]) {
+             blitz.nodes[nodeid] = {}
+         }
+
+         // Create hook stack to be executed before cluster()
+         if (!blitz.nodes[nodeid].hooks) {
+             blitz.nodes[nodeid].hooks = []
+         }
+
+         blitz.nodes[nodeid].hooks.push(fn)
+     }
+
+
+     /**
+      * Execute hooks for specific node
+      */
+     runHooks(nodeid, node) {
+         if(blitz.nodes[nodeid].hooks) {
+             blitz.nodes[nodeid].hooks.forEach(hook => hook())
+         }
+     }
+
+
+    /**
      * Let blitz handle framework modules
      */
     use(node) {
@@ -64,6 +94,7 @@ class Blitz {
         }
 
         this.setConfig(nodeid, node.config)
+        this.runHooks(nodeid, node)
         this.cluster(nodeid, node.appPath)
     }
 
