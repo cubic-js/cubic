@@ -17,7 +17,7 @@ class RequestController {
 
         // Load endpoint config directly on bootup
         this.endpoints.connect()
-        .then(() => this.endpoints.compare(this.schema, this.adapter))
+        .then(() => this.endpoints.compareSchema(this.adapter))
     }
 
 
@@ -28,7 +28,7 @@ class RequestController {
         return new Promise((resolve, reject) => {
 
             // Check if Schema requires updating
-            endpoints.compare(this.schema, this.adapter)
+            endpoints.compareSchema(this.adapter)
 
             // Verify & Parse request
             let request = endpoints.parse(req, this.schema)

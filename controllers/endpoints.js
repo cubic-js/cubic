@@ -26,11 +26,13 @@ class EndpointController {
     /**
      * Saves endpoints from core node to db
      */
-    saveEndpoints(endpoints) {
+    saveEndpoints(endpoints, http) {
         let config = {
             type: "endpoints",
             data: endpoints,
         }
+
+        // Save in db
         this.db.config.updateOne({
             type: "endpoints"
         }, {
@@ -38,29 +40,47 @@ class EndpointController {
         }, {
             upsert: true
         })
+
+        // Save locally
+        this.saveSchema(config, http)
     }
 
 
     /**
-     * Refresh endpoint config every 30 minutes
+     * Route Endpoints on Express
      */
-    compare(schema, adapter) {
-        let now = new Date()
-        if (now - schema.uat > 1800000) {
+    routeEndpoints(adapter) {
+        if (adapter.app) {
+            adapter.request.schema.endpoints.forEach((endpoint) => {
+                adapter.app.all(endpoint.route, (req, res) => adapter.prepass(req, res))
+            })
+        }
+    }
+
+
+    /**
+     * Save Schema for given adapter
+     */
+    saveSchema(config, adapter) {
+
+        // Save new schema
+        adapter.request.schema.endpoints = config.data
+        adapter.request.schema.uat = new Date()
+        this.routeEndpoints(adapter)
+    }
+
+
+    /**
+     * Refresh endpoint config every minute or if schema has no endpoints
+     */
+    compareSchema(adapter) {
+        if (new Date() - adapter.request.schema.uat > 60000 || !adapter.request.schema.endpoints) {
             this.db.config.findOne({
                 type: "endpoints"
             }, (err, config) => {
                 if (config) {
-                    this.convert(config.data)
-                    schema.endpoints = config.data
-                    schema.uat = now
-
-                    // Express Routing
-                    if (adapter.app) {
-                        schema.endpoints.forEach((endpoint) => {
-                            adapter.app.all(endpoint.route, (req, res) => adapter.prepass(req, res))
-                        })
-                    }
+                    this.convertSchema(config.data)
+                    this.saveSchema(config, adapter)
                 }
             })
         }
@@ -70,7 +90,7 @@ class EndpointController {
     /**
      * Converts Schema to local standards & converts string functions to real functions
      */
-    convert(endpoints) {
+    convertSchema(endpoints) {
         for (var endpoint in endpoints) {
             this.convertParams(endpoints[endpoint])
             this.convertScopes(endpoints[endpoint])
