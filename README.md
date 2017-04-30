@@ -23,6 +23,24 @@ Now visit `localhost:3010/foo` to get your `bar`.
 
 <br>
 
+## Hooks
+Hooks allow you to execute functions right before a certain node launches. Within the function, you'll have access to `blitz.config[node]` with all the options you've set.
+
+### Example
+```javascript
+require("blitz-js")()
+
+let options = { ferret: tobi }
+let hookFn = () => { console.log(blitz.config.api.ferret) }
+
+const API = require(blitz-js-api)
+blitz.hook(API, hookFn)
+blitz.use(new API(options)) // logs "tobi"
+```
+The stack of hook functions will be saved `in blitz.nodes[node].hooks`.
+
+<br>
+
 ## Configuration
 ```javascript
 require("blitz-js")({ key: value })
