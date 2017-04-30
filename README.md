@@ -29,7 +29,7 @@ require("blitz-js")({ key: value })
 ```
 
 | Key           | Value         | Description   |
-| ------------- | ------------- | ------------- |
+|:------------- |:------------- |:------------- |
 | environment   | development   | / | 
 | environment   | production    | / | 
 | logLevel      | info          | Default log level. Logs limited information about the node status. |
@@ -43,7 +43,7 @@ For configuration of individual nodes, check out their repositories below.
 
 ## Available Nodes
 | Repo          | Package       | Description   |
-| ------------- | ------------- | ------------- |
+|:------------- |:------------- |:------------- |
 | [blitz.js-api](https://github.com/nexus-devs/blitz.js-api) | [blitz-js-api](https://www.npmjs.com/package/blitz-js-api) | RESTful API with WebSocket support which authorizes and distributes requests to the resource node. |
 | [blitz.js-core](https://github.com/nexus-devs/blitz.js-core) | [blitz-js-core](https://www.npmjs.com/package/blitz-js-core) | Resource Server for simple endpoint implementation to the API node. |
 | [blitz.js-auth](https://github.com/nexus-devs/blitz.js-auth) | [blitz-js-auth](https://www.npmjs.com/package/blitz-js-auth) | Authentication Server for creating users and providing JSON Web Tokens to grant authorization on the API node.
