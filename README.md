@@ -24,7 +24,7 @@ Now visit `localhost:3010/foo` to get your `bar`.
 <br>
 
 ## Hooks
-Hooks allow you to execute functions right before a certain node launches. Within the function, you'll have access to `blitz.config[node]` with all the options you've set.
+Hooks allow you to execute functions right before a certain node launches. Within the function, you'll have access to `blitz.config[node]` with all the options you've set in `blitz.use()`.
 
 ### Example
 ```javascript
