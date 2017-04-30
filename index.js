@@ -70,7 +70,7 @@ class Blitz {
      /**
       * Execute hooks for specific node
       */
-     runHooks(nodeid, node) {
+     runHooks(nodeid) {
          if(blitz.nodes[nodeid].hooks) {
              blitz.nodes[nodeid].hooks.forEach(hook => hook())
          }
@@ -94,7 +94,7 @@ class Blitz {
         }
 
         this.setConfig(nodeid, node.config)
-        this.runHooks(nodeid, node)
+        this.runHooks(nodeid)
         this.cluster(nodeid, node.appPath)
     }
 
