@@ -8,7 +8,7 @@
 ## Example
 
 ```javascript
-require("blitz-js")() // Generates the global blitz object
+require("blitz-js")()
 
 const Auth = require("blitz-js-auth")
 blitz.use(new Auth()) // Authentication server which generates user tokens
