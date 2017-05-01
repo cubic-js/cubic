@@ -40,7 +40,7 @@ class Log {
      */
     info(str) {
         if(this.includesLogLevel("info")){
-            console.log(chalk.grey(this.getPrefix() + str))
+            console.log(chalk.grey(this.getPrefix()) + str)
         }
     }
 
@@ -50,7 +50,7 @@ class Log {
      */
     error(str) {
         if(this.includesLogLevel("error")) {
-            console.error(chalk.red(this.getPrefix() + str))
+            console.error(chalk.red(this.getPrefix()) + str)
         }
     }
 
