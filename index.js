@@ -28,50 +28,56 @@ class Blitz extends EventEmitter {
             ignore_limiter: false
         }, options)
 
+        // Add "/" to url if not existing
+        if (this.options.api_url.slice(-1) !== "/") this.options.api_url += "/"
+        if (this.options.auth_url.slice(-1) !== "/") this.options.auth_url += "/"
+
         // Establish connection to resource server w/ options
         this.connection = new Connection()
         this.connection.setup(this.options)
 
-        // Open up client to higher level
-        .then(() => {
-            if (this.options.use_socket) this.client = this.connection.client.socket
-        })
-        .then(() => this.emit('ready'))
+            // Open up client to higher level
+            .then(() => {
+                if (this.options.use_socket) this.client = this.connection.client.socket
+            })
+            .then(() => this.emit('ready'))
     }
 
 
     /**
      * RESTful methods for manual interaction
      */
+    query(verb, query) {
+        if (query[0] = "/") query = query.slice(1, query.length)
+
+        this.connection.request(verb, this.options.api_url + query)
+            .then(res => resolve(res))
+            .catch(err =>
+                throw (new Error(err)))
+    }
+
+
     get(query) {
         return new Promise((resolve, reject) => {
-            this.connection.request('GET', query)
-                .then(res => resolve(res))
-                .catch(err => reject(err))
+            this.query("GET", query).then((res) => resolve(res))
         })
     }
 
     post(query) {
         return new Promise((resolve, reject) => {
-            this.connection.request('POST', query)
-                .then(res => resolve(res))
-                .catch(err => reject(err))
+            this.query("POST", query).then((res) => resolve(res))
         })
     }
 
     put(query) {
         return new Promise((resolve, reject) => {
-            this.connection.request('PUT', query)
-                .then(res => resolve(res))
-                .catch(err => reject(err))
+            this.query("PUT", query).then((res) => resolve(res))
         })
     }
 
     delete(query) {
         return new Promise((resolve, reject) => {
-            this.connection.request('DELETE', query)
-                .then(res => resolve(res))
-                .catch(err => reject(err))
+            this.query("DELETE", query).then((res) => resolve(res))
         })
     }
 }
