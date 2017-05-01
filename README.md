@@ -7,19 +7,6 @@
 ## Blitz.js API Node
 [Blitz.js](https://github.com/nexus-devs/blitz.js) node for validating, authorizing and distributing incoming requests.
 
-```javascript
-require("blitz-js")()
-
-const Auth = require("blitz-js-auth")
-blitz.use(new Auth())
-
-const API = require("blitz-js-auth")
-blitz.use(new API())
-
-const Core = require("blitz-js-core")
-blitz.use(new Core())
-```
-
 <br>
 
 ## Connection Types
