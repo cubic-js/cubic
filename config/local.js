@@ -7,8 +7,15 @@ module.exports = {
      * Current Node Information
      */
     port: 3030,
-    issuer: "http://localhost:3030",
     routes: __dirname + "/endpoints/routes.js",
+
+
+    /**
+     * token config
+     */
+     iss: "http://localhost:3030",
+     exp: "1h",
+     alg: "RSA",
 
 
     /**

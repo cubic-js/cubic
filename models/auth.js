@@ -156,9 +156,9 @@ class Authentication {
 
         // JWT Options
         let options = {
-            expiresIn: '10s',
-            algorithm: 'RS256',
-            issuer: blitz.config.auth.issuer
+            expiresIn: blitz.config.auth.exp,
+            algorithm: blitz.config.auth.alg,
+            issuer: blitz.config.auth.iss
         }
 
         return jwt.sign(data, blitz.config.auth.cert, options)
