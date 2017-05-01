@@ -119,7 +119,7 @@ class Blitz {
             blitz.nodes[id].workers[i].send({global: serialized})
         }
 
-        blitz.log.info(":: " + id + "-node has been launched on " + cores + " core" + (cores <= 1 ? "" : "s"))
+        blitz.log.info(id + "-node has been launched on " + cores + " core" + (cores <= 1 ? "" : "s"))
     }
 
 

@@ -8,7 +8,6 @@ class Log {
 
         // Hierarchically ordered log levels
         this.levels = ["silly", "verbose", "info", "error"]
-
         this.info = this.info
     }
 
@@ -41,7 +40,7 @@ class Log {
      */
     info(str) {
         if(this.includesLogLevel("info")){
-            console.log(chalk.grey("Info      | ") + str)
+            console.log(chalk.grey(this.getPrefix() + "Info    ::  ") + str)
         }
     }
 
@@ -51,7 +50,7 @@ class Log {
      */
     error(str) {
         if(this.includesLogLevel("error")) {
-            console.error(chalk.red("Error     | ") + str)
+            console.error(chalk.red(this.getPrefix() + "Error   ::  ") + str)
         }
     }
 
@@ -61,7 +60,7 @@ class Log {
      */
     verbose(str) {
         if(this.includesLogLevel("verbose")) {
-            console.log(chalk.grey("System    | " + str))
+            console.log(chalk.grey(this.getPrefix() + "System  ::  " + str))
         }
     }
 
@@ -71,8 +70,25 @@ class Log {
      */
     silly(str) {
         if(this.includesLogLevel("silly")) {
-            console.log(chalk.grey("System    | " + str))
+            console.log(chalk.grey(this.getPrefix() + "System  ::  " + str))
         }
+    }
+
+
+    /**
+     * Generate Prefix for caller, so everything is in the same vertical line
+     */
+    getPrefix() {
+        let prefix = process.pid
+        let max = 5 - prefix.toString().length
+
+        // Fill up 15 chars in width
+        for (let i = 0; i < max; i++) {
+            prefix += " "
+        }
+        prefix += "  ::  "
+
+        return prefix
     }
 }
 
