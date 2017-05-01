@@ -4,8 +4,8 @@
  * Dependencies
  */
 const BlitzUtil = require("blitz-js-util")
-const BlitzQuery = require('blitz-js-query')
-const MethodHandler = require('../MethodHandler.js')
+const BlitzQuery = require("blitz-js-query")
+const MethodHandler = require("../MethodHandler.js")
 
 /**
  * Connects to local API Node & handles basic cycles
@@ -32,7 +32,7 @@ class Client {
                     api_url: blitz.config.core.apiURL,
                     auth_url: blitz.config.core.authURL,
                     use_socket: true,
-                    namespace: 'root',
+                    namespace: "root",
                     ignore_limiter: true,
 
                     // Authentication Settings
@@ -42,7 +42,7 @@ class Client {
 
                 // Connect to api-node
                 this.api = new BlitzQuery(options)
-                this.api.on('ready', () => {
+                this.api.on("ready", () => {
 
                     this.listen()
                     this.sendEndpoints()
@@ -59,9 +59,24 @@ class Client {
      * Listen to incoming requests to be processed
      */
     listen() {
-        this.api.client.on('req', options => {
-             MethodHandler.callMethod(options)
-                 .then(data => this.api.client.emit(options.callback, data))
+
+        // Tell API node that we"re alive
+        this.api.client.on("check", id =>{
+            blitz.log.silly("CHK [" + id + "] ACK OUT")
+            this.api.client.emit(id, "ready")
+        })
+
+
+        // Actual request
+        this.api.client.on("req", options => {
+
+            blitz.log.silly("REQ [" + options.callback + "] IN")
+            MethodHandler.callMethod(options)
+
+                 .then(data => {
+                     blitz.log.silly("REQ [" + options.callback + "] RESOLVE")
+                     this.api.client.emit(options.callback, data)
+                 })
                  .catch(() => {}) // Just don't respond if file not locally available
         })
     }
@@ -71,7 +86,7 @@ class Client {
      * Send local endpoints to API node so they get routed
      */
     sendEndpoints() {
-        this.api.connection.request('config', MethodHandler.generateEndpointSchema())
+        this.api.connection.request("config", MethodHandler.generateEndpointSchema())
     }
 }
 
