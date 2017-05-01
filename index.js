@@ -48,13 +48,15 @@ class Blitz extends EventEmitter {
      * RESTful methods for manual interaction
      */
     query(verb, query) {
-        if (query[0] = "/") query = query.slice(1, query.length)
+        return new Promise((resolve, reject) => {
+            if (query[0] === "/") query = query.slice(1, query.length)
 
-        this.connection.request(verb, this.options.api_url + query)
-            .then(res => resolve(res))
-            .catch(err => {
-                throw (new Error(err))
-            })
+            this.connection.request(verb, this.options.api_url + query)
+                .then(res => resolve(res))
+                .catch(err => {
+                    throw (new Error(err))
+                })
+        })
     }
 
 
