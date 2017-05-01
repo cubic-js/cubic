@@ -15,7 +15,7 @@ module.exports = {
      */
      iss: "http://localhost:3030",
      exp: "1h",
-     alg: "RSA",
+     alg: "RS256",
 
 
     /**
