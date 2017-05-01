@@ -40,7 +40,7 @@ class Log {
      */
     info(str) {
         if(this.includesLogLevel("info")){
-            console.log(chalk.grey(this.getPrefix() + "Info    ::  ") + str)
+            console.log(chalk.grey(this.getPrefix() + str)
         }
     }
 
@@ -50,7 +50,7 @@ class Log {
      */
     error(str) {
         if(this.includesLogLevel("error")) {
-            console.error(chalk.red(this.getPrefix() + "Error   ::  ") + str)
+            console.error(chalk.red(this.getPrefix() + str)
         }
     }
 
@@ -60,7 +60,7 @@ class Log {
      */
     verbose(str) {
         if(this.includesLogLevel("verbose")) {
-            console.log(chalk.grey(this.getPrefix() + "System  ::  " + str))
+            console.log(chalk.grey(this.getPrefix() + str))
         }
     }
 
@@ -70,7 +70,7 @@ class Log {
      */
     silly(str) {
         if(this.includesLogLevel("silly")) {
-            console.log(chalk.grey(this.getPrefix() + "System  ::  " + str))
+            console.log(chalk.grey(this.getPrefix() + str))
         }
     }
 
@@ -86,7 +86,7 @@ class Log {
         for (let i = 0; i < max; i++) {
             prefix += " "
         }
-        prefix += "  ::  "
+        prefix += "  |  "
 
         return prefix
     }
