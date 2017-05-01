@@ -52,8 +52,9 @@ class Blitz extends EventEmitter {
 
         this.connection.request(verb, this.options.api_url + query)
             .then(res => resolve(res))
-            .catch(err =>
-                throw (new Error(err)))
+            .catch(err => {
+                throw (new Error(err))
+            })
     }
 
 
