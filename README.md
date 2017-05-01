@@ -37,7 +37,7 @@ const API = require(blitz-js-api)
 blitz.hook(API, hookFn)
 blitz.use(new API(options)) // logs "tobi"
 ```
-The stack of hook functions will be saved `in blitz.nodes[node].hooks`.
+The stack of hook functions will be saved in `blitz.nodes[node].hooks`.
 
 <br>
 
