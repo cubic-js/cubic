@@ -49,9 +49,23 @@ class Blitz extends EventEmitter {
      */
     query(verb, query) {
         return new Promise((resolve, reject) => {
-            if (query[0] === "/") query = query.slice(1, query.length)
 
-            this.connection.request(verb, this.options.api_url + query)
+            // Get proper URL from strings & objects (see post requests)
+            if (typeof query === "string") {
+                if(query[0] === "/") query = query.slice(1, query.length)
+                query = this.options.api_url + query
+            }
+
+            // Object as query
+            else {
+                if(query.url[0] === "/") {
+                   query.url = query.url.slice(1, query.url.length)
+                }
+                query.url = this.options.api_url + query.url
+            }
+
+            // Let connection handle request
+            this.connection.request(verb, query)
                 .then(res => resolve(res))
                 .catch(err => {
                     throw (new Error(err))
