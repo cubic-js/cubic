@@ -13,8 +13,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-query": "0.0.9",
-    "blitz-js-util": "0.0.0",
+    "blitz-js-query": "latest",
+    "blitz-js-util": "latest",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.25",
     "socket.io-client": "^1.7.2"
