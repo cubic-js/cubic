@@ -29,6 +29,7 @@ module.exports = {
      * Authorization properties
      */
     cert: fs.readFileSync(__dirname + "/certs/auth_private.pem", "utf-8"),
+    scopes: require("./scopes/scopes.js"),
 
 
     /**

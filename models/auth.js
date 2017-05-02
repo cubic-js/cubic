@@ -57,7 +57,7 @@ class Authentication {
 
                 // Set Options
                 let data = {
-                    scp: user.scope,
+                    scp: this.getFullScope(user.scope),
                     uid: user.user_id,
                 }
 
@@ -98,7 +98,7 @@ class Authentication {
             // Valid User Found > Send token
             else {
                 let data = {
-                    scp: user.scope,
+                    scp: this.getFullScope(user.scope),
                     uid: user.user_id,
                 }
 
@@ -117,6 +117,24 @@ class Authentication {
         .catch(err => {
             return err
         })
+    }
+
+
+    /**
+     * Extend given minimum scope with any higher
+     */
+    getFullScope(scope) {
+        let scopes = blitz.config.auth.scopes
+        let scopeSplit = scope.split(" ")
+        for (var i = 0; i < scopes.length; i++) {
+            scopeSplit.forEach((subscope) => {
+                if (scopes[i] === subscope) {
+                    scope += " " + scopes.slice(0, i).join(" ")
+                }
+            })
+        }
+
+        return scope
     }
 
 
