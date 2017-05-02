@@ -135,7 +135,7 @@ class EndpointController {
 
             // Route matches
             if (matching) {
-                if (!endpoint.scope.includes(req.user.scp)) return "unauthorized"
+                if (!req.user.scp.includes(endpoint.scope)) return "unauthorized"
                 if (req.verb !== endpoint.verb) return false
 
                 this.parseParams(req, endpoint, params)
