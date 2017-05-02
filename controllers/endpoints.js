@@ -98,7 +98,6 @@ class EndpointController {
     convertSchema(endpoints) {
         for (var endpoint in endpoints) {
             this.convertParams(endpoints[endpoint])
-            this.convertScopes(endpoints[endpoint])
         }
     }
 
@@ -111,27 +110,13 @@ class EndpointController {
             endpoint.params.forEach((specs, i) => {
 
                 // If string -> check if function (workaround for json.stringify on socket.emit)
-                if (typeof specs.default === "string" && (specs.default.includes("() => {") || specs.default.includes("function ("))) {
+                if (typeof specs.default === "string" && (specs.default.includes(") => {") || specs.default.includes("function ("))) {
 
                     // Function from String (remove everything before first { and last }), override default
                     let fn = new Function(specs.default.substring(specs.default.indexOf("{") + 1).slice(0, -1))
                     endpoint.params[i].default = fn
                 }
             })
-        }
-    }
-
-
-    /**
-     * Extend given minimum scope with any higher
-     */
-    convertScopes(endpoint) {
-        if (typeof endpoint.scope === "string") {
-            let scope = blitz.config.api.authScopes
-            for (var i = 0; i < scope.length; i++) {
-                if (scope[i] === endpoint.scope) scope = scope.slice(i, scope.length)
-            }
-            endpoint.scope = scope
         }
     }
 
