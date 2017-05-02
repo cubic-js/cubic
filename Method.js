@@ -49,7 +49,7 @@ class Method{
      * @return {object[]} Cached documents
      */
     getCache(collection, query, params) {
-        this.db.collection(collection + '-cache').findOne(query).toArray((err, result) => {
+        this.db.collection(collection + '-cache').findOne(query, (err, result) => {
             // Return object, default empty
             let docs = []
 
