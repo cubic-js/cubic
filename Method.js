@@ -40,6 +40,46 @@ class Method{
          */
         this.db = db
     }
+
+    /**
+     * Gets cached values if available
+     * @param {string} collection - Collection to cache
+     * @param {object} query - Current query
+     * @param {object} params - Additional selection parameters
+     * @return {object[]} Cached documents
+     */
+    getCache(collection, query, params) {
+        this.db.collection(collection + '-cache').find(query).toArray((err, result) => {
+            // Return object, default empty
+            let docs = []
+
+            // Append objects that fit the params
+            for (let i = 0; i < result.length; i++) {
+                let currentDoc = result[i]
+
+                // Loop trough params
+                let paramsCorrect = true
+                for (let key in params) {
+                    if (params.hasOwnProperty(key)) {
+                        // Does current doc own that key?
+                        if (currentDoc.hasOwnProperty(key)) {
+                            // Is the property selected?
+                            if (currentDoc[key] != params[key]) {
+                                paramsCorrect = false
+                                break
+                            }
+                        }
+                    }
+                }
+
+                // Append to selected docs
+                if (paramsCorrect) docs.push(currentDoc)
+            }
+
+            // Return documents
+            return docs
+        })
+    }
 }
 
 module.exports = Method
