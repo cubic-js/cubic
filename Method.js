@@ -54,7 +54,7 @@ class Method{
             let docs = []
 
             // Append objects that fit the params
-            if (result) {
+            if ("undefined" !== typeof result) {
                 result = result['_cached_documents']
                 for (let i = 0; i < result.length; i++) {
                     let currentDoc = result[i]
