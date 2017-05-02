@@ -48,7 +48,7 @@ class Method{
      * @param {object} params - Additional selection parameters
      * @return {object[]} Cached documents
      */
-    getCache(collection, query, params) {
+    getCache(collection, query, params = {}) {
         this.db.collection(collection + '-cache').findOne(query, (err, result) => {
             // Return object, default empty
             let docs = []
