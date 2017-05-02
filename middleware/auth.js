@@ -91,6 +91,7 @@ class Authentication {
             // Set req.user from token
             try {
                 socket.user = jwt.verify(token, blitz.config.api.authCert)
+                console.log(socket.user)
                 return next()
             }
 
