@@ -49,11 +49,12 @@ class Method{
      * @return {object[]} Cached documents
      */
     getCache(collection, query, params) {
-        this.db.collection(collection + '-cache').find(query).toArray((err, result) => {
+        this.db.collection(collection + '-cache').findOne(query).toArray((err, result) => {
             // Return object, default empty
             let docs = []
 
             // Append objects that fit the params
+            result = result['_cached_documents']
             for (let i = 0; i < result.length; i++) {
                 let currentDoc = result[i]
 
@@ -79,6 +80,17 @@ class Method{
             // Return documents
             return docs
         })
+    }
+
+    /**
+     * Caches new values
+     * @param {string} collection - Collection to cache
+     * @param {object} query - Current query
+     * @param {object[]} documents - Documents to cache
+     */
+    setCache(collection, query, documents) {
+        query['_cached_documents'] = documents
+        this.db.collection(collection + '-cache').insertOne(query)
     }
 }
 
