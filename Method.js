@@ -54,27 +54,29 @@ class Method{
             let docs = []
 
             // Append objects that fit the params
-            result = result['_cached_documents']
-            for (let i = 0; i < result.length; i++) {
-                let currentDoc = result[i]
+            if (result) {
+                result = result['_cached_documents']
+                for (let i = 0; i < result.length; i++) {
+                    let currentDoc = result[i]
 
-                // Loop trough params
-                let paramsCorrect = true
-                for (let key in params) {
-                    if (params.hasOwnProperty(key)) {
-                        // Does current doc own that key?
-                        if (currentDoc.hasOwnProperty(key)) {
-                            // Is the property selected?
-                            if (currentDoc[key] != params[key]) {
-                                paramsCorrect = false
-                                break
+                    // Loop trough params
+                    let paramsCorrect = true
+                    for (let key in params) {
+                        if (params.hasOwnProperty(key)) {
+                            // Does current doc own that key?
+                            if (currentDoc.hasOwnProperty(key)) {
+                                // Is the property selected?
+                                if (currentDoc[key] != params[key]) {
+                                    paramsCorrect = false
+                                    break
+                                }
                             }
                         }
                     }
-                }
 
-                // Append to selected docs
-                if (paramsCorrect) docs.push(currentDoc)
+                    // Append to selected docs
+                    if (paramsCorrect) docs.push(currentDoc)
+                }
             }
 
             // Return documents
