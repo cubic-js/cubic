@@ -68,6 +68,7 @@ class EndpointController {
     saveSchema(config, adapter) {
 
         // Save new schema
+        this.convertSchema(config.data)
         adapter.request.schema.endpoints = config.data
         adapter.request.schema.uat = new Date()
         this.routeEndpoints(adapter)
@@ -83,10 +84,7 @@ class EndpointController {
                     type: "endpoints"
                 })
                 .then((err, config) => {
-                    if (config) {
-                        this.convertSchema(config.data)
-                        this.saveSchema(config, adapter)
-                    }
+                    if (config) this.saveSchema(config, adapter)
                 })
         }
     }
@@ -219,6 +217,9 @@ class EndpointController {
                 if (specs.type === "number") {
                     if (isNaN(requested)) return false
                     else requested = parseFloat(requested)
+                }
+                else if (specs.type.includes("bool")) {
+                    requested = (requested == "true" || requested == "1" || requested == 1)
                 }
                 params.push(requested)
             }
