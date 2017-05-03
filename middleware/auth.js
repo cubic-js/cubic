@@ -87,12 +87,10 @@ class Authentication {
         // Token sent at all?
         if (socket.handshake.query.bearer) {
             let token = socket.handshake.query.bearer
-            console.log("token sent: " + token)
 
             // Set req.user from token
             try {
                 socket.user = jwt.verify(token, blitz.config.api.authCert)
-                console.log(socket.user)
                 return next()
             }
 
