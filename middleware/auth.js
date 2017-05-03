@@ -58,13 +58,13 @@ class Authentication {
             // Set req.user from token
             try {
                 req.user = jwt.verify(token, blitz.config.api.authCert)
-                blitz.log.verbose("Socket.io | " + req.headers['x-forwarded-for'] || req.connection.remoteAddress + " connected as " + req.user.uid)
+                blitz.log.verbose("Express   | " + req.headers['x-forwarded-for'] || req.connection.remoteAddress + " connected as " + req.user.uid)
                 return next()
             }
 
             // Invalid Token
             catch (err) {
-                blitz.log.verbose("Socket.io | " + req.headers['x-forwarded-for'] || req.connection.remoteAddress + " rejected (invalid token)")
+                blitz.log.verbose("Express   | " + req.headers['x-forwarded-for'] || req.connection.remoteAddress + " rejected (invalid token)")
                 return next(err)
             }
         }
