@@ -72,6 +72,7 @@ class Logger {
             _send.call(this, body)
             let diff = process.hrtime(timestart)
             blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1])/1e6} ms`))
+            console.log(" ")
         }
     }
 
