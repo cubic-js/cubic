@@ -118,6 +118,7 @@ class Logger {
                 // Time Logging
                 let diff = process.hrtime(timestart)
                 blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`))
+                console.log(" ")
             }
         }
     }

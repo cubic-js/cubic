@@ -58,17 +58,20 @@ class Authentication {
             // Set req.user from token
             try {
                 req.user = jwt.verify(token, blitz.config.api.authCert)
+                blitz.log.verbose("Socket.io | " + req.headers['x-forwarded-for'] || req.connection.remoteAddress + " connected as " + req.user.uid)
                 return next()
             }
 
             // Invalid Token
             catch (err) {
+                blitz.log.verbose("Socket.io | " + req.headers['x-forwarded-for'] || req.connection.remoteAddress + " rejected (invalid token)")
                 return next(err)
             }
         }
 
         // No token provided
         else {
+            blitz.log.verbose("Express   | " + req.user.uid + " connected without token")
             next()
         }
     }
@@ -91,17 +94,20 @@ class Authentication {
             // Set req.user from token
             try {
                 socket.user = jwt.verify(token, blitz.config.api.authCert)
+                blitz.log.verbose("Socket.io | " + socket.request.connection.remoteAddress + " connected as " + socket.user.uid + " on " + socket.nsp.name)
                 return next()
             }
 
             // Invalid Token
             catch (err) {
+                blitz.log.verbose("Socket.io | " + socket.request.connection.remoteAddress + " rejected (invalid token) on " + socket.nsp.name)
                 return next(err)
             }
         }
 
         // No Token provided
         else {
+            blitz.log.verbose("Socket.io | " + socket.user.uid + " connected without token on " + socket.nsp.name)
             return next()
         }
     }
