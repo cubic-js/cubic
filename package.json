@@ -21,7 +21,6 @@
     "lodash": "^4.17.4",
     "mongodb": "^2.2.25",
     "redis": "^2.6.5",
-    "require-reload": "^0.2.2",
     "rolling-rate-limiter": "^0.1.5",
     "socket.io": "^1.7.2"
   }

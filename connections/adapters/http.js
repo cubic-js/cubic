@@ -11,8 +11,7 @@ const http = require("http")
 /**
  * Middleware helpers
  */
-const reload = require("require-reload")(require) // layer needs to be hot-reloaded for out-of-class variables
-let Layer = reload("../layers.js")
+const Layer = require("../layers.js")
 
 
 /**
@@ -50,7 +49,6 @@ class HttpAdapter {
     prepass(req, res) {
 
         // Create new layer object for middleware
-        Layer = reload("../layers.js")
         let layer = new Layer()
 
         // Iterate through middleware function stack
