@@ -44,11 +44,16 @@ class Client {
                 this.api = new BlitzQuery(options)
                 this.api.on("ready", () => {
 
+                    // Listen to incoming requests & send config
                     this.listen()
                     this.sendEndpoints()
-
-                    // Log Worker info
                     blitz.log.verbose("core-node worker started [PID: " + process.pid + "]")
+
+                    // Listen on Reconnect
+                    this.api.client.on("connect", () => {
+                        blitz.log.verbose("core-node worker reconnected to api node")
+                        this.sendEndpoints()
+                    })
                 })
             }
         })
@@ -61,7 +66,7 @@ class Client {
     listen() {
 
         // Tell API node that we"re alive
-        this.api.client.on("check", id =>{
+        this.api.client.on("check", id => {
             blitz.log.silly("CHK [" + id + "] ACK OUT")
             this.api.client.emit(id, "ready")
         })
@@ -69,15 +74,14 @@ class Client {
 
         // Actual request
         this.api.client.on("req", options => {
-
             blitz.log.silly("REQ [" + options.callback + "] IN")
             MethodHandler.callMethod(options)
 
-                 .then(data => {
-                     blitz.log.silly("REQ [" + options.callback + "] RESOLVE")
-                     this.api.client.emit(options.callback, data)
-                 })
-                 .catch(() => {}) // Just don't respond if file not locally available
+                .then(data => {
+                    blitz.log.silly("REQ [" + options.callback + "] RESOLVE")
+                    this.api.client.emit(options.callback, data)
+                })
+                .catch(() => {}) // Just don't respond if file not locally available
         })
     }
 
