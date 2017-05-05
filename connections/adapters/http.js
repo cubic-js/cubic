@@ -11,7 +11,7 @@ const http = require("http")
 /**
  * Middleware helpers
  */
-const Layer = require("../layers.js")
+const layer = require("../layers.js")
 
 
 /**
@@ -47,10 +47,6 @@ class HttpAdapter {
      * Functions to run before allowing request
      */
     prepass(req, res) {
-
-        // Create new layer object for middleware
-        let layer = new Layer()
-
         // Iterate through middleware function stack
         layer.runStack(req, res, this.stack)
             .then(() => this.pass(req, res))

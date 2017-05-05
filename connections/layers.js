@@ -91,4 +91,4 @@ class Layer {
     }
 }
 
-module.exports = Layer
+module.exports = new Layer()

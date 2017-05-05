@@ -11,7 +11,7 @@ const io = require("socket.io")
  * Middleware helpers
  */
 const converter = require("../../middleware/socketConverter.js")
-const Layer = require("../layers.js")
+const layer = require("../layers.js")
 
 
 /**
@@ -48,9 +48,6 @@ class SocketAdapter {
      * Run middleware before passing to ReqController
      */
     prepass(socket, verb, request, ack) {
-
-        // Create new layer object for middleware
-        let layer = new Layer()
 
         // Modify req/res object to allow same middleware approach as in express
         let req = converter.convertReq(request, socket, verb)
