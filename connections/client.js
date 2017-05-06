@@ -5,7 +5,7 @@
  */
 const BlitzUtil = require("blitz-js-util")
 const BlitzQuery = require("blitz-js-query")
-const MethodHandler = require("../MethodHandler.js")
+const MethodHandler = require("../EndpointHandler.js")
 
 /**
  * Connects to local API Node & handles basic cycles
