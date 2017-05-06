@@ -2,7 +2,7 @@
   "name": "blitz-js-core",
   "version": "0.0.15",
   "description": "⚡ Core Node for blitz.js framework",
-  "main": "cluster.js",
+  "main": "index.js",
   "scripts": {
     "start": "node ./index.js"
   },
@@ -16,7 +16,6 @@
     "blitz-js-query": "latest",
     "blitz-js-util": "latest",
     "lodash": "^4.17.4",
-    "mongodb": "^2.2.25",
-    "socket.io-client": "^1.7.2"
+    "mongodb": "^2.2.25"
   }
 }
