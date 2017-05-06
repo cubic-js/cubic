@@ -5,8 +5,8 @@ module.exports = {
     /**
      * Core-Node config
      */
-    endpointPath:  __dirname + "/../methods/",
-    endpointParent: __dirname +"/../Method.js",
+    endpointPath:  __dirname + "/../endpoints/",
+    endpointParent: __dirname +"/../Endpoint.js",
 
 
     /**
