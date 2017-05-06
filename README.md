@@ -30,7 +30,7 @@ Hooks allow you to execute functions right before a certain node launches. Withi
 ```javascript
 require("blitz-js")()
 
-let options = { ferret: tobi }
+let options = { ferret: "tobi" }
 let hookFn = () => console.log(blitz.config.api.ferret)
 
 const API = require(blitz-js-api)
