@@ -33,6 +33,7 @@ module.exports = (sockets, http) => {
 
         // Listen to Updates from core node and publish to subscribers
         socket.on('PUBLISH', update => {
+            blitz.log.verbose("API       | Publishing new data for " + update.endpoint)
             sockets.io.to(update.endpoint).emit("UPDATE", update)
         })
     })
