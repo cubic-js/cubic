@@ -33,7 +33,7 @@ module.exports = (sockets, http) => {
 
         // Listen to Updates from core node and publish to subscribers
         socket.on('PUBLISH', update => {
-            sockets.io.to(update.endpoint).emit("update", update)
+            sockets.io.to(update.endpoint).emit("UPDATE", update)
         })
     })
 }
