@@ -28,7 +28,7 @@ module.exports = (sockets, http) => {
         // Listen to endpoint config event & save in db/memstore
         socket.on('config', (endpoints) => {
             sockets.request.endpoints.saveEndpoints(endpoints, sockets)
-                .then(() => http.request.endpoints.saveEndpoints(endpoints, http))
+            http.request.endpoints.saveEndpoints(endpoints, http)
         })
 
         // Listen to Updates from core node and publish to subscribers

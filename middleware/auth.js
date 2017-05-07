@@ -130,7 +130,7 @@ class Authentication {
      */
     authorize(socket, next) {
         if (socket.nsp.name === "/root" && socket.user.scp.includes("root")) {
-            next()
+            return next()
         }
 
         // No criteria matched
