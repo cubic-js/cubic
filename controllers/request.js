@@ -78,7 +78,7 @@ class RequestController {
         return new Promise((resolve, reject) => {
 
             // Check if nodes available
-            this.check()
+            this.check(options.file)
 
                 // Send request or respond with busy
                 .then(socket => this.sendRequest(socket, options))
@@ -93,29 +93,32 @@ class RequestController {
     /**
      * Check if resource nodes are busy
      */
-    check() {
+    check(file) {
         return new Promise((resolve, reject) => {
 
             // unique callback id
-            let id = process.hrtime().join("").toString()
+            let request = {
+                id: process.hrtime().join("").toString(),
+                file: file
+            }
 
             // Send check to root nsp
-            this.client.root.emit("check", id)
-            blitz.log.silly("CHK [" + id + "] BROADCAST")
+            this.client.root.emit("check", request)
+            blitz.log.silly("API       | Check broadcasted")
 
             // Listen to all sockets in root nsp for response
             Object.keys(this.client.root.sockets).forEach(sid => {
                 let socket = this.client.root.sockets[sid]
 
-                socket.on(id, () => {
-                    socket.removeAllListeners(id)
-                    blitz.log.silly("CHK [" + id + "] ACK IN")
+                socket.on(request.id, () => {
+                    socket.removeAllListeners(request.id)
+                    blitz.log.silly("API       | Check acknowledged")
                     resolve(socket)
                 })
             })
 
             // Wait 1 second before rejecting
-            setTimeout(() => reject("All nodes currently busy. Please try again later."), 1000)
+            setTimeout(() => reject("All nodes currently busy. Please try again later"), 1000)
         })
     }
 
@@ -131,12 +134,12 @@ class RequestController {
 
             // Send Request to all Core Nodes
             this.client.root.emit("req", options)
-            blitz.log.silly("REQ [" + options.callback + "] OUT")
+            blitz.log.silly("API       | Request sent")
 
             // Listen to all sockets for response
             socket.on(options.callback, data => {
                 socket.removeAllListeners(options.callback)
-                blitz.log.silly("REQ [" + options.callback + "] SUCCESS")
+                blitz.log.silly("API       | Request successful - Sending data to client")
                 resolve(data)
             })
         })

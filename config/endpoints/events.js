@@ -15,8 +15,8 @@ module.exports = (sockets, http) => {
         socket.on('PUT', (req, res) => sockets.prepass(socket, 'PUT', req, res))
         socket.on('DELETE', (req, res) => sockets.prepass(socket, 'DELETE', req, res))
 
-        // Private Endpoints, requires authorization
-        socket.on('UPDATE', (data, ack) => sockets.update(data, ack))
+        // Subscriptions
+        socket.on("SUBSCRIBE", endpoint => socket.join(endpoint))
     })
 
 
@@ -29,6 +29,11 @@ module.exports = (sockets, http) => {
         socket.on('config', (endpoints) => {
             sockets.request.endpoints.saveEndpoints(endpoints, sockets)
                 .then(() => http.request.endpoints.saveEndpoints(endpoints, http))
+        })
+
+        // Listen to Updates from core node and publish to subscribers
+        socket.on('PUBLISH', update => {
+            sockets.io.to(update.endpoint).emit("update", update)
         })
     })
 }

@@ -35,5 +35,4 @@ class api {
     }
 }
 
-
 module.exports = api
