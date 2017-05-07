@@ -39,6 +39,7 @@ class Blitz extends EventEmitter {
             // Open up client to higher level
             .then(() => {
                 if (this.options.use_socket) this.client = this.connection.client.socket
+                else this.client = this.connection.client.request
             })
             .then(() => this.emit('ready'))
     }
@@ -110,8 +111,8 @@ class Blitz extends EventEmitter {
     /**
      * Event listening for socket.io
      */
-    on(ev, fn) {
-        this.client.on(ev, fn)
+    onUpdate(fn) {
+        this.client.on("UPDATE", fn)
     }
 }
 
