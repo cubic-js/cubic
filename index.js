@@ -73,7 +73,6 @@ class Blitz extends EventEmitter {
         })
     }
 
-
     get(query) {
         return new Promise((resolve, reject) => {
             this.query("GET", query).then((res) => resolve(res))
@@ -96,6 +95,23 @@ class Blitz extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.query("DELETE", query).then((res) => resolve(res))
         })
+    }
+
+
+    /**
+     * Subscribe to certain endpoints
+     */
+    subscribe(endpoint) {
+        if (this.options.use_socket) this.client.emit("SUBSCRIBE", endpoint)
+        else console.error("Can't subscribe without socket client")
+    }
+
+
+    /**
+     * Event listening for socket.io
+     */
+    on(ev, fn) {
+        this.client.on(ev, fn)
     }
 }
 
