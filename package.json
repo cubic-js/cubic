@@ -1,6 +1,6 @@
 {
   "name": "blitz-js-query",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "HTTP/Socket.io query adapter for the blitz.js framework",
   "main": "index.js",
   "repository": {
