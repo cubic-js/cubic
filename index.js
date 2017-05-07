@@ -23,7 +23,7 @@ class core {
         }
 
         // Path to module to be forked
-        this.appPath = __dirname + "/connections/client.js"
+        this.appPath = __dirname + "/EndpointHandler.js"
     }
 }
 

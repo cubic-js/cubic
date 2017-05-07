@@ -3,21 +3,28 @@
 /**
  * Connect to mongodb for all methods
  */
-let mongodb = require("mongodb").MongoClient
+const mongodb = require("mongodb").MongoClient
 let db = null
 mongodb.connect(blitz.config.core.mongoURL, (err, connected) => {
     if(err) throw(err)
     db = connected
 })
 
+
+/**
+ * Shared api client
+ */
+const client = require("./connections/client.js")
+
+
 /**
  * Class describing generic database/calculation methods
  * Any lower-level method extends this class
  */
-class Method{
+class Endpoint{
 
     /**
-     * Creates a new API call
+     * Describes Endpoint properties
      * @constructor
      */
     constructor(){
@@ -39,7 +46,25 @@ class Method{
          * @type {Db}
          */
         this.db = db
+
+        /**
+         * Shared API Client
+         * @type {Client}
+         */
+        this.client = client.api.client
+    }
+
+
+    /**
+     * Publish Data for a specific endpoint
+     */
+    publish(endpoint, data) {
+        let update = {
+            endpoint: endpoint,
+            data: data
+        }
+        this.client.emit("PUBLISH", update)
     }
 }
 
-module.exports = Method
+module.exports = Endpoint
