@@ -51,7 +51,7 @@ class Server {
                 this.configRoutes()
 
                 // Log Worker info
-                blitz.log.verbose("auth-node worker started [PID: " + process.pid + "]")
+                blitz.log.verbose("auth-node worker started")
             }
         })
     }
