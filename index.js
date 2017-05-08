@@ -80,19 +80,31 @@ class Blitz extends EventEmitter {
         })
     }
 
-    post(query) {
+    post(url, body) {
+        let query = {
+            url: url,
+            body: body
+        }
         return new Promise((resolve, reject) => {
             this.query("POST", query).then((res) => resolve(res))
         })
     }
 
-    put(query) {
+    put(url, body) {
+        let query = {
+            url: url,
+            body: body
+        }
         return new Promise((resolve, reject) => {
             this.query("PUT", query).then((res) => resolve(res))
         })
     }
 
-    delete(query) {
+    delete(url, body) {
+        let query = {
+            url: url,
+            body: body
+        }
         return new Promise((resolve, reject) => {
             this.query("DELETE", query).then((res) => resolve(res))
         })
