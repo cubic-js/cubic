@@ -33,7 +33,7 @@ require("blitz-js")()
 let options = { ferret: "tobi" }
 let hookFn = () => console.log(blitz.config.api.ferret)
 
-const API = require(blitz-js-api)
+let API = require(blitz-js-api)
 blitz.hook(API, hookFn)
 blitz.use(new API(options)) // logs "tobi"
 ```
