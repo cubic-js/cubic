@@ -18,6 +18,9 @@ class Blitz {
      * Set global blitz config system
      */
     constructor(options) {
+        this.logUnhandled()
+
+        // Generate global blitz object
         global.blitz = this
         blitz.config = {}
         blitz.nodes = {}
@@ -50,31 +53,31 @@ class Blitz {
     /**
      * Hook functions to be executed before specific node is clustered while making node config available to the Hook
      */
-     hook(node, fn) {
-         let nodeid = node.name
+    hook(node, fn) {
+        let nodeid = node.name
 
-         // Create global node obj if not existing
-         if (!blitz.nodes[nodeid]) {
-             blitz.nodes[nodeid] = {}
-         }
+        // Create global node obj if not existing
+        if (!blitz.nodes[nodeid]) {
+            blitz.nodes[nodeid] = {}
+        }
 
-         // Create hook stack to be executed before cluster()
-         if (!blitz.nodes[nodeid].hooks) {
-             blitz.nodes[nodeid].hooks = []
-         }
+        // Create hook stack to be executed before cluster()
+        if (!blitz.nodes[nodeid].hooks) {
+            blitz.nodes[nodeid].hooks = []
+        }
 
-         blitz.nodes[nodeid].hooks.push(fn)
-     }
+        blitz.nodes[nodeid].hooks.push(fn)
+    }
 
 
-     /**
-      * Execute hooks for specific node
-      */
-     runHooks(nodeid) {
-         if(blitz.nodes[nodeid].hooks) {
-             blitz.nodes[nodeid].hooks.forEach(hook => hook())
-         }
-     }
+    /**
+     * Execute hooks for specific node
+     */
+    runHooks(nodeid) {
+        if (blitz.nodes[nodeid].hooks) {
+            blitz.nodes[nodeid].hooks.forEach(hook => hook())
+        }
+    }
 
 
     /**
@@ -116,7 +119,9 @@ class Blitz {
 
             // Send global blitz to worker
             let serialized = this.serialize(blitz)
-            blitz.nodes[id].workers[i].send({global: serialized})
+            blitz.nodes[id].workers[i].send({
+                global: serialized
+            })
         }
 
         blitz.log.info(id + "-node has been launched on " + cores + " core" + (cores <= 1 ? "" : "s"))
@@ -126,11 +131,21 @@ class Blitz {
     /**
      * Serialize global blitz object
      */
-     serialize(obj) {
-         return CircularJSON.stringify(obj,function(key, value){
-            return (typeof value === 'function' ) ? value.toString() : value
+    serialize(obj) {
+        return CircularJSON.stringify(obj, function(key, value) {
+            return (typeof value === 'function') ? value.toString() : value
         })
-     }
+    }
+
+
+    /**
+     * Throw unhandled promise rejections
+     */
+    logUnhandled() {
+        process.on("unhandledRejection", (err) => {
+            console.error(err);
+        })
+    }
 }
 
 
