@@ -33,7 +33,7 @@ require("blitz-js")()
 let options = { ferret: "tobi" }
 let hookFn = () => console.log(blitz.config.api.ferret)
 
-const API = require(blitz-js-api)
+let API = require("blitz-js-api")
 blitz.hook(API, hookFn)
 blitz.use(new API(options)) // logs "tobi"
 ```
@@ -60,7 +60,7 @@ For configuration of individual nodes, check out their repositories below.
 <br>
 
 ## Available Nodes
-| Repo          | Package       | Description   |
+| RepositoryLink          | npmPackage       | Description   |
 |:------------- |:------------- |:------------- |
 | [blitz.js-api](https://github.com/nexus-devs/blitz.js-api) | [blitz-js-api](https://www.npmjs.com/package/blitz-js-api) | RESTful API with WebSocket support which authorizes and distributes requests to the resource node. |
 | [blitz.js-core](https://github.com/nexus-devs/blitz.js-core) | [blitz-js-core](https://www.npmjs.com/package/blitz-js-core) | Resource Server for simple endpoint implementation to the API node. |
