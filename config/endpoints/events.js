@@ -16,7 +16,10 @@ module.exports = (sockets, http) => {
         socket.on('DELETE', (req, res) => sockets.prepass(socket, 'DELETE', req, res))
 
         // Subscriptions
-        socket.on("SUBSCRIBE", endpoint => socket.join(endpoint))
+        socket.on("SUBSCRIBE", endpoint => {
+            blitz.log.verbose(socket.user.uid + " subscribed to " + endpoint)
+            socket.join(endpoint)
+        })
     })
 
 
