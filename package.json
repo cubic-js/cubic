@@ -1,6 +1,6 @@
 {
   "name": "blitz-js",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "⚡ Ultra Modular Nodejs Framework",
   "main": "index.js",
   "repository": {
