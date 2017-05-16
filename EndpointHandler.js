@@ -34,10 +34,11 @@ class EndpointHandler {
      * @param {object} options - Options to pass to endpoint
      * @returns {Promise} Calculated data from endpoint
      */
-    callEndpoint(options) {
+    callEndpoint(request) {
         return new Promise((resolve, reject) => {
-            let endpoint = new(require(options.file))
-            endpoint.main.apply(endpoint, options.params).then(data => resolve(data))
+            let endpoint = new(require(request.file))
+            endpoint.url = request.url
+            endpoint.main.apply(endpoint, request.params).then(data => resolve(data))
         })
     }
 
