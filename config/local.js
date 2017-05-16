@@ -30,7 +30,7 @@ module.exports = {
      * Cache settings
      */
     cacheDB: 1,
-    cacheExp: 10,
+    cacheExp: 1800,
 
 
     /**
