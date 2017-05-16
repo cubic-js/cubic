@@ -157,6 +157,7 @@ class EndpointController {
 
                 return {
                     statusCode: 200,
+                    url: req.url,
                     file: endpoint.file,
                     params: params
                 }
@@ -183,6 +184,7 @@ class EndpointController {
             user: req.user,
             verb: req.method,
             route: route,
+            url: req.url,
             method: req.parsed.method,
             params: req.parsed.params,
             body: req.body

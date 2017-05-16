@@ -35,7 +35,7 @@ class RequestController {
             // Verify & Parse request
             let request = endpoints.parse(req, this.schema)
 
-            // Unauthorized
+            // Invalid Request
             if (parseInt(request.statusCode.toString()[0]) > 3) {
                 resolve(request)
             }
