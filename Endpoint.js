@@ -103,7 +103,7 @@ class Endpoint {
         if (url.slice(-1) === "?") url = url.slice(0, -1)
 
         // Replace space with %20
-        url.replace(" ", "%20")
+        url = url.replace(" ", "%20")
 
         return url
     }
