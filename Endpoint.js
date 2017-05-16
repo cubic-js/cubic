@@ -1,7 +1,7 @@
 'use strict'
 
 /**
- * Connect to mongodb for all methods
+ * Mongodb connection for data processing
  */
 const mongodb = require("mongodb").MongoClient
 let db = null
@@ -14,7 +14,7 @@ mongodb.connect(blitz.config.core.mongoURL, (err, connected) => {
 /**
  * Shared api client
  */
-const client = require("./connections/client.js")
+const client = require("./controllers/api.js")
 
 
 /**
@@ -51,7 +51,7 @@ class Endpoint{
          * Shared API Client
          * @type {Client}
          */
-        this.client = client.api.client
+        this.api = client.api.client
     }
 
 
@@ -63,7 +63,20 @@ class Endpoint{
             endpoint: endpoint,
             data: data
         }
-        this.client.emit("PUBLISH", update)
+        this.api.emit("PUBLISH", update)
+    }
+
+
+    /**
+     * Send data to be cached for endpoint on API node
+     */
+    cache(key, value, exp) {
+        let data ={
+            key: key,
+            value: value,
+            exp: exp
+        }
+        this.api.emit("CACHE", data)
     }
 }
 
