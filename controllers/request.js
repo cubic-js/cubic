@@ -36,15 +36,12 @@ class RequestController {
             let request = endpoints.parse(req, this.schema)
 
             // Unauthorized
-            if (request === "unauthorized") {
-                resolve({
-                    statusCode: 401,
-                    body: "Unauthorized"
-                })
+            if (parseInt(request.statusCode.toString()[0]) > 3) {
+                resolve(request)
             }
 
             // Params returned
-            else if (request) {
+            else {
                 this.send(request)
                     .then(data => {
                         resolve({
@@ -58,14 +55,6 @@ class RequestController {
                             body: err
                         })
                     })
-            }
-
-            // No params returned
-            else {
-                resolve({
-                    statusCode: 405,
-                    body: "Invalid Request. Refer to api.nexus-stats.com for documentation."
-                })
             }
         })
     }
@@ -81,7 +70,7 @@ class RequestController {
             this.check(options.file)
 
                 // Send request or respond with busy
-                .then(socket => this.sendRequest(socket, options))
+                .then(socket => this.request(socket, options))
                 .catch(err => reject(err))
 
                 // Respond with data if all went right
@@ -124,9 +113,9 @@ class RequestController {
 
 
     /**
-     * Send request and receive data
+     * Send request to responding node
      */
-    sendRequest(socket, options) {
+    request(socket, options) {
         return new Promise((resolve, reject) => {
 
             // Generate unique callback for emit & pass to responding node

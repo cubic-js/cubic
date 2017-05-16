@@ -135,21 +135,39 @@ class EndpointController {
 
             // Route matches
             if (matching) {
-                if (!req.user.scp.includes(endpoint.scope)) return "unauthorized"
-                if (req.verb !== endpoint.verb) return false
+                if (!req.user.scp.includes(endpoint.scope)) {
+                    return {
+                        statusCode: 401,
+                        body: 'Unauthorized. Expected ' + endpoint.scope + " scope, got " + req.user.scp + "."
+                    }
+                }
+                if (req.verb !== endpoint.verb) {
+                    return {
+                        statusCode: 405,
+                        body: "Invalid Method. Expected " + endpoint.verb + ", got " + req.verb + "."
+                    }
+                }
 
-                this.parseParams(req, endpoint, params)
+                // Check params for value matching. No match -> res truthy
+                let res = this.parseParams(req, endpoint, params)
+                if (res) return res
+
+                // If POST or PUT, append body
                 this.parseBody(req, params)
 
-                return ({
+                return {
+                    statusCode: 200,
                     file: endpoint.file,
                     params: params
-                })
+                }
             }
         }
 
         // No endpoint matched
-        return false
+        return {
+            statusCode: 404,
+            body: "No endpoint matched the request."
+        }
     }
 
 
@@ -214,13 +232,26 @@ class EndpointController {
 
             // Requested not falsy -> request value in `requested`
             if (requested) {
+                let mismatch = false
+
+                // Check data type
                 if (specs.type === "number") {
-                    if (isNaN(requested)) return false
+                    if (isNaN(requested)) mismatch = true
                     else requested = parseFloat(requested)
                 }
                 else if (specs.type.includes("bool")) {
                     requested = (requested == "true" || requested == "1" || requested == 1)
+                    if(!requested) mismatch = true
                 }
+
+                // Data types don't match
+                if (mismatch) {
+                    return {
+                        statusCode: 400,
+                        body: "Wrong param type for " + specs.name + ". Expected " + specs.type + ", got " + typeof requested + "."
+                    }
+                }
+
                 params.push(requested)
             }
 
@@ -234,7 +265,7 @@ class EndpointController {
 
 
     /**
-     * Parse Body if POST/PUT
+     * Add Body to Params so they're accessible in endpoint
      */
     parseBody(req, params) {
         if (req.verb === "POST" || req.verb === "PUT") {
