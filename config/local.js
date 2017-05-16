@@ -27,6 +27,13 @@ module.exports = {
 
 
     /**
+     * Cache settings
+     */
+    cacheDB: 1,
+    cacheExp: 10,
+
+
+    /**
      * Authorization properties
      */
     authCert: fs.readFileSync(__dirname + "/certs/auth_public.pem", "utf-8"),

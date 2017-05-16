@@ -5,7 +5,6 @@
  */
 const BlitzUtil = require("blitz-js-util")
 
-
 /**
  * Middleware Functions
  */
@@ -36,6 +35,7 @@ class Server {
                 // Build up Server
                 this.setupHttpServer()
                 this.setupSockets()
+                this.setupCache()
 
                 // Config Express & Sockets.io
                 this.applyMiddleware()
@@ -66,6 +66,14 @@ class Server {
 
 
     /**
+     * Load Cache Controller
+     */
+    setupCache() {
+        this.cache = require("../controllers/cache.js")
+    }
+
+
+    /**
      * Applies Middleware to adapters
      */
     applyMiddleware() {
@@ -88,6 +96,9 @@ class Server {
             this.use((req, res, next) => logger.log(req, res, next))
         }
 
+        // Get response from cache if available
+        this.use((req, res, next) => this.cache.check(req, res, next))
+
         // Rolling Rate Limit
         if (blitz.config.api.useRateLimiter) {
             this.use((req, res, next) => limit.check(req, res, next))
@@ -100,7 +111,7 @@ class Server {
      */
     applyRoutes() {
         require(blitz.config.api.routes)(this.http)
-        require(blitz.config.api.events)(this.sockets, this.http)
+        require(blitz.config.api.events)(this.sockets, this.http, this.cache)
     }
 
 
