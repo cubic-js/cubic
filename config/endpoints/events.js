@@ -36,13 +36,13 @@ module.exports = (sockets, http, cache) => {
 
         // Listen to Updates from core node and publish to subscribers
         socket.on("PUBLISH", update => {
-            blitz.log.verbose("API       | Publishing new data for " + update.endpoint)
+            blitz.log.verbose("API       | publishing new data for " + update.endpoint)
             sockets.io.to(update.endpoint).emit("UPDATE", update)
         })
 
         // Listen for Cache updates
         socket.on("CACHE", data => {
-            blitz.log.verbose("API       | Caching data for " + data.key)
+            blitz.log.verbose("API       | caching data for " + data.key)
             cache.save(data.key, data.value, data.exp)
         })
     })
