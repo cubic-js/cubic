@@ -188,8 +188,9 @@ class Authentication {
      */
     getRefreshToken(user_key) {
 
-        // Generate Random Token for Refresh
-        let refreshToken = randtoken.uid(256)
+        // Generate Unique Token for Refresh
+        // Token is composed of current time in ns + random 256bit token
+        let refreshToken = process.hrtime().join("").toString() + randtoken.uid(256)
 
         // Save Refresh Token in DB
         this.users.findOneAndUpdate({
