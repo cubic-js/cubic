@@ -17,8 +17,12 @@ module.exports = (sockets, http, cache) => {
 
         // Subscriptions
         socket.on("SUBSCRIBE", endpoint => {
-            blitz.log.verbose(socket.user.uid + " subscribed to " + endpoint)
+            blitz.log.verbose("Socket.io | " + socket.user.uid + " subscribed to " + endpoint)
             socket.join(endpoint)
+        })
+
+        socket.on("disconnect", () => {
+            blitz.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
         })
     })
 
