@@ -78,61 +78,6 @@ class Endpoint {
         }
         this.api.emit("CACHE", data)
     }
-
-
-    /**
-     * Generate URL from schema
-     */
-    getURL(resources, params) {
-        let url = "/warframe/v1/items/" + (resources.length > 0 ? resources[0] + "/" : "") + "statistics?"
-
-        this.schema.params.forEach((param, i) => {
-
-            // Function? Get return value
-            if (typeof param.default === "function") {
-                url = this.appendFunction(url, param, params[i]) || url
-            }
-
-            // Default is primitive
-            else {
-                url = this.appendPrimitive(url, param, params[i]) || url
-            }
-        })
-
-        // Remove "?" if last char
-        if (url.slice(-1) === "?") url = url.slice(0, -1)
-
-        // Replace space with %20
-        url = url.replace(" ", "%20")
-
-        return url
-    }
-
-    appendFunction(url, param, value) {
-        let defaultValue = param.default()
-
-        // Date? Consider +-5s for connections
-        if (param.date) {
-            if (!(defaultValue < value + 5000 && defaultValue > value - 5000)) {
-                url += url.slice(-1) === "?" ? "" : "&"
-                url += param.name + "=" + value
-                return url
-            }
-        }
-
-        // No date
-        else {
-            return this.appendPrimitive(url, param, value)
-        }
-    }
-
-    appendPrimitive(url, param, value) {
-        if (value !== param.default) {
-            url += url.slice(-1) === "?" ? "" : "&"
-            url += param.name + "=" + value
-            return url
-        }
-    }
 }
 
 module.exports = Endpoint
