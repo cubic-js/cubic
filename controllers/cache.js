@@ -38,7 +38,17 @@ class CacheController {
     get(key) {
         return new Promise((resolve, reject) => {
             this.client.get(key.toLowerCase(), (err, res) => {
-                if (res) resolve(res)
+                if (res) {
+                    try {
+                        res = JSON.parse(res)
+                    }
+                    catch(e) {
+
+                    }
+                    finally {
+                        resolve(res)
+                    }
+                }
                 else resolve(null)
             })
         })
