@@ -83,7 +83,7 @@ class EndpointController {
             this.db.config.findOne({
                     type: "endpoints"
                 })
-                .then((err, config) => {
+                .then(config => {
                     if (config) this.saveSchema(config, adapter)
                 })
         }
