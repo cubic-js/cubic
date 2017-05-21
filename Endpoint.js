@@ -51,7 +51,7 @@ class Endpoint {
          * Shared API Client
          * @type {Client}
          */
-        this.api = client.api.client
+        this.api = client.api
     }
 
 
@@ -63,7 +63,7 @@ class Endpoint {
             endpoint: endpoint,
             data: data
         }
-        this.api.emit("PUBLISH", update)
+        this.api.emit("publish", update)
     }
 
 
@@ -76,7 +76,7 @@ class Endpoint {
             value: value,
             exp: exp
         }
-        this.api.emit("CACHE", data)
+        this.api.emit("cache", data)
     }
 }
 

@@ -3,7 +3,7 @@
 /**
  * Dependencies
  */
-const BlitzQuery = require("blitz-js-query")
+const BlitzQuery = require("../../npm-blitz-query/index.js")
 const EndpointHandler = require("../EndpointHandler.js")
 
 /**
@@ -33,7 +33,7 @@ class Client {
 
         // Connect to api-node
         this.api = new BlitzQuery(options)
-        this.api.on("ready", () => {
+        this.api.connect().then(() => {
 
             // Listen to incoming requests & send config
             this.listen()
@@ -41,9 +41,12 @@ class Client {
             blitz.log.verbose("core-node worker connected")
 
             // Listen on Reconnect
-            this.api.client.on("connect", () => {
+            this.api.on("reconnect", () => {
                 blitz.log.verbose("core-node worker reconnected to api node")
-                this.sendEndpoints()
+            })
+
+            this.api.on("disconnect", () => {
+                blitz.log.verbose("core-node worker disconnected from api node")
             })
         })
     }
@@ -55,13 +58,13 @@ class Client {
     listen() {
 
         // Tell API node that we're ready
-        this.api.client.on("check", request => {
+        this.api.on("check", request => {
 
             // Check if file available
             try {
                 require(request.file)
                 blitz.log.silly("Core      | Check successful")
-                this.api.client.emit(request.id, "ack")
+                this.api.emit(request.id, "ack")
             }
 
             // Not available -> let other nodes respond
@@ -71,13 +74,13 @@ class Client {
         })
 
         // Actual request
-        this.api.client.on("req", options => {
+        this.api.on("req", options => {
             blitz.log.silly("Core      | Request received")
 
             EndpointHandler.callEndpoint(options)
                 .then(data => {
                     blitz.log.silly("Core      | Request resolved")
-                    this.api.client.emit(options.callback, data)
+                    this.api.emit(options.callback, data)
                 })
         })
     }
@@ -87,7 +90,8 @@ class Client {
      * Send local endpoints to API node so they get routed
      */
     sendEndpoints() {
-        this.api.connection.request("config", EndpointHandler.generateEndpointSchema())
+        blitz.log.verbose("Core      | sending endpoint config")
+        this.api.emit("config", EndpointHandler.generateEndpointSchema())
     }
 }
 
