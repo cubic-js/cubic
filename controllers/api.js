@@ -3,7 +3,7 @@
 /**
  * Dependencies
  */
-const BlitzQuery = require("../../npm-blitz-query/index.js")
+const BlitzQuery = require("blitz-js-query")
 const EndpointHandler = require("../EndpointHandler.js")
 
 /**
@@ -76,7 +76,6 @@ class Client {
         // Actual request
         this.api.on("req", options => {
             blitz.log.silly("Core      | Request received")
-
             EndpointHandler.callEndpoint(options)
                 .then(data => {
                     blitz.log.silly("Core      | Request resolved")
