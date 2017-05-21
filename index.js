@@ -2,16 +2,13 @@
 
 const extend = require('deep-extend')
 const Connection = require('./lib/connection.js')
-const EventEmitter = require('event-emitter-es6')
 
-class Blitz extends EventEmitter {
+class Blitz {
 
     /**
      * Merge default options with client options
      */
     constructor(options) {
-        super()
-
         this.options = extend({
 
             // Resource Config
@@ -31,17 +28,41 @@ class Blitz extends EventEmitter {
         // Add "/" to url if not existing
         if (this.options.api_url.slice(-1) !== "/") this.options.api_url += "/"
         if (this.options.auth_url.slice(-1) !== "/") this.options.auth_url += "/"
+    }
 
-        // Establish connection to resource server w/ options
-        this.connection = new Connection()
-        this.connection.setup(this.options)
 
-            // Open up client to higher level
-            .then(() => {
-                if (this.options.use_socket) this.client = this.connection.client.socket
-                else this.client = this.connection.client.request
-            })
-            .then(() => this.emit('ready'))
+    /**
+     * Connect by getting tokens and setting up clients
+     */
+    connect() {
+        return new Promise((resolve, reject) => {
+            this.connection = new Connection(this.options)
+            this.connection.connect().then(() => resolve())
+        })
+    }
+
+
+    /**
+     * Subscribe to certain endpoints
+     */
+    subscribe(endpoint) {
+        this.connection.client.emit("subscribe", endpoint)
+    }
+
+
+    /**
+     * Event listening for socket.io
+     */
+    on(ev, fn) {
+        this.connection.client.on(ev, fn)
+    }
+
+
+    /**
+     * Expose Socket client emit
+     */
+    emit(ev, data) {
+        this.connection.client.emit(ev, data)
     }
 
 
@@ -53,14 +74,14 @@ class Blitz extends EventEmitter {
 
             // Get proper URL from strings & objects (see post requests)
             if (typeof query === "string") {
-                if(query[0] === "/") query = query.slice(1, query.length)
+                if (query[0] === "/") query = query.slice(1, query.length)
                 query = this.options.api_url + query
             }
 
             // Object as query
             else {
-                if(query.url[0] === "/") {
-                   query.url = query.url.slice(1, query.url.length)
+                if (query.url[0] === "/") {
+                    query.url = query.url.slice(1, query.url.length)
                 }
                 query.url = this.options.api_url + query.url
             }
@@ -108,23 +129,6 @@ class Blitz extends EventEmitter {
         return new Promise((resolve, reject) => {
             this.query("DELETE", query).then((res) => resolve(res))
         })
-    }
-
-
-    /**
-     * Subscribe to certain endpoints
-     */
-    subscribe(endpoint) {
-        if (this.options.use_socket) this.client.emit("SUBSCRIBE", endpoint)
-        else console.error("Can't subscribe without socket client")
-    }
-
-
-    /**
-     * Event listening for socket.io
-     */
-    onUpdate(fn) {
-        this.client.on("UPDATE", fn)
     }
 }
 
