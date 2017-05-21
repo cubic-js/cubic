@@ -34,7 +34,7 @@ module.exports = (sockets, http, cache) => {
     sockets.root.on("connect", socket => {
 
         // Listen to endpoint config event & save in db/memstore
-        sockets.root.on("config", endpoints => {
+        socket.on("config", endpoints => {
             blitz.log.verbose("API       | < endpoint config")
             sockets.request.endpoints.saveEndpoints(endpoints, sockets)
             http.request.endpoints.saveEndpoints(endpoints, http)
