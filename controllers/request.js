@@ -99,8 +99,7 @@ class RequestController {
             Object.keys(this.client.root.sockets).forEach(sid => {
                 let socket = this.client.root.sockets[sid]
 
-                socket.on(request.id, () => {
-                    socket.removeAllListeners(request.id)
+                socket.once(request.id, () => {
                     blitz.log.silly("API       | Check acknowledged")
                     resolve(socket)
                 })
@@ -126,8 +125,7 @@ class RequestController {
             blitz.log.silly("API       | Request sent")
 
             // Listen to all sockets for response
-            socket.on(options.callback, data => {
-                socket.removeAllListeners(options.callback)
+            socket.once(options.callback, data => {
                 blitz.log.silly("API       | Request successful - Sending data to client")
                 resolve(data)
             })

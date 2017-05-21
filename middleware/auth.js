@@ -81,7 +81,6 @@ class Authentication {
      * Socket.io Middleware to verify JWT if present. Also adds user to req.
      */
     verifySocket(socket, next) {
-
         socket.user = {
             uid: socket.request.connection.remoteAddress,
             scp: "basic-read"
@@ -100,8 +99,8 @@ class Authentication {
 
             // Invalid Token
             catch (err) {
-                blitz.log.verbose("Socket.io | " + socket.request.connection.remoteAddress + " rejected (invalid token) on " + socket.nsp.name)
-                return next(err)
+                blitz.log.verbose("Socket.io | " + socket.request.connection.remoteAddress + " rejected (" + err + ") on " + socket.nsp.name)
+                return next(new Error(err))
             }
         }
 
@@ -118,6 +117,7 @@ class Authentication {
      */
     verifyExpiration(req, res, next) {
         if (new Date().getTime() / 1000 - req.user.exp > 0) {
+            blitz.log.verbose("API       | " + req.user.uid + " rejected (jwt expired)")
             return next("jwt expired")
         } else {
             return next()
@@ -134,6 +134,7 @@ class Authentication {
         }
 
         // No criteria matched
+        blitz.log.verbose("Socket.io | Rejected connection to " + socket.nsp.name)
         return next(new Error(`Rejected connection to ${socket.nsp.name}`))
     }
 }

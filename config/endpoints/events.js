@@ -7,7 +7,7 @@ module.exports = (sockets, http, cache) => {
     /**
      * Default namespace
      */
-    sockets.io.on("connection", socket => {
+    sockets.io.on("connect", socket => {
 
         // RESTful-like event types
         socket.on("GET", (req, res) => sockets.prepass(socket, "GET", req, res))
@@ -16,9 +16,10 @@ module.exports = (sockets, http, cache) => {
         socket.on("DELETE", (req, res) => sockets.prepass(socket, "DELETE", req, res))
 
         // Subscriptions
-        socket.on("SUBSCRIBE", endpoint => {
+        socket.on("subscribe", endpoint => {
             blitz.log.verbose("Socket.io | " + socket.user.uid + " subscribed to " + endpoint)
             socket.join(endpoint)
+            socket.emit("subscribed", endpoint)
         })
 
         socket.on("disconnect", () => {
@@ -30,24 +31,29 @@ module.exports = (sockets, http, cache) => {
     /**
      * Root namespace
      */
-    sockets.root.on("connection", socket => {
+    sockets.root.on("connect", socket => {
 
         // Listen to endpoint config event & save in db/memstore
-        socket.on("config", endpoints => {
+        sockets.root.on("config", endpoints => {
+            blitz.log.verbose("API       | < endpoint config")
             sockets.request.endpoints.saveEndpoints(endpoints, sockets)
             http.request.endpoints.saveEndpoints(endpoints, http)
         })
 
         // Listen to Updates from core node and publish to subscribers
-        socket.on("PUBLISH", update => {
-            blitz.log.verbose("API       | publishing new data for " + update.endpoint)
+        socket.on("publish", update => {
+            blitz.log.verbose("API       | > publishing data for " + update.endpoint)
             sockets.io.to(update.endpoint).emit("UPDATE", update)
         })
 
         // Listen for Cache updates
-        socket.on("CACHE", data => {
-            blitz.log.verbose("API       | caching data for " + data.key)
+        socket.on("cache", data => {
+            blitz.log.verbose("API       | < caching data for " + data.key)
             cache.save(data.key, data.value, data.exp)
+        })
+
+        socket.on("disconnect", () => {
+            blitz.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
         })
     })
 }
