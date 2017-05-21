@@ -18,7 +18,6 @@ class Blitz {
      * Set global blitz config system
      */
     constructor(options) {
-        this.logUnhandled()
 
         // Generate global blitz object
         global.blitz = this
@@ -134,16 +133,6 @@ class Blitz {
     serialize(obj) {
         return CircularJSON.stringify(obj, function(key, value) {
             return (typeof value === 'function') ? value.toString() : value
-        })
-    }
-
-
-    /**
-     * Throw unhandled promise rejections
-     */
-    logUnhandled() {
-        process.on("unhandledRejection", (err) => {
-            console.error(err);
         })
     }
 }
