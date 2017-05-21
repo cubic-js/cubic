@@ -13,8 +13,8 @@
   "author": "Kaptard",
   "license": "MIT",
   "dependencies": {
-    "deep-extend": "^0.4.1",
+    "deep-extend": "^0.5.0",
     "request": "^2.79.0",
-    "socket.io-client": "^1.7.3"
+    "socket.io-client": "^2.0.1"
   }
 }
