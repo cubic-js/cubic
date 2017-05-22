@@ -34,7 +34,7 @@ class Authentication {
      * Check supplied user info & send token
      */
     matchCredentials(req, res, next) {
-        res.status(401).send("fuck u")
+
         // find user in db
         this.users.findOne({
             user_key: req.body.user_key
