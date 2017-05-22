@@ -34,7 +34,7 @@ class Authentication {
      * Check supplied user info & send token
      */
     matchCredentials(req, res, next) {
-
+        res.status(401).send("fuck u")
         // find user in db
         this.users.findOne({
             user_key: req.body.user_key
@@ -63,7 +63,7 @@ class Authentication {
 
                 // Get Tokens
                 let accessToken = this.getAccessToken(data)
-                let refreshToken = this.getRefreshToken(user.user_key)
+                let refreshToken = user.refresh_token ? user.refresh_token : this.getRefreshToken(user.user_key)
 
                 return res.json({
                     access_token: accessToken,
