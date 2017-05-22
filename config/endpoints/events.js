@@ -25,6 +25,8 @@ module.exports = (sockets, http, cache) => {
         socket.on("disconnect", () => {
             blitz.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
         })
+
+        socket.emit("ready")
     })
 
 
@@ -55,5 +57,7 @@ module.exports = (sockets, http, cache) => {
         socket.on("disconnect", () => {
             blitz.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
         })
+
+        socket.emit("ready")
     })
 }
