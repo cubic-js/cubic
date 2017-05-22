@@ -64,7 +64,7 @@ class Authentication {
 
             // Invalid Token
             catch (err) {
-                blitz.log.verbose("Express   | " + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + " rejected (invalid token)")
+                blitz.log.verbose("Express   | " + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + " rejected (" + err + ")")
                 return next(err)
             }
         }
