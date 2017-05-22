@@ -53,7 +53,7 @@ class Authentication {
 
         // Token present?
         if (req.headers.authorization) {
-            let token = req.headers.authorization.toLowerCase().replace("bearer ", "")
+            let token = req.headers.authorization.replace("bearer ", "").replace("Bearer ", "")
 
             // Set req.user from token
             try {
