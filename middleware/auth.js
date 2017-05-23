@@ -82,7 +82,7 @@ class Authentication {
      */
     verifySocket(socket, next) {
         socket.user = {
-            uid: socket.request.connection.remoteAddress,
+            uid: socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address,
             scp: "basic-read"
         }
 
