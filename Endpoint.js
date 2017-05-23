@@ -78,6 +78,14 @@ class Endpoint {
         }
         this.api.emit("cache", data)
     }
+
+
+    /**
+     * Helper function to safely set attributes in object
+     */
+    set(key, value) {
+        this[key] = value
+    }
 }
 
 module.exports = Endpoint

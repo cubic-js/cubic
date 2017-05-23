@@ -37,7 +37,7 @@ class EndpointHandler {
     callEndpoint(request) {
         return new Promise((resolve, reject) => {
             let endpoint = new(require(request.file))
-            endpoint.url = request.url
+            endpoint.set("url", request.url)
             endpoint.main.apply(endpoint, request.params).then(data => resolve(data))
         })
     }
@@ -56,7 +56,6 @@ class EndpointHandler {
 
         // Cleanup
         let parsed = []
-
         for (var i = 0; i < config.length; i++) {
             if (typeof config[i] !== "string" && Object.keys(config[i]).length !== 0) {
                 parsed.push(config[i])
