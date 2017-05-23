@@ -1,6 +1,7 @@
 /**
  * Module Dependencies
  */
+const decache = require("decache")
 const fs = require('fs')
 const path = require('path')
 const util = require('util')
@@ -35,10 +36,10 @@ class EndpointHandler {
      * @returns {Promise} Calculated data from endpoint
      */
     callEndpoint(request) {
-        let endpoint = new(require(request.file))
-        endpoint.url = request.url
-        
         return new Promise((resolve, reject) => {
+            decache(request.file)
+            let endpoint = new(require(request.file))
+            endpoint.url = request.url
             endpoint.main.apply(endpoint, request.params).then(data => resolve(data))
         })
     }

@@ -15,6 +15,7 @@
   "dependencies": {
     "blitz-js-query": "0.0.25",
     "blitz-js-util": "latest",
+    "decache": "^4.1.0",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.25",
     "redis": "^2.7.1"
