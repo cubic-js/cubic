@@ -36,7 +36,7 @@ class EndpointHandler {
      */
     callEndpoint(request) {
         return new Promise((resolve, reject) => {
-            let endpoint = new(require(request.file))
+            var endpoint = new(require(request.file))
             endpoint.set("url", request.url)
             endpoint.main.apply(endpoint, request.params).then(data => resolve(data))
         })
