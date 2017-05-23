@@ -35,9 +35,10 @@ class EndpointHandler {
      * @returns {Promise} Calculated data from endpoint
      */
     callEndpoint(request) {
+        let endpoint = new(require(request.file))
+        endpoint.url = request.url
+        
         return new Promise((resolve, reject) => {
-            var endpoint = new(require(request.file))
-            endpoint.set("url", request.url)
             endpoint.main.apply(endpoint, request.params).then(data => resolve(data))
         })
     }
@@ -56,6 +57,7 @@ class EndpointHandler {
 
         // Cleanup
         let parsed = []
+
         for (var i = 0; i < config.length; i++) {
             if (typeof config[i] !== "string" && Object.keys(config[i]).length !== 0) {
                 parsed.push(config[i])
