@@ -41,8 +41,9 @@ class Client {
             blitz.log.verbose("core-node worker connected")
 
             // Listen on Reconnect
-            this.api.on("reconnect", () => {
+            this.api.on("connect", () => {
                 blitz.log.verbose("core-node worker reconnected to api node")
+                this.sendEndpoints()
             })
 
             this.api.on("disconnect", () => {
