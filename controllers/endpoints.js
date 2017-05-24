@@ -201,21 +201,32 @@ class EndpointController {
         let reqroute = req.route.split("/")
         let schemaroute = endpoint.route.split("/")
 
-        for (var i = 0; i < schemaroute.length; i++) {
+        // Remove last char if "/"
+        reqroute[reqroute.length - 1] === "" ? reqroute.splice(-1, 1) : null
+        schemaroute[schemaroute.length - 1] === "" ? schemaroute.splice(-1, 1) : null
 
-            // Get route resource params
-            if (schemaroute[i][0] === ":") {
-                matching = true
-                params.push(reqroute[i])
-            } else if (schemaroute[i] !== reqroute[i]) {
-                matching = false
-                break
-            } else {
-                matching = true
+        if(schemaroute.length === reqroute.length) {
+            for (var i = 0; i < schemaroute.length; i++) {
+
+                // Get route resource params
+                if (schemaroute[i][0] === ":") {
+                    matching = true
+                    params.push(reqroute[i])
+                } else if (schemaroute[i] !== reqroute[i]) {
+                    matching = false
+                    break
+                } else {
+                    matching = true
+                }
             }
+
+            return matching
         }
 
-        return matching
+        // if not same length -> endpoint can't match
+        else {
+            return false
+        }
     }
 
 
