@@ -95,7 +95,7 @@ class EndpointController {
      */
     convertSchema(endpoints) {
         for (var endpoint in endpoints) {
-            this.convertParams(endpoints[endpoint])
+            this.convertDefaults(endpoints[endpoint])
         }
     }
 
@@ -103,7 +103,7 @@ class EndpointController {
     /**
      * Convert stringified functions to anonymous functions
      */
-    convertParams(endpoint) {
+    convertDefaults(endpoint) {
         if (Object.keys(endpoint.params).length > 0) {
             endpoint.params.forEach((specs, i) => {
 
@@ -199,15 +199,15 @@ class EndpointController {
      */
     parseRoute(req, endpoint, params, matching) {
         let reqroute = req.route.split("/")
-        let scmroute = endpoint.route.split("/")
+        let schemaroute = endpoint.route.split("/")
 
-        for (var i = 0; i < scmroute.length; i++) {
+        for (var i = 0; i < schemaroute.length; i++) {
 
             // Get route resource params
-            if (scmroute[i][0] === ":") {
+            if (schemaroute[i][0] === ":") {
                 matching = true
                 params.push(reqroute[i])
-            } else if (scmroute[i] !== reqroute[i]) {
+            } else if (schemaroute[i] !== reqroute[i]) {
                 matching = false
                 break
             } else {
