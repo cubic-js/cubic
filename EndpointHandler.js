@@ -92,23 +92,12 @@ class EndpointHandler {
 
             // Basic File information
             endpoint.file = filename.replace("//", "/").replace("./core/", "./")
-            endpoint.endpoint = path.basename(filename).replace(".js", "")
 
             // Custom schema values
             let schema = new(require(endpoint.file))().schema
 
             // Routes
             endpoint.route = filename.replace(blitz.config.core.endpointPath, "").replace(".js", "")
-
-            if (schema.resources !== false) {
-                let url = endpoint.route.split('/')
-
-                // Add each resource to route, then replace original
-                schema.resources.forEach(resource => {
-                    url.splice((url.length - 1), 0, ':' + resource) // before endpoint, but not -2 because split has empty first el due to route starting with '/'
-                })
-                endpoint.route = url.join('/')
-            }
 
             // Stringify functions to be preserved on socket.io's emit
             Object.keys(schema.params).map((i) => {
@@ -120,6 +109,8 @@ class EndpointHandler {
             endpoint.params = schema.params
 
             // Other Modified values
+            endpoint.endpoint = path.basename(filename).replace(".js", "")
+            endpoint.route = schema.url ? schema.url : filename.replace(blitz.config.core.endpointPath, "").replace(".js", "")
             endpoint.scope = schema.scope
             endpoint.verb = schema.verb
             endpoint.description = schema.description
