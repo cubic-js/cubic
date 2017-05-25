@@ -28,21 +28,23 @@ class EndpointController {
      * Saves endpoints from core node to db
      */
     saveEndpoints(endpoints, adapter) {
+
         return new Promise((resolve, reject) => {
             let config = {
                 type: "endpoints",
-                data: endpoints,
+                data: _.cloneDeep(endpoints), // clone to prevent overwriting
             }
 
             // Save in db
             this.db.config.updateOne({
-                type: "endpoints"
+                _id: "endpoints"
             }, {
                 $set: config
             }, {
                 upsert: true
             })
             .then(() => resolve())
+            .catch(() => {}) // ignore duplicate error
 
             // Save locally
             this.saveSchema(config, adapter)
@@ -81,7 +83,7 @@ class EndpointController {
     compareSchema(adapter) {
         if (new Date() - adapter.request.schema.uat > 60000 || !adapter.request.schema.endpoints) {
             this.db.config.findOne({
-                    type: "endpoints"
+                    _id: "endpoints"
                 })
                 .then(config => {
                     if (config) this.saveSchema(config, adapter)
