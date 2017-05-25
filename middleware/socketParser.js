@@ -10,29 +10,8 @@ class Converter {
      */
     convertReq(request, socket, verb) {
         let req = {}
-        let url = null
+        let url = verb === "GET" ? request : request.url
 
-        // request string, object or invalid?
-        if(verb === "GET" && typeof request === "string" && request.includes("/")) {
-             url = request.split("/")
-        }
-
-        else if ((verb === "POST" || verb === "PUT") && request !== null && typeof request === "object" && typeof request.url === 'string' && request.url.includes("/")) {
-            url = request.url.split("/")
-        }
-
-        else {
-            url = []
-        }
-
-        // Remove domain from url
-        for(var i = 0; i < url.length; i++) {
-            if(url[i].includes("localhost") || url[i].includes("nexus-stats.com")){
-                url.splice(0, i + 1)
-            }
-        }
-
-        url = "/" + url.join("/")
         req.body = request.body
         req.url = url
         req.user = socket.user
@@ -63,10 +42,7 @@ class Converter {
                     res.body = data
                     ack(res)
                 } else {
-                    console.error(" ")
-                    console.error("Can't respond to same request multiple times.")
-                    console.error(" ")
-                    throw(new Error("Can't respond to same request multiple times."))
+                    // Multi request. No errors will occur but this shouldn't happen
                 }
             }
 

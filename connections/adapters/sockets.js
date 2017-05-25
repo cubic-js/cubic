@@ -10,7 +10,7 @@ const io = require("socket.io")
 /**
  * Middleware helpers
  */
-const converter = require("../../middleware/socketConverter.js")
+const converter = require("../../middleware/socketParser.js")
 const layer = require("../layers.js")
 
 
