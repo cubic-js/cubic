@@ -43,12 +43,7 @@ class RequestController {
             // Params returned
             else {
                 this.send(request)
-                    .then(data => {
-                        resolve({
-                            statusCode: 200,
-                            body: data
-                        })
-                    })
+                    .then(res => resolve(res))
                     .catch(err => {
                         resolve({
                             statusCode: 503,
