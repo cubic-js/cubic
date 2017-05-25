@@ -40,7 +40,21 @@ class EndpointHandler {
             decache(request.file)
             let endpoint = new(require(request.file))
             endpoint.url = request.url
-            endpoint.main.apply(endpoint, request.params).then(data => resolve(data))
+            endpoint.main.apply(endpoint, request.params)
+                .then(data => {
+                    let res = {
+                        statusCode: 200,
+                        body: data
+                    }
+                    resolve(res)
+                })
+                .catch(err => {
+                    let res = {
+                        statusCode: 400,
+                        body: err
+                    }
+                    resolve(res)
+                })
         })
     }
 
