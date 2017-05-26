@@ -1,9 +1,5 @@
 "use strict"
 
-/**
- * Dependencies
- */
-const BlitzUtil = require("blitz-js-util")
 
 /**
  * Middleware Functions
@@ -25,27 +21,18 @@ class Server {
      */
     constructor() {
 
-        // When config received, launch server
-        process.on("message", (m) => {
+        // Build up Server
+        this.setupHttpServer()
+        this.setupSockets()
+        this.setupCache()
 
-            if (m.global) {
+        // Config Express & Sockets.io
+        this.applyMiddleware()
+        this.applyRoutes()
+        this.setRequestClient()
 
-                BlitzUtil.generateBlitzGlobal(m.global)
-
-                // Build up Server
-                this.setupHttpServer()
-                this.setupSockets()
-                this.setupCache()
-
-                // Config Express & Sockets.io
-                this.applyMiddleware()
-                this.applyRoutes()
-                this.setRequestClient()
-
-                // Log Worker info
-                blitz.log.verbose("api-node worker connected")
-            }
-        })
+        // Log Worker info
+        blitz.log.verbose("api-node worker connected")
     }
 
 
@@ -133,4 +120,4 @@ class Server {
     }
 }
 
-module.exports = new Server()
+module.exports = Server

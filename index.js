@@ -4,6 +4,8 @@
  * Dependencies
  */
 const local = require("./config/local.js")
+const worker = require("../blitz.js-util/index.js")
+const Server = require("./connections/server.js")
 
 /**
  * Parent Class for API-Node
@@ -16,23 +18,32 @@ class api {
      */
     constructor(options) {
 
-        // Config which is called by blitz.js on blitz.use()
-        this.config = {
-            local: local,
-            provided: options
+        // Process forked
+        if (process.send) {
+            worker.connect(this).then(() => this.main())
         }
 
-        // Path to module to be forked
-        this.appPath = __dirname + "/connections/server.js"
+        // Process not forked
+        else {
+
+            // Config which is called by blitz.js on blitz.use()
+            this.config = {
+                local: local,
+                provided: options
+            }
+
+            // Path for forking
+            this.filename = __filename
+        }
     }
 
+    main() {
+        this.server = new Server()
+    }
 
-    /**
-     * Make combined middleware accessible from api Object
-     */
-    use(fn) {
+    use(fn){
         this.server.use(fn)
     }
 }
 
-module.exports = api
+module.exports = process.send ? new api() : api
