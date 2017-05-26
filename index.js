@@ -83,52 +83,75 @@ class Blitz {
      * Let blitz handle framework modules
      */
     use(node) {
-        let nodeid = node.constructor.name
+        let id = node.constructor.name
 
         // Property already set? Merge them.
-        if (blitz.nodes[nodeid]) {
-            blitz.nodes[nodeid] = _.merge(blitz.nodes[nodeid], node)
+        if (blitz.nodes[id]) {
+            blitz.nodes[id] = _.merge(blitz.nodes[id], node)
         }
 
         // Property not assigned before
         else {
-            blitz.nodes[nodeid] = node
+            blitz.nodes[id] = {}
         }
 
-        this.setConfig(nodeid, node.config)
-        this.runHooks(nodeid)
-        this.cluster(nodeid, node.appPath)
+        this.setConfig(id, node.config)
+        this.runHooks(id)
+        this.cluster(node, id)
     }
 
 
     /**
-     * Cluster given blitz module
+     * Create workers from node file
      */
-    cluster(id, appPath) {
+    cluster(node, id) {
+        let file = node.filename
         let cores = 1 //blitz.config[id].cores
 
-        // Initialize array to push workers into
-        blitz.nodes[id].workers = []
-
         // Fork Workers
+        blitz.nodes[id].workers = []
         for (let i = 0; i < cores; i++) {
 
             // Add to node's worker list to be accessible globally
-            blitz.nodes[id].workers.push(fork(appPath))
+            blitz.nodes[id].workers.push(fork(file))
 
             // Send global blitz to worker
-            let serialized = this.serialize(blitz)
             blitz.nodes[id].workers[i].send({
-                global: serialized
+                type: "setGlobal",
+                data: this.serialize(blitz)
             })
-        }
 
-        blitz.log.info(id + "-node has been launched on " + cores + " core" + (cores <= 1 ? "" : "s"))
+            // Make Worker methods accessible from global blitz
+            this.setWorkerInterface(node,id)
+        }
     }
 
 
     /**
-     * Serialize global blitz object
+     * Make Worker methods accessible from global blitz
+     */
+    setWorkerInterface(node, id) {
+        for (let method of Object.getOwnPropertyNames(Object.getPrototypeOf(node))) {
+            let _this = this
+
+            // Direct request via stdout to worker
+            blitz.nodes[id][method] = function() {
+                blitz.nodes[id].workers.forEach(worker => {
+                    worker.send({
+                        type: "call",
+                        value: {
+                            method: method,
+                            args: _this.serialize(arguments)
+                        }
+                    })
+                })
+            }
+        }
+    }
+
+
+    /**
+     * Serialize global blitz object so it can be sent via stdout to workers
      */
     serialize(obj) {
         return CircularJSON.stringify(obj, function(key, value) {
