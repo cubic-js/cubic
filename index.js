@@ -4,6 +4,9 @@
  * Dependencies
  */
 const local = require("./config/local.js")
+const worker = require("blitz-js-util")
+const Server = require("./connections/server.js")
+
 
 /**
  * Parent Class for API-Node
@@ -16,15 +19,28 @@ class auth {
      */
     constructor(options) {
 
-        // Config which is called by blitz.js on blitz.use()
-        this.config = {
-            local: local,
-            provided: options
+        // Process forked
+        if (process.send) {
+            worker.connect(this).then(() => this.init())
         }
 
-        // Path to module to be forked
-        this.appPath = __dirname + "/connections/server.js"
+        // Process not forked
+        else {
+
+            // Config which is called by blitz.js on blitz.use()
+            this.config = {
+                local: local,
+                provided: options
+            }
+
+            // Path for forking
+            this.filename = __filename
+        }
+    }
+
+    init() {
+        this.server = new Server()
     }
 }
 
-module.exports = auth
+module.exports = process.send ? new auth() : auth
