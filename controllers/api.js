@@ -4,7 +4,7 @@
  * Dependencies
  */
 const BlitzQuery = require("blitz-js-query")
-const EndpointHandler = require("../EndpointHandler.js")
+const EndpointHandler = new(require("../EndpointHandler.js"))
 
 /**
  * Connects to local API Node & handles basic cycles

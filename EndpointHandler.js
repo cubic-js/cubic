@@ -6,7 +6,6 @@ const fs = require('fs')
 const path = require('path')
 const util = require('util')
 const _ = require('lodash')
-const BlitzUtil = require("blitz-js-util")
 
 
 /**
@@ -14,19 +13,11 @@ const BlitzUtil = require("blitz-js-util")
  */
 class EndpointHandler {
 
+    /**
+     * Initialize Endpoint Parent with API Client
+     */
     constructor() {
-        // When config received, launch client
-        process.on("message", (m) => {
-
-            if (m.global) {
-
-                // Set global blitz object
-                BlitzUtil.generateBlitzGlobal(m.global)
-
-                // Initialize Endpoint Parent with API Client
-                require(blitz.config.core.endpointParent)
-            }
-        })
+        require(blitz.config.core.endpointParent)
     }
 
 
@@ -134,4 +125,4 @@ class EndpointHandler {
     }
 }
 
-module.exports = new EndpointHandler()
+module.exports = EndpointHandler

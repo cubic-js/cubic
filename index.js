@@ -4,6 +4,9 @@
  * Dependencies
  */
 const local = require('./config/local.js')
+const worker = require("blitz-js-util")
+const EndpointHandler = require("./EndpointHandler.js")
+
 
 /**
  * Describes parent class which controls all objects handling input/output
@@ -16,15 +19,28 @@ class core {
      */
     constructor(options) {
 
-        // Config which is called by blitz.js on blitz.use()
-        this.config = {
-            local: local,
-            provided: options
+        // Process forked
+        if (process.send) {
+            worker.connect(this).then(() => this.init())
         }
 
-        // Path to module to be forked
-        this.appPath = __dirname + "/EndpointHandler.js"
+        // Process not forked
+        else {
+
+            // Config which is called by blitz.js on blitz.use()
+            this.config = {
+                local: local,
+                provided: options
+            }
+
+            // Path for forking
+            this.filename = __filename
+        }
+    }
+
+    init() {
+        this.endpointHandler = new EndpointHandler()
     }
 }
 
-module.exports = core
+module.exports = process.send ? new core() : core
