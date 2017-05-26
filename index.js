@@ -20,7 +20,7 @@ class api {
 
         // Process forked
         if (process.send) {
-            worker.connect(this).then(() => this.main())
+            worker.connect(this).then(() => this.init())
         }
 
         // Process not forked
@@ -37,7 +37,7 @@ class api {
         }
     }
 
-    main() {
+    init() {
         this.server = new Server()
     }
 
