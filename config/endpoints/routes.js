@@ -6,9 +6,7 @@ module.exports = (http) => {
     /**
      * Render API Documentation on index
      */
-    http.app.get('/', (req, res) => {
-        res.send('Documentation gonna be here')
-    })
+    http.app.get('*', (req, res, next) => http.prepass(req, res, next))
 
     /**
      * Other Routes are created dynamically via events.js config

@@ -66,8 +66,13 @@ class HttpAdapter {
     /**
      * Accepts middleware to run before this.pass().
      */
-    use(fn) {
-        this.stack.unshift(fn)
+    use(route, fn, verb) {
+        let middleware = {
+            method: verb ? verb : "ANY",
+            route: typeof route === "string" ? route : "*", // check if includes. Maybe need reverse order for reading?
+            fn: typeof fn === "function" ? fn : route
+        }
+        this.stack.unshift(middleware)
     }
 }
 

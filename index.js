@@ -41,8 +41,24 @@ class api {
         this.server = new Server()
     }
 
-    use(fn){
-        this.server.use(fn)
+    use(route, fn) {
+        this.server.use(route, fn)
+    }
+
+    get(route, fn) {
+        this.server.use(route, fn, "GET")
+    }
+
+    post(route, fn) {
+        this.server.use(route, fn, "POST")
+    }
+
+    put(route, fn) {
+        this.server.use(route, fn, "PUT")
+    }
+
+    delete(route, fn) {
+        this.server.use(route, fn, "DELETE")
     }
 }
 

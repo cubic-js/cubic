@@ -72,8 +72,13 @@ class SocketAdapter {
     /**
      * Adds functions to queue that are processed before this.pass() gets called
      */
-    use(fn) {
-        this.stack.unshift(fn)
+    use(route, fn, verb) {
+        let middleware = {
+            method: verb ? verb : "ANY",
+            route: typeof route === "string" ? route : "*", // check if includes. Maybe need reverse order for reading?
+            fn: typeof fn === "function" ? fn : route
+        }
+        this.stack.unshift(middleware)
     }
 }
 

@@ -38,15 +38,25 @@ class Layer {
 
             // Take out next function to process
             _stack.pop()
-            let fn = _stack.slice(-1)[0]
+            let mw = _stack.slice(-1)[0]
 
-            // Call next function if not falsy
-            if (fn) {
-                try {
-                    fn(_req, _res, _next)
-                } catch (err) {
-                    _next(err)
+            // Call next middleware if matching
+            if (mw) {
+
+                // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
+                if(new RegExp("^" + mw.route.split("*").join(".*") + "$").test(_req.url) && (_req.method === mw.method || mw.method === "ANY")) {
+                    try {
+                        mw.fn(_req, _res, _next)
+                    } catch (err) {
+                        _next(err)
+                    }
                 }
+
+                // Not matching, try next middleware
+                else {
+                    _next()
+                }
+
             }
 
             // Next function is falsy (usually empty)

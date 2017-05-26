@@ -73,7 +73,7 @@ class EndpointController {
         this.convertSchema(config.data)
         adapter.request.schema.endpoints = config.data
         adapter.request.schema.uat = new Date()
-        this.routeEndpoints(adapter)
+        //this.routeEndpoints(adapter)
     }
 
 

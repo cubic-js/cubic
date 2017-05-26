@@ -114,9 +114,9 @@ class Server {
     /**
      * Sets up connection adapter middleware fired on each request
      */
-    use(fn) {
-        this.http.use(fn)
-        this.sockets.use(fn)
+    use(route, fn, verb) {
+        this.http.use(route, fn, verb)
+        this.sockets.use(route, fn, verb)
     }
 }
 
