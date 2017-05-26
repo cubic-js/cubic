@@ -55,7 +55,7 @@ require("blitz-js")({ key: value })
 | logLevel      | verbose       | Verbose log level. Includes Request Timestamps, Socket Connections, Config events, etc. |
 | logLevel      | silly         | Silly log level. Includes internal information on which routes are being bound, diagnostics and lifecycle details. |
 
-For configuration of individual nodes, check out their repositories below.
+Configuration settings will be accessible via `blitz.config.local`. For configuration of individual nodes, check out their repositories below.
 
 <br>
 
