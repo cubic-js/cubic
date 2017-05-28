@@ -28,7 +28,6 @@ class Layer {
 
         // Error occured? Send back to client.
         if (err) {
-            console.log(err)
             self.res.status(500).send(err)
             return self.reject()
         }
