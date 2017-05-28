@@ -4,7 +4,7 @@
  * Dependencies
  */
 const local = require("./config/local.js")
-const worker = require("blitz-js-util")
+const worker = require("../blitz.js-util/index.js")
 const Server = require("./connections/server.js")
 
 /**
@@ -55,6 +55,10 @@ class api {
 
     put(route, fn) {
         this.server.use(route, fn, "PUT")
+    }
+
+    patch(route, fn) {
+        this.server.use(route, fn, "PATCH")
     }
 
     delete(route, fn) {

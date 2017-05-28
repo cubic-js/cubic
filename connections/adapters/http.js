@@ -67,6 +67,8 @@ class HttpAdapter {
      * Accepts middleware to run before this.pass().
      */
     use(route, fn, verb) {
+        console.log(typeof fn)
+        console.log(fn)
         let middleware = {
             method: verb ? verb : "ANY",
             route: typeof route === "string" ? route : "*", // check if includes. Maybe need reverse order for reading?

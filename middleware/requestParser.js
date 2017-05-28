@@ -31,18 +31,16 @@ class RequestParser {
         json.original = url
 
         // Clean up
-        url = url.replace("%20", " ")
+        url = url.split("%20").join(" ")
         url = url.replace("https://", "")
         url = url.replace("http://", "")
 
         // Slice sub-categories
         url = url.split("/")
 
-        // Base Information
+        // Build up req object
         this.getBase(json, url)
-
-        // Get Method
-        this.getMethod(json, url)
+        this.getQuery(json, url)
 
         // Remove already-assigned data
         url.pop()
@@ -68,20 +66,22 @@ class RequestParser {
     /**
      * Get Method & params from rest of URL
      */
-    getMethod(json, url) {
-        let params = url[url.length - 1].split("?")
-        json.method = params[0]
-        json.params = {}
+    getQuery(json, url) {
+        let query = url[url.length - 1].split("?")
+        json.endpoint = query[0]
+        url.splice(-1, 1)
+        json.route = url.join("/") + "/" + json.endpoint
+        json.query = {}
 
         // Get Query from rest of query string
-        if (params.length > 1) {
-            params.splice(0, 1)
-            params = params[0].split("&")
+        if (query.length > 1) {
+            query.splice(0, 1)
+            query = query[0].split("&")
 
             // Assign left/right value of param to individual key
-            for (var i = 0; i < params.length; i++) {
-                let val = params[i].split("=")
-                json.params[val[0]] = val[1]
+            for (var i = 0; i < query.length; i++) {
+                let val = query[i].split("=")
+                json.query[val[0]] = val[1]
             }
         }
     }

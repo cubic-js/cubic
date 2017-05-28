@@ -53,18 +53,6 @@ class EndpointController {
 
 
     /**
-     * Route Endpoints on Express
-     */
-    routeEndpoints(adapter) {
-        if (adapter.app) {
-            adapter.request.schema.endpoints.forEach((endpoint) => {
-                adapter.app.all(endpoint.route, (req, res) => adapter.prepass(req, res))
-            })
-        }
-    }
-
-
-    /**
      * Save Schema for given adapter
      */
     saveSchema(config, adapter) {
@@ -73,7 +61,6 @@ class EndpointController {
         this.convertSchema(config.data)
         adapter.request.schema.endpoints = config.data
         adapter.request.schema.uat = new Date()
-        //this.routeEndpoints(adapter)
     }
 
 
@@ -106,15 +93,15 @@ class EndpointController {
      * Convert stringified functions to anonymous functions
      */
     convertDefaults(endpoint) {
-        if (Object.keys(endpoint.params).length > 0) {
-            endpoint.params.forEach((specs, i) => {
-
+        if (Object.keys(endpoint.query).length > 0) {
+            endpoint.query.forEach((specs, i) => {
+                
                 // If string -> check if function (workaround for json.stringify on socket.emit)
-                if (typeof specs.default === "string" && (specs.default.includes(") => {") || specs.default.includes("function ("))) {
+                if (typeof specs.default === "string" && (specs.default.includes("=>") || specs.default.substring(0, 8) == 'function')) {
 
                     // Function from String (remove everything before first { and last }), override default
                     let fn = new Function(specs.default.substring(specs.default.indexOf("{") + 1).slice(0, -1))
-                    endpoint.params[i].default = fn
+                    endpoint.query[i].default = fn
                 }
             })
         }
@@ -130,10 +117,10 @@ class EndpointController {
         for (var sub in schema.endpoints) {
             let endpoint = schema.endpoints[sub]
             let matching = false
-            let params = []
+            let query = []
 
             // Check if method in Schema
-            matching = this.parseRoute(req, endpoint, params, matching)
+            matching = this.parseRoute(req, endpoint, query, matching)
 
             // Route matches
             if (matching) {
@@ -143,25 +130,25 @@ class EndpointController {
                         body: 'Unauthorized. Expected ' + endpoint.scope + " scope, got " + req.user.scp + "."
                     }
                 }
-                if (req.verb !== endpoint.verb) {
+                if (req.method !== endpoint.method) {
                     return {
                         statusCode: 405,
-                        body: "Invalid Method. Expected " + endpoint.verb + ", got " + req.verb + "."
+                        body: "Invalid Method. Expected " + endpoint.verb + ", got " + req.method + "."
                     }
                 }
 
-                // Check params for value matching. No match -> res truthy
-                let res = this.parseParams(req, endpoint, params)
+                // Check query for value matching. No match -> res truthy
+                let res = this.parseQuery(req, endpoint, query)
                 if (res) return res
 
                 // If POST or PUT, append body
-                this.parseBody(req, params)
+                this.parseBody(req, query)
 
                 return {
                     statusCode: 200,
                     url: req.url,
                     file: endpoint.file,
-                    params: params
+                    query: query
                 }
             }
         }
@@ -178,17 +165,14 @@ class EndpointController {
      * Get Base information from request, used by further methods
      */
     parseBase(req) {
-        let route = req.url.split("/")
-        route.pop()
-        route = (`${route.join("/")}/${req.parsed.method}`).replace("%20", " ")
 
         let request = {
             user: req.user,
-            verb: req.method,
-            route: route,
+            method: req.method,
             url: req.url,
-            method: req.parsed.method,
-            params: req.parsed.params,
+            route: req.parsed.route,
+            endpoint: req.parsed.endpoint,
+            query: req.parsed.query,
             body: req.body
         }
 
@@ -199,7 +183,7 @@ class EndpointController {
     /**
      * Match request route w/ given route and assign resources
      */
-    parseRoute(req, endpoint, params, matching) {
+    parseRoute(req, endpoint, query, matching) {
         let reqroute = req.route.split("/")
         let schemaroute = endpoint.route.split("/")
 
@@ -210,10 +194,10 @@ class EndpointController {
         if(schemaroute.length === reqroute.length) {
             for (var i = 0; i < schemaroute.length; i++) {
 
-                // Get route resource params
+                // Get route resource query
                 if (schemaroute[i][0] === ":") {
                     matching = true
-                    params.push(reqroute[i])
+                    query.push(reqroute[i])
                 } else if (schemaroute[i] !== reqroute[i]) {
                     matching = false
                     break
@@ -233,16 +217,16 @@ class EndpointController {
 
 
     /**
-     * Parse Params if route matches
+     * Parse Query if route matches
      */
-    parseParams(req, endpoint, params) {
-        for (var i = 0; i < endpoint.params.length; i++) {
-            let specs = endpoint.params[i]
+    parseQuery(req, endpoint, query) {
+        for (var i = 0; i < endpoint.query.length; i++) {
+            let specs = endpoint.query[i]
 
             // Param included in request?
             let requested = false
-            Object.keys(req.params).map((key, index) => {
-                if (key === specs.name) requested = req.params[key]
+            Object.keys(req.query).map((key, index) => {
+                if (key === specs.name) requested = req.query[key]
             })
 
             // Requested not falsy -> request value in `requested`
@@ -267,24 +251,24 @@ class EndpointController {
                     }
                 }
 
-                params.push(requested)
+                query.push(requested)
             }
 
             // Not requested -> assign default value
             else {
-                if (typeof specs.default === "function") params.push(specs.default())
-                else params.push(specs.default)
+                if (typeof specs.default === "function") query.push(specs.default())
+                else query.push(specs.default)
             }
         }
     }
 
 
     /**
-     * Add Body to Params so they're accessible in endpoint
+     * Add Body to Query so they're accessible in endpoint
      */
-    parseBody(req, params) {
-        if (req.verb === "POST" || req.verb === "PUT") {
-            params.push(req.body)
+    parseBody(req, query) {
+        if (req.method === "POST" || req.method === "PUT") {
+            query.push(req.body)
         }
     }
 }

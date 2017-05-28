@@ -13,6 +13,7 @@ module.exports = (sockets, http, cache) => {
         socket.on("GET", (req, res) => sockets.prepass(socket, "GET", req, res))
         socket.on("POST", (req, res) => sockets.prepass(socket, "POST", req, res))
         socket.on("PUT", (req, res) => sockets.prepass(socket, "PUT", req, res))
+        socket.on("PATCH", (req, res) => sockets.prepass(socket, "PATCH", req, res))
         socket.on("DELETE", (req, res) => sockets.prepass(socket, "DELETE", req, res))
 
         // Subscriptions

@@ -103,7 +103,7 @@ class Server {
 
 
     /**
-     * Loads RequestController into server adapters to process actual request handling
+     * Loads RequestController into server adapters to process requests to core node
      */
     setRequestClient() {
         this.http.request.client = this.sockets

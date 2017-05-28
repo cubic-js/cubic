@@ -3,24 +3,23 @@
 /**
  * Lodash for array deep clone
  */
-const lo = require("lodash")
+const _ = require("lodash")
 
 
 /**
  * Variables outside scope for .next() to be callable
  */
-let _req = null
-let _res = null
-let _stack = []
-let _next = null
-let _resolve = null
-let _reject = null
+let self = {}
 
 
 /**
  * Middleware Handler for connection adapters
  */
 class Layer {
+
+    constructor() {
+        self = this
+    }
 
     /**
      * Runs through middleware functions before adapter.pass
@@ -29,40 +28,76 @@ class Layer {
 
         // Error occured? Send back to client.
         if (err) {
-            _res.status(400).send(err)
-            _reject()
+            console.log(err)
+            self.res.status(500).send(err)
+            return self.reject()
         }
 
         // Otherwise, continue waterfall
-        else if (_stack.length >= 1) {
+        else if (self.stack.length >= 1) {
 
             // Take out next function to process
-            _stack.pop()
-            let mw = _stack.slice(-1)[0]
+            self.stack.pop()
+            let mw = self.stack.slice(-1)[0]
 
-            // Call next middleware if matching
-            if (mw) {
-
-                // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
-                if(new RegExp("^" + mw.route.split("*").join(".*") + "$").test(_req.url) && (_req.method === mw.method || mw.method === "ANY")) {
-                    try {
-                        mw.fn(_req, _res, _next)
-                    } catch (err) {
-                        _next(err)
-                    }
-                }
-
-                // Not matching, try next middleware
-                else {
-                    _next()
-                }
-
+            // mw is falsy -> all middleware has been called already
+            if (!mw) {
+                return self.resolve()
             }
 
-            // Next function is falsy (usually empty)
-            else {
-                _resolve()
+            // Call next middleware if route matches
+            if (self.routeMatches(mw)) {
+                try {
+                    mw.fn(self.req, self.res, self.next)
+                } catch (err) {
+                    self.next(err)
+                }
+            } else {
+                self.next()
             }
+        }
+    }
+
+
+    /**
+     * Check if route matches and assign optional placeholders
+     */
+    routeMatches(mw) {
+
+        // Add params to req object if present
+        let route = mw.route.split("/")
+        let url =  this.req.url.split("/")
+        this.req.params = {}
+
+        for (let i = 0; i < route.length; i++) {
+
+            // params already assigned? means route has been matched
+            if (Object.keys(this.req.params).length > 0) {
+                break
+            }
+
+            // Add placeholder value to req object
+            if (route[i][0] === ':') {
+                this.req.params[route[i].replace(":", "")] = url[i]
+                url[i] = route[i] // Wildcard for route check below
+                continue
+            }
+
+            // Not matching, clear any params and stop
+            else if (route[i] !== url[i]) {
+                this.req.params = {}
+                break
+            }
+        }
+
+        // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
+        if (new RegExp("^" + mw.route.split("*").join(".*") + "$").test(url.join("/")) && (this.req.method === mw.method || mw.method === "ANY")) {
+            return true
+        }
+
+        // Not matching
+        else {
+            return false
         }
     }
 
@@ -77,8 +112,8 @@ class Layer {
             this.new(req, res, stack)
 
             // Make resolve/reject accessible to next()
-            _resolve = resolve
-            _reject = reject
+            this.resolve = resolve
+            this.reject = reject
 
             // Trigger stack waterfall
             this.next()
@@ -90,14 +125,13 @@ class Layer {
      * Modify Layer for new requests
      */
     new(req, res, stack) {
-        _req = req
-        _res = res
-        _stack = lo.cloneDeep(stack) // clone original stack
-
-        _next = this.next
+        this.req = req
+        this.res = res
+        this.stack = _.cloneDeep(stack) // ensure stack doesn't get modified for next request
+        this.next = this.next
 
         // Stack needs buffer to be popped on first next()
-        _stack.push(null)
+        this.stack.push(null)
     }
 }
 
