@@ -34,10 +34,10 @@ class Endpoint {
          * @type {{resources: Array, params: Array, scope: string, verb: string, description: string}}
          */
         this.schema = {
-            resources: [],
-            params: [],
+            url: "",
+            query: [],
             scope: 'basic-read',
-            verb: 'GET',
+            method: 'GET',
             description: "There is no description for this endpoint yet."
         }
 

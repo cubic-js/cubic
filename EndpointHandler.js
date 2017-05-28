@@ -30,8 +30,10 @@ class EndpointHandler {
         return new Promise((resolve, reject) => {
             decache(request.file)
             let endpoint = new(require(request.file))
+
+            // Apply to endpoint
             endpoint.url = request.url
-            endpoint.main.apply(endpoint, request.params)
+            endpoint.main.apply(endpoint, request.query)
                 .then(data => {
                     let res = {
                         statusCode: 200,
@@ -105,19 +107,19 @@ class EndpointHandler {
             endpoint.route = filename.replace(blitz.config.core.endpointPath, "").replace(".js", "")
 
             // Stringify functions to be preserved on socket.io's emit
-            Object.keys(schema.params).map((i) => {
-                let param = schema.params[i]
+            Object.keys(schema.query).map((i) => {
+                let param = schema.query[i]
                 if (typeof param.default === 'function') {
-                    schema.params[i].default = param.default.toString()
+                    schema.query[i].default = param.default.toString()
                 }
             })
-            endpoint.params = schema.params
+            endpoint.query = schema.query
 
             // Other Modified values
             endpoint.endpoint = path.basename(filename).replace(".js", "")
             endpoint.route = schema.url ? schema.url : filename.replace(blitz.config.core.endpointPath, "").replace(".js", "")
             endpoint.scope = schema.scope
-            endpoint.verb = schema.verb
+            endpoint.method = schema.method
             endpoint.description = schema.description
         }
 
