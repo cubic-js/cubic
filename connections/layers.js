@@ -63,6 +63,10 @@ class Layer {
      */
     routeMatches(mw) {
 
+        // Normalize url/route format
+        mw.route = mw.route[mw.route.length - 1] === "/" ? mw.route.slice(0, -1) : mw.route
+        this.req.url = this.req.url[this.req.url.length - 1] === "/" ? this.req.url.slice(0, -1) : this.req.url
+
         // Add params to req object if present
         let route = mw.route.split("/")
         let url =  this.req.url.split("/")
@@ -88,6 +92,8 @@ class Layer {
                 break
             }
         }
+
+        console.log(url)
 
         // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
         if (new RegExp("^" + mw.route.split("*").join(".*") + "$").test(url.join("/")) && (this.req.method === mw.method || mw.method === "ANY")) {
