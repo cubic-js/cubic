@@ -66,4 +66,4 @@ class api {
     }
 }
 
-module.exports = process.send ? new api() : api
+module.exports = process.env.isWorker ? new api() : api
