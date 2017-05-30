@@ -113,7 +113,7 @@ class Blitz {
         for (let i = 0; i < cores; i++) {
 
             // Add to node's worker list to be accessible globally
-            blitz.nodes[id].workers.push(fork(file))
+            blitz.nodes[id].workers.push(fork(file, { env : { isWorker : true } }))
 
             // Send global blitz to worker
             blitz.nodes[id].workers[i].send({
