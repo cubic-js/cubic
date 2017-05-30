@@ -17,7 +17,7 @@ class Blitz {
 
             // Connection Config
             use_socket: true,
-            namespace: '',
+            namespace: '/',
 
             // Authorization Config
             user_key: null,
@@ -25,9 +25,11 @@ class Blitz {
             ignore_limiter: false
         }, options)
 
-        // Add "/" to url if not existing
-        if (this.options.api_url.slice(-1) !== "/") this.options.api_url += "/"
-        if (this.options.auth_url.slice(-1) !== "/") this.options.auth_url += "/"
+        // Remove "/" from url's
+        let api = this.options.api_url
+        let auth = this.options.auth_url
+        this.options.api_url = api[api.length - 1] === "/" ? api.slice(0, -1) : api
+        this.options.auth_url = auth[auth.length - 1] === "/" ? auth.slice(0, -1) : auth
     }
 
 
