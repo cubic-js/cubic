@@ -23,7 +23,7 @@ class Client {
             api_url: blitz.config.core.apiURL,
             auth_url: blitz.config.core.authURL,
             use_socket: true,
-            namespace: "root",
+            namespace: "/root",
             ignore_limiter: true,
 
             // Authentication Settings
