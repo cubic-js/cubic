@@ -123,6 +123,11 @@ class Blitz {
 
             // Make Worker methods accessible from global blitz
             this.setWorkerInterface(node,id)
+
+            // Restart worker on exit
+            blitz.nodes[id].workers[i].on("exit", (code, signal) => {
+                blitz.nodes[id].workers.push(fork(file))
+            })
         }
     }
 
