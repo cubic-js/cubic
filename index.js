@@ -19,7 +19,7 @@ class api {
     constructor(options) {
 
         // Process forked
-        if (process.send) {
+        if (process.env.isWorker) {
             worker.connect(this).then(() => this.init())
         }
 
