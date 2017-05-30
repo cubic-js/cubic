@@ -43,4 +43,4 @@ class auth {
     }
 }
 
-module.exports = process.send ? new auth() : auth
+module.exports = process.env.isWorker ? new auth() : auth
