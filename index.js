@@ -43,4 +43,4 @@ class core {
     }
 }
 
-module.exports = process.send ? new core() : core
+module.exports = process.env.isWorker ? new core() : core
