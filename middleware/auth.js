@@ -82,7 +82,7 @@ class Authentication {
      */
     verifySocket(socket, next) {
         socket.user = {
-            uid: socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address,
+            uid: socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address || socket.request.connection.remoteAddress,
             scp: "basic-read"
         }
 
@@ -93,13 +93,13 @@ class Authentication {
             // Set req.user from token
             try {
                 socket.user = jwt.verify(token, blitz.config.api.authCert)
-                blitz.log.verbose("Socket.io | " + socket.request.connection.remoteAddress + " connected as " + socket.user.uid + " on " + socket.nsp.name)
+                blitz.log.verbose("Socket.io | " + (socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address || socket.request.connection.remoteAddress) + " connected as " + socket.user.uid + " on " + socket.nsp.name)
                 return next()
             }
 
             // Invalid Token
             catch (err) {
-                blitz.log.verbose("Socket.io | " + socket.request.connection.remoteAddress + " rejected (" + err + ") on " + socket.nsp.name)
+                blitz.log.verbose("Socket.io | " + socket.user.uid + " rejected (" + err + ") on " + socket.nsp.name)
                 return next(new Error(err))
             }
         }

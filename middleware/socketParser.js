@@ -9,15 +9,19 @@ class Converter {
      * Convert Socket.io request into req-like object
      */
     convertReq(request, socket, verb) {
-        let req = {}
-        let url = verb === "GET" ? request : request.url
+        if(request) {
+            let req = {}
+            let url = verb === "GET" ? request : request.url
 
-        req.body = request.body
-        req.url = url
-        req.user = socket.user
-        req.method = verb
-        req.channel = "Sockets"
-        return req
+            req.body = request.body
+            req.url = url
+            req.user = socket.user
+            req.method = verb
+            req.channel = "Sockets"
+            return req
+        } else {
+            return {}
+        }
     }
 
 

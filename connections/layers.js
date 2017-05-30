@@ -93,8 +93,6 @@ class Layer {
             }
         }
 
-        console.log(url)
-
         // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
         if (new RegExp("^" + mw.route.split("*").join(".*") + "$").test(url.join("/")) && (this.req.method === mw.method || mw.method === "ANY")) {
             return true

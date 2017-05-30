@@ -28,7 +28,6 @@ class EndpointController {
      * Saves endpoints from core node to db
      */
     saveEndpoints(endpoints, adapter) {
-
         return new Promise((resolve, reject) => {
             let config = {
                 type: "endpoints",
@@ -95,7 +94,7 @@ class EndpointController {
     convertDefaults(endpoint) {
         if (Object.keys(endpoint.query).length > 0) {
             endpoint.query.forEach((specs, i) => {
-                
+
                 // If string -> check if function (workaround for json.stringify on socket.emit)
                 if (typeof specs.default === "string" && (specs.default.includes("=>") || specs.default.substring(0, 8) == 'function')) {
 
