@@ -9,6 +9,7 @@ class Blitz {
      * Merge default options with client options
      */
     constructor(options) {
+        this.connecting = null
         this.options = extend({
 
             // Resource Config
@@ -30,6 +31,24 @@ class Blitz {
         let auth = this.options.auth_url
         this.options.api_url = api[api.length - 1] === "/" ? api.slice(0, -1) : api
         this.options.auth_url = auth[auth.length - 1] === "/" ? auth.slice(0, -1) : auth
+
+        this.connect()
+    }
+
+
+    /**
+     * Ensure connection is established, then fulfill request
+     */
+    sync(fn) {
+        if (this.connecting) {
+            return new Promise((resolve, reject) => {
+                this.connecting.then(() => {
+                        fn()
+                        resolve()
+                    })
+            })
+        }
+        return Promise.resolve(fn())
     }
 
 
@@ -37,9 +56,12 @@ class Blitz {
      * Connect by getting tokens and setting up clients
      */
     connect() {
-        return new Promise((resolve, reject) => {
+        this.connecting = new Promise((resolve, reject) => {
             this.connection = new Connection(this.options)
-            this.connection.connect().then(() => resolve())
+            this.connection.connect().then(() => {
+                this.connecting = null
+                resolve()
+            })
         })
     }
 
@@ -48,15 +70,17 @@ class Blitz {
      * Subscribe to certain endpoints
      */
     subscribe(endpoint) {
-        this.connection.client.emit("subscribe", endpoint)
+        let fn = () => this.emit("subscribe", endpoint)
+        this.sync(fn)
     }
 
 
     /**
      * Event listening for socket.io
      */
-    on(ev, fn) {
-        this.connection.client.on(ev, fn)
+    on(ev, func) {
+        let fn = () => this.connection.client.on(ev, func)
+        this.sync(fn)
     }
 
 
@@ -64,7 +88,8 @@ class Blitz {
      * Expose Socket client emit
      */
     emit(ev, data) {
-        this.connection.client.emit(ev, data)
+        let fn = () => this.connection.client.emit(ev, data)
+        this.sync(fn)
     }
 
 
@@ -75,11 +100,13 @@ class Blitz {
         return new Promise((resolve, reject) => {
 
             // Let connection handle request
-            this.connection.request(verb, query)
+            let fn = () => { this.connection.request(verb, query)
                 .then(res => resolve(res))
                 .catch(err => {
                     throw (new Error(err))
                 })
+            }
+            this.sync(fn)
         })
     }
 
