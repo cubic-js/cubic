@@ -12,6 +12,11 @@ module.exports = {
 
 
     /**
+     * Core Node Config
+     */
+    requestTimeout: 5000,
+
+    /**
      * Middleware Options
      */
     useRequestLogger: true,

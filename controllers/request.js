@@ -101,7 +101,7 @@ class RequestController {
             })
 
             // Wait 1 second before rejecting
-            setTimeout(() => reject("All nodes currently busy. Please try again later"), 1000)
+            setTimeout(() => reject("All nodes currently busy. Please try again later"), blitz.config.api.requestTimeout)
         })
     }
 
