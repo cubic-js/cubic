@@ -14,7 +14,7 @@ module.exports = {
     /**
      * Core Node Config
      */
-    requestTimeout: 5000,
+    requestTimeout: 1000,
 
     /**
      * Middleware Options
