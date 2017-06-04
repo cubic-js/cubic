@@ -44,16 +44,16 @@ class Authentication {
 
             // No User Found
             if (!user) {
-                this.unauthorized(res, req.body.user_key, req.ip, 'credentials')
+                this.unauthorized(res, req.body.user_key, req.headers['x-forwarded-for'] || req.connection.remoteAddress, 'credentials')
             } else
 
             // Password Mismatch
             if (!this.isValidSecret(req.body.user_secret, user.user_secret)) {
-                this.unauthorized(res, req.body.user_key, req.ip, 'credentials')
+                this.unauthorized(res, req.body.user_key, req.headers['x-forwarded-for'] || req.connection.remoteAddress, 'credentials')
             } else {
 
                 // Valid User Found
-                this.saveIP(user.user_key, req.ip, 'credentials', true)
+                this.saveIP(user.user_key, req.headers['x-forwarded-for'] || req.connection.remoteAddress, 'credentials', true)
 
                 // Set Options
                 let data = {
@@ -73,7 +73,7 @@ class Authentication {
         })
 
         .catch(err => {
-            this.unauthorized(res, req.body.user_key, req.ip, 'credentials')
+            this.unauthorized(res, req.body.user_key, req.headers['x-forwarded-for'] || req.connection.remoteAddress, 'credentials')
         })
     }
 
@@ -106,7 +106,7 @@ class Authentication {
                 let accessToken = this.getAccessToken(data)
 
                 // Save IP
-                this.saveIP(user.user_key, req.ip, 'refresh_token', true)
+                this.saveIP(user.user_key, req.headers['x-forwarded-for'] || req.connection.remoteAddress, 'refresh_token', true)
 
                 return res.status(200).json({
                     access_token: accessToken
@@ -156,7 +156,7 @@ class Authentication {
         user.save().then(user => {
 
             // Log IP
-            this.saveIP(user_key, req.ip, 'register', true)
+            this.saveIP(user_key, req.headers['x-forwarded-for'] || req.connection.remoteAddress, 'register', true)
 
             // Send Credentials to user
             return (res.status(200).json({
