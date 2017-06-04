@@ -56,7 +56,7 @@ const high_limit = RateLimiter({
          }
 
          // User is root -> skip limiting
-         else if (req.user.scp.includes("root")) {
+         else if (req.user.scp.includes("root") || req.user.scp.includes("ignore-rate-limit")) {
              return next()
          }
 
