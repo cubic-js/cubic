@@ -107,7 +107,8 @@ class EndpointHandler {
             endpoint.file = filename.replace("//", "/").replace("./core/", "./")
 
             // Custom schema values
-            let schema = new(require(endpoint.file))().schema
+            let Endpoint = require(endpoint.file)
+            let schema = new Endpoint().schema
 
             // Routes
             endpoint.route = filename.replace(blitz.config.core.endpointPath, "").replace(".js", "")

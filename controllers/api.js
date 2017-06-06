@@ -33,22 +33,20 @@ class Client {
 
         // Connect to api-node
         this.api = new BlitzQuery(options)
-        this.api.connect().then(() => {
 
-            // Listen to incoming requests & send config
-            this.listen()
+        // Listen to incoming requests & send config
+        this.listen()
+        this.sendEndpoints()
+        blitz.log.verbose("core-node worker connected")
+
+        // Listen on Reconnect
+        this.api.on("connect", () => {
+            blitz.log.verbose("core-node worker reconnected to api node")
             this.sendEndpoints()
-            blitz.log.verbose("core-node worker connected")
+        })
 
-            // Listen on Reconnect
-            this.api.on("connect", () => {
-                blitz.log.verbose("core-node worker reconnected to api node")
-                this.sendEndpoints()
-            })
-
-            this.api.on("disconnect", () => {
-                blitz.log.verbose("core-node worker disconnected from api node")
-            })
+        this.api.on("disconnect", () => {
+            blitz.log.verbose("core-node worker disconnected from api node")
         })
     }
 
@@ -91,7 +89,10 @@ class Client {
      */
     sendEndpoints() {
         blitz.log.verbose("Core      | sending endpoint config")
-        this.api.emit("config", EndpointHandler.generateEndpointSchema())
+        setTimeout(() => {
+            this.api.emit("config", EndpointHandler.generateEndpointSchema())
+        }, 1) // wtf nodejs? this needs to be fixed. will throw err w/o timeout
+
     }
 }
 
