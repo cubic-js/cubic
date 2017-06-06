@@ -65,12 +65,18 @@ class EndpointHandler {
 
         // Cleanup
         let parsed = []
+        let pushToEnd = []
 
         for (var i = 0; i < config.length; i++) {
             if (typeof config[i] !== "string" && Object.keys(config[i]).length !== 0) {
-                parsed.push(config[i])
+                let route = config[i].route.split("/")
+                route[route.length - 1].includes(":") ? pushToEnd.push(config[i]) : parsed.push(config[i])
             }
         }
+
+        // Add items which must not override previous url's with similar route
+        // e.g. /something/:id must not be routed before /something/else
+        parsed = parsed.concat(pushToEnd)
 
         // Return config to send to api node
         return parsed
