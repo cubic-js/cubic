@@ -226,7 +226,7 @@ class Authentication {
         // Generate new array and save in db
         .then((user) => {
             if (user) {
-                let arr_max = 5
+                let arr_max = blitz.config.maxLogsPerUser
                 let arr_new = []
                 let arr_exs = user.last_ip
 
