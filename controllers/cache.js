@@ -20,7 +20,9 @@ class CacheController {
      */
     save(key, value, exp) {
         value = typeof value === "object" ? JSON.stringify(value) : value
-        this.client.setex(key.toLowerCase(), exp || blitz.config.api.cacheExp, value)
+        key = key.toLowerCase().split(" ").join("%20")
+        blitz.log.verbose("API       | < caching data for " + key)
+        this.client.setex(key, exp || blitz.config.api.cacheExp, value)
     }
 
 
@@ -37,7 +39,8 @@ class CacheController {
      */
     get(key) {
         return new Promise((resolve, reject) => {
-            this.client.get(key.toLowerCase(), (err, res) => {
+            key = key.toLowerCase().split(" ").join("%20")
+            this.client.get(key, (err, res) => {
                 if (res) {
                     try {
                         res = JSON.parse(res)

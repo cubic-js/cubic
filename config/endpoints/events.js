@@ -51,7 +51,6 @@ module.exports = (sockets, http, cache) => {
 
         // Listen for Cache updates
         socket.on("cache", data => {
-            blitz.log.verbose("API       | < caching data for " + data.key)
             cache.save(data.key, data.value, data.exp)
         })
 
