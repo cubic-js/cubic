@@ -1,11 +1,13 @@
+"use strict"
+
 /**
  * Module Dependencies
  */
-const decache = require("decache")
 const fs = require('fs')
 const path = require('path')
 const util = require('util')
 const _ = require('lodash')
+const mongodb = require("mongodb").MongoClient
 
 
 /**
@@ -14,10 +16,16 @@ const _ = require('lodash')
 class EndpointHandler {
 
     /**
-     * Initialize Endpoint Parent with API Client
+     * Initialize Connections used by individual endpoints
      */
     constructor() {
-        require(blitz.config.core.endpointParent)
+        mongodb.connect(blitz.config.core.mongoURL, (err, connected) => {
+            if (err) throw (err)
+            this.db = connected
+        })
+        this.client = require("./controllers/api.js")
+        this.client.endpointHandler = this
+        this.client.init()
     }
 
 
@@ -28,11 +36,13 @@ class EndpointHandler {
      */
     callEndpoint(request) {
         return new Promise((resolve, reject) => {
-            decache(request.file)
-            let endpoint = new(require(request.file))
+            let Endpoint = require(request.file)
+            let endpoint = new Endpoint()
 
             // Apply to endpoint
             endpoint.url = request.url
+            endpoint.db = this.db
+            endpoint.api = this.client.api
             endpoint.main.apply(endpoint, request.query)
                 .then(data => {
                     let res = {

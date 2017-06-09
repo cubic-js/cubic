@@ -3,8 +3,8 @@
 /**
  * Dependencies
  */
-const BlitzQuery = require("blitz-js-query")
-const EndpointHandler = new(require("../EndpointHandler.js"))
+const BlitzQuery = require("../../npm-blitz-query/index.js")
+
 
 /**
  * Connects to local API Node & handles basic cycles
@@ -33,6 +33,12 @@ class Client {
 
         // Connect to api-node
         this.api = new BlitzQuery(options)
+    }
+
+    /**
+     * Initialization method called by EndpointHandler after passing methods
+     */
+    init() {
 
         // Listen to incoming requests & send config
         this.listen()
@@ -75,7 +81,7 @@ class Client {
         // Actual request
         this.api.on("req", options => {
             blitz.log.silly("Core      | Request received")
-            EndpointHandler.callEndpoint(options)
+            this.endpointHandler.callEndpoint(options)
                 .then(data => {
                     blitz.log.silly("Core      | Request resolved")
                     this.api.emit(options.callback, data)
@@ -89,10 +95,7 @@ class Client {
      */
     sendEndpoints() {
         blitz.log.verbose("Core      | sending endpoint config")
-        setTimeout(() => {
-            this.api.emit("config", EndpointHandler.generateEndpointSchema())
-        }, 1) // wtf nodejs? this needs to be fixed. will throw err w/o timeout
-
+        this.api.emit("config", this.endpointHandler.generateEndpointSchema())
     }
 }
 

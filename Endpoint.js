@@ -1,23 +1,6 @@
 'use strict'
 
 /**
- * Mongodb connection for data processing
- */
-const mongodb = require("mongodb").MongoClient
-let db = null
-mongodb.connect(blitz.config.core.mongoURL, (err, connected) => {
-    if (err) throw (err)
-    db = connected
-})
-
-
-/**
- * Shared api client
- */
-const client = require("./controllers/api.js")
-
-
-/**
  * Class describing generic database/calculation methods
  * Any lower-level method extends this class
  */
@@ -40,18 +23,6 @@ class Endpoint {
             method: 'GET',
             description: "There is no description for this endpoint yet."
         }
-
-        /**
-         * MongoDB database
-         * @type {Db}
-         */
-        this.db = db
-
-        /**
-         * Shared API Client
-         * @type {Client}
-         */
-        this.api = client.api
     }
 
 
