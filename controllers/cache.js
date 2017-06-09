@@ -30,7 +30,9 @@ class CacheController {
      * Middleware function. Respond if data present, Next if not
      */
     check(req, res, next) {
-        this.get(req.url).then(data => data ? res.send(data) : next())
+        this.get(req.url).then(data => {
+            data ? res.send(data) : next()
+        })
     }
 
 
@@ -49,6 +51,7 @@ class CacheController {
 
                     }
                     finally {
+                        blitz.log.verbose("API       | > returning cached data " + key)
                         resolve(res)
                     }
                 }

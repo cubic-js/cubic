@@ -5,54 +5,44 @@
  */
 const _ = require("lodash")
 
-
-/**
- * Variables outside scope for .next() to be callable
- */
-let self = {}
-
-
 /**
  * Middleware Handler for connection adapters
  */
 class Layer {
 
-    constructor() {
-        self = this
-    }
-
     /**
      * Runs through middleware functions before adapter.pass
      */
     next(err) {
+        this.next = this.next.bind(this) // preserve `this` on callback
 
         // Error occured? Send back to client.
         if (err) {
-            self.res.status(500).send(err)
-            return self.reject()
+            this.res.status(500).send(err)
+            return this.reject()
         }
 
         // Otherwise, continue waterfall
-        else if (self.stack.length >= 1) {
+        else if (this.stack.length >= 1) {
 
             // Take out next function to process
-            self.stack.pop()
-            let mw = self.stack.slice(-1)[0]
+            this.stack.pop()
+            let mw = this.stack.slice(-1)[0]
 
             // mw is falsy -> all middleware has been called already
             if (!mw) {
-                return self.resolve()
+                return this.resolve()
             }
 
             // Call next middleware if route matches
-            if (self.routeMatches(mw)) {
+            if (this.routeMatches(mw)) {
                 try {
-                    mw.fn(self.req, self.res, self.next)
+                    mw.fn(this.req, this.res, this.next)
                 } catch (err) {
-                    self.next(err)
+                    this.next(err)
                 }
             } else {
-                self.next()
+                this.next()
             }
         }
     }
@@ -131,11 +121,10 @@ class Layer {
         this.req = req
         this.res = res
         this.stack = _.cloneDeep(stack) // ensure stack doesn't get modified for next request
-        this.next = this.next
 
         // Stack needs buffer to be popped on first next()
         this.stack.push(null)
     }
 }
 
-module.exports = new Layer()
+module.exports = Layer

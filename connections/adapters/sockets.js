@@ -11,7 +11,8 @@ const io = require("socket.io")
  * Middleware helpers
  */
 const converter = require("../../middleware/socketParser.js")
-const layer = require("../layers.js")
+const Layer = require("../layers.js")
+const _ = require("lodash")
 
 
 /**
@@ -52,8 +53,8 @@ class SocketAdapter {
         // Modify req/res object to allow same middleware approach as in express
         let req = converter.convertReq(request, socket, verb)
         let res = converter.convertRes(socket, ack)
+        let layer = _.cloneDeep(new Layer)
 
-        // Iterate through middleware function stack
         layer.runStack(req, res, this.stack)
             .then(() => this.pass(req, res))
             .catch(() => {})
