@@ -39,6 +39,7 @@ class Endpoint {
             data: data
         }
         this.api.emit("publish", update)
+        blitz.log.verbose("Core      | Sending data to publish for " + endpoint)
     }
 
 
@@ -52,6 +53,7 @@ class Endpoint {
             exp: exp
         }
         this.api.emit("cache", data)
+        blitz.log.verbose("Core      | Sending data to cache for " + key)
     }
 
 
