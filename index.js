@@ -40,15 +40,7 @@ class Blitz {
      * Ensure connection is established, then fulfill request
      */
     sync(fn) {
-        if (this.connecting) {
-            return new Promise((resolve, reject) => {
-                this.connecting.then(() => {
-                        fn()
-                        resolve()
-                    })
-            })
-        }
-        return Promise.resolve(fn())
+        this.connecting ? this.connecting.then(fn) : fn()        
     }
 
 
