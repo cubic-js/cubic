@@ -14,9 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "blitz-js-query": "0.0.37",
-    "blitz-js-util": "latest",
+    "blitz-js-util": "0.0.3",
     "lodash": "^4.17.4",
-    "mongodb": "^2.2.25",
-    "redis": "^2.7.1"
+    "mongodb": "^2.2.25"
   }
 }
