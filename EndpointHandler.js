@@ -37,12 +37,9 @@ class EndpointHandler {
     callEndpoint(request) {
         return new Promise((resolve, reject) => {
             let Endpoint = require(request.file)
-            let endpoint = new Endpoint()
+            let endpoint = new Endpoint(this.client.api, this.db, request.url)
 
             // Apply to endpoint
-            endpoint.url = request.url
-            endpoint.db = this.db
-            endpoint.api = this.client.api
             endpoint.main.apply(endpoint, request.query)
                 .then(data => {
                     let res = {

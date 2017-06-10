@@ -10,7 +10,7 @@ class Endpoint {
      * Describes Endpoint properties
      * @constructor
      */
-    constructor() {
+    constructor(api, db, url) {
 
         /**
          * Default schema for API calls
@@ -23,6 +23,10 @@ class Endpoint {
             method: 'GET',
             description: "There is no description for this endpoint yet."
         }
+
+        this.api = api
+        this.db = db
+        this.url = url
     }
 
 
