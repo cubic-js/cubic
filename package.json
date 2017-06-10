@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-query": "0.0.37",
+    "blitz-js-query": "0.0.38",
     "blitz-js-util": "0.0.3",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.25"
