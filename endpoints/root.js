@@ -6,8 +6,8 @@ const Endpoint = require('../Endpoint.js')
  * Contains multi-purpose functions for child-methods and provides default values
  */
  class Foo extends Endpoint {
-     constructor(){
-         super()
+     constructor(api, db, url) {
+         super(api, db, url)
          this.schema.scope = "root-read"
          this.schema.description = "Testing method for checking root authorization"
      }
