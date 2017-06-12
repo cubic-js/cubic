@@ -18,7 +18,7 @@ const low_limit = RateLimiter({
     redis: client,
     namespace: "LowAccessLimit",
     interval: 5000,
-    maxInInterval: 25
+    maxInInterval: 100
 })
 
 // Rate Limiter for registered users
@@ -26,7 +26,7 @@ const mid_limit = RateLimiter({
     redis: client,
     namespace: "MidAccessLimit",
     interval: 10000,
-    maxInInterval: 12,
+    maxInInterval: 30,
     minDifference: 10
 })
 
@@ -35,7 +35,7 @@ const high_limit = RateLimiter({
     redis: client,
     namespace: "HighAccessLimit",
     interval: 10000,
-    maxInInterval: 8,
+    maxInInterval: 30,
     minDifference: 10
 })
 
