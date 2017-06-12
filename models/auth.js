@@ -226,12 +226,12 @@ class Authentication {
         // Generate new array and save in db
         .then((user) => {
             if (user) {
-                let arr_max = blitz.config.maxLogsPerUser
+                let arr_max = blitz.config.auth.maxLogsPerUser
                 let arr_new = []
                 let arr_exs = user.last_ip
 
                 // If arr max is reached: delete oldest
-                if (arr_exs.length >= arr_max) arr_exs.splice(arr_max)
+                if (arr_exs.length >= arr_max) arr_exs.splice(arr_max - 1)
 
                 // Add Newest
                 arr_exs.unshift({
