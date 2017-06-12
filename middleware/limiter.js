@@ -27,7 +27,7 @@ const mid_limit = RateLimiter({
     namespace: "MidAccessLimit",
     interval: 10000,
     maxInInterval: 12,
-    minDifference: 750
+    minDifference: 10
 })
 
 // Rate Limiter for no tokens
@@ -36,7 +36,7 @@ const high_limit = RateLimiter({
     namespace: "HighAccessLimit",
     interval: 10000,
     maxInInterval: 8,
-    minDifference: 1000
+    minDifference: 10
 })
 
 
@@ -52,7 +52,7 @@ const high_limit = RateLimiter({
 
          // No Token provided -> High limit, 1req/s
          if (!req.user.scp) {
-             high_limit(req.user.uid, (err, timeLeft) => this.limit(err, req, res, next, timeLeft))
+             high_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
          }
 
          // User is root -> skip limiting
@@ -62,12 +62,12 @@ const high_limit = RateLimiter({
 
          // Token provided & privileged user -> No minDifference, 5req/s
          else if (req.user.scp.includes("elevated")) {
-             low_limit(req.user.uid, (err, timeLeft) => this.limit(err, req, res, next, timeLeft))
+             low_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
          }
 
          // Token provided & default user -> Enhanced limits, 2req/s
          else if (req.user.scp.includes("basic")) {
-             mid_limit(req.user.uid, (err, timeLeft) => this.limit(err, req, res, next, timeLeft))
+             mid_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
          }
 
          else return next("Undocumented Authorization Scope. Please contact a developer on our discord server. https://discord.gg/8mCNvKp")
@@ -77,7 +77,7 @@ const high_limit = RateLimiter({
      /**
       * Rate Limit error handling
       */
-     limit(err, req, res, next, timeLeft) {
+     limit(err, req, res, next, timeLeft, actionsLeft) {
 
          // Return any errors
          if (err) {
@@ -88,10 +88,10 @@ const high_limit = RateLimiter({
          else if (timeLeft) {
 
              // Figure out why request got limited
-             if (timeLeft > 0) {
-                 var err = "Rate limit exceeded. Request intervals too close."
+             if (actionsLeft > 0) {
+                 var err = "Rate limit exceeded. Request intervals too close. You need to wait " + timeLeft + "ms to continue."
              } else {
-                 var err = "Rate limit exceeded. Max requests per interval reached."
+                 var err = "Rate limit exceeded. Max requests per interval reached. You need to wait " + timeLeft + "ms to continue."
              }
 
              // Figure out Source of Request
