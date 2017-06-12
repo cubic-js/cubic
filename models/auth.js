@@ -231,7 +231,7 @@ class Authentication {
                 let arr_exs = user.last_ip
 
                 // If arr max is reached: delete oldest
-                if (arr_exs.length >= arr_max) arr_exs.pop()
+                if (arr_exs.length >= arr_max) arr_exs.splice(arr_max)
 
                 // Add Newest
                 arr_exs.unshift({
