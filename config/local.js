@@ -8,7 +8,7 @@ module.exports = {
      */
     port: 3030,
     routes: __dirname + "/endpoints/routes.js",
-    maxLogsPerUser: 50,
+    maxLogsPerUser: 20,
 
 
     /**
