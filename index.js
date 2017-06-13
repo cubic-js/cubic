@@ -106,7 +106,7 @@ class Blitz {
      */
     cluster(node, id) {
         let file = node.filename
-        let cores = 1 //blitz.config[id].cores
+        let cores = blitz.config[id].cores
 
         // Fork Workers
         blitz.nodes[id].workers = []
