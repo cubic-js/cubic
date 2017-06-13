@@ -7,6 +7,7 @@ const Auth = require('../models/auth.js')
 const express = require('express')
 const bodyParser = require('body-parser')
 const http = require('http')
+const Purge = require("../tasks/purge.js")
 
 
 /**
@@ -40,6 +41,7 @@ class Server {
         // Express modifications
         this.configMiddleware()
         this.configRoutes()
+        this.configTasks()
 
         // Log Worker info
         blitz.log.verbose("auth-node worker started")
@@ -57,6 +59,14 @@ class Server {
      */
     configRoutes() {
         require(blitz.config.auth.routes)(this.app, this.auth)
+    }
+
+    /**
+     * Tasks to perform in background
+     */
+    configTasks() {
+        let purge = new Purge(this.auth.users)
+        purge.watch()
     }
 }
 
