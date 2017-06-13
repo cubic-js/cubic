@@ -116,7 +116,7 @@ class RequestController {
             options.callback = process.hrtime().join("").toString()
 
             // Send Request to all Core Nodes
-            this.client.root.emit("req", options)
+            socket.emit("req", options)
             blitz.log.silly("API       | Request sent")
 
             // Listen to all sockets for response
