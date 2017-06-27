@@ -43,10 +43,18 @@ module.exports = (sockets, http, cache) => {
             http.request.endpoints.saveEndpoints(endpoints, http)
         })
 
+        // Subscriptions
+        socket.on("subscribe", endpoint => {
+            blitz.log.verbose("Socket.io | " + socket.user.uid + " subscribed to " + endpoint)
+            socket.join(endpoint)
+            socket.emit("subscribed", endpoint)
+        })
+
         // Listen to Updates from core node and publish to subscribers
         socket.on("publish", update => {
             blitz.log.verbose("API       | > publishing data for " + update.endpoint)
             sockets.io.to(update.endpoint).emit(update.endpoint, update.data)
+            sockets.root.to(update.endpoint).emit(update.endpoint, update.data)
         })
 
         // Listen for Cache updates
