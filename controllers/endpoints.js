@@ -112,50 +112,62 @@ class EndpointController {
      */
     parse(req, schema) {
         req = this.parseBase(req)
+        let found = false
+        let query = []
+        let err = {
+            statusCode: 404,
+            body: "No endpoint matched the request."
+        } // Default error if not overwritten
 
-        for (var sub in schema.endpoints) {
-            let endpoint = schema.endpoints[sub]
-            let matching = false
-            let query = []
+        for (let endpoint of schema.endpoints) {
 
             // Check if method in Schema
-            matching = this.parseRoute(req, endpoint, query, matching)
+            let matching = this.parseRoute(req, endpoint, query)
 
             // Route matches
-            if (matching) {
+            if (!found && matching) {
                 if (!req.user.scp.includes(endpoint.scope)) {
-                    return {
+                    err = {
                         statusCode: 401,
                         body: 'Unauthorized. Expected ' + endpoint.scope + " scope, got " + req.user.scp + "."
                     }
                 }
-                if (req.method !== endpoint.method) {
-                    return {
+                else if (req.method !== endpoint.method) {
+                    err = {
                         statusCode: 405,
-                        body: "Invalid Method. Expected " + endpoint.verb + ", got " + req.method + "."
+                        body: "Invalid Method. Expected " + endpoint.method + ", got " + req.method + "."
                     }
                 }
-
-                // Check query for value matching. No match -> res truthy
-                let res = this.parseQuery(req, endpoint, query)
-                if (res) return res
-
-                // If POST or PUT, append body
-                this.parseBody(req, query)
-
-                return {
-                    statusCode: 200,
-                    url: req.url,
-                    file: endpoint.file,
-                    query: query
+                else {
+                    found = endpoint
+                    err = false
                 }
             }
         }
 
-        // No endpoint matched
-        return {
-            statusCode: 404,
-            body: "No endpoint matched the request."
+        // No errors -> allow request
+        if (!err) {
+
+            // Check query for value matching. No match -> res truthy
+            let res = this.parseQuery(req, found, query)
+
+            // Returned value contains specific query error
+            if (res) return res
+
+            // If POST or PUT, append body
+            this.parseBody(req, query)
+
+            return {
+                statusCode: 200,
+                url: req.url,
+                file: found.file,
+                query: query
+            }
+        }
+
+        // No matching endpoint or errors
+        else {
+            return err
         }
     }
 
@@ -164,8 +176,7 @@ class EndpointController {
      * Get Base information from request, used by further methods
      */
     parseBase(req) {
-
-        let request = {
+        return {
             user: req.user,
             method: req.method,
             url: req.url,
@@ -174,23 +185,22 @@ class EndpointController {
             query: req.parsed.query,
             body: req.body
         }
-
-        return request
     }
 
 
     /**
      * Match request route w/ given route and assign resources
      */
-    parseRoute(req, endpoint, query, matching) {
+    parseRoute(req, endpoint, query) {
         let reqroute = req.route.split("/")
         let schemaroute = endpoint.route.split("/")
+        let matching = false
 
         // Remove last char if "/"
         reqroute[reqroute.length - 1] === "" ? reqroute.splice(-1, 1) : null
         schemaroute[schemaroute.length - 1] === "" ? schemaroute.splice(-1, 1) : null
 
-        if(schemaroute.length === reqroute.length) {
+        if (schemaroute.length === reqroute.length) {
             for (var i = 0; i < schemaroute.length; i++) {
 
                 // Get route resource query
@@ -204,7 +214,6 @@ class EndpointController {
                     matching = true
                 }
             }
-
             return matching
         }
 
