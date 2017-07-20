@@ -67,7 +67,7 @@ class Server {
 
         // Use BodyParser for Express
         this.http.app.use(bodyParser.urlencoded({
-                extended: false
+                extended: true
             }))
             .use(bodyParser.json())
 
