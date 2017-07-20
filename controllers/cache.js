@@ -18,7 +18,7 @@ class CacheController {
     /**
      * Saves string as key value
      */
-    save(key, value, exp) {
+    save(key, value, exp = 0) {
         value = typeof value === "object" ? JSON.stringify(value) : value
         key = key.toLowerCase().split(" ").join("%20")
         blitz.log.verbose("API       | < caching data for " + key)
