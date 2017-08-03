@@ -1,5 +1,3 @@
-'use strict'
-
 const extend = require('deep-extend')
 const Connection = require('./lib/connection.js')
 
@@ -37,75 +35,53 @@ class Blitz {
 
 
     /**
-     * Ensure connection is established, then fulfill request
-     */
-    sync(fn) {
-        this.connecting ? this.connecting.then(fn) : fn()        
-    }
-
-
-    /**
      * Connect by getting tokens and setting up clients
      */
-    connect() {
-        this.connecting = new Promise((resolve, reject) => {
-            this.connection = new Connection(this.options)
-            this.connection.connect().then(() => {
-                this.connecting = null
-                resolve()
-            })
-        })
+    async connect() {
+        this.connection = new Connection(this.options)
+        this.connecting = this.connection.connect()
+        await this.connecting
+        this.connecting = null
     }
 
 
     /**
      * Subscribe to certain endpoints
      */
-    subscribe(endpoint) {
-        let fn = () => this.emit("subscribe", endpoint)
-        this.sync(fn)
+    async subscribe(endpoint) {
+        await this.connecting
+        this.emit("subscribe", endpoint)
     }
 
 
     /**
      * Event listening for socket.io
      */
-    on(ev, func) {
-        let fn = () => this.connection.client.on(ev, func)
-        this.sync(fn)
+    async on(ev, func) {
+        await this.connecting
+        this.connection.client.on(ev, func)
     }
 
 
     /**
      * Expose Socket client emit
      */
-    emit(ev, data) {
-        let fn = () => this.connection.client.emit(ev, data)
-        this.sync(fn)
+    async emit(ev, data) {
+        await this.connecting
+        this.connection.client.emit(ev, data)
     }
 
 
     /**
      * RESTful methods for manual interaction
      */
-    query(verb, query) {
-        return new Promise((resolve, reject) => {
-
-            // Let connection handle request
-            let fn = () => { this.connection.request(verb, query)
-                .then(res => resolve(res))
-                .catch(err => {
-                    throw (new Error(err))
-                })
-            }
-            this.sync(fn)
-        })
+    async query(verb, query) {
+        await this.connecting
+        return this.connection.request(verb, query)
     }
 
     get(query) {
-        return new Promise((resolve, reject) => {
-            this.query("GET", query).then((res) => resolve(res))
-        })
+        return this.query("GET", query)
     }
 
     post(url, body) {
@@ -113,9 +89,7 @@ class Blitz {
             url: url,
             body: body
         }
-        return new Promise((resolve, reject) => {
-            this.query("POST", query).then((res) => resolve(res))
-        })
+        return this.query("POST", query)
     }
 
     put(url, body) {
@@ -123,9 +97,7 @@ class Blitz {
             url: url,
             body: body
         }
-        return new Promise((resolve, reject) => {
-            this.query("PUT", query).then((res) => resolve(res))
-        })
+        return this.query("PUT", query)
     }
 
     patch(url, body) {
@@ -133,9 +105,7 @@ class Blitz {
             url: url,
             body: body
         }
-        return new Promise((resolve, reject) => {
-            this.query("PATCH", query).then((res) => resolve(res))
-        })
+        return this.query("PATCH", query)
     }
 
     delete(url, body) {
@@ -143,9 +113,7 @@ class Blitz {
             url: url,
             body: body
         }
-        return new Promise((resolve, reject) => {
-            this.query("DELETE", query).then((res) => resolve(res))
-        })
+        return this.query("DELETE", query)
     }
 }
 
