@@ -5,7 +5,7 @@
 const extend = require("deep-extend")
 const local = require("./config/local.js")
 const preauth = require("./hooks/preauth.js")
-const worker = require("../blitz.js-util/index.js")
+const worker = require("blitz-js-query")
 
 
 /**
@@ -46,9 +46,9 @@ class Auth {
          * work because no config is set)
          */
         delete process.env.isWorker
-        const Core = require("../blitz.js-core/index.js")
-        const API = require("../blitz.js-api/index.js")
-        const Blitz = require("../blitz.js/index.js")(blitz.config.local)
+        const Core = require("blitz-js-core")
+        const API = require("blitz-js-api")
+        const Blitz = require("blitz-js")(blitz.config.local)
 
         // Apply config to nodes and hook them
         let options = blitz.config[blitz.id]
