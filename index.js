@@ -1,27 +1,24 @@
-"use strict"
-
 /**
- * Dependencies
+ * blitz.js authentication server
+ * Web-API to get authentication for resource servers
  */
+const extend = require("deep-extend")
 const local = require("./config/local.js")
-const worker = require("blitz-js-util")
-const Server = require("./connections/server.js")
+const preauth = require("./hooks/preauth.js")
+const worker = require("../blitz.js-util/index.js")
 
 
 /**
- * Parent Class for API-Node
+ * Loader for auth-node system. For ease of maintenance, the auth-node consists
+ * of a core-node that is connected to its own api-node as web server, much
+ * like a regular blitz.js project
  */
-class auth {
-
-    /**
-     * Set config for blitz.js to merge
-     * @constructor
-     */
+class Auth {
     constructor(options) {
 
         // Process forked
         if (process.env.isWorker) {
-            worker.connect(this).then(() => this.init())
+            worker.expose(this).then(this.hookDependencies)
         }
 
         // Process not forked
@@ -38,9 +35,38 @@ class auth {
         }
     }
 
-    init() {
-        this.server = new Server()
+
+    /**
+     * Hook node components for actual logic
+     */
+    hookDependencies() {
+        /**
+         * Nodes must be required here, otherwise worker spawn will trigger them to create
+         * a new object on require due to process.env.isWorker = true. (which won't
+         * work because no config is set)
+         */
+        delete process.env.isWorker
+        const Core = require("../blitz.js-core/index.js")
+        const API = require("../blitz.js-api/index.js")
+        const Blitz = require("../blitz.js/index.js")(blitz.config.local)
+
+        // Apply config to nodes and hook them
+        let options = blitz.config[blitz.id]
+
+        // API node which controls incoming requests
+        options.id = "auth_api"
+        blitz.use(new API(options))
+        preauth.validateWorker()
+
+        // Core Node which processes incoming requests
+        options.id = "auth_core"
+        blitz.hook(options.id, preauth.verifyIndices)
+        blitz.hook(options.id, preauth.manageDevUser)
+        blitz.use(new Core(options))
+
+        // Set proces state back to original
+        process.env.isWorker = true
     }
 }
 
-module.exports = process.env.isWorker ? new auth() : auth
+module.exports = process.env.isWorker ? new Auth() : Auth
