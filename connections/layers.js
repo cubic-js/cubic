@@ -1,5 +1,3 @@
-"use strict"
-
 /**
  * Lodash for array deep clone
  */

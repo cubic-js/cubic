@@ -1,5 +1,3 @@
-'use strict'
-
 const chalk = require('chalk')
 
 /**
@@ -38,7 +36,7 @@ class Logger {
         if (req.channel === "Sockets") {
             this.prefix = chalk.grey("Socket.io | ")
         } else {
-            this.prefix = chalk.grey("Express   | ")
+            this.prefix = chalk.grey("HTTPS     | ")
         }
     }
 

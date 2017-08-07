@@ -1,8 +1,4 @@
-/**
- * Dependencies
- */
 const redis = require("redis")
-
 
 class CacheController {
 
@@ -11,7 +7,7 @@ class CacheController {
      */
     constructor() {
         this.client = redis.createClient()
-        this.client.select(blitz.config.api.cacheDB)
+        this.client.select(blitz.config[blitz.id].cacheDB)
     }
 
 
@@ -22,17 +18,16 @@ class CacheController {
         value = typeof value === "object" ? JSON.stringify(value) : value
         key = key.toLowerCase().split(" ").join("%20")
         blitz.log.verbose("API       | < caching data for " + key)
-        this.client.setex(key, exp || blitz.config.api.cacheExp, value)
+        this.client.setex(key, exp || blitz.config[blitz.id].cacheExp, value)
     }
 
 
     /**
      * Middleware function. Respond if data present, Next if not
      */
-    check(req, res, next) {
-        this.get(req.url).then(data => {
-            data ? res.send(data) : next()
-        })
+    async check(req, res, next) {
+        let data = await this.get(req.url)
+        data ? res.send(data) : next()
     }
 
 
@@ -61,4 +56,4 @@ class CacheController {
     }
 }
 
-module.exports = new CacheController()
+module.exports = CacheController

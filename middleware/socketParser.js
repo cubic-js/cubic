@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Helper class to Convert Socket.io requests into res-like objects. This allows uniform pre-pass middleware.
  */
@@ -18,6 +16,7 @@ class Converter {
             req.user = socket.user
             req.method = verb
             req.channel = "Sockets"
+
             return req
         } else {
             return {}

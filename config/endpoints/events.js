@@ -18,6 +18,7 @@ module.exports = (sockets, http, cache) => {
 
         // Subscriptions
         socket.on("subscribe", endpoint => {
+            endpoint = endpoint.toLowerCase()
             blitz.log.verbose("Socket.io | " + socket.user.uid + " subscribed to " + endpoint)
             socket.join(endpoint)
             socket.emit("subscribed", endpoint)
@@ -45,6 +46,7 @@ module.exports = (sockets, http, cache) => {
 
         // Subscriptions
         socket.on("subscribe", endpoint => {
+            endpoint = endpoint.toLowerCase()
             blitz.log.verbose("Socket.io | " + socket.user.uid + " subscribed to " + endpoint)
             socket.join(endpoint)
             socket.emit("subscribed", endpoint)

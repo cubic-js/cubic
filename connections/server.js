@@ -1,9 +1,9 @@
-"use strict"
-
-
 /**
  * Middleware Functions
  */
+const HTTP = require("./adapters/http.js")
+const Io = require("./adapters/sockets.js")
+const Cache = require("../controllers/cache.js")
 const bodyParser = require("body-parser")
 const auth = require("../middleware/auth.js")
 const parser = require("../middleware/requestParser.js")
@@ -22,41 +22,14 @@ class Server {
     constructor() {
 
         // Build up Server
-        this.setupHttpServer()
-        this.setupSockets()
-        this.setupCache()
+        this.http = new HTTP(blitz.config[blitz.id].port)
+        this.sockets = new Io(this.http.server)
+        this.cache = new Cache()
 
         // Config Express & Sockets.io
         this.applyMiddleware()
         this.applyRoutes()
         this.setRequestClient()
-
-        // Log Worker info
-        blitz.log.verbose("api-node worker connected")
-    }
-
-
-    /**
-     * Loads up instance of the http class including an express http server
-     */
-    setupHttpServer() {
-        this.http = new(require("./adapters/http.js"))(blitz.config.api.port)
-    }
-
-
-    /**
-     * Lets Socket.io connect to previously set up http server
-     */
-    setupSockets() {
-        this.sockets = new(require("./adapters/sockets.js"))(this.http.server)
-    }
-
-
-    /**
-     * Load Cache Controller
-     */
-    setupCache() {
-        this.cache = require("../controllers/cache.js")
     }
 
 
@@ -79,7 +52,7 @@ class Server {
         this.use((req, res, next) => parser.parse(req, res, next))
 
         // Use custom Logger for i/o
-        if (blitz.config.api.useRequestLogger) {
+        if (blitz.config[blitz.id].useRequestLogger) {
             this.use((req, res, next) => logger.log(req, res, next))
         }
 
@@ -87,7 +60,7 @@ class Server {
         this.use((req, res, next) => this.cache.check(req, res, next))
 
         // Rolling Rate Limit
-        if (blitz.config.api.useRateLimiter) {
+        if (blitz.config[blitz.id].useRateLimiter) {
             this.use((req, res, next) => limit.check(req, res, next))
         }
     }
@@ -97,8 +70,8 @@ class Server {
      * Apply Routes/Events after Middleware for correct order
      */
     applyRoutes() {
-        require(blitz.config.api.routes)(this.http)
-        require(blitz.config.api.events)(this.sockets, this.http, this.cache)
+        require(blitz.config[blitz.id].routes)(this.http)
+        require(blitz.config[blitz.id].events)(this.sockets, this.http, this.cache)
     }
 
 

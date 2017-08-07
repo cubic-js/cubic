@@ -1,10 +1,4 @@
-"use strict"
-
-/**
- * JSON Web Tokens
- */
 const jwt = require("jsonwebtoken")
-
 
 /**
  * Describes authorization protocol for socket/http requests
@@ -57,7 +51,7 @@ class Authentication {
 
             // Set req.user from token
             try {
-                req.user = jwt.verify(token, blitz.config.api.authCert)
+                req.user = jwt.verify(token, blitz.config[blitz.id].certPublic)
                 blitz.log.verbose("Express   | " + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + " connected as " + req.user.uid)
                 return next()
             }
@@ -92,7 +86,7 @@ class Authentication {
 
             // Set req.user from token
             try {
-                socket.user = jwt.verify(token, blitz.config.api.authCert)
+                socket.user = jwt.verify(token, blitz.config[blitz.id].certPublic)
                 blitz.log.verbose("Socket.io | " + (socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address || socket.request.connection.remoteAddress) + " connected as " + socket.user.uid + " on " + socket.nsp.name)
                 return next()
             }

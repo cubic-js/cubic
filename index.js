@@ -1,16 +1,14 @@
-"use strict"
-
 /**
  * Dependencies
  */
 const local = require("./config/local.js")
-const worker = require("blitz-js-util")
+const worker = require("../blitz.js-util/index.js")
 const Server = require("./connections/server.js")
 
 /**
  * Parent Class for API-Node
  */
-class api {
+class API {
 
     /**
      * Set config for blitz.js to merge
@@ -20,7 +18,7 @@ class api {
 
         // Process forked
         if (process.env.isWorker) {
-            worker.connect(this).then(() => this.init())
+            worker.expose(this).then(() => this.init())
         }
 
         // Process not forked
@@ -66,4 +64,4 @@ class api {
     }
 }
 
-module.exports = process.env.isWorker ? new api() : api
+module.exports = process.env.isWorker ? new API() : API

@@ -1,7 +1,6 @@
-"use strict";
-
 const mongodb = require("mongodb").MongoClient
 const _ = require("lodash")
+const CircularJSON = require("circular-json")
 
 /**
  * Endpoint Controller for managing Endpoints from resource nodes
@@ -11,42 +10,31 @@ class EndpointController {
     /**
      * Connect to databases
      */
-    connect() {
-        return new Promise((resolve, reject) => {
-            this.db = mongodb
-            this.db.connect(blitz.config.api.mongoURL, (err, db) => {
-                if (!err) {
-                    this.db.config = db.collection("config")
-                    resolve()
-                }
-            })
-        })
+    async connect() {
+        this.db = await mongodb.connect(blitz.config[blitz.id].mongoURL)
+        this.db.config = this.db.collection("config")
     }
 
 
     /**
      * Saves endpoints from core node to db
      */
-    saveEndpoints(endpoints, adapter) {
-        return new Promise((resolve, reject) => {
-            let config = {
-                type: "endpoints",
-                data: _.cloneDeep(endpoints), // clone to prevent overwriting
-            }
+    async saveEndpoints(endpoints, adapter) {
+        let config = {
+            type: "endpoints",
+            data: _.cloneDeep(endpoints), // clone to prevent overwriting
+        }
 
-            // Save in db
-            this.db.config.updateOne({
-                _id: "endpoints"
-            }, {
-                $set: config
-            }, {
-                upsert: true
-            })
-            .then(() => resolve())
-            .catch(() => {}) // ignore duplicate error
+        // Save locally
+        this.saveSchema(config, adapter)
 
-            // Save locally
-            this.saveSchema(config, adapter)
+        // Save in db
+        await this.db.config.updateOne({
+            _id: "endpoints"
+        }, {
+            $set: config
+        }, {
+            upsert: true
         })
     }
 
@@ -66,9 +54,9 @@ class EndpointController {
     /**
      * Refresh endpoint config every minute or if schema has no endpoints
      */
-    compareSchema(adapter) {
+    async compareSchema(adapter) {
         if (new Date() - adapter.request.schema.uat > 60000 || !adapter.request.schema.endpoints) {
-            this.db.config.findOne({
+            await this.db.config.findOne({
                     _id: "endpoints"
                 })
                 .then(config => {
@@ -96,7 +84,7 @@ class EndpointController {
             endpoint.query.forEach((specs, i) => {
 
                 // If string -> check if function (workaround for json.stringify on socket.emit)
-                if (typeof specs.default === "string" && (specs.default.includes("=>") || specs.default.substring(0, 8) == 'function')) {
+                if (typeof specs.default === "string" && (specs.default.includes(" => ") || specs.default.substring(0, 8) == 'function')) {
 
                     // Function from String (remove everything before first { and last }), override default
                     let fn = new Function(specs.default.substring(specs.default.indexOf("{") + 1).slice(0, -1))
@@ -108,10 +96,9 @@ class EndpointController {
 
 
     /**
-     * Verify Request Validity with cached data from core-node
+     * Verify Request Validity with schema data from core-node
      */
     parse(req, schema) {
-        req = this.parseBase(req)
         let found = false
         let query = []
         let err = {
@@ -126,19 +113,21 @@ class EndpointController {
 
             // Route matches
             if (!found && matching) {
-                if (!req.user.scp.includes(endpoint.scope)) {
+                let unauthorized = !req.user.scp.includes(endpoint.scope) &&
+                                   (!req.user.scp.includes("root") ||
+                                   (!req.user.scp.includes("root-read-write") &&
+                                   endpoint.method !== "GET"))
+                if (unauthorized) {
                     err = {
                         statusCode: 401,
                         body: 'Unauthorized. Expected ' + endpoint.scope + " scope, got " + req.user.scp + "."
                     }
-                }
-                else if (req.method !== endpoint.method) {
+                } else if (req.method !== endpoint.method) {
                     err = {
                         statusCode: 405,
                         body: "Invalid Method. Expected " + endpoint.method + ", got " + req.method + "."
                     }
-                }
-                else {
+                } else {
                     found = endpoint
                     err = false
                 }
@@ -173,22 +162,6 @@ class EndpointController {
 
 
     /**
-     * Get Base information from request, used by further methods
-     */
-    parseBase(req) {
-        return {
-            user: req.user,
-            method: req.method,
-            url: req.url,
-            route: req.parsed.route,
-            endpoint: req.parsed.endpoint,
-            query: req.parsed.query,
-            body: req.body
-        }
-    }
-
-
-    /**
      * Match request route w/ given route and assign resources
      */
     parseRoute(req, endpoint, query) {
@@ -214,6 +187,7 @@ class EndpointController {
                     matching = true
                 }
             }
+            matching && endpoint.sendRequest ? query.unshift(CircularJSON.stringify(req)) : null
             return matching
         }
 
@@ -225,7 +199,7 @@ class EndpointController {
 
 
     /**
-     * Parse Query if route matches
+     * Parse params of query if route matches
      */
     parseQuery(req, endpoint, query) {
         for (var i = 0; i < endpoint.query.length; i++) {
@@ -245,10 +219,9 @@ class EndpointController {
                 if (specs.type === "number") {
                     if (isNaN(requested)) mismatch = true
                     else requested = parseFloat(requested)
-                }
-                else if (specs.type.includes("bool")) {
+                } else if (specs.type.includes("bool")) {
                     requested = (requested == "true" || requested == "1" || requested == 1)
-                    if(!requested) mismatch = true
+                    if (!requested) mismatch = true
                 }
 
                 // Data types don't match
@@ -258,7 +231,6 @@ class EndpointController {
                         body: "Wrong param type for " + specs.name + ". Expected " + specs.type + ", got " + typeof requested + "."
                     }
                 }
-
                 query.push(requested)
             }
 

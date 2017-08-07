@@ -1,7 +1,5 @@
-'use strict'
-
 /**
- * Converts standard URL string into JSON object usable by dbs nodes
+ * Converts standard URL string into JSON object usable by core nodes
  */
 class RequestParser {
 
@@ -17,7 +15,7 @@ class RequestParser {
 
         // Improper request format
         else {
-            next("Invalid Request Format. Please provide a URL string")
+            next("Invalid Request Format. Please provide a URL string.")
         }
     }
 
@@ -27,8 +25,6 @@ class RequestParser {
      */
     process(req, res, next) {
         let url = req.url
-        let json = {}
-        json.original = url
 
         // Clean up
         url = url.split("%20").join(" ")
@@ -39,39 +35,27 @@ class RequestParser {
         url = url.split("/")
 
         // Build up req object
-        this.getBase(json, url)
-        this.getQuery(json, url)
+        this.getQuery(req, url)
 
         // Remove already-assigned data
         url.pop()
         url.splice(0, 3)
 
         // Assign Resource Path
-        json.resource = url
-        req.parsed = json
+        req.resource = url
         next()
-    }
-
-
-    /**
-     * Get Base Information out of URL
-     */
-    getBase(json, url) {
-        json.host = url[0] // api.nexus-stats.com
-        json.game = url[1] // warframe, dota2, ...
-        json.version = url[2] // v1/v2...
     }
 
 
     /**
      * Get Method & params from rest of URL
      */
-    getQuery(json, url) {
+    getQuery(req, url) {
         let query = url[url.length - 1].split("?")
-        json.endpoint = query[0]
+        req.endpoint = query[0]
         url.splice(-1, 1)
-        json.route = url.join("/") + "/" + json.endpoint
-        json.query = {}
+        req.route = url.join("/") + "/" + req.endpoint
+        req.query = {}
 
         // Get Query from rest of query string
         if (query.length > 1) {
@@ -81,7 +65,7 @@ class RequestParser {
             // Assign left/right value of param to individual key
             for (var i = 0; i < query.length; i++) {
                 let val = query[i].split("=")
-                json.query[val[0]] = val[1]
+                req.query[val[0]] = val[1]
             }
         }
     }

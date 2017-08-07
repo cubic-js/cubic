@@ -1,6 +1,3 @@
-"use strict"
-
-
 /**
  * Redis Client for rate limiting
  */

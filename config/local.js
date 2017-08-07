@@ -25,7 +25,7 @@ module.exports = {
      * Databases
      */
     mongoPort: 27017,
-    mongoURL: "mongodb://localhost/blitz",
+    mongoURL: "mongodb://localhost/blitz-js-api",
     redisPort: 6379,
 
     /**
@@ -37,7 +37,7 @@ module.exports = {
     /**
      * Authorization properties
      */
-    authCert: fs.readFileSync(__dirname + "/certs/auth_public.pem", "utf-8"),
+    certPublic: fs.readFileSync(__dirname + "/certs/auth_public.pem", "utf-8"),
 
     /**
      * Cluster config

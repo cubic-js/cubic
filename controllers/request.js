@@ -1,6 +1,7 @@
-"use strict"
-
 const endpoints = require("./endpoints.js")
+const timeout = (fn, s) => {
+    return new Promise(resolve => setTimeout(() => resolve(fn()), s))
+}
 
 /**
  * Checks request against endpoints given by dbs node
@@ -12,7 +13,8 @@ class RequestController {
      */
     constructor(adapter) {
         this.schema = {
-            uat: 0
+            uat: 0,
+            endpoints: []
         }
         this.endpoints = endpoints
         this.adapter = adapter
@@ -26,51 +28,41 @@ class RequestController {
     /**
      * Controls Request processing
      */
-    getResponse(req) {
-        return new Promise((resolve, reject) => {
+    async getResponse(req) {
+        // Check if Schema requires updating
+        endpoints.compareSchema(this.adapter)
 
-            // Check if Schema requires updating
-            endpoints.compareSchema(this.adapter)
+        // Verify & Parse request
+        let request = endpoints.parse(req, this.schema)
 
-            // Verify & Parse request
-            let request = endpoints.parse(req, this.schema)
+        // Invalid Request
+        if (parseInt(request.statusCode.toString()[0]) > 3) {
+            return request
+        }
 
-            // Invalid Request
-            if (parseInt(request.statusCode.toString()[0]) > 3) {
-                resolve(request)
-            }
-
-            // Params returned
-            else {
-                this.send(request)
-                    .then(res => resolve(res))
-                    .catch(err => {
-                        resolve({
-                            statusCode: 503,
-                            body: err
-                        })
-                    })
-            }
-        })
+        // Params returned
+        else {
+            return await this.send(request)
+        }
     }
 
 
     /**
      * Sends request to connected sockets.
      */
-    send(options) {
-        return new Promise((resolve, reject) => {
+    async send(options) {
+        try {
+            let socket = await this.check(options.file)
+            return this.request(socket, options)
+        }
 
-            // Check if nodes available
-            this.check(options.file)
-
-                // Send request or respond with busy
-                .then(socket => this.request(socket, options))
-                .catch(err => reject(err))
-
-                // Respond with data if all went right
-                .then(res => resolve(res))
-        })
+        // No socket responded (file not available or cannot be reached)
+        catch (err) {
+            return {
+                statusCode: 503,
+                body: err
+            }
+        }
     }
 
 
@@ -79,8 +71,6 @@ class RequestController {
      */
     check(file) {
         return new Promise((resolve, reject) => {
-
-            // unique callback id
             let request = {
                 id: process.hrtime().join("").toString(),
                 file: file
@@ -93,7 +83,6 @@ class RequestController {
             // Listen to all sockets in root nsp for response
             Object.keys(this.client.root.sockets).forEach(sid => {
                 let socket = this.client.root.sockets[sid]
-
                 socket.once(request.id, () => {
                     blitz.log.silly("API       | Check acknowledged")
                     resolve(socket)
@@ -101,7 +90,7 @@ class RequestController {
             })
 
             // Wait before rejecting
-            setTimeout(() => reject("All nodes currently busy. Please try again later"), blitz.config.api.requestTimeout)
+            setTimeout(() => reject("All nodes currently busy. Please try again later"), blitz.config[blitz.id].requestTimeout)
         })
     }
 
@@ -109,7 +98,7 @@ class RequestController {
     /**
      * Send request to responding node
      */
-    request(socket, options) {
+    async request(socket, options) {
         return new Promise((resolve, reject) => {
 
             // Generate unique callback for emit & pass to responding node
