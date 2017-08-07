@@ -1,5 +1,5 @@
 [![blitz.js](/banner.png)](https://github.com/nexus-devs)
-<p align="center">Horizontal scaling made easy by giving you control over each individual component.</p>
+<p align="center">Horizontal scaling made easy by giving you full control over each framework component.</p>
 
 ##  
 
