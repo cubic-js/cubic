@@ -3,7 +3,7 @@
 /**
  * Dependencies
  */
-const BlitzQuery = require("../../npm-blitz-query/index.js")
+const BlitzQuery = require("blitz-js-query")
 
 
 /**
