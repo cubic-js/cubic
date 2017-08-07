@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * Class describing generic database/calculation methods
  * Any lower-level method extends this class
@@ -23,7 +21,6 @@ class Endpoint {
             method: 'GET',
             description: "There is no description for this endpoint yet."
         }
-
         this.api = api
         this.db = db
         this.url = url

@@ -1,6 +1,4 @@
-'use strict'
-
-const Endpoint = require('../Endpoint.js')
+const Endpoint = require(blitz.config[blitz.id].endpointParent)
 
 /**
  * Contains multi-purpose functions for child-methods and provides default values
@@ -11,8 +9,8 @@ const Endpoint = require('../Endpoint.js')
          this.schema.description = "Simple testing method which returns 'bar'."
      }
 
-    main(){
-         return new Promise((resolve, reject) => resolve("bar"))
+    async main(){
+         return "bar"
      }
  }
 

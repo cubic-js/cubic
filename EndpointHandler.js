@@ -1,5 +1,3 @@
-"use strict"
-
 /**
  * Module Dependencies
  */
@@ -8,6 +6,7 @@ const path = require('path')
 const util = require('util')
 const _ = require('lodash')
 const mongodb = require("mongodb").MongoClient
+const CircularJSON = require("circular-json")
 
 
 /**
@@ -19,13 +18,12 @@ class EndpointHandler {
      * Initialize Connections used by individual endpoints
      */
     constructor() {
-        mongodb.connect(blitz.config.core.mongoURL, (err, connected) => {
-            if (err) throw (err)
+        mongodb.connect(blitz.config[blitz.id].mongoURL, (err, connected) => {
             this.db = connected
+            this.client = require("./controllers/api.js")
+            this.client.endpointHandler = this
+            this.client.init()
         })
-        this.client = require("./controllers/api.js")
-        this.client.endpointHandler = this
-        this.client.init()
     }
 
 
@@ -34,28 +32,30 @@ class EndpointHandler {
      * @param {object} options - Options to pass to endpoint
      * @returns {Promise} Calculated data from endpoint
      */
-    callEndpoint(request) {
-        return new Promise((resolve, reject) => {
-            let Endpoint = require(request.file)
-            let endpoint = new Endpoint(this.client.api, this.db, request.url)
+    async callEndpoint(request) {
+        let Endpoint = require(request.file)
+        let endpoint = new Endpoint(this.client.api, this.db, request.url)
 
-            // Apply to endpoint
-            endpoint.main.apply(endpoint, request.query)
-                .then(data => {
-                    let res = {
-                        statusCode: 200,
-                        body: data
-                    }
-                    resolve(res)
-                })
-                .catch(err => {
-                    let res = {
-                        statusCode: 400,
-                        body: err
-                    }
-                    resolve(res)
-                })
-        })
+        // Original request passed? Needs to be parsed first.
+        if (endpoint.schema.sendRequest) {
+            request.query[0] = CircularJSON.parse(request.query[0])
+        }
+
+        // Apply to endpoint
+        return endpoint.main.apply(endpoint, request.query)
+            .then(data => {
+                return {
+                    statusCode: 200,
+                    body: data
+                }
+            })
+            .catch(err => {
+                console.error(err)
+                return {
+                    statusCode: 400,
+                    body: err
+                }
+            })
     }
 
 
@@ -67,7 +67,7 @@ class EndpointHandler {
 
         // Generate File Tree
         let config = []
-        config.push(util.inspect(this.getMethodTree(blitz.config.core.endpointPath, config), false, null))
+        config.push(util.inspect(this.getMethodTree(blitz.config[blitz.id].endpointPath, config), false, null))
         config = _.flattenDeep(config)
 
         // Cleanup
@@ -118,7 +118,7 @@ class EndpointHandler {
             let schema = new Endpoint().schema
 
             // Routes
-            endpoint.route = filename.replace(blitz.config.core.endpointPath, "").replace(".js", "")
+            endpoint.route = filename.replace(blitz.config[blitz.id].endpointPath, "").replace(".js", "")
 
             // Stringify functions to be preserved on socket.io's emit
             Object.keys(schema.query).map((i) => {
@@ -131,10 +131,11 @@ class EndpointHandler {
 
             // Other Modified values
             endpoint.endpoint = path.basename(filename).replace(".js", "")
-            endpoint.route = schema.url ? schema.url : filename.replace(blitz.config.core.endpointPath, "").replace(".js", "")
+            endpoint.route = schema.url ? schema.url : filename.replace(blitz.config[blitz.id].endpointPath, "").replace(".js", "")
             endpoint.scope = schema.scope
             endpoint.method = schema.method
             endpoint.description = schema.description
+            endpoint.sendRequest = schema.sendRequest
         }
 
         return endpoint

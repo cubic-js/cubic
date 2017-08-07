@@ -4,14 +4,14 @@
  * Dependencies
  */
 const local = require('./config/local.js')
-const worker = require("blitz-js-util")
+const worker = require("../blitz.js-util/index.js")
 const EndpointHandler = require("./EndpointHandler.js")
 
 
 /**
  * Describes parent class which controls all objects handling input/output
  */
-class core {
+class Core {
 
     /**
      * Set config for blitz.js to merge
@@ -21,7 +21,7 @@ class core {
 
         // Process forked
         if (process.env.isWorker) {
-            worker.connect(this).then(() => this.init())
+            worker.expose(this).then(() => this.init())
         }
 
         // Process not forked
@@ -39,8 +39,9 @@ class core {
     }
 
     init() {
+        //console.log(blitz.config[blitz.id])
         this.endpointHandler = new EndpointHandler()
     }
 }
 
-module.exports = process.env.isWorker ? new core() : core
+module.exports = process.env.isWorker ? new Core() : Core

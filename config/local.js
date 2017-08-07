@@ -20,15 +20,15 @@ module.exports = {
      * Databases
      */
     mongoPort: 27017,
-    mongoURL: "mongodb://localhost/blitz",
+    mongoURL: "mongodb://localhost/blitz-js-core",
     redisPort: 6379,
 
 
     /**
      * Authentication Credentials
      */
-    user_key: "Vf9W14UqTOceb6p6hTarH9LCbJCIKpY1PLUFHFj68cpWnLM91S2pzELKUc8bGn9I",
-    user_secret: "wSIKrCEldMIeKi7W6Q0ITHSAudnzXWYUEAEFe1HmZEbPcyjnW4VNjjuwxpmAB05C",
+    user_key: "dev",
+    user_secret: "dev",
 
 
     /**
