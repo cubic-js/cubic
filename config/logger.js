@@ -87,7 +87,6 @@ class Log {
             prefix += " "
         }
         prefix += "  |  "
-
         return prefix
     }
 }
