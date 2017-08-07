@@ -5,7 +5,7 @@
 const extend = require("deep-extend")
 const local = require("./config/local.js")
 const preauth = require("./hooks/preauth.js")
-const worker = require("blitz-js-query")
+const worker = require("blitz-js-util")
 
 
 /**

@@ -13,9 +13,9 @@
   "license": "MIT",
   "dependencies": {
     "bcrypt-as-promised": "^1.1.0",
-    "blitz-js": "^0.1.1",
-    "blitz-js-api": "^0.1.2",
-    "blitz-js-core": "^0.1.1",
+    "blitz-js": "^0.1.2",
+    "blitz-js-api": "^0.1.3",
+    "blitz-js-core": "^0.1.2",
     "blitz-js-util": "^0.1.0",
     "body-parser": "^1.16.1",
     "chalk": "^2.1.0",
