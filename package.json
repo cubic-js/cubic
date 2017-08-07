@@ -13,11 +13,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-query": "0.1.0",
-    "blitz-js-util": "0.1.0",
+    "blitz-js-query": "^0.1.0",
+    "blitz-js-util": "^0.1.0",
     "circular-json": "^0.3.3",
     "deep-extend": "^0.5.0",
     "lodash": "^4.17.4",
-    "mongodb": "^2.2.25"
+    "mongodb": "^2.2.30"
   }
 }
