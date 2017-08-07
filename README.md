@@ -1,5 +1,5 @@
 [![blitz.js](/banner.png)](https://github.com/nexus-devs)
-<p align="center">Instant API deployment. Built on Express and Socket.io. Ridiculously modular.</p>
+<p align="center">Horizontal scaling made easy by giving you control over each individual component.</p>
 
 ##  
 
