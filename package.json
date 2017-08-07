@@ -13,16 +13,16 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-util": "0.1.0",
+    "blitz-js-util": "^0.1.0",
     "body-parser": "^1.17.2",
     "chalk": "^2.1.0",
     "circular-json": "^0.3.3",
-    "express": "~4.15.3",
-    "jsonwebtoken": "^7.4.1",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^7.4.2",
     "lodash": "^4.17.4",
-    "mongodb": "^2.2.27",
+    "mongodb": "^2.2.30",
     "redis": "^2.7.1",
-    "rolling-rate-limiter": "^0.1.6",
-    "socket.io": "^2.0.1"
+    "rolling-rate-limiter": "^0.1.10",
+    "socket.io": "^2.0.3"
   }
 }
