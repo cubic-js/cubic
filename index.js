@@ -21,7 +21,10 @@ class Core {
 
         // Process forked
         if (process.env.isWorker) {
-            worker.expose(this).then(() => this.init())
+            worker.setGlobal().then(() => {
+                this.init()
+                worker.expose(this)
+            })
         }
 
         // Process not forked
@@ -39,7 +42,6 @@ class Core {
     }
 
     init() {
-        //console.log(blitz.config[blitz.id])
         this.endpointHandler = new EndpointHandler()
     }
 }
