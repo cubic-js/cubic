@@ -5,7 +5,7 @@
 const extend = require("deep-extend")
 const local = require("./config/local.js")
 const preauth = require("./hooks/preauth.js")
-const worker = require("blitz-js-util")
+const worker = require("blitz-js-query")
 
 
 /**
@@ -18,7 +18,10 @@ class Auth {
 
         // Process forked
         if (process.env.isWorker) {
-            worker.expose(this).then(this.hookDependencies)
+            worker.setGlobal().then(() => {
+                this.hookDependencies()
+                worker.expose(this)
+            })
         }
 
         // Process not forked
