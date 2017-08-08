@@ -21,10 +21,9 @@ class Core {
 
         // Process forked
         if (process.env.isWorker) {
-            this.setup = worker.setGlobal().then(() => {
-                this.init()
-                worker.expose(this)
-            })
+            this.setup = worker.setGlobal()
+            this.setup.then(() => this.init())
+            worker.expose(this)
         }
 
         // Process not forked
