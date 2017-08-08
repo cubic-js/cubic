@@ -1,29 +1,22 @@
+const mongodb = require("mongodb").MongoClient
+
+/**
+ * Remove unused users to reduce unnecessary storage usage (production only)
+ */
 class Purge {
-
-    constructor(user) {
-        this.user = user
-    }
-
-    /**
-     * Remove unused users to reduce unnecessary storage usage
-     */
-    watch() {
-        setInterval(() => {
-            this.user.find({}).then(users => {
-                users.forEach(user => {
-                    if (user.last_ip.length < 2) {
-                        if (new Date() - new Date(user.last_ip[0].accessed) > 604800000) {
-                            this.remove(user.user_key)
-                        }
+    async watch() {
+        if (blitz.config.local.environment === "production" && blitz.config[blitz.id].purgeMaxLimit > 0) {
+            let db = await mongodb.connect(blitz.config[blitz.id].mongoURL)
+            setInterval(() => {
+                let limit = new Date() - blitz.config[blitz.id].purgeMaxLimit
+                db.collection("users").remove({
+                    last_ip[0]: {
+                        $lt: limit
                     }
                 })
-            })
-        }, 3600000)
-    }
-
-    remove(key) {
-        this.users.remove({user_key: key})
+            }, blitz.config[blitz.id].purgeInterval)
+        }
     }
 }
 
-module.exports = Purge
+module.exports = new Purge

@@ -11,7 +11,15 @@ module.exports = {
      */
     port: 3030,
     endpointPath: __dirname + "/../endpoints/",
-    maxLogsPerUser: 50,
+
+
+    /**
+     * User maintenance information
+     */
+    maxLogsPerUser: 50, // Max number of ip logs for authentication
+    purgeInterval: 3600000, // Interval to check for inactive users (in ms)
+    purgeMaxLimit: 2592000000, // Age at which user is considered inactive (in ms)
+                               // Production only. Set to 0 to disable pruge.
 
 
     /**

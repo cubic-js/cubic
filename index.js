@@ -5,6 +5,7 @@
 const extend = require("deep-extend")
 const local = require("./config/local.js")
 const preauth = require("./hooks/preauth.js")
+const purge = require("./hooks/purge.js")
 const worker = require("blitz-js-util")
 
 
@@ -57,6 +58,7 @@ class Auth {
 
         // API node which controls incoming requests
         options.id = "auth_api"
+        blitz.hook(options.id, purge.watch)
         blitz.use(new API(options))
         preauth.validateWorker()
 
