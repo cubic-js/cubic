@@ -64,7 +64,7 @@ class PreAuth {
             }, {
                 $set: {
                     user_key: "dev",
-                    user_secret: await bcrypt.hash("dev", await bcrypt.genSalt(10), null),
+                    user_secret: await bcrypt.hash("dev"),
                     user_id: "dev-node",
                     last_ip: [],
                     scope: "root-read-write",
