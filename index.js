@@ -18,7 +18,7 @@ class Auth {
 
         // Process forked
         if (process.env.isWorker) {
-            worker.setGlobal().then(() => {
+            this.setup = worker.setGlobal().then(() => {
                 this.hookDependencies()
                 worker.expose(this)
             })
@@ -42,7 +42,7 @@ class Auth {
     /**
      * Hook node components for actual logic
      */
-    hookDependencies() {
+    async hookDependencies() {
         /**
          * Nodes must be required here, otherwise worker spawn will trigger them to create
          * a new object on require due to process.env.isWorker = true. (which won't
@@ -58,7 +58,9 @@ class Auth {
 
         // API node which controls incoming requests
         options.id = "auth_api"
-        blitz.use(new API(options))
+        let api = new API(options)
+        blitz.use(api)
+        await api.setup
         preauth.validateWorker()
 
         // Core Node which processes incoming requests

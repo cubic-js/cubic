@@ -14,8 +14,8 @@
   "dependencies": {
     "bcrypt-as-promised": "^1.1.0",
     "blitz-js": "^0.1.2",
-    "blitz-js-api": "^0.1.4",
-    "blitz-js-core": "^0.1.3",
+    "blitz-js-api": "^0.1.5",
+    "blitz-js-core": "^0.1.4",
     "blitz-js-util": "^0.1.1",
     "body-parser": "^1.16.1",
     "chalk": "^2.1.0",
