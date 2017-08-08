@@ -17,7 +17,7 @@ const API = require("blitz-js-api")
 blitz.use(new API()) // Public api node which will get data from the resource node below
 
 const Core = require("blitz-js-core")
-blitz.use(new Core()) // Resource node which authenticates as root and sends available endpoints to api node
+blitz.use(new Core()) // Resource node which processes your application logic
 ```
 Now visit `localhost:3010/foo` to get your `bar`.
 
