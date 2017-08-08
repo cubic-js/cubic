@@ -18,10 +18,9 @@ class Auth {
 
         // Process forked
         if (process.env.isWorker) {
-            this.setup = worker.setGlobal().then(() => {
-                this.hookDependencies()
-                worker.expose(this)
-            })
+            this.setup = worker.setGlobal()
+            this.setup.then(() => this.hookDependencies())
+            worker.expose(this)
         }
 
         // Process not forked
@@ -58,9 +57,7 @@ class Auth {
 
         // API node which controls incoming requests
         options.id = "auth_api"
-        let api = new API(options)
-        blitz.use(api)
-        await api.setup
+        blitz.use(new API(options))
         preauth.validateWorker()
 
         // Core Node which processes incoming requests

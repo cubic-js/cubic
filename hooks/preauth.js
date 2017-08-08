@@ -90,7 +90,7 @@ class PreAuth {
      * private key to verify authenticity
      */
     validateWorker() {
-        blitz.nodes.auth_api.post("/token", async (req, res, next) => {
+        return blitz.nodes.auth_api.post("/token", async (req, res, next) => {
 
             // Load JWT inside function because it's used in another process
             const jwt = require("jsonwebtoken")
@@ -144,7 +144,9 @@ class PreAuth {
             }
 
             // Normal Authentication attempt
-            else next()
+            else {
+                next()
+            }
         })
     }
 }
