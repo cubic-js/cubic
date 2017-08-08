@@ -114,7 +114,7 @@ class Blitz {
     /**
      * Create workers from node file
      */
-    cluster(node, id) {
+    async cluster(node, id) {
         let file = node.filename
         let cores = 1 //blitz.config[id].cores
 
@@ -128,23 +128,60 @@ class Blitz {
                     isWorker: true
                 }
             }))
+            let worker = blitz.nodes[id].workers[i]
+            worker.ping = () => {return this.ping(worker)}
 
             // Send global blitz to worker
             blitz.id = id
-            blitz.nodes[id].workers[i].send({
+            worker.send({
                 type: "setGlobal",
-                data: this.serialize(blitz)
+                body: this.serialize(blitz)
             })
 
             // Make Worker methods accessible from global blitz
             this.exposeMethods(node, id)
 
             // Restart worker on exit
-            blitz.nodes[id].workers[i].on("exit", (code, signal) => {
+            blitz.nodes[id].workers[i].on("death", () => {
                 blitz.nodes[id].workers.push(fork(file))
             })
         }
     }
+
+
+    /**
+     * Ping method to check for listeners on process. Returns time elapsed.
+     */
+     ping(worker) {
+         return new Promise(resolve => {
+             let timestart = new Date
+             let resolved = false
+
+             // Send ping
+             worker.send({
+                 type: "ping",
+                 body: {}
+             })
+
+             // Listen to response
+             worker.once("message", msg => {
+                 if (msg.type === "pong") {
+                     resolve(new Date - timestart)
+                     resolved = true
+                 }
+             })
+
+             // Retry if no response
+             setTimeout(() => {
+                 if (!resolved) {
+                     this.ping(worker).then(() => {
+                         resolve(new Date - timestart)
+                         resolved = true
+                     })
+                 }
+             }, 500)
+         })
+     }
 
 
     /**
@@ -153,22 +190,39 @@ class Blitz {
     exposeMethods(node, id) {
         for (let method of Object.getOwnPropertyNames(Object.getPrototypeOf(node))) {
             let _this = this
-
-            // Direct request via stdout to worker
             blitz.nodes[id][method] = function() {
-                blitz.nodes[id].workers.forEach(worker => {
-                    worker.send({
-                        type: "call",
-                        value: {
-                            method: method,
-                            args: _this.serialize(arguments)
-                        }
-                    })
-                })
+                return _this.setMethodInterface(id, method, arguments)
             }
         }
     }
 
+
+    /**
+     * Helper function which calls functions on worker
+     */
+    setMethodInterface(id, method, args) {
+        return new Promise(resolve => {
+            blitz.nodes[id].workers.forEach(async worker => {
+                await worker.ping()
+
+                // Call function with given args
+                worker.send({
+                    type: "call",
+                    body: {
+                        method: method,
+                        args: this.serialize(args)
+                    }
+                })
+
+                // Listen to response
+                worker.on("message", msg => {
+                    if (msg.type === "return" && msg.body.method === method) {
+                        resolve(msg.body.value)
+                    }
+                })
+            })
+        })
+    }
 
     /**
      * Serialize global blitz object so it can be sent via stdout to workers
