@@ -107,7 +107,7 @@ class PreAuth {
                 })
 
                 // Check if secret matches
-                if (await bcrypt.compare(req.body.user_secret, user.user_secret)) {
+                if (user && await bcrypt.compare(req.body.user_secret, user.user_secret)) {
                     let refresh_token
                     let access_token = jwt.sign({
                         scp: user.scope,
