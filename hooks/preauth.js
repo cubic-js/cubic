@@ -108,24 +108,30 @@ class PreAuth {
 
                 // Check if secret matches
                 if (await bcrypt.compare(req.body.user_secret, user.user_secret)) {
+                    let refresh_token
                     let access_token = jwt.sign({
                         scp: user.scope,
                         uid: user.user_id
                     }, blitz.config.auth.certPrivate, {
                         algorithm: blitz.config.auth.alg
                     })
-                    let refresh_token = user.user_key + randtoken.uid(256)
 
-                    // Save Refresh Token in DB
-                    await db.collection("users").updateOne({
-                        'user_key': user.user_key
-                    }, {
-                        $set: {
-                            'refresh_token': refresh_token
-                        }
-                    }, {
-                        upsert: true
-                    })
+                    if (user.refresh_token) {
+                        refresh_token = user.refresh_token
+                    } else {
+                        refresh_token = user.user_key + randtoken.uid(256)
+
+                        // Save Refresh Token in DB
+                        await db.collection("users").updateOne({
+                            'user_key': user.user_key
+                        }, {
+                            $set: {
+                                'refresh_token': refresh_token
+                            }
+                        }, {
+                            upsert: true
+                        })
+                    }
 
                     // Send back tokens
                     return res.json({
