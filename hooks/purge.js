@@ -10,7 +10,7 @@ class Purge {
             setInterval(() => {
                 let limit = new Date() - blitz.config[blitz.id].purgeMaxLimit
                 db.collection("users").remove({
-                    last_ip[0]: {
+                    "last_ip.0": {
                         $lt: limit
                     }
                 })
