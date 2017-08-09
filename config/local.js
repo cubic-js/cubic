@@ -52,13 +52,6 @@ module.exports = {
 
 
     /**
-     * Authentication Credentials for core-node
-     */
-    user_key: "dev",
-    user_secret: "dev",
-
-
-    /**
      * Cluster config
      */
     cores: os.cpus().length
