@@ -18,7 +18,6 @@ module.exports = (sockets, http, cache) => {
 
         // Subscriptions
         socket.on("subscribe", endpoint => {
-            endpoint = endpoint.toLowerCase()
             blitz.log.verbose("Socket.io | " + socket.user.uid + " subscribed to " + endpoint)
             socket.join(endpoint)
             socket.emit("subscribed", endpoint)
@@ -46,7 +45,6 @@ module.exports = (sockets, http, cache) => {
 
         // Subscriptions
         socket.on("subscribe", endpoint => {
-            endpoint = endpoint.toLowerCase()
             blitz.log.verbose("Socket.io | " + socket.user.uid + " subscribed to " + endpoint)
             socket.join(endpoint)
             socket.emit("subscribed", endpoint)
@@ -54,10 +52,9 @@ module.exports = (sockets, http, cache) => {
 
         // Listen to Updates from core node and publish to subscribers
         socket.on("publish", update => {
-            let endpoint = update.endpoint.toLowerCase()
-            blitz.log.verbose("API       | > publishing data for " + endpoint)
-            sockets.io.to(endpoint).emit(update.endpoint, update.data)
-            sockets.root.to(endpoint).emit(update.endpoint, update.data)
+            blitz.log.verbose("API       | > publishing data for " + update.endpoint)
+            sockets.io.to(update.endpoint).emit(update.endpoint, update.data)
+            sockets.root.to(update.endpoint).emit(update.endpoint, update.data)
         })
 
         // Listen for Cache updates
