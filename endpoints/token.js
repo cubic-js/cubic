@@ -55,7 +55,7 @@ class Authentication extends Endpoint {
         })
 
         // No User Found
-        if (user && await this.isValidSecret(credentials.user_secret, user.user_secret)) {
+        if (await this.isValidSecret(credentials.user_secret, user.user_secret)) {
 
             // Valid User Found
             this.saveIP(user.user_key, ip, 'credentials', true)
@@ -178,7 +178,7 @@ class Authentication extends Endpoint {
         let refreshToken = user_key + randtoken.uid(256)
 
         // Save Refresh Token in DB
-        this.users.updateOne({
+        this.db.collection("users").updateOne({
             'user_key': user_key
         }, {
             $set: {

@@ -2,7 +2,6 @@ const fs = require('fs')
 const os = require('os')
 const prvCert = fs.readFileSync(__dirname + "/certs/auth_private.pem", "utf-8")
 const pubCert = fs.readFileSync(__dirname + "/certs/auth_public.pem", "utf-8")
-const jwt = require("jsonwebtoken")
 
 module.exports = {
 
@@ -55,12 +54,8 @@ module.exports = {
     /**
      * Authentication Credentials for core-node
      */
-    user_key: "dev-VerifyBySignature",
-    user_secret: jwt.sign({
-        authorized: true
-    }, prvCert, {
-        algorithm: "RS256"
-    }),
+    user_key: "dev",
+    user_secret: "dev",
 
 
     /**

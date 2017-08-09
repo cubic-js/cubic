@@ -2,7 +2,6 @@
  * blitz.js authentication server
  * Web-API to get authentication for resource servers
  */
-const extend = require("deep-extend")
 const local = require("./config/local.js")
 const preauth = require("./hooks/preauth.js")
 const purge = require("./hooks/purge.js")
@@ -55,6 +54,7 @@ class Auth {
 
         // Apply config to nodes and hook them
         let options = blitz.config[blitz.id]
+        options.user_key += "-VerifyAuthWorker"
 
         // API node which controls incoming requests
         options.id = "auth_api"
