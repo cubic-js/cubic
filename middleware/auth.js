@@ -40,8 +40,9 @@ class Authentication {
      * Express Middleware to verify JWT if present. Also adds user to req.
      */
     verifyExpress(req, res, next) {
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         req.user = {
-            uid: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            uid: ip,
             scp: "basic-read"
         }
 
@@ -52,20 +53,20 @@ class Authentication {
             // Set req.user from token
             try {
                 req.user = jwt.verify(token, blitz.config[blitz.id].certPublic)
-                blitz.log.verbose("Express   | " + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + " connected as " + req.user.uid)
+                blitz.log.verbose("HTTP      | " + ip + " connected as " + req.user.uid)
                 return next()
             }
 
             // Invalid Token
             catch (err) {
-                blitz.log.verbose("Express   | " + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + " rejected (" + err + ")")
+                blitz.log.verbose("HTTP      | " + ip + " rejected (" + err + ")")
                 return next(err)
             }
         }
 
         // No token provided
         else {
-            blitz.log.verbose("Express   | " + req.user.uid + " connected without token")
+            blitz.log.verbose("HTTP      | " + req.user.uid + " connected without token")
             next()
         }
     }
@@ -75,8 +76,9 @@ class Authentication {
      * Socket.io Middleware to verify JWT if present. Also adds user to req.
      */
     verifySocket(socket, next) {
+        let ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address || socket.request.connection.remoteAddress
         socket.user = {
-            uid: socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address || socket.request.connection.remoteAddress,
+            uid: ip,
             scp: "basic-read"
         }
 
@@ -87,7 +89,7 @@ class Authentication {
             // Set req.user from token
             try {
                 socket.user = jwt.verify(token, blitz.config[blitz.id].certPublic)
-                blitz.log.verbose("Socket.io | " + (socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address || socket.request.connection.remoteAddress) + " connected as " + socket.user.uid + " on " + socket.nsp.name)
+                blitz.log.verbose("Socket.io | " + ip + " connected as " + socket.user.uid + " on " + socket.nsp.name)
                 return next()
             }
 

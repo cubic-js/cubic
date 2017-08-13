@@ -13,6 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "bcrypt-as-promised": "^1.1.0",
     "blitz-js-util": "^0.1.2",
     "body-parser": "^1.17.2",
     "chalk": "^2.1.0",
@@ -20,7 +21,7 @@
     "express": "^4.15.4",
     "jsonwebtoken": "^7.4.2",
     "lodash": "^4.17.4",
-    "mongodb": "^2.2.30",
+    "rand-token": "^0.3.0",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.10",
     "socket.io": "^2.0.3"

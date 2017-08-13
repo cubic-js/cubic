@@ -1,7 +1,4 @@
-const endpoints = require("./endpoints.js")
-const timeout = (fn, s) => {
-    return new Promise(resolve => setTimeout(() => resolve(fn()), s))
-}
+const CircularJSON = require("circular-json")
 
 /**
  * Checks request against endpoints given by dbs node
@@ -9,71 +6,22 @@ const timeout = (fn, s) => {
 class RequestController {
 
     /**
-     * Connect to databases
-     */
-    constructor(adapter) {
-        this.schema = {
-            uat: 0,
-            endpoints: []
-        }
-        this.endpoints = endpoints
-        this.adapter = adapter
-
-        // Load endpoint config directly on bootup
-        this.endpoints.connect()
-            .then(() => this.endpoints.compareSchema(this.adapter))
-    }
-
-
-    /**
      * Controls Request processing
      */
     async getResponse(req) {
-        // Check if Schema requires updating
-        endpoints.compareSchema(this.adapter)
-
-        // Verify & Parse request
-        let request = endpoints.parse(req, this.schema)
-
-        // Invalid Request
-        if (parseInt(request.statusCode.toString()[0]) > 3) {
-            return request
-        }
-
-        // Params returned
-        else {
-            return await this.send(request)
-        }
-    }
-
-
-    /**
-     * Sends request to connected sockets.
-     */
-    async send(options) {
-        try {
-            let socket = await this.check(options.file)
-            return this.request(socket, options)
-        }
-
-        // No socket responded (file not available or cannot be reached)
-        catch (err) {
-            return {
-                statusCode: 503,
-                body: err
-            }
-        }
+        return this.send(req)
     }
 
 
     /**
      * Check if resource nodes are busy
      */
-    check(file) {
+    check(req) {
         return new Promise((resolve, reject) => {
+            let sockets = []
             let request = {
                 id: process.hrtime().join("").toString(),
-                file: file
+                url: req.url
             }
 
             // Send check to root nsp
@@ -81,16 +29,51 @@ class RequestController {
             blitz.log.silly("API       | Check broadcasted")
 
             // Listen to all sockets in root nsp for response
-            Object.keys(this.client.root.sockets).forEach(sid => {
+            let sio = Object.keys(this.client.root.sockets)
+            let responses = 0
+            sio.forEach(sid => {
                 let socket = this.client.root.sockets[sid]
-                socket.once(request.id, () => {
-                    blitz.log.silly("API       | Check acknowledged")
-                    resolve(socket)
+                socket.once(request.id, res => {
+                    responses++
+
+                    // Check successful
+                    if (res.available) {
+                        blitz.log.silly("API       | Check acknowledged")
+                        sockets.push(socket)
+                    }
+
+                    // All nodes checked
+                    if (sio.length === responses) {
+                        if (sockets.length > 0) {
+                            resolve({
+                                available: true,
+                                sockets: sockets
+                            })
+                        } else {
+                            resolve({
+                                available: false,
+                                error: {
+                                    statusCode: 404,
+                                    method: "send",
+                                    body: "No endpoint matched the request."
+                                }
+                            })
+                        }
+                    }
                 })
             })
 
             // Wait before rejecting
-            setTimeout(() => reject("All nodes currently busy. Please try again later"), blitz.config[blitz.id].requestTimeout)
+            setTimeout(() => {
+                resolve({
+                    available: false,
+                    error: {
+                        statusCode: 503,
+                        method: "send",
+                        body: "All nodes currently busy. Please try again later."
+                    }
+                })
+            }, blitz.config[blitz.id].requestTimeout)
         })
     }
 
@@ -98,21 +81,31 @@ class RequestController {
     /**
      * Send request to responding node
      */
-    async request(socket, options) {
-        return new Promise((resolve, reject) => {
+    send(req) {
+        return new Promise(async resolve => {
+            let nodes = await this.check(req)
+            let sockets = nodes.sockets
 
-            // Generate unique callback for emit & pass to responding node
-            options.callback = process.hrtime().join("").toString()
+            // At least one socket replied
+            if (sockets) {
+                let socket = sockets[0]
 
-            // Send Request to all Core Nodes
-            socket.emit("req", options)
-            blitz.log.silly("API       | Request sent")
+                // Generate unique callback for emit & pass to responding node
+                req.id = process.hrtime().join("").toString()
+                socket.emit("req", CircularJSON.stringify(req))
+                blitz.log.silly("API       | Request sent")
 
-            // Listen to all sockets for response
-            socket.once(options.callback, data => {
-                blitz.log.silly("API       | Request successful - Sending data to client")
-                resolve(data)
-            })
+                // Listen to socket for response.
+                socket.once(req.id, data => {
+                    blitz.log.silly("API       | Request successful - Sending data to client")
+                    resolve(data)
+                })
+            }
+
+            // No sockets available
+            else {
+                resolve(nodes.error)
+            }
         })
     }
 }

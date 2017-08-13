@@ -27,9 +27,9 @@ class Server {
         this.cache = new Cache()
 
         // Config Express & Sockets.io
+        this.setRequestClient()
         this.applyMiddleware()
         this.applyRoutes()
-        this.setRequestClient()
     }
 
 
@@ -71,7 +71,7 @@ class Server {
      */
     applyRoutes() {
         require(blitz.config[blitz.id].routes)(this.http)
-        require(blitz.config[blitz.id].events)(this.sockets, this.http, this.cache)
+        require(blitz.config[blitz.id].events)(this.sockets, this.cache)
     }
 
 

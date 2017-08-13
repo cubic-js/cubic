@@ -2,7 +2,7 @@
  * Event Configuration for Socket.io Server
  */
 
-module.exports = (sockets, http, cache) => {
+module.exports = (sockets, cache) => {
 
     /**
      * Default namespace
@@ -35,13 +35,6 @@ module.exports = (sockets, http, cache) => {
      * Root namespace
      */
     sockets.root.on("connect", socket => {
-
-        // Listen to endpoint config event & save in db/memstore
-        socket.on("config", endpoints => {
-            blitz.log.verbose("API       | < endpoint config")
-            sockets.request.endpoints.saveEndpoints(endpoints, sockets)
-            http.request.endpoints.saveEndpoints(endpoints, http)
-        })
 
         // Subscriptions
         socket.on("subscribe", endpoint => {

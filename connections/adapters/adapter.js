@@ -11,7 +11,7 @@ class Adapter {
         this.stack = []
 
         // Bind Request Controller to object
-        this.request = new Request(this)
+        this.request = new Request()
     }
 
 
@@ -19,7 +19,7 @@ class Adapter {
      * Functions to run before allowing request
      */
     async prepass(req, res) {
-        let layer = new Layer
+        const layer = new Layer
         await layer.runStack(req, res, this.stack)
         this.pass(req, res)
     }
@@ -30,12 +30,12 @@ class Adapter {
      */
     async pass(req, res) {
         let response = await this.request.getResponse(req)
-        res.status(response.statusCode).send(response.body)
+        res.status(response.statusCode)[response.method](response.body)
     }
 
 
     /**
-     * Accepts middleware to run before this.pass().
+     * Accepts middleware to run before this.pass()
      */
     use(route, fn, verb) {
         let middleware = {
