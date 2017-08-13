@@ -84,7 +84,6 @@ class Client {
 
             // Not available -> let other nodes respond
             catch (err) {
-                console.log(err)
                 blitz.log.silly("Core      | Checked file not available")
                 this.api.emit(req.id, {
                     available: false

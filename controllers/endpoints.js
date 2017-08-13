@@ -219,7 +219,6 @@ class EndpointController {
                 query[index] = def
             }
         })
-        //console.log(query)
     }
 
 
