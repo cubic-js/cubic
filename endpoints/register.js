@@ -19,11 +19,10 @@ const bcrypt = require('bcrypt-as-promised')
 class Authentication extends Endpoint {
     constructor(api, db, url) {
         super(api, db, url)
-        this.schema.sendRequest = true
     }
 
     async main(req) {
-        return this.newUser(req)
+        return this.newUser(this.req)
     }
 
     /**

@@ -20,19 +20,18 @@ class Authentication extends Endpoint {
     constructor(api, db, url) {
         super(api, db, url)
         this.schema.method = "POST"
-        this.schema.sendRequest = true
     }
 
-    async main(req, auth) {
+    async main(auth) {
 
         // Credentials sent
         if (auth.user_key) {
-            return this.matchCredentials(auth, req)
+            return this.matchCredentials(auth, this.req)
         }
 
         // Refresh Token sent
         else if (auth.refresh_token) {
-            return this.matchRefreshToken(auth, req)
+            return this.matchRefreshToken(auth, this.req)
         }
 
         // No Allowed content
