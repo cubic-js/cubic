@@ -5,7 +5,7 @@
  */
 const local = require('./config/local.js')
 const worker = require("blitz-js-util")
-const EndpointHandler = require("./EndpointHandler.js")
+const Client = require("./controllers/api.js")
 
 
 /**
@@ -41,7 +41,7 @@ class Core {
     }
 
     init() {
-        this.endpointHandler = new EndpointHandler()
+        this.client = new Client()
     }
 }
 

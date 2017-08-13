@@ -1,9 +1,9 @@
-"use strict"
-
 /**
  * Dependencies
  */
 const BlitzQuery = require("blitz-js-query")
+const EndpointController = require("./endpoints.js")
+const CircularJSON = require("circular-json")
 
 
 /**
@@ -33,6 +33,10 @@ class Client {
 
         // Connect to api-node
         this.api = new BlitzQuery(options)
+
+        // Load Endpoint Controller
+        this.endpointController = new EndpointController()
+        this.init()
     }
 
     /**
@@ -42,12 +46,10 @@ class Client {
 
         // Listen to incoming requests & send config
         this.listen()
-        this.sendEndpoints()
 
         // Listen on Reconnect
         this.api.on("connect", () => {
             blitz.log.verbose("Core      | " + [blitz.id] + " worker connected to target API")
-            this.sendEndpoints()
         })
 
         this.api.on("disconnect", () => {
@@ -60,43 +62,51 @@ class Client {
      * Listen to incoming requests to be processed
      */
     listen() {
+        this.listenForChecks()
+        this.listenForRequests()
+    }
 
-        // Tell API node that we're ready
-        this.api.on("check", request => {
+
+    /**
+     * Listen to incoming file checks
+     */
+    listenForChecks() {
+        this.api.on("check", req => {
 
             // Check if file available
             try {
-                require(request.file)
+                this.endpointController.getEndpoint(req.url)
                 blitz.log.silly("Core      | Check successful")
-                this.api.emit(request.id, "ack")
+                this.api.emit(req.id, {
+                    available: true
+                })
             }
 
             // Not available -> let other nodes respond
             catch (err) {
+                console.log(err)
                 blitz.log.silly("Core      | Checked file not available")
-            }
-        })
-
-        // Actual request
-        this.api.on("req", options => {
-            blitz.log.silly("Core      | Request received")
-            this.endpointHandler.callEndpoint(options)
-                .then(data => {
-                    blitz.log.silly("Core      | Request resolved")
-                    this.api.emit(options.callback, data)
+                this.api.emit(req.id, {
+                    available: false
                 })
+            }
         })
     }
 
 
     /**
-     * Send local endpoints to API node so they get routed
+     * Listen to incoming requests
      */
-    sendEndpoints() {
-        blitz.log.verbose("Core      | sending endpoint config")
-        this.api.emit("config", this.endpointHandler.generateEndpointSchema())
+    async listenForRequests() {
+        this.api.on("req", async req => {
+            blitz.log.silly("Core      | Request received")
+            req = CircularJSON.parse(req)
+            let data = await this.endpointController.callEndpoint(req, this.api)
+            blitz.log.silly("Core      | Request resolved")
+            this.api.emit(req.id, data)
+        })
     }
 }
 
 
-module.exports = new Client()
+module.exports = Client

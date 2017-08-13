@@ -6,16 +6,14 @@ class Endpoint {
 
     /**
      * Describes Endpoint properties
-     * @constructor
      */
-    constructor(api, db, url) {
+    constructor(api, db, req) {
 
         /**
          * Default schema for API calls
          * @type {{resources: Array, params: Array, scope: string, verb: string, description: string}}
          */
         this.schema = {
-            url: "",
             query: [],
             scope: 'basic-read',
             method: 'GET',
@@ -23,7 +21,8 @@ class Endpoint {
         }
         this.api = api
         this.db = db
-        this.url = url
+        this.url = req ? req.url : null
+        this.req = req
     }
 
 
@@ -51,14 +50,6 @@ class Endpoint {
         }
         this.api.emit("cache", data)
         blitz.log.verbose("Core      | Sending data to cache for " + key)
-    }
-
-
-    /**
-     * Helper function to safely set attributes in object
-     */
-    set(key, value) {
-        this[key] = value
     }
 }
 

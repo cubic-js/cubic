@@ -1,12 +1,13 @@
 const os = require('os')
+const path = require("path")
 
 module.exports = {
 
     /**
      * Core-Node config
      */
-    endpointPath:  __dirname + "/../endpoints/",
-    endpointParent: __dirname +"/../Endpoint.js",
+    endpointPath: path.join(__dirname, "/../endpoints/"),
+    endpointParent: path.join(__dirname, "/../Endpoint.js"),
 
 
     /**
