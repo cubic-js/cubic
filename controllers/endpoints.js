@@ -24,59 +24,87 @@ class EndpointController {
 
 
     /**
-     * Get specific endpoint through url detection
+     * Calls endpoint with given param Array
      */
-    findByUrl(url) {
-        let found = true
-        let reqUrl = url.split("?")[0].split("/")
+    async getResponse(req, api) {
 
-        for (let endpoint of this.endpoints) {
-            let route = endpoint.route.split("/")
-            if(route.length === reqUrl.length) {
-                for (let i = 0; i < reqUrl.length; i++) {
-                    if (route[i] !== reqUrl[i] && !route[i].includes(":")) {
-                        found = false
-                        break
-                    } else if (i === reqUrl.length - 1) {
-                        found = endpoint
-                    }
-                }
-                if (found) break
+        // Return raw file if available
+        try {
+            let readFile = util.promisify(fs.readFile)
+            let raw = await readFile(blitz.config[blitz.id].publicPath + req.url, {encoding: "utf-8"})
+            api.emit("cache", {
+                key: req.url,
+                value: raw,
+                exp: blitz.config[blitz.id].cacheDuration
+            })
+            return {
+                statusCode: 200,
+                method: "send",
+                body: raw
             }
         }
-        return found
+
+        // Assume dynamic endpoint otherwise
+        catch (err) {
+            return await this.callEndpoint(req, api)
+        }
     }
 
 
     /**
      * Calls endpoint with given param Array
      */
-    async callEndpoint(req, api) {
-        req.url = req.url.split("%20").join(" ")
-        const parsed = this.parse(req)
-        const Endpoint = require(parsed.endpoint.file)
-        const endpoint = new Endpoint(api, await this.db, req)
+     async callEndpoint(req, api) {
+         req.url = req.url.split("%20").join(" ")
+         const parsed = this.parse(req)
+         const Endpoint = require(parsed.endpoint.file)
+         const endpoint = new Endpoint(api, await this.db, req)
 
-        // Apply to endpoint
-        return endpoint.main.apply(endpoint, parsed.query)
-            .then(data => {
-                return {
-                    statusCode: data.statusCode || 200,
-                    method: data.method || "send",
-                    body: data.body || data
-                }
-            })
-            .catch(err => {
-                if (blitz.config.local.environment === "development") {
-                    console.log(err)
-                }
-                return {
-                    statusCode: err.statusCode || 400,
-                    method: err.method || "send",
-                    body: err.body || err
-                }
-            })
-    }
+         // Apply to endpoint
+         return endpoint.main.apply(endpoint, parsed.query)
+             .then(data => {
+                 return {
+                     statusCode: data.statusCode || 200,
+                     method: data.method || "send",
+                     body: data.body || data
+                 }
+             })
+             .catch(err => {
+                 if (blitz.config.local.environment === "development") {
+                     console.log(err)
+                 }
+                 return {
+                     statusCode: err.statusCode || 400,
+                     method: err.method || "send",
+                     body: err.body || err
+                 }
+             })
+     }
+
+
+     /**
+      * Get specific endpoint through url detection
+      */
+     findByUrl(url) {
+         let found = true
+         let reqUrl = url.split("?")[0].split("/")
+
+         for (let endpoint of this.endpoints) {
+             let route = endpoint.route.split("/")
+             if (route.length === reqUrl.length) {
+                 for (let i = 0; i < reqUrl.length; i++) {
+                     if (route[i] !== reqUrl[i] && !route[i].includes(":")) {
+                         found = false
+                         break
+                     } else if (i === reqUrl.length - 1) {
+                         found = endpoint
+                     }
+                 }
+                 if (found) break
+             }
+         }
+         return found
+     }
 
 
     /**
@@ -128,11 +156,21 @@ class EndpointController {
 
 
     /**
-     * Get Endpoint from givne URL
+     * Get Endpoint from given URL
      */
-    getEndpoint(url) {
-        let path = this.parseURL(url).endpoint.file
-        return require(path)
+    async getEndpoint(url) {
+
+        // Try to get raw file in public folder
+        try {
+            let check = util.promisify(fs.stat)
+            await check(blitz.config[blitz.id].publicPath + url)
+        }
+
+        // Assume dynamic endpoint if file not available
+        catch (err) {
+            let path = this.parseURL(url).endpoint.file
+            return require(path)
+        }
     }
 
 
@@ -151,12 +189,12 @@ class EndpointController {
      * Parse URL into filepath and query params
      */
     parseURL(url) {
+        url = url === "" ? "/" : url
         let route = url.split("?")[0]
         let endpoint = this.findByUrl(route)
         let placeholders = endpoint.route.split(":").length - 1
         let totalParams = placeholders + endpoint.query.length
-        let query = []
-        for (let j = 0; j < totalParams; j++) query.push(null)
+        let query = new Array(totalParams)
 
         // Assign placeholder data
         let eurl = endpoint.route.split("/")

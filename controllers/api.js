@@ -71,11 +71,11 @@ class Client {
      * Listen to incoming file checks
      */
     listenForChecks() {
-        this.api.on("check", req => {
+        this.api.on("check", async req => {
 
             // Check if file available
             try {
-                this.endpointController.getEndpoint(req.url)
+                await this.endpointController.getEndpoint(req.url)
                 blitz.log.silly("Core      | Check successful")
                 this.api.emit(req.id, {
                     available: true
@@ -96,11 +96,11 @@ class Client {
     /**
      * Listen to incoming requests
      */
-    async listenForRequests() {
+    listenForRequests() {
         this.api.on("req", async req => {
             blitz.log.silly("Core      | Request received")
             req = CircularJSON.parse(req)
-            let data = await this.endpointController.callEndpoint(req, this.api)
+            let data = await this.endpointController.getResponse(req, this.api)
             blitz.log.silly("Core      | Request resolved")
             this.api.emit(req.id, data)
         })

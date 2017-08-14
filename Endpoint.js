@@ -42,15 +42,15 @@ class Endpoint {
     /**
      * Send data to be cached for endpoint on API node
      */
-    cache(key, value, exp) {
-        let data = {
-            key: key,
-            value: value,
-            exp: exp
-        }
-        this.api.emit("cache", data)
-        blitz.log.verbose("Core      | Sending data to cache for " + key)
-    }
+     cache(key, value, exp) {
+         let data = {
+             key: key,
+             value: value,
+             exp: exp
+         }
+         this.api.emit("cache", data)
+         blitz.log.verbose("Core      | Sending data to cache for " + key)
+     }
 }
 
 module.exports = Endpoint
