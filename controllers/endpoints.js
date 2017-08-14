@@ -27,30 +27,29 @@ class EndpointController {
      * Calls endpoint with given param Array
      */
     async getResponse(req, api) {
-
-        // Return raw file if available
         try {
             return await this.sendRaw(req, api)
-        }
-
-        // Assume dynamic endpoint otherwise
-        catch (err) {
+        } catch (err) {
             return await this.callEndpoint(req, api)
         }
     }
 
 
+    /**
+     * Send raw file if available
+     */
     async sendRaw(req, api) {
         let readFile = util.promisify(fs.readFile)
-        let raw = await readFile(blitz.config[blitz.id].publicPath + req.url, {encoding: "utf-8"})
+        let filename = blitz.config[blitz.id].publicPath + req.url
+        let raw = await readFile(filename)
+
+        // Determine content type
         api.emit("cache", {
             key: req.url,
             value: raw,
             exp: blitz.config[blitz.id].cacheDuration
         })
         return {
-            statusCode: 200,
-            method: "send",
             body: raw
         }
     }
@@ -69,8 +68,9 @@ class EndpointController {
          return endpoint.main.apply(endpoint, parsed.query)
              .then(data => {
                  return {
-                     statusCode: data.statusCode || 200,
-                     method: data.method || "send",
+                     type: data.type,
+                     statusCode: data.statusCode,
+                     method: data.method,
                      body: data.body || data
                  }
              })
@@ -79,8 +79,9 @@ class EndpointController {
                      console.log(err)
                  }
                  return {
+                     type: data.type,
                      statusCode: err.statusCode || 400,
-                     method: err.method || "send",
+                     method: err.method,
                      body: err.body || err
                  }
              })

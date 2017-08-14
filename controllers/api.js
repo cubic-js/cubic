@@ -101,8 +101,14 @@ class Client {
             blitz.log.silly("Core      | Request received")
             req = CircularJSON.parse(req)
             let data = await this.endpointController.getResponse(req, this.api)
+            let res = {
+                type: data.type || null,
+                statusCode: data.statusCode || 200,
+                method: data.method || "send",
+                body: data.body || {}
+            }
             blitz.log.silly("Core      | Request resolved")
-            this.api.emit(req.id, data)
+            this.api.emit(req.id, res)
         })
     }
 }
