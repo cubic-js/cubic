@@ -30,23 +30,28 @@ class EndpointController {
 
         // Return raw file if available
         try {
-            let readFile = util.promisify(fs.readFile)
-            let raw = await readFile(blitz.config[blitz.id].publicPath + req.url, {encoding: "utf-8"})
-            api.emit("cache", {
-                key: req.url,
-                value: raw,
-                exp: blitz.config[blitz.id].cacheDuration
-            })
-            return {
-                statusCode: 200,
-                method: "send",
-                body: raw
-            }
+            return await this.sendRaw(req, api)
         }
 
         // Assume dynamic endpoint otherwise
         catch (err) {
             return await this.callEndpoint(req, api)
+        }
+    }
+
+
+    async sendRaw(req, api) {
+        let readFile = util.promisify(fs.readFile)
+        let raw = await readFile(blitz.config[blitz.id].publicPath + req.url, {encoding: "utf-8"})
+        api.emit("cache", {
+            key: req.url,
+            value: raw,
+            exp: blitz.config[blitz.id].cacheDuration
+        })
+        return {
+            statusCode: 200,
+            method: "send",
+            body: raw
         }
     }
 
