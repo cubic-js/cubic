@@ -1,5 +1,6 @@
 const Request = require("../../controllers/request.js")
 const Layer = require("../layers.js")
+const mime = require("mime")
 
 /**
  * Class describing connection adapter / Request Handler for different channel
@@ -30,7 +31,14 @@ class Adapter {
      */
     async pass(req, res) {
         let response = await this.request.getResponse(req)
-        res.status(response.statusCode)[response.method](response.body)
+        let url = req.url.split("/")
+        if (url[url.length - 1].split(".")[1]) {
+            let data = new Buffer(response.body, "base64")
+            res.header("content-type", mime.lookup(req.url))
+            res.end(data)
+        } else {
+            res.status(response.statusCode)[response.method](response.body)
+        }
     }
 
 

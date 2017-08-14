@@ -90,7 +90,7 @@ class Logger {
                 io = chalk.red(io)
             }
 
-            blitz.log.info(prefix + io + res.statusCode + ": " + body.slice(0, 100) + (body.length > 100 ? "..." : ""))
+            blitz.log.info(prefix + io + res.statusCode + ": " + body.replace(/\r?\n|\r/g, " ").slice(0, 100) + (body.length > 100 ? "..." : ""))
         }
     }
 

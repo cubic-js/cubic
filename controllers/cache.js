@@ -1,4 +1,5 @@
 const redis = require("redis")
+const mime = require("mime")
 
 class CacheController {
 
@@ -27,7 +28,27 @@ class CacheController {
      */
     async check(req, res, next) {
         let data = await this.get(req.url)
-        data ? res.send(data) : next()
+        let url = req.url.split("/")
+
+        // Is cached
+        if (data) {
+            if (url[url.length - 1].split(".")[1]) {
+                let bufferData = new Buffer(data.body, "base64")
+                res.header("content-type", mime.lookup(req.url))
+                res.end(bufferData)
+            } else {
+                if (data.type === "json") {
+                    res.json(data)
+                } else {
+                    res.send(data.body)
+                }
+            }
+        }
+
+        // Not cached
+        else {
+            next()
+        }
     }
 
 
@@ -40,7 +61,10 @@ class CacheController {
             this.client.get(key, (err, res) => {
                 if (res) {
                     try {
-                        res = JSON.parse(res)
+                        res = {
+                            body: JSON.parse(res),
+                            type: "json"
+                        }
                     }
                     catch(e) {
 
