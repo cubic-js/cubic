@@ -102,7 +102,6 @@ class Client {
             req = CircularJSON.parse(req)
             let data = await this.endpointController.getResponse(req, this.api)
             let res = {
-                type: data.type || null,
                 statusCode: data.statusCode || 200,
                 method: data.method || "send",
                 body: data.body || {}

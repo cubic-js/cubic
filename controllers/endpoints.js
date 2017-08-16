@@ -45,6 +45,7 @@ class EndpointController {
 
         // Determine content type
         api.emit("cache", {
+            scope: "basic-read",
             key: req.url,
             value: raw,
             exp: blitz.config[blitz.id].cacheDuration
@@ -68,7 +69,6 @@ class EndpointController {
          return endpoint.main.apply(endpoint, parsed.query)
              .then(data => {
                  return {
-                     type: data.type,
                      statusCode: data.statusCode,
                      method: data.method,
                      body: data.body || data
@@ -79,7 +79,6 @@ class EndpointController {
                      console.log(err)
                  }
                  return {
-                     type: data.type,
                      statusCode: err.statusCode || 400,
                      method: err.method,
                      body: err.body || err

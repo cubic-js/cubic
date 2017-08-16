@@ -11,7 +11,6 @@ class Endpoint {
 
         /**
          * Default schema for API calls
-         * @type {{resources: Array, params: Array, scope: string, verb: string, description: string}}
          */
         this.schema = {
             query: [],
@@ -31,8 +30,8 @@ class Endpoint {
      */
     publish(endpoint, data) {
         let update = {
-            endpoint: endpoint,
-            data: data
+            endpoint,
+            data
         }
         this.api.emit("publish", update)
         blitz.log.verbose("Core      | Sending data to publish for " + endpoint)
@@ -42,15 +41,16 @@ class Endpoint {
     /**
      * Send data to be cached for endpoint on API node
      */
-     cache(key, value, exp) {
-         let data = {
-             key: key,
-             value: value,
-             exp: exp
-         }
-         this.api.emit("cache", data)
-         blitz.log.verbose("Core      | Sending data to cache for " + key)
-     }
+    cache(key, value, exp) {
+        let data = {
+            key,
+            value,
+            exp,
+            scope: this.schema.scope
+        }
+        this.api.emit("cache", data)
+        blitz.log.verbose("Core      | Sending data to cache for " + key)
+    }
 }
 
 module.exports = Endpoint

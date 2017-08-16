@@ -4,7 +4,7 @@
  * Dependencies
  */
 const local = require('./config/local.js')
-const worker = require("blitz-js-util")
+const worker = require("../blitz.js-util/index.js")
 const Client = require("./controllers/api.js")
 
 
