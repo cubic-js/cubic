@@ -62,28 +62,58 @@ class EndpointController {
      async callEndpoint(req, api) {
          req.url = req.url.split("%20").join(" ")
          const parsed = this.parse(req)
+         const invalid = this.validateRequest(req, parsed)
          const Endpoint = require(parsed.endpoint.file)
          const endpoint = new Endpoint(api, await this.db, req)
 
          // Apply to endpoint
-         return endpoint.main.apply(endpoint, parsed.query)
-             .then(data => {
-                 return {
-                     statusCode: data.statusCode,
-                     method: data.method,
-                     body: data.body || data
+         if (!invalid) {
+             return endpoint.main.apply(endpoint, parsed.query)
+                 .then(data => {
+                     return {
+                         statusCode: data.statusCode,
+                         method: data.method,
+                         body: data.body || data
+                     }
+                 })
+                 .catch(err => {
+                     if (blitz.config.local.environment === "development") {
+                         console.log(err)
+                     }
+                     return {
+                         statusCode: err.statusCode || 400,
+                         method: err.method,
+                         body: err.body || err
+                     }
+                 })
+         } else {
+             return invalid
+         }
+     }
+
+
+     /**
+      * Check request method and authorization before processing request
+      */
+     validateRequest(req, parsed) {
+         if (!req.user.scp.includes(parsed.endpoint.scope)) {
+             return {
+                 statusCode: 401,
+                 body: {
+                     error: "Unauthorized",
+                     reason: `Expected ${parsed.endpoint.scope}, got ${req.user.scp}.`
                  }
-             })
-             .catch(err => {
-                 if (blitz.config.local.environment === "development") {
-                     console.log(err)
+             }
+         }
+         if (req.method.toLowerCase() !== parsed.endpoint.method.toLowerCase()) {
+             return {
+                 statusCode: 405,
+                 body: {
+                     error: "Method not allowed.",
+                     reason: `Expected ${parsed.endpoint.method}, got ${req.method}.`
                  }
-                 return {
-                     statusCode: err.statusCode || 400,
-                     method: err.method,
-                     body: err.body || err
-                 }
-             })
+             }
+         }
      }
 
 
