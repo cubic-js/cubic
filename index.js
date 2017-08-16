@@ -5,7 +5,7 @@
 const local = require("./config/local.js")
 const preauth = require("./hooks/preauth.js")
 const purge = require("./hooks/purge.js")
-const worker = require("blitz-js-util")
+const worker = require("../blitz.js-util/index.js")
 
 
 /**
@@ -19,7 +19,7 @@ class Auth {
         // Process forked
         if (process.env.isWorker) {
             this.setup = worker.setGlobal()
-            this.setup.then(() => this.hookDependencies())
+            this.setup.then(() => this.init())
             worker.expose(this)
         }
 
@@ -41,30 +41,31 @@ class Auth {
     /**
      * Hook node components for actual logic
      */
-    async hookDependencies() {
+    init() {
         /**
          * Nodes must be required here, otherwise worker spawn will trigger them to create
          * a new object on require due to process.env.isWorker = true. (which won't
          * work because no config is set)
          */
         delete process.env.isWorker
-        const Core = require("blitz-js-core")
-        const API = require("blitz-js-api")
-        const Blitz = require("blitz-js")(blitz.config.local)
+        const Core = require("../blitz.js-core/index.js")
+        const API = require("../blitz.js-api/index.js")
+        const Blitz = require("../blitz.js/index.js")(blitz.config.local)
 
         // Apply config to nodes and hook them
         let options = blitz.config[blitz.id]
         options.user_key += "-VerifyAuthWorker"
+        options.cores = 1
 
         // API node which controls incoming requests
         options.id = "auth_api"
-        blitz.hook(options.id, purge.watch)
+        blitz.hook(options.id, purge.purgeInactiveUsers)
         blitz.use(new API(options))
         preauth.validateWorker()
 
         // Core Node which processes incoming requests
         options.id = "auth_core"
-        blitz.hook(options.id, preauth.verifyIndices)
+        blitz.hook(options.id, preauth.verifyUserIndices)
         blitz.hook(options.id, preauth.manageDevUser)
         blitz.use(new Core(options))
 

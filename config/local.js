@@ -34,6 +34,7 @@ module.exports = {
      */
     mongoPort: 27017,
     mongoURL: "mongodb://localhost/blitz-js-auth",
+    cacheDB: 3,
 
 
     /**

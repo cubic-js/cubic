@@ -41,7 +41,7 @@ class PreAuth {
     /**
      * Set mongo indices to optimize queries for user_key and refresh tokens
      */
-    async verifyIndices() {
+    async verifyUserIndices() {
         let db = await mongodb.connect(blitz.config[blitz.id].mongoURL)
         blitz.log.verbose("Auth      | verifying user indices")
         mongoVerifySingleIndex(db, 'users', {

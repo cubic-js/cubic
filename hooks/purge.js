@@ -4,7 +4,7 @@ const mongodb = require("mongodb").MongoClient
  * Remove unused users to reduce unnecessary storage usage (production only)
  */
 class Purge {
-    async watch() {
+    async purgeInactiveUsers() {
         if (blitz.config.local.environment === "production" && blitz.config[blitz.id].purgeMaxLimit > 0) {
             let db = await mongodb.connect(blitz.config[blitz.id].mongoURL)
             setInterval(() => {
