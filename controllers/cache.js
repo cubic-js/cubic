@@ -15,11 +15,15 @@ class CacheController {
     /**
      * Saves string as key value
      */
-    save(key, value, exp = 0) {
-        value = typeof value === "object" ? JSON.stringify(value) : value
+    save(key, value, exp = blitz.config[blitz.id].cacheExp, scope) {
+        value = JSON.stringify({
+            data: value,
+            type: typeof value,
+            scope: scope
+        })
         key = key.toLowerCase().split(" ").join("%20")
         blitz.log.verbose("API       | < caching data for " + key)
-        this.client.setex(key, exp || blitz.config[blitz.id].cacheExp, value)
+        this.client.setex(key, exp, value)
     }
 
 
@@ -27,27 +31,48 @@ class CacheController {
      * Middleware function. Respond if data present, Next if not
      */
     async check(req, res, next) {
-        let data = await this.get(req.url)
+        let cached = await this.get(req.url)
+
+        if (cached) {
+
+            // Authorized
+            if (req.user.scp.includes(cached.scope)) {
+                this.respond(cached, req, res)
+            }
+
+            // Unauthorized, reject
+            else {
+                res.status(401).send({
+                    error: "Unauthorized.",
+                    reason: `Expected scope: ${cached.scope}. Got ${req.user.scp}.`
+                })
+            }
+        } else {
+            next()
+        }
+    }
+
+
+    /**
+     * Cached data available, respond to request
+     */
+    respond(cached, req, res) {
         let url = req.url.split("/")
 
-        // Is cached
-        if (data) {
-            if (url[url.length - 1].split(".")[1]) {
-                let bufferData = new Buffer(data.body, "base64")
-                res.header("content-type", mime.lookup(req.url))
-                res.end(bufferData)
-            } else {
-                if (data.type === "json") {
-                    res.json(data)
-                } else {
-                    res.send(data.body)
-                }
-            }
+        // File extension in URL? Send raw file as base64 buffer.
+        if (url[url.length - 1].split(".")[1]) {
+            let bufferData = new Buffer(cached.data, "base64")
+            res.header("content-type", mime.lookup(req.url))
+            res.end(bufferData)
         }
 
-        // Not cached
+        // Primitive data type / objects
         else {
-            next()
+            if (cached.type === "json") {
+                res.json(cached.data)
+            } else {
+                res.send(cached.data)
+            }
         }
     }
 
@@ -60,21 +85,9 @@ class CacheController {
             key = key.toLowerCase().split(" ").join("%20")
             this.client.get(key, (err, res) => {
                 if (res) {
-                    try {
-                        res = {
-                            body: JSON.parse(res),
-                            type: "json"
-                        }
-                    }
-                    catch(e) {
-
-                    }
-                    finally {
-                        blitz.log.verbose("API       | > returning cached data " + key)
-                        resolve(res)
-                    }
-                }
-                else resolve(null)
+                    blitz.log.verbose("API       | > returning cached data for " + key)
+                    resolve(JSON.parse(res))
+                } else resolve(null)
             })
         })
     }

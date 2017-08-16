@@ -21,7 +21,6 @@ class Logger {
         this.addTimer(res)
 
         // Actual Console Output
-        console.log(" ")
         blitz.log.info(this.prefix + chalk.grey(":: " + new Date()))
         blitz.log.info(`${this.prefix}< ${this.user.uid}: ${req.method} ${req.url}`)
         next()
@@ -116,7 +115,7 @@ class Logger {
                 // Time Logging
                 let diff = process.hrtime(timestart)
                 blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`))
-                console.log(" ")
+                blitz.log.info(" ")
             }
         }
     }

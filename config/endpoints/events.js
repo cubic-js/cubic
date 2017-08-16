@@ -52,7 +52,7 @@ module.exports = (sockets, cache) => {
 
         // Listen for Cache updates
         socket.on("cache", data => {
-            cache.save(data.key, data.value, data.exp)
+            cache.save(data.key, data.value, data.exp, data.scope)
         })
 
         socket.on("disconnect", () => {
