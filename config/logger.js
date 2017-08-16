@@ -7,8 +7,9 @@ class Log {
     constructor() {
 
         // Hierarchically ordered log levels
-        this.levels = ["silly", "verbose", "info", "error"]
+        this.levels = ["silly", "verbose", "info", "monitor"]
         this.info = this.info
+        this.path = __filename // used to initialize on other workers
     }
 
 
@@ -27,11 +28,7 @@ class Log {
         let enabled = this.levels.slice(i, this.levels.length)
 
         // Check if provided log level in enabled list
-        if (enabled.includes(level)) {
-            return true
-        } else {
-            return false
-        }
+        return enabled.includes(level) ? true : false
     }
 
 
@@ -48,9 +45,11 @@ class Log {
     /**
      * Error Log Level. Helpful for automated tests.
      */
-    error(str) {
-        if(this.includesLogLevel("error")) {
-            console.error(chalk.red(this.getPrefix()) + str)
+    monitor(str, success, time) {
+        if(this.includesLogLevel("monitor")) {
+            let ok = success ? chalk.green("OK") : chalk.red("FAILED")
+            let ms = chalk.grey(time)
+            console.log(`:: ${ok} ${str} ${ms}`)
         }
     }
 
