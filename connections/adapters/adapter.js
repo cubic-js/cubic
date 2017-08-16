@@ -32,7 +32,7 @@ class Adapter {
     async pass(req, res) {
         let response = await this.request.getResponse(req)
         let url = req.url.split("/")
-        if (url[url.length - 1].split(".")[1]) {
+        if (url[url.length - 1].split(".")[1] && response.status >= 400) {
             let data = new Buffer(response.body, "base64")
             res.header("content-type", mime.lookup(req.url))
             res.end(data)
