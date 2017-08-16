@@ -3,10 +3,12 @@
 /**
  * Dependencies
  */
+require('events').EventEmitter.prototype._maxListeners = 100
 const local = require('./config/local.js')
 const CircularJSON = require("circular-json")
 const _ = require('lodash')
 const fork = require("child_process").fork
+const epoch = new Date
 
 
 /**
@@ -23,7 +25,6 @@ class Blitz {
         // sub components)
         if (global.blitz) {
             blitz = _.merge(this, blitz)
-            blitz.log.class = require("./config/logger.js")
         }
 
         // No instance was run before
@@ -32,7 +33,6 @@ class Blitz {
             blitz.config = {}
             blitz.nodes = {}
             blitz.log = new(require("./config/logger.js"))
-            blitz.log.class = require("./config/logger.js")
         }
 
         let config = {
@@ -55,6 +55,49 @@ class Blitz {
         for (var property in merged) {
             blitz.config[id][property] = merged[property]
         }
+    }
+
+
+    /**
+     * Send config to be set on workers. This will be eval'd, so be careful.
+     */
+    setWorkerConfig(str) {
+        return new Promise(async resolve => {
+            let responses = 0
+            for (let id in blitz.nodes) {
+                let node = blitz.nodes[id]
+                let res = await this.send(node.workers, "eval", str, "eval'd")
+                responses++
+                if (responses === Object.keys(blitz.nodes).length) resolve(res)
+            }
+        })
+    }
+
+
+    /**
+     * Send a message to all workers of a node and resolve with response
+     */
+    send(workers, type, body, listener) {
+        return new Promise(resolve => {
+            let responses = 0
+            workers.forEach(worker => {
+                worker.send({
+                    type,
+                    body
+                })
+                worker.once("message", msg => {
+                    if (msg.type === listener) {
+                        responses++
+                        if (responses === workers.length) resolve(msg.body)
+                    }
+                })
+                setTimeout(() => {
+                    if (responses !== workers.length) {
+                        this.send(workers, type, body, listener).then(resolve)
+                    }
+                }, 500)
+            })
+        })
     }
 
 
@@ -83,7 +126,10 @@ class Blitz {
      */
     runHooks(id) {
         if (blitz.nodes[id].hooks) {
-            blitz.nodes[id].hooks.forEach(hook => hook())
+            blitz.nodes[id].hooks.forEach(async hook => {
+                await hook()
+                blitz.log.monitor(`Hooked ${hook.name} on ${id}.`, true, `${new Date - epoch}ms`)
+            })
         }
     }
 
@@ -91,7 +137,7 @@ class Blitz {
     /**
      * Let blitz handle framework modules
      */
-    use(node) {
+    async use(node) {
         let nid = node.config.provided ? node.config.provided.id : undefined
         let id = nid ? nid : node.constructor.name.toLowerCase()
 
@@ -108,6 +154,8 @@ class Blitz {
         this.setConfig(id, node.config)
         this.runHooks(id)
         this.cluster(node, id)
+        await this.pingAll(blitz.nodes[id].workers)
+        blitz.log.monitor(`Loaded ${id} node.`, true, `${new Date - epoch}ms`)
     }
 
 
@@ -131,11 +179,13 @@ class Blitz {
             let worker = blitz.nodes[id].workers[i]
             worker.ping = () => {return this.ping(worker)}
 
-            // Send global blitz to worker
-            blitz.id = id
+            // We don't want pseudo circular references in the worker
+            let subBlitz = _.cloneDeep(blitz)
+            subBlitz.id = id
+            subBlitz.nodes = {}
             worker.send({
                 type: "setGlobal",
-                body: this.serialize(blitz)
+                body: this.serialize(subBlitz)
             })
 
             // Make Worker methods accessible from global blitz
@@ -151,6 +201,7 @@ class Blitz {
 
     /**
      * Ping method to check for listeners on process. Returns time elapsed.
+     * This may be replacable with `this.send()`
      */
      ping(worker) {
          return new Promise(resolve => {
@@ -181,6 +232,15 @@ class Blitz {
                  }
              }, 500)
          })
+     }
+
+
+     /**
+      * Wrapper which pings all nodes opposed to just one. Does not include
+      * timeouts.
+      */
+     pingAll(workers) {
+         return this.send(workers, "ping", {}, "pong")
      }
 
 
@@ -223,6 +283,7 @@ class Blitz {
             })
         })
     }
+
 
     /**
      * Serialize global blitz object so it can be sent via stdout to workers
