@@ -128,7 +128,7 @@ class Blitz {
         if (blitz.nodes[id].hooks) {
             blitz.nodes[id].hooks.forEach(async hook => {
                 await hook()
-                blitz.log.monitor(`Hooked ${hook.name} on ${id}.`, true, `${new Date - epoch}ms`)
+                blitz.log.monitor(`Hooked ${hook.name} on ${id}`, true, `${new Date - epoch}ms`)
             })
         }
     }
@@ -155,7 +155,7 @@ class Blitz {
         this.runHooks(id)
         this.cluster(node, id)
         await this.pingAll(blitz.nodes[id].workers)
-        blitz.log.monitor(`Loaded ${id} node.`, true, `${new Date - epoch}ms`)
+        blitz.log.monitor(`Loaded ${id} node`, true, `${new Date - epoch}ms`)
     }
 
 
