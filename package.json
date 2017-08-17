@@ -1,0 +1,27 @@
+{
+  "name": "blitz-js-view",
+  "version": "0.0.0",
+  "description": "⚡ View Node for the blitz.js framework",
+  "main": "index.js",
+  "author": "Kaptard",
+  "license": "MIT",
+  "dependencies": {
+    "autoprefixer": "^7.1.2",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.1",
+    "blitz-js": "^0.1.4",
+    "blitz-js-api": "^0.1.10",
+    "blitz-js-core": "^0.1.6",
+    "blitz-js-util": "^0.1.4",
+    "css-loader": "^0.28.5",
+    "memory-fs": "^0.4.1",
+    "vue": "^2.4.2",
+    "vue-loader": "^13.0.4",
+    "vue-server-renderer": "^2.4.2",
+    "vue-style-loader": "^3.0.1",
+    "vue-template-compiler": "^2.4.2",
+    "webpack": "^3.5.5",
+    "webpack-merge": "^4.1.0",
+    "webpack-node-externals": "^1.6.0"
+  }
+}
