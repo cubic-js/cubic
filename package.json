@@ -1,6 +1,6 @@
 {
     "name": "blitz-js-view",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "⚡ View Node for the blitz.js framework",
     "main": "index.js",
     "repository": {
