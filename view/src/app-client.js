@@ -5,4 +5,4 @@ import { createApp } from './app.js'
 const { app } = createApp()
 
 // this assumes App.vue template root element has `id="app"`
-app.$mount('#app')
+app.$mount('app')

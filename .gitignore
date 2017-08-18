@@ -5,3 +5,5 @@
 /node_modules/
 .idea/
 /out/
+/view/public/*bundle.*
+/view/public/*manifest.*

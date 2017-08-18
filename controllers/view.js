@@ -19,17 +19,18 @@ const createBundleRenderer = require("vue-server-renderer").createBundleRenderer
  * View Controller rendering data into templates
  */
 class ViewController {
-    async render(template, data, req) {
+    async render(template, data) {
         const serverBundle = require(path.join(publicPath, "vue-ssr-server-bundle.json"))
         const clientManifest = require(path.join(publicPath, "vue-ssr-client-manifest.json"))
-        const base = await readFile(path.join(sourcePath, "index.html"))
+        const base = await readFile(path.join(sourcePath, "index.html"), "utf-8")
         const renderer = createBundleRenderer(serverBundle, {
             template: base,
             clientManifest,
+            basedir: path.join(blitz.config[blitz.id].sourcePath, "../.."),
             runInNewContext: false
         })
         const render = util.promisify(renderer.renderToString)
-        return render(data)
+        return render()
     }
 }
 

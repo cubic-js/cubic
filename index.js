@@ -10,7 +10,6 @@ const promisify = require("util").promisify
 const readFile = promisify(fs.readFile)
 const webpack = require('webpack')
 
-
 /**
  * Loader for auth-node system. For ease of maintenance, the auth-node consists
  * of a core-node that is connected to its own api-node as web server, much
@@ -57,8 +56,8 @@ class View {
      */
     initBlitz() {
         delete process.env.isWorker
-        const Core = require("blitz-js-core")
-        const API = require("blitz-js-api")
+        const Core = require("../blitz-js-core")
+        const API = require("../blitz-js-api")
         const Blitz = require("blitz-js")(blitz.config.local)
 
         // Apply config to nodes and hook them
