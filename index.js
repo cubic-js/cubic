@@ -10,6 +10,7 @@ const promisify = require("util").promisify
 const readFile = promisify(fs.readFile)
 const webpack = require('webpack')
 
+
 /**
  * Loader for auth-node system. For ease of maintenance, the auth-node consists
  * of a core-node that is connected to its own api-node as web server, much
@@ -91,7 +92,6 @@ class View {
         }
         compiler.watch({}, (err, stats) => {
             if (err) console.log(err)
-            else console.log(stats)
         })
     }
 }

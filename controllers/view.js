@@ -28,10 +28,8 @@ class ViewController {
             clientManifest,
             runInNewContext: false
         })
-        renderer.renderToString(data, (err, html) => {
-            if (err) console.log(err)
-            console.log(html)
-        })
+        const render = util.promisify(renderer.renderToString)
+        return render(data)
     }
 }
 

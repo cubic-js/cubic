@@ -17,7 +17,6 @@
         "blitz-js-api": "^0.1.10",
         "blitz-js-core": "^0.1.6",
         "blitz-js-util": "^0.1.4",
-        "css-loader": "^0.28.5",
         "memory-fs": "^0.4.1",
         "vue": "^2.4.2",
         "vue-loader": "^13.0.4",

@@ -70,7 +70,7 @@ class Endpoint {
         }, data)
         return {
             method: "send",
-            body: await view.render(template, data, this.req)
+            body: await view.render(template, data)
         }
     }
 }
