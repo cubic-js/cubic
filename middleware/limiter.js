@@ -23,8 +23,7 @@ const mid_limit = RateLimiter({
     redis: client,
     namespace: "MidAccessLimit",
     interval: 10000,
-    maxInInterval: 30,
-    minDifference: 10
+    maxInInterval: 30
 })
 
 // Rate Limiter for no tokens
@@ -32,8 +31,7 @@ const high_limit = RateLimiter({
     redis: client,
     namespace: "HighAccessLimit",
     interval: 10000,
-    maxInInterval: 30,
-    minDifference: 10
+    maxInInterval: 30
 })
 
 
