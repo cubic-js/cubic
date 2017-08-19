@@ -1,11 +1,29 @@
 <template>
-    <app>
-        <h1>ayy lmao</h1>
-    </app>
+<app>
+    <img src="http://localhost:3020/img/catboy.jpg">
+    <hello></hello>
+</app>
 </template>
 
-<style>
-    h1 {
-        font-family: sans-serif;
+
+<script>
+import Hello from './components/hello.vue'
+export default {
+    name: 'app',
+    components: {
+        Hello
     }
+}
+</script>
+
+
+<style>
+app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+}
 </style>
