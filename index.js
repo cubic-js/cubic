@@ -43,6 +43,10 @@ class Core {
     init() {
         this.client = new Client()
     }
+
+    generateEndpointSchema() {
+        return this.client.endpointController.endpoints
+    }
 }
 
 module.exports = process.env.isWorker ? new Core() : Core

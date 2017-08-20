@@ -43,7 +43,6 @@ class EndpointController {
         let filename = blitz.config[blitz.id].publicPath + req.url
         let raw = await readFile(filename)
 
-        // Determine content type
         api.emit("cache", {
             scope: "basic-read",
             key: req.url,
