@@ -60,17 +60,10 @@ class Endpoint {
     /**
      * Render page with Vue.js
      */
-    async render(template, data) {
-        data = extend({
-            head: {
-                title: "New Blitz.js Project",
-                meta: []
-            },
-            app: {}
-        }, data)
+    async render(data) {
         return {
             method: "send",
-            body: await view.render(template, data, this.req)
+            body: await view.render(this.req.url, data)
         }
     }
 }

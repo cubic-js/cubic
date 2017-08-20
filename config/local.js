@@ -8,6 +8,8 @@ module.exports = {
     port: 3020,
     routes: __dirname + "/endpoints/routes.js",
     events: __dirname + "/endpoints/events.js",
+    isCore: true,
+    isApi: true,
 
 
     /**

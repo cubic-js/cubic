@@ -8,6 +8,7 @@ const path = require('path')
 const fs = require("fs")
 const promisify = require("util").promisify
 const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
 const webpack = require('webpack')
 
 /**
@@ -43,9 +44,12 @@ class View {
     /**
      * Hook node components for actual logic
      */
-    init() {
+    async init() {
         this.initBlitz()
-        this.initWebpack()
+        if (blitz.config[blitz.id].isCore) {
+            await this.registerEndpoints()
+            await this.initWebpack()
+        }
     }
 
 
@@ -92,6 +96,31 @@ class View {
         compiler.watch({}, (err, stats) => {
             if (err) console.log(err)
         })
+    }
+
+
+    /**
+     * Register routes in vue-router file. It can't be done in runtime, so
+     * we gotta ensure the file is ready before rendering anything.
+     */
+    async registerEndpoints() {
+        let filename = path.join(blitz.config[blitz.id].sourcePath, "router/routes.js")
+        let endpoints = await blitz.nodes.view_core.generateEndpointSchema()
+        let routes = []
+        endpoints.forEach(endpoint => {
+            let route = {
+                path: endpoint.route,
+                component: endpoint.view
+            }
+            routes.push(route)
+        })
+        let out = `/**
+                    * Auto-generated routes from blitz.js view node.
+                    * Components will be eval'd, so full functionality is preserved.
+                    */
+                    export default ${JSON.stringify(routes)}
+                    `
+        await writeFile(filename, out.replace(/^                 /gm, ""))
     }
 }
 
