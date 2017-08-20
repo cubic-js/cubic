@@ -197,6 +197,9 @@ class EndpointController {
 
         // Try to get raw file in public folder
         try {
+            if (url.includes("../")) {
+                throw "Attempt to navigate outside of public folder not permitted."
+            }
             let check = util.promisify(fs.stat)
             await check(blitz.config[blitz.id].publicPath + url)
         }
