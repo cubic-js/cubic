@@ -90,11 +90,10 @@ class View {
         const compiler = webpack([clientConfig, serverConfig])
         if (compiler.errors) {
             throw compiler.errors
-        } else {
-            blitz.log.monitor("Webpack build successful", true, `${new Date - timer}ms`)
         }
         compiler.watch({}, (err, stats) => {
             if (err) console.log(err)
+            else blitz.log.monitor("Webpack build successful", true, `${new Date - timer}ms`)
         })
     }
 

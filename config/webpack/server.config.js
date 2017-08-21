@@ -9,7 +9,7 @@ const VueSSRServerPlugin = require("vue-server-renderer/server-plugin")
  */
 module.exports = merge(baseConfig, {
     // Entry point which guides to everything webpack is supposed to bundle
-    entry: "../../view/src/app-server.js",
+    entry: __dirname + "/../../view/src/app-server.js",
 
     // Let webpack and vue-loader know we're rendering server-sided
     target: "node",
@@ -19,6 +19,7 @@ module.exports = merge(baseConfig, {
 
     // This tells the server bundle to use Node-style exports
     output: {
+        path: blitz.config[blitz.id].publicPath,
         libraryTarget: "commonjs2"
     },
 

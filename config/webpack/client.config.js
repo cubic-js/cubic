@@ -9,7 +9,7 @@ const VueSSRClientPlugin = require("vue-server-renderer/client-plugin")
  */
 module.exports = merge(baseConfig, {
     // Entry point which guides to everything webpack is supposed to bundle
-    entry: "../../view/src/app-client.js",
+    entry: __dirname + "/../../view/src/app-client.js",
 
     plugins: [
         // Important: this splits the webpack runtime into a leading chunk
