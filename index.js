@@ -104,23 +104,40 @@ class View {
      * we gotta ensure the file is ready before rendering anything.
      */
     async registerEndpoints() {
-        let filename = path.join(blitz.config[blitz.id].sourcePath, "router/routes.js")
         let endpoints = await blitz.nodes.view_core.generateEndpointSchema()
         let routes = []
+        let views = []
         endpoints.forEach(endpoint => {
             let route = {
                 path: endpoint.route,
-                component: endpoint.view
+                component: endpoint.view,
+                props: true
             }
+            let view = `const ${endpoint.view.replace(/\/|\\|\.|\-/g, "")} = require("${blitz.config[blitz.id].sourcePath.replace(/\\/g, "\\\\")}/${endpoint.view}").default`
             routes.push(route)
+            views.find(el => el === view) ? null : views.push(view)
         })
-        let out = `/**
+        views.unshift("//start-view-injection")
+        views.push("//end-view-injection")
+
+        // Inject view variables into router. We can't dynamically require views
+        // at runtime, so we have to do it pre-build this way.
+        let viewFile = `${__dirname}/view/src/router/index.js`
+        let viewInject = views.join("\n")
+        let viewRegex = /^\/\/start-view-injection[\s\S]*\/\/end-view-injection$/im
+        let viewOutput = await readFile(viewFile, "utf-8")
+        viewOutput = viewOutput.replace(viewRegex, viewInject)
+        await writeFile(viewFile, viewOutput)
+
+        // Save Routes
+        let routeFile = `${__dirname}/view/src/router/routes.js`
+        let routeOutput = `/**
                     * Auto-generated routes from blitz.js view node.
                     * Components will be eval'd, so full functionality is preserved.
                     */
                     export default ${JSON.stringify(routes)}
                     `
-        await writeFile(filename, out.replace(/^                 /gm, ""))
+        await writeFile(routeFile, routeOutput.replace(/^                 /gm, ""))
     }
 }
 

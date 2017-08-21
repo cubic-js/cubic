@@ -1,4 +1,3 @@
-const path = require("path")
 const merge = require("webpack-merge")
 const baseConfig = require("./base.config.js")
 const nodeExternals = require("webpack-node-externals")
@@ -10,7 +9,7 @@ const VueSSRServerPlugin = require("vue-server-renderer/server-plugin")
  */
 module.exports = merge(baseConfig, {
     // Entry point which guides to everything webpack is supposed to bundle
-    entry: path.join(blitz.config[blitz.id].sourcePath, "app-server.js"),
+    entry: "../../view/src/app-server.js",
 
     // Let webpack and vue-loader know we're rendering server-sided
     target: "node",

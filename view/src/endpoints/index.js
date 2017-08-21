@@ -8,12 +8,7 @@ const Endpoint = require(blitz.config[blitz.id].endpointParent)
          super(api, db, url)
          this.schema.description = "Primary Landing Page"
          this.schema.url = "/"
-     }
-
-    async main() {
-        return this.render("app.vue", {
-            node: blitz.id
-        })
+         this.schema.view = "views/index.vue"
      }
  }
 

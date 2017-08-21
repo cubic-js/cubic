@@ -1,4 +1,3 @@
-const path = require("path")
 const webpack = require("webpack")
 const merge = require("webpack-merge")
 const baseConfig = require("./base.config.js")
@@ -10,7 +9,7 @@ const VueSSRClientPlugin = require("vue-server-renderer/client-plugin")
  */
 module.exports = merge(baseConfig, {
     // Entry point which guides to everything webpack is supposed to bundle
-    entry: path.join(blitz.config[blitz.id].sourcePath, "app-client.js"),
+    entry: "../../view/src/app-client.js",
 
     plugins: [
         // Important: this splits the webpack runtime into a leading chunk
