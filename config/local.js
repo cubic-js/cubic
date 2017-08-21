@@ -4,7 +4,7 @@ module.exports = {
     /**
      * Environment options
      */
-    environment: "development",
+    environment: process.env.NODE_ENV || "development",
     global: true,
 
     /**
