@@ -44,6 +44,13 @@ class Core {
         this.client = new Client()
     }
 
+    /**
+     * Run any function from a remote process with `this` context
+     */
+    run(fn) {
+        return fn.apply(this)
+    }
+
     generateEndpointSchema() {
         return this.client.endpointController.endpoints
     }
