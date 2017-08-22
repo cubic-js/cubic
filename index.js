@@ -60,8 +60,8 @@ class View {
      */
     initBlitz() {
         delete process.env.isWorker
-        const Core = require("../blitz-js-core")
-        const API = require("../blitz-js-api")
+        const Core = require("blitz-js-core")
+        const API = require("blitz-js-api")
         const Blitz = require("blitz-js")(blitz.config.local)
 
         // Apply config to nodes and hook them
