@@ -95,6 +95,11 @@ class View {
         }
         compiler.watch({}, (err, stats) => {
             if (err) console.log(err)
+            stats.stats.forEach(build => {
+                if (build.compilation.errors.length) {
+                    console.log(build.compilation.errors)
+                }
+            })
         })
     }
 
