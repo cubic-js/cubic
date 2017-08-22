@@ -41,6 +41,13 @@ class API {
         this.server = new Server()
     }
 
+    /**
+     * Run any function from a remote process with `this` context
+     */
+    run(fn) {
+        return fn.apply(this)
+    }
+
     use(route, fn) {
         this.server.use(route, fn)
     }
