@@ -5,7 +5,7 @@
  * file. app.js simply exports a createApp function
  */
 import Vue from 'vue'
-import App from './app.vue'
+import App from 'src/app.vue'
 import { createRouter } from "./router/index.js"
 
 // export a factory function for creating fresh app, router and store

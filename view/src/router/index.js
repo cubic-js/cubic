@@ -10,11 +10,11 @@ import routes from "./routes.js"
 
 /**
  * View paths will be automatically injected here. They can't be required
- * dynamically in runtime, so we have to do it pre-build. Names and paths are
+ * dynamically at runtime, so we have to do it pre-build. Names and paths are
  * generated from endpoint schema.
  */
 //start-view-injection
-const viewsindexvue = require("D:\\dev\\nexus-stats\\nexus-stats/view/src/views/index.vue").default
+const viewswarframeindexvue = require("D:\\dev\\nexus-stats\\nexus-stats/view/src/views/warframe/index.vue").default
 //end-view-injection
 
 Vue.use(Router)
@@ -26,10 +26,7 @@ export function createRouter() {
             if (savedPosition) {
                 return savedPosition
             } else {
-                return {
-                    x: 0,
-                    y: 0
-                }
+                return { x: 0, y: 0 }
             }
         },
         routes: []

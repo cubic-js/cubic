@@ -24,8 +24,14 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.css$/,
-                loader: `${modules}/vue-style-loader`
+                test: /\.s?[a|c]ss$/,
+                use: [
+                {
+                    loader: `!${modules}/vue-style-loader!${modules}/sass-loader`,
+                    options: {
+                        includePaths: [blitz.config[blitz.id].sourcePath]
+                    }
+                }]
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
@@ -37,10 +43,18 @@ module.exports = {
         ]
     },
 
+    // Make source path accessible inside components, e.g. import 'src/app.vue'
+    resolve: {
+        alias: {
+            src: blitz.config[blitz.id].sourcePath
+        }
+    },
+
     // Plugins for post-bundle operations
     plugins: [
         new ExtractTextPlugin({
-            filename: "common.[chunkhash].css"
+            filename: "[name].[chunkhash].css",
+            disable: blitz.config.local.environment === "development"
         })
     ]
 }

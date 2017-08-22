@@ -18,7 +18,7 @@ module.exports = {
     cacheDuration: 10,
     sourcePath: __dirname +"/../view/src",
     publicPath: __dirname + "/../view/public",
-    endpointPath: __dirname + "/../view/src/endpoints/",
+    endpointPath: __dirname + "/../view/endpoints/",
     endpointParent: __dirname + "/../Endpoint.js",
 
 
