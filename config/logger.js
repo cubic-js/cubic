@@ -3,7 +3,7 @@
 const chalk = require('chalk')
 
 class Log {
-  constructor() {
+  constructor () {
     // Hierarchically ordered log levels
     this.levels = ['silly', 'verbose', 'info', 'monitor']
     this.info = this.info
@@ -13,7 +13,7 @@ class Log {
   /**
    * Checks if log should proceed
    */
-  includesLogLevel(level) {
+  includesLogLevel (level) {
     // Invalid Log Level
     if (!this.levels.includes(blitz.config.local.logLevel)) {
       return false
@@ -30,7 +30,7 @@ class Log {
   /**
    * Default log level. Logs limited information about the node status.
    */
-  info(str) {
+  info (str) {
     if (this.includesLogLevel('info')) {
       console.log(chalk.grey(this.getPrefix()) + str)
     }
@@ -39,7 +39,7 @@ class Log {
   /**
    * Error Log Level. Helpful for automated tests.
    */
-  monitor(str, success, time) {
+  monitor (str, success, time) {
     if (this.includesLogLevel('monitor')) {
       let ok = success ? chalk.green('OK') : chalk.red('FAILED')
       let ms = chalk.grey(time)
@@ -50,7 +50,7 @@ class Log {
   /**
    * Verbose log level. Includes Request Timestamps, Socket Connections, Config events, etc
    */
-  verbose(str) {
+  verbose (str) {
     if (this.includesLogLevel('verbose')) {
       console.log(chalk.grey(this.getPrefix() + str))
     }
@@ -59,7 +59,7 @@ class Log {
   /**
    * Silly log level. Includes internal information on which routes are being bound, diagnostics and lifecycle details
    */
-  silly(str) {
+  silly (str) {
     if (this.includesLogLevel('silly')) {
       console.log(chalk.grey(this.getPrefix() + str))
     }
@@ -68,7 +68,7 @@ class Log {
   /**
    * Generate Prefix for caller, so everything is in the same vertical line
    */
-  getPrefix() {
+  getPrefix () {
     let prefix = process.pid
     let max = 5 - prefix.toString().length
 
