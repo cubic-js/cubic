@@ -14,7 +14,7 @@ class Endpoint {
          */
         this.schema = {
             query: [],
-            scope: 'basic-read',
+            scope: "",
             method: 'GET',
             description: "There is no description for this endpoint yet."
         }
