@@ -17,7 +17,7 @@ class Blitz {
   /**
    * Set global blitz config system
    */
-  constructor(options) {
+  constructor (options) {
     // Merge existing blitz global with current if a new instance is
     // called inside a worker itself (necessary for hooking further
     // sub components)
@@ -30,7 +30,7 @@ class Blitz {
       global.blitz = this
       blitz.config = {}
       blitz.nodes = {}
-      blitz.log = new(require('./config/logger.js'))()
+      blitz.log = new (require('./config/logger.js'))()
     }
 
     let config = {
@@ -44,7 +44,7 @@ class Blitz {
   /**
    * Attach module config to global blitz object
    */
-  setConfig(id, config) {
+  setConfig (id, config) {
     let merged = _.merge(config.local, config.provided)
     blitz.config[id] = {}
 
@@ -57,7 +57,7 @@ class Blitz {
   /**
    * Send config to be set on workers. This will be eval'd, so be careful.
    */
-  setWorkerConfig(str) {
+  setWorkerConfig (str) {
     return new Promise(async resolve => {
       let responses = 0
       for (let id in blitz.nodes) {
@@ -72,7 +72,7 @@ class Blitz {
   /**
    * Send a message to all workers of a node and resolve with response
    */
-  send(workers, type, body, listener) {
+  send (workers, type, body, listener) {
     return new Promise(resolve => {
       let responses = 0
       workers.forEach(worker => {
@@ -98,7 +98,7 @@ class Blitz {
   /**
    * Hook functions to be executed before specific node is clustered while making node config available to the Hook
    */
-  hook(node, fn) {
+  hook (node, fn) {
     let id = typeof node === 'string' ? node : node.name.toLowerCase()
 
     // Create global node obj if not existing
@@ -117,7 +117,7 @@ class Blitz {
   /**
    * Execute hooks for specific node
    */
-  runHooks(id) {
+  runHooks (id) {
     if (blitz.nodes[id].hooks) {
       blitz.nodes[id].hooks.forEach(async hook => {
         await hook()
@@ -129,7 +129,7 @@ class Blitz {
   /**
    * Let blitz handle framework modules
    */
-  async use(node) {
+  async use (node) {
     let nid = node.config.provided ? node.config.provided.id : undefined
     let id = nid || node.constructor.name.toLowerCase()
 
@@ -153,7 +153,7 @@ class Blitz {
   /**
    * Create workers from node file
    */
-  async cluster(node, id) {
+  async cluster (node, id) {
     let file = node.filename
     let cores = 1 // blitz.config[id].cores
 
@@ -194,7 +194,7 @@ class Blitz {
    * Ping method to check for listeners on process. Returns time elapsed.
    * This may be replacable with `this.send()`
    */
-  ping(worker) {
+  ping (worker) {
     return new Promise(resolve => {
       let timestart = new Date()
       let resolved = false
@@ -229,17 +229,17 @@ class Blitz {
    * Wrapper which pings all nodes opposed to just one. Does not include
    * timeouts.
    */
-  pingAll(workers) {
+  pingAll (workers) {
     return this.send(workers, 'ping', {}, 'pong')
   }
 
   /**
    * Make Worker methods accessible from global blitz
    */
-  exposeMethods(node, id) {
+  exposeMethods (node, id) {
     for (let method of Object.getOwnPropertyNames(Object.getPrototypeOf(node))) {
       let _this = this
-      blitz.nodes[id][method] = function() {
+      blitz.nodes[id][method] = function () {
         return _this.setMethodInterface(id, method, arguments)
       }
     }
@@ -248,7 +248,7 @@ class Blitz {
   /**
    * Helper function which calls functions on worker
    */
-  setMethodInterface(id, method, args) {
+  setMethodInterface (id, method, args) {
     return new Promise(resolve => {
       blitz.nodes[id].workers.forEach(async worker => {
         await worker.ping()
@@ -275,7 +275,7 @@ class Blitz {
   /**
    * Serialize global blitz object so it can be sent via stdout to workers
    */
-  serialize(obj) {
+  serialize (obj) {
     return CircularJSON.stringify(obj, (key, value) => {
       return (typeof value === 'function') ? value.toString() : value
     })
