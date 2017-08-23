@@ -10,105 +10,97 @@ const client = Redis.createClient()
  */
 const RateLimiter = require("rolling-rate-limiter")
 
-// Rate Limiter for privileged scope
-const low_limit = RateLimiter({
-    redis: client,
-    namespace: "LowAccessLimit",
-    interval: 5000,
-    maxInInterval: 100
-})
-
-// Rate Limiter for registered users
-const mid_limit = RateLimiter({
-    redis: client,
-    namespace: "MidAccessLimit",
-    interval: 10000,
-    maxInInterval: 30
-})
-
-// Rate Limiter for no tokens
-const high_limit = RateLimiter({
-    redis: client,
-    namespace: "HighAccessLimit",
-    interval: 10000,
-    maxInInterval: 30
-})
-
 
 /**
  * Rolling Rate limiting Implementation
  */
- class Limiter {
+class Limiter {
 
-     /**
-      * Rolling Rate Limiting with Redis
-      */
-     check(req, res, next) {
+    /**
+     * Rolling Rate Limiting with Redis
+     */
+    check(req, res, next) {
+        // Rate Limiter for privileged scope
+        const low_limit = RateLimiter(Object.assign({
+            redis: client,
+            namespace: "LowAccessLimit"
+        }, blitz.config[blitz.id].limiter.low))
 
-         // No Token provided -> High limit, 1req/s
-         if (!req.user.scp) {
-             high_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
-         }
+        // Rate Limiter for registered users
+        const mid_limit = RateLimiter(Object.assign({
+            redis: client,
+            namespace: "MidAccessLimit"
+        }, blitz.config[blitz.id].limiter.mid))
 
-         // User is root -> skip limiting
-         else if (req.user.scp.includes("root") || req.user.scp.includes("ignore-rate-limit")) {
-             return next()
-         }
-
-         // Token provided & privileged user -> No minDifference, 5req/s
-         else if (req.user.scp.includes("elevated")) {
-             low_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
-         }
-
-         // Token provided & default user -> Enhanced limits, 2req/s
-         else if (req.user.scp.includes("basic")) {
-             mid_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
-         }
-
-         else return next("Undocumented Authorization Scope. Please contact a developer on our discord server. https://discord.gg/8mCNvKp")
-     }
+        // Rate Limiter for no tokens
+        const high_limit = RateLimiter(Object.assign({
+            redis: client,
+            namespace: "HighAccessLimit"
+        }, blitz.config[blitz.id].limiter.high))
 
 
-     /**
-      * Rate Limit error handling
-      */
-     limit(err, req, res, next, timeLeft, actionsLeft) {
+        // No Token provided -> High limit
+        if (!req.user.scp) {
+            high_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
+        }
 
-         // Return any errors
-         if (err) {
-             return next(new Error("Uncaught Exception"))
-         }
+        // User is root -> skip limiting
+        else if (req.user.scp.includes("root") || req.user.scp.includes("ignore-rate-limit")) {
+            return next()
+        }
 
-         // Limit Rate if necessary
-         else if (timeLeft) {
+        // Token provided & privileged user -> No minDifference
+        else if (req.user.scp.includes("elevated")) {
+            low_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
+        }
 
-             // Figure out why request got limited
-             if (actionsLeft > 0) {
-                 var err = {
-                     error: "Rate limit exceeded.",
-                     reason: `Request intervals too close. You need to wait ${timeLeft} ms to continue.`
-                 }
-             } else {
-                 var err = {
-                     error: "Rate limit exceeded.",
-                     reason: `Max requests per interval reached. You need to wait ${timeLeft} ms to continue.`
-                 }
-             }
-
-             // Figure out Source of Request
-             if (req.channel === "Sockets") var prefix = "Sockets"
-             else var prefix = "REST"
-
-             // Respond with error
-             return res.status(429).send(err)
-         }
-
-         // Otherwise allow
-         else {
-             return next()
-         }
-     }
- }
+        // Token provided & default user -> Enhanced limits, 2req/s
+        else if (req.user.scp.includes("basic")) {
+            mid_limit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
+        } else return next("Undocumented Authorization Scope. Please contact a developer on our discord server. https://discord.gg/8mCNvKp")
+    }
 
 
- module.exports = new Limiter()
+    /**
+     * Rate Limit error handling
+     */
+    limit(err, req, res, next, timeLeft, actionsLeft) {
+
+        // Return any errors
+        if (err) {
+            return next(new Error("Uncaught Exception"))
+        }
+
+        // Limit Rate if necessary
+        else if (timeLeft) {
+
+            // Figure out why request got limited
+            if (actionsLeft > 0) {
+                var err = {
+                    error: "Rate limit exceeded.",
+                    reason: `Request intervals too close. You need to wait ${timeLeft} ms to continue.`
+                }
+            } else {
+                var err = {
+                    error: "Rate limit exceeded.",
+                    reason: `Max requests per interval reached. You need to wait ${timeLeft} ms to continue.`
+                }
+            }
+
+            // Figure out Source of Request
+            if (req.channel === "Sockets") var prefix = "Sockets"
+            else var prefix = "REST"
+
+            // Respond with error
+            return res.status(429).send(err)
+        }
+
+        // Otherwise allow
+        else {
+            return next()
+        }
+    }
+}
+
+
+module.exports = new Limiter

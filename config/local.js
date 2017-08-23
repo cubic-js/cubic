@@ -21,7 +21,23 @@ module.exports = {
      * Middleware Options
      */
     useRequestLogger: true,
-    useRateLimiter: true,
+    limiter: {
+        enabled: true,
+        low: {
+            interval: 5000,
+            maxInInterval: 50
+        },
+        mid: {
+            interval: 10000,
+            maxInInterval: 30,
+            minDifference: 10
+        },
+        high: {
+            interval: 10000,
+            maxInInterval: 20,
+            minDifference: 50
+        }
+    },
 
 
     /**

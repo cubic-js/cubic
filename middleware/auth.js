@@ -43,7 +43,7 @@ class Authentication {
         const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         req.user = {
             uid: ip,
-            scp: "basic-read"
+            scp: ""
         }
 
         // Token present?
@@ -79,7 +79,7 @@ class Authentication {
         let ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address || socket.request.connection.remoteAddress
         socket.user = {
             uid: ip,
-            scp: "basic-read"
+            scp: ""
         }
 
         // Token sent at all?

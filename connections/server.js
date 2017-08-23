@@ -60,7 +60,7 @@ class Server {
         this.use((req, res, next) => this.cache.check(req, res, next))
 
         // Rolling Rate Limit
-        if (blitz.config[blitz.id].useRateLimiter) {
+        if (blitz.config[blitz.id].limiter.enabled) {
             this.use((req, res, next) => limit.check(req, res, next))
         }
     }
