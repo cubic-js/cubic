@@ -1,76 +1,73 @@
 /**
  * Dependencies
  */
-const local = require("./config/local.js")
-const worker = require("blitz-js-util")
-const Server = require("./connections/server.js")
+const local = require('./config/local.js')
+const worker = require('blitz-js-util')
+const Server = require('./connections/server.js')
 
 /**
  * Parent Class for API-Node
  */
 class API {
-
-    /**
-     * Set config for blitz.js to merge
-     * @constructor
-     */
-    constructor(options) {
-
-        // Process forked
-        if (process.env.isWorker) {
-            this.setup = worker.setGlobal()
-            this.setup.then(() => this.init())
-            worker.expose(this)
-        }
-
-        // Process not forked
-        else {
-
-            // Config which is called by blitz.js on blitz.use()
-            this.config = {
-                local: local,
-                provided: options
-            }
-
-            // Path for forking
-            this.filename = __filename
-        }
+  /**
+   * Set config for blitz.js to merge
+   * @constructor
+   */
+  constructor (options) {
+    // Process forked
+    if (process.env.isWorker) {
+      this.setup = worker.setGlobal()
+      this.setup.then(() => this.init())
+      worker.expose(this)
     }
 
-    init() {
-        this.server = new Server()
-    }
+    // Process not forked
+    else {
+      // Config which is called by blitz.js on blitz.use()
+      this.config = {
+        local: local,
+        provided: options
+      }
 
-    /**
-     * Run any function from a remote process with `this` context
-     */
-    run(fn) {
-        return fn.apply(this)
+      // Path for forking
+      this.filename = __filename
     }
+  }
 
-    use(route, fn) {
-        this.server.use(route, fn)
-    }
+  init () {
+    this.server = new Server()
+  }
 
-    get(route, fn) {
-        this.server.use(route, fn, "GET")
-    }
+  /**
+   * Run any function from a remote process with `this` context
+   */
+  run (fn) {
+    return fn.apply(this)
+  }
 
-    post(route, fn) {
-        this.server.use(route, fn, "POST")
-    }
+  use (route, fn) {
+    this.server.use(route, fn)
+  }
 
-    put(route, fn) {
-        this.server.use(route, fn, "PUT")
-    }
+  get (route, fn) {
+    this.server.use(route, fn, 'GET')
+  }
 
-    patch(route, fn) {
-        this.server.use(route, fn, "PATCH")
-    }
+  post (route, fn) {
+    this.server.use(route, fn, 'POST')
+  }
 
-    delete(route, fn) {
-        this.server.use(route, fn, "DELETE")
-    }
+  put (route, fn) {
+    this.server.use(route, fn, 'PUT')
+  }
+
+  patch (route, fn) {
+    this.server.use(route, fn, 'PATCH')
+  }
+
+  delete (route, fn) {
+    this.server.use(route, fn, 'DELETE')
+  }
 }
 
 module.exports = process.env.isWorker ? new API() : API
