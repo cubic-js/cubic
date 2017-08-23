@@ -84,10 +84,15 @@ const high_limit = RateLimiter({
 
              // Figure out why request got limited
              if (actionsLeft > 0) {
-                 var err = "Rate limit exceeded. Request intervals too close. You need to wait " + timeLeft + "ms to continue."
+                 var err = {
+                     error: "Rate limit exceeded.",
+                     reason: `Request intervals too close. You need to wait ${timeLeft} ms to continue.`
+                 }
              } else {
-                 var err = "Rate limit exceeded. Max requests per interval reached. You need to wait " + timeLeft + "ms to continue."
-             }
+                 var err = {
+                     error: "Rate limit exceeded.",
+                     reason: `Max requests per interval reached. You need to wait ${timeLeft} ms to continue.`
+                 }
 
              // Figure out Source of Request
              if (req.channel === "Sockets") var prefix = "Sockets"
