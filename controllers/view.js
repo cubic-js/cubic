@@ -29,7 +29,7 @@ class ViewController {
         const renderer = createBundleRenderer(serverBundle, {
             template,
             clientManifest,
-            basedir: path.join(blitz.config[blitz.id].sourcePath, "../.."),
+            basedir: path.join(blitz.config[blitz.id].sourcePath, "../../"),
             runInNewContext: false
         })
         const render = util.promisify(renderer.renderToString)

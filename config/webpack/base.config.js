@@ -1,16 +1,18 @@
-const path = require("path")
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const isProd = blitz.config.local.environment !== "development"
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
     filename: "[name].[chunkhash].css",
     disable: !isProd
 })
 
 module.exports = {
+    context: __dirname,
+
     // Output file which will be loaded by Vue (server & client side)
     output: {
         path: blitz.config[blitz.id].publicPath,
-        filename: "[name].bundle.js"
+        publicPath: "/",
+        filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js"
     },
 
     // Loaders which determine how file types are interpreted
@@ -34,12 +36,12 @@ module.exports = {
             },
             {
                 test: /\.s?[a|c]ss$/,
-                use: extractSass.extract({
+                use: isProd ? extractSass.extract({
                     use: [{
                         loader: "sass-loader"
                     }],
                     fallback: "style-loader"
-                })
+                }) : "sass-loader"
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,

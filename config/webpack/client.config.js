@@ -1,3 +1,4 @@
+const isProd = blitz.config.local.environment !== "development"
 const webpack = require("webpack")
 const merge = require("webpack-merge")
 const baseConfig = require("./base.config.js")
@@ -8,8 +9,13 @@ const VueSSRClientPlugin = require("vue-server-renderer/client-plugin")
  * for both server and client bundles
  */
 module.exports = merge(baseConfig, {
+    name: "client",
+
     // Entry point which guides to everything webpack is supposed to bundle
-    entry: __dirname + "/../../view/src/app-client.js",
+    // Use app so hot-module-reload can overwrite entry for that specific part
+    entry: {
+        client: __dirname + "/../../view/src/app-client.js"
+    },
 
     plugins: [
         // Important: this splits the webpack runtime into a leading chunk
@@ -19,6 +25,7 @@ module.exports = merge(baseConfig, {
             name: "manifest",
             minChunks: Infinity
         }),
+
         // This plugins generates `vue-ssr-client-manifest.json` in the
         // output directory.
         new VueSSRClientPlugin()

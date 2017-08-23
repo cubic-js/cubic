@@ -9,7 +9,7 @@ const fs = require("fs")
 const promisify = require("util").promisify
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
-const webpack = require('webpack')
+const webpack = promisify(require('webpack'))
 
 /**
  * Loader for auth-node system. For ease of maintenance, the auth-node consists
@@ -60,8 +60,8 @@ class View {
      */
     initBlitz() {
         delete process.env.isWorker
-        const Core = require("blitz-js-core")
-        const API = require("blitz-js-api")
+        const Core = require("../blitz-js-core")
+        const API = require("../blitz-js-api")
         const Blitz = require("blitz-js")(blitz.config.local)
 
         // Apply config to nodes and hook them
@@ -81,24 +81,84 @@ class View {
 
 
     /**
-     * Initialize Webpack
+     * Initialize Webpack here if we're in production. Production assumes that
+     * core workers and API nodes are on different machines. During develop-
+     * ment we'll run webpack from an API middleware, because hot module
+     * replacement requires a webpack instance on the same process.
      */
-    async initWebpack() {
+    initWebpack() {
+        if (blitz.config.local.environment === "production") {
+            this.initWebpackLocal()
+        } else {
+            this.initWebpackLocal()
+        }
+    }
+
+
+    /**
+     * Run webpack locally, assuming production environment.
+     */
+    async initWebpackLocal() {
         const timer = new Date
-        const clientConfig = require('./config/webpack/client.config')
-        const serverConfig = require('./config/webpack/server.config')
-        const compiler = webpack([clientConfig, serverConfig])
-        if (compiler.errors) {
-            throw compiler.errors
+        const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
+        const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
+        const compiled = await webpack([clientConfig, serverConfig])
+        if (compiled.errors) {
+            throw compiled.errors
         } else {
             blitz.log.monitor("Webpack build successful", true, `${new Date - timer}ms`)
         }
-        compiler.watch({}, (err, stats) => {
-            if (err) console.log(err)
-            stats.stats.forEach(build => {
-                if (build.compilation.errors.length) {
-                    console.log(build.compilation.errors)
+    }
+
+
+    /**
+     * Hook HMR middleware into API node and bundle from there
+     */
+    async initWebpackOnAPI() {
+        await blitz.nodes.view_api.run(function() {
+            const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
+            const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
+            const publicPath = clientConfig.output.path
+
+            // Dependencies
+            const webpack = require("webpack")
+            const util = require("util")
+            const fs = require("fs")
+            const path = require("path")
+            const readFile = (mfs, file) => mfs.readFileSync(path.join(publicPath, file), "utf-8")
+            const copyFile = (mfs, file) => util.promisify(fs.writeFile)(path.join(publicPath, file), readFile(mfs, file))
+
+            // Modify client config to work with hot middleware
+            clientConfig.entry.app = ["webpack-hot-middleware/client?path=/__hot", clientConfig.entry.app]
+            clientConfig.output.filename = "[name].js"
+            clientConfig.plugins.push(
+                new webpack.HotModuleReplacementPlugin(),
+                new webpack.NoEmitOnErrorsPlugin()
+            )
+            const compiler = webpack([clientConfig, serverConfig])
+            const devMiddleware = require("webpack-dev-middleware")(compiler, {
+                noInfo: true, publicPath: clientConfig.output.publicPath
+            })
+            const hotMiddleware = require("webpack-hot-middleware")(compiler, {
+                log: console.log, path: '/__hot', heartbeat: 10 * 1000
+            })
+
+            // Step 2: Attach the dev middleware to the compiler & the server
+            this.server.http.app.use(devMiddleware)
+
+            // Step 3: Attach the hot middleware to the compiler & the server
+            this.server.http.app.use(hotMiddleware)
+
+            compiler.plugin("done", stats => {
+                stats = stats.toJson()
+                if (stats.errors.length) {
+                    throw stats.errors
                 }
+                stats.children.forEach(bundle => {
+                    bundle.assets.forEach(asset => {
+                        copyFile(devMiddleware.fileSystem, asset.name)
+                    })
+                })
             })
         })
     }

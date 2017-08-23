@@ -8,6 +8,8 @@ const VueSSRServerPlugin = require("vue-server-renderer/server-plugin")
  * for both server and client bundles
  */
 module.exports = merge(baseConfig, {
+    name: "server",
+
     // Entry point which guides to everything webpack is supposed to bundle
     entry: __dirname + "/../../view/src/app-server.js",
 

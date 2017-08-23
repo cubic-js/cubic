@@ -2,7 +2,7 @@ import { createApp } from './app.js'
 
 export default context => {
     return new Promise((resolve, reject) => {
-        const { app, router } = createApp(context)
+        const { app, router, store } = createApp(context)
         const { url } = context
 
         // Set router's location
