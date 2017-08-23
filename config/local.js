@@ -25,10 +25,9 @@ module.exports = {
     routes: __dirname + "/endpoints/routes.js",
     events: __dirname + "/endpoints/events.js",
     limiter: {
-        low: {
+        high: {
             interval: 60000,
-            maxInInterval: 120,
-            minDifference: null
+            maxInInterval: 120
         }
     },
 
