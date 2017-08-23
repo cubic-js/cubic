@@ -10,6 +10,8 @@ module.exports = {
      */
     port: 3030,
     endpointPath: __dirname + "/../endpoints/",
+    isCore: true,
+    isApi: true,
 
 
     /**
@@ -62,5 +64,5 @@ module.exports = {
     /**
      * Cluster config
      */
-    cores: os.cpus().length
+    cores: Math.ceil(os.cpus().length / 2)
 }
