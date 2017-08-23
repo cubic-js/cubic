@@ -29,7 +29,6 @@ class Blitz {
         let auth = this.options.auth_url
         this.options.api_url = api[api.length - 1] === "/" ? api.slice(0, -1) : api
         this.options.auth_url = auth[auth.length - 1] === "/" ? auth.slice(0, -1) : auth
-
         this.connect()
     }
 
