@@ -93,6 +93,7 @@ const high_limit = RateLimiter({
                      error: "Rate limit exceeded.",
                      reason: `Max requests per interval reached. You need to wait ${timeLeft} ms to continue.`
                  }
+             }
 
              // Figure out Source of Request
              if (req.channel === "Sockets") var prefix = "Sockets"
