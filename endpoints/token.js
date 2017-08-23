@@ -15,8 +15,8 @@ const bcrypt = require('bcrypt-as-promised')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Authentication extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
+  constructor (api, db, req) {
+    super(api, db, req)
     this.schema.method = 'POST'
   }
 
@@ -44,7 +44,7 @@ class Authentication extends Endpoint {
    * Check supplied user info & send token
    */
   async matchCredentials (credentials, req) {
-    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    let ip = req.user.uid
     let user = await this.db.collection('users').findOne({
       user_key: credentials.user_key
     })
@@ -79,7 +79,7 @@ class Authentication extends Endpoint {
    * Validates Refresh token, sends new access token
    */
   async matchRefreshToken (credentials, req) {
-    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    let ip = req.user.uid
     let user = await this.db.collection('users').findOne({
       refresh_token: credentials.refresh_token
     })

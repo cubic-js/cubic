@@ -14,14 +14,15 @@
   "dependencies": {
     "bcrypt-as-promised": "^1.1.0",
     "blitz-js": "^0.1.4",
-    "blitz-js-api": "^0.1.10",
-    "blitz-js-core": "^0.1.6",
-    "blitz-js-util": "^0.1.4",
-    "body-parser": "^1.16.1",
+    "blitz-js-api": "^0.1.12",
+    "blitz-js-core": "^0.1.7",
+    "blitz-js-util": "^0.1.5",
+    "body-parser": "^1.17.2",
     "chalk": "^2.1.0",
-    "debug": "~2.6.0",
+    "debug": "^2.6.8",
     "express": "^4.15.4",
     "jsonwebtoken": "^7.4.3",
+    "mongodb": "^2.2.31",
     "rand-token": "^0.3.0"
   }
 }
