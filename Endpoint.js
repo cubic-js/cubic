@@ -3,54 +3,50 @@
  * Any lower-level method extends this class
  */
 class Endpoint {
-
+  /**
+   * Describes Endpoint properties
+   */
+  constructor (api, db, req) {
     /**
-     * Describes Endpoint properties
+     * Default schema for API calls
      */
-    constructor(api, db, req) {
-
-        /**
-         * Default schema for API calls
-         */
-        this.schema = {
-            query: [],
-            scope: "",
-            method: 'GET',
-            description: "There is no description for this endpoint yet."
-        }
-        this.api = api
-        this.db = db
-        this.url = req ? req.url : null
-        this.req = req
+    this.schema = {
+      query: [],
+      scope: '',
+      method: 'GET',
+      description: 'There is no description for this endpoint yet.'
     }
+    this.api = api
+    this.db = db
+    this.url = req ? req.url : null
+    this.req = req
+  }
 
-
-    /**
-     * Publish Data for a specific endpoint
-     */
-    publish(endpoint, data) {
-        let update = {
-            endpoint,
-            data
-        }
-        this.api.emit("publish", update)
-        blitz.log.verbose("Core      | Sending data to publish for " + endpoint)
+  /**
+   * Publish Data for a specific endpoint
+   */
+  publish (endpoint, data) {
+    let update = {
+      endpoint,
+      data
     }
+    this.api.emit('publish', update)
+    blitz.log.verbose('Core      | Sending data to publish for ' + endpoint)
+  }
 
-
-    /**
-     * Send data to be cached for endpoint on API node
-     */
-    cache(key, value, exp) {
-        let data = {
-            key,
-            value,
-            exp,
-            scope: this.schema.scope
-        }
-        this.api.emit("cache", data)
-        blitz.log.verbose("Core      | Sending data to cache for " + key)
+  /**
+   * Send data to be cached for endpoint on API node
+   */
+  cache (key, value, exp) {
+    let data = {
+      key,
+      value,
+      exp,
+      scope: this.schema.scope
     }
+    this.api.emit('cache', data)
+    blitz.log.verbose('Core      | Sending data to cache for ' + key)
+  }
 }
 
 module.exports = Endpoint
