@@ -95,7 +95,7 @@ class EndpointController {
       * Check request method and authorization before processing request
       */
      validateRequest(req, parsed) {
-         if (!req.user.scp.includes(parsed.endpoint.scope)) {
+         if (!req.user.scp.includes(parsed.endpoint.scope) && !req.user.scp.includes("root-read-write")) {
              return {
                  statusCode: 401,
                  body: {
