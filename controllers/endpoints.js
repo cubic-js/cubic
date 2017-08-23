@@ -44,7 +44,7 @@ class EndpointController {
         let raw = await readFile(filename)
 
         api.emit("cache", {
-            scope: "basic-read",
+            scope: "",
             key: req.url,
             value: raw,
             exp: blitz.config[blitz.id].cacheDuration
