@@ -9,25 +9,25 @@ const VueSSRClientPlugin = require("vue-server-renderer/client-plugin")
  * for both server and client bundles
  */
 module.exports = merge(baseConfig, {
-    name: "client",
+  name: "client",
 
-    // Entry point which guides to everything webpack is supposed to bundle
-    // Use app so hot-module-reload can overwrite entry for that specific part
-    entry: {
-        client: __dirname + "/../../view/src/app-client.js"
-    },
+  // Entry point which guides to everything webpack is supposed to bundle
+  // Use app so hot-module-reload can overwrite entry for that specific part
+  entry: {
+    client: __dirname + "/../../view/src/app-client.js"
+  },
 
-    plugins: [
-        // Important: this splits the webpack runtime into a leading chunk
-        // so that async chunks can be injected right after it.
-        // this also enables better caching for your app/vendor code.
-        new webpack.optimize.CommonsChunkPlugin({
-            name: "manifest",
-            minChunks: Infinity
-        }),
+  plugins: [
+    // Important: this splits the webpack runtime into a leading chunk
+    // so that async chunks can be injected right after it.
+    // this also enables better caching for your app/vendor code.
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "manifest",
+      minChunks: Infinity
+    }),
 
-        // This plugins generates `vue-ssr-client-manifest.json` in the
-        // output directory.
-        new VueSSRClientPlugin()
-    ]
+    // This plugins generates `vue-ssr-client-manifest.json` in the
+    // output directory.
+    new VueSSRClientPlugin()
+  ]
 })

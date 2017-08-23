@@ -21,24 +21,27 @@ const viewswarframeindexvue = require("D:\\dev\\nexus-stats\\nexus-stats/view/sr
 Vue.use(Router)
 
 export function createRouter() {
-    const config = {
-        mode: 'history',
-        scrollBehavior(to, from, savedPosition) {
-            if (savedPosition) {
-                return savedPosition
-            } else {
-                return { x: 0, y: 0 }
-            }
-        },
-        routes: []
-    }
+  const config = {
+    mode: 'history',
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition
+      } else {
+        return {
+          x: 0,
+          y: 0
+        }
+      }
+    },
+    routes: []
+  }
 
-    // Add auto-generated routes
-    for (let route of routes) {
-        config.routes.push({
-            path: route.path,
-            component: eval(route.component.replace(/\/|\\|\.|\-/g, ""))
-        })
-    }
-    return new Router(config)
+  // Add auto-generated routes
+  for (let route of routes) {
+    config.routes.push({
+      path: route.path,
+      component: eval(route.component.replace(/\/|\\|\.|\-/g, ""))
+    })
+  }
+  return new Router(config)
 }
