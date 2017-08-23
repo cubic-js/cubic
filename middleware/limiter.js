@@ -20,6 +20,7 @@ class Limiter {
      * Rolling Rate Limiting with Redis
      */
     check(req, res, next) {
+    
         // Rate Limiter for privileged scope
         const low_limit = RateLimiter(Object.assign({
             redis: client,

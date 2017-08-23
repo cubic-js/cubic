@@ -29,13 +29,11 @@ module.exports = {
         },
         mid: {
             interval: 10000,
-            maxInInterval: 30,
-            minDifference: 10
+            maxInInterval: 30
         },
         high: {
             interval: 10000,
-            maxInInterval: 20,
-            minDifference: 50
+            maxInInterval: 20
         }
     },
 
