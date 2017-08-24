@@ -14,7 +14,7 @@ import { sync } from "vuex-router-sync"
 // instances
 export function createApp(context) {
   const router = createRouter()
-  const store = createStore()
+  const store = createStore(context ? context.api : null)
 
   // sync the router with the vuex store.
   // this registers `store.state.route`

@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import actions from './actions'
+import { createActions } from './actions'
 import mutations from './mutations'
 import getters from './getters'
 
 Vue.use(Vuex)
 
-export function createStore () {
+export function createStore (api) {
+  const actions = createActions(api)
   return new Vuex.Store({
-    state: {/** stuff gets stored here **/},
+    state: {},
     actions,
     mutations,
     getters
