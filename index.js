@@ -55,7 +55,7 @@ class Auth {
 
     // API node which controls incoming requests
     options.id = 'auth_api'
-    blitz.hook(options.id, purge.purgeInactiveUsers)
+    //blitz.hook(options.id, purge.purgeInactiveUsers)
     blitz.use(new API(options))
     preauth.validateWorker()
 
