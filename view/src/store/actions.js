@@ -1,29 +1,20 @@
 /**
  * Methods for retrieving/calculating data
  */
-import Blitz from 'blitz-js-query-browser'
 let client
+let userActions
+try {
+  userActions = require('src/store/actions')
+}
+catch (err) {}
 
-export function createActions(api) {
-  // We're on the server -> Get pre-connected api connection from node
-  if (api) {
-    client = api
-  }
-  // We're on the client -> load API connection
-  else {
-    client = new Blitz()
-  }
+export function createActions() {
 
-  // Expose methods of client to actions
-  let actions = []
-  for (let property in client) {
-    typeof client[property] === 'function' ? actions.push(client[property]) : 0
-  }
+  // Merge with user provided actions
+  let actions = userActions || {}
 
   // Merge client methods with custom actions
   return Object.assign(actions, {
-    setValue({ commit }, value) {
-      commit("setValue", value)
-    }
+
   })
 }

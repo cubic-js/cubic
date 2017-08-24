@@ -6,6 +6,7 @@
  */
 import Vue from 'vue'
 import App from 'src/app.vue'
+import Blitz from 'blitz-js-query-browser'
 import { createRouter } from "./router"
 import { createStore } from "./store"
 import { sync } from "vuex-router-sync"
@@ -14,11 +15,24 @@ import { sync } from "vuex-router-sync"
 // instances
 export function createApp(context) {
   const router = createRouter()
-  const store = createStore(context ? context.api : null)
+  const store = createStore()
 
   // sync the router with the vuex store.
   // this registers `store.state.route`
   sync(store, router)
+
+  // We're on the server -> Get pre-connected api connection from node
+  if (context) {
+    Vue.prototype.$blitz = context.api
+  }
+
+  // We're on the client -> load API connection
+  else {
+    Vue.prototype.$blitz = new Blitz({
+      //api_url: 'https://api.nexus-stats.com',
+      //auth_url: 'https://auth.nexus-stats.com'
+    })
+  }
 
   // create the app instance.
   // here we inject the router, store and ssr context to all child components,

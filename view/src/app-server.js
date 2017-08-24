@@ -25,7 +25,7 @@ const callAsyncRecursive = (parent, params) => {
 }
 
 /**
- * Exports
+ * Generate App with pre-fetched data in store state
  */
 export default context => {
   return new Promise((resolve, reject) => {

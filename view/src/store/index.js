@@ -6,8 +6,8 @@ import getters from './getters'
 
 Vue.use(Vuex)
 
-export function createStore (api) {
-  const actions = createActions(api)
+export function createStore () {
+  const actions = createActions()
   return new Vuex.Store({
     state: {},
     actions,

@@ -36,7 +36,8 @@ export function createRouter() {
     routes: []
   }
 
-  // Add auto-generated routes
+  // Add auto-generated routes. For components we eval the unique variable name
+  // composed of the view without disallowed characters
   for (let route of routes) {
     config.routes.push({
       path: route.path,
