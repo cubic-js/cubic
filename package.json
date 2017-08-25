@@ -1,7 +1,7 @@
 {
-  "name": "blitz-js-query",
-  "version": "0.1.5",
-  "description": "HTTP/Socket.io query adapter for the blitz.js framework",
+  "name": "blitz-js-query-browser",
+  "version": "0.1.2",
+  "description": "Blitz-js API connection module optimized for usage in browsers",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -14,9 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "async-delay-queue": "^1.0.4",
-    "deep-extend": "^0.5.0",
-    "request": "^2.81.0",
-    "request-promise": "^4.2.1",
     "socket.io-client": "^2.0.3"
   }
 }
