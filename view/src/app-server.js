@@ -51,7 +51,6 @@ export default context => {
         console.log(callAsyncRecursive(loaded, params, context.api))
         return callAsyncRecursive(loaded, params, context.api)
       })).then(() => {
-        console.log(store.state)
         // After all asyncData hooks are resolved, our store is now
         // filled with the state needed to render the app.
         // Expose the state on the render context, and let the request handler
