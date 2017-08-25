@@ -1,3 +1,10 @@
+
+[![blitz.js API](/banner.png)](https://github.com/nexus-devs)
+
+## 
+
+<br>
+
 ## Nexus Core Resource Node
 Node.js server for data-processing of fundamental statistics. Uses the standard [nexus-stats-api](https://github.com/nexus-devs/npm-nexus-api) module to connect to the nexus-stats infrastructure.
 - - - -
@@ -46,13 +53,3 @@ params: [
 ### Authorization
 You can also choose which minimum scopes to grant access to, e.g. `scope: "elevated-read-write"`. The API node will automatically include any higher scopes in the permission hierarchy.
 
-### Database indexes
-```javascript
-// Single indexes
-db.collection.createIndex({'item': 1})
-db.collection.createIndex({'component': 1})
-db.collection.createIndex({'timestamp': -1})
-
-// Compound index
-db.collection.createIndex({'timestamp': -1, 'item': 1})
-```
