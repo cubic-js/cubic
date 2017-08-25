@@ -1,7 +1,12 @@
 [![blitz.js](/banner.png)](https://github.com/nexus-devs)
-<p align="center">Horizontal scaling made easy with a module-based infrastructure.</p>
 
 ##  
+
+[![Discord](https://img.shields.io/discord/195582152849620992.svg)](https://discord.gg/AG8RPZ8) [![GitHub release](https://img.shields.io/github/release/nexus-devs/blitz-js.svg)]()
+
+<br>
+
+Blitz.js is a Node.js framework which allows you to build all application logic in components. The framework automatically exposes your components to a RESTful HTTP & Websocket API and takes care of authorization, rate limits and more independently. **TL;DR** - Blitz lets you focus exclusively on your app's code.
 
 <br>
 
