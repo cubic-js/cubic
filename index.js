@@ -9,7 +9,7 @@ const fs = require("fs")
 const promisify = require("util").promisify
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
-const webpack = promisify(require('webpack'))
+const webpack = require('webpack')
 
 /**
  * Loader for auth-node system. For ease of maintenance, the auth-node consists
@@ -88,9 +88,9 @@ class View {
    */
   initWebpack() {
     if (blitz.config.local.environment === "production") {
-      this.initWebpackLocal()
+      this.initWebpackProd()
     } else {
-      this.initWebpackLocal()
+      this.initWebpackDev()
     }
   }
 
@@ -98,11 +98,11 @@ class View {
   /**
    * Run webpack locally, assuming production environment.
    */
-  async initWebpackLocal() {
+  async initWebpackProd() {
     const timer = new Date
     const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
     const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
-    const compiled = await webpack([clientConfig, serverConfig])
+    const compiled = await promisify(webpack)([clientConfig, serverConfig])
     if (compiled.errors) {
       throw compiled.errors
     } else {
@@ -112,57 +112,21 @@ class View {
 
 
   /**
-   * Hook HMR middleware into API node and bundle from there
+   * Hook HMR middleware for development
    */
-  async initWebpackOnAPI() {
-    await blitz.nodes.view_api.run(function() {
-      const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
-      const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
-      const publicPath = clientConfig.output.path
-
-      // Dependencies
-      const webpack = require("webpack")
-      const util = require("util")
-      const fs = require("fs")
-      const path = require("path")
-      const readFile = (mfs, file) => mfs.readFileSync(path.join(publicPath, file), "utf-8")
-      const copyFile = (mfs, file) => util.promisify(fs.writeFile)(path.join(publicPath, file), readFile(mfs, file))
-
-      // Modify client config to work with hot middleware
-      clientConfig.entry.app = ["webpack-hot-middleware/client?path=/__hot", clientConfig.entry.app]
-      clientConfig.output.filename = "[name].js"
-      clientConfig.plugins.push(
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin()
-      )
-      const compiler = webpack([clientConfig, serverConfig])
-      const devMiddleware = require("webpack-dev-middleware")(compiler, {
-        noInfo: true,
-        publicPath: clientConfig.output.publicPath
-      })
-      const hotMiddleware = require("webpack-hot-middleware")(compiler, {
-        log: console.log,
-        path: '/__hot',
-        heartbeat: 10 * 1000
-      })
-
-      // Step 2: Attach the dev middleware to the compiler & the server
-      this.server.http.app.use(devMiddleware)
-
-      // Step 3: Attach the hot middleware to the compiler & the server
-      this.server.http.app.use(hotMiddleware)
-
-      compiler.plugin("done", stats => {
-        stats = stats.toJson()
-        if (stats.errors.length) {
-          throw stats.errors
-        }
-        stats.children.forEach(bundle => {
-          bundle.assets.forEach(asset => {
-            copyFile(devMiddleware.fileSystem, asset.name)
-          })
-        })
-      })
+  async initWebpackDev() {
+    const timer = new Date
+    const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
+    const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
+    const compiler = webpack([clientConfig, serverConfig])
+    compiler.watch({}, (err, stats) => {
+      if (err) {
+        throw err
+      }
+      stats = stats.toJson()
+      if (stats.errors.length) {
+        throw stats.errors
+      }
     })
   }
 

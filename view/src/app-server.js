@@ -48,7 +48,6 @@ export default context => {
           store,
           route: router.currentRoute
         }
-        console.log(callAsyncRecursive(loaded, params, context.api))
         return callAsyncRecursive(loaded, params, context.api)
       })).then(() => {
         // After all asyncData hooks are resolved, our store is now
