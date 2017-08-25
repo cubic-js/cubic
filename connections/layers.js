@@ -10,13 +10,13 @@ class Layer {
   /**
    * Runs through middleware functions before adapter.pass
    */
-  next (err) {
+  next(err) {
     this.next = this.next.bind(this) // preserve `this` on callback
 
     // Error occured? Send back to client.
     if (err) {
       this.res.status(500).send(err)
-      return this.reject()
+      return this.reject(err)
     }
 
     // Otherwise, continue waterfall
@@ -46,51 +46,53 @@ class Layer {
   /**
    * Check if route matches and assign optional placeholders
    */
-  routeMatches (mw) {
+  routeMatches(mw) {
     // Normalize url/route format
-    mw.route = mw.route[mw.route.length - 1] === '/' ? mw.route.slice(0, -1) : mw.route
-    this.req.url = this.req.url[this.req.url.length - 1] === '/' ? this.req.url.slice(0, -1) : this.req.url
+    if (typeof this.req.url === "string") {
+      mw.route = mw.route[mw.route.length - 1] === '/' ? mw.route.slice(0, -1) : mw.route
+      this.req.url = this.req.url[this.req.url.length - 1] === '/' ? this.req.url.slice(0, -1) : this.req.url
 
-    // Add params to req object if present
-    let route = mw.route.split('/')
-    let url = this.req.url.split('/')
-    this.req.params = {}
+      // Add params to req object if present
+      let route = mw.route.split('/')
+      let url = this.req.url.split('/')
+      this.req.params = {}
 
-    for (let i = 0; i < route.length; i++) {
-      // params already assigned? means route has been matched
-      if (Object.keys(this.req.params).length > 0) {
-        break
+      for (let i = 0; i < route.length; i++) {
+        // params already assigned? means route has been matched
+        if (Object.keys(this.req.params).length > 0) {
+          break
+        }
+
+        // Add placeholder value to req object
+        if (route[i][0] === ':') {
+          this.req.params[route[i].replace(':', '')] = url[i]
+          url[i] = route[i] // Wildcard for route check below
+          continue
+        }
+
+        // Not matching, clear any params and stop
+        else if (route[i] !== url[i]) {
+          this.req.params = {}
+          break
+        }
       }
 
-      // Add placeholder value to req object
-      if (route[i][0] === ':') {
-        this.req.params[route[i].replace(':', '')] = url[i]
-        url[i] = route[i] // Wildcard for route check below
-        continue
+      // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
+      if (new RegExp('^' + mw.route.split('*').join('.*') + '$').test(url.join('/')) && (this.req.method === mw.method || mw.method === 'ANY')) {
+        return true
       }
-
-      // Not matching, clear any params and stop
-      else if (route[i] !== url[i]) {
-        this.req.params = {}
-        break
-      }
-    }
-
-    // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
-    if (new RegExp('^' + mw.route.split('*').join('.*') + '$').test(url.join('/')) && (this.req.method === mw.method || mw.method === 'ANY')) {
-      return true
+    } else {
+      this.next("Invalid URL.")
     }
 
     // Not matching
-    else {
-      return false
-    }
+    return false
   }
 
   /**
    * Executes middleware functions
    */
-  runStack (req, res, stack) {
+  runStack(req, res, stack) {
     return new Promise((resolve, reject) => {
       // Pass  request & function stack to middleware
       this.new(req, res, stack)
@@ -107,7 +109,7 @@ class Layer {
   /**
    * Modify Layer for new requests
    */
-  new (req, res, stack) {
+  new(req, res, stack) {
     this.req = req
     this.res = res
     this.stack = _.cloneDeep(stack) // ensure stack doesn't get modified for next request

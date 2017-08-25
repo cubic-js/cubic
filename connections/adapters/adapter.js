@@ -19,8 +19,10 @@ class Adapter {
    */
   async prepass (req, res) {
     const layer = new Layer()
-    await layer.runStack(req, res, this.stack)
-    this.pass(req, res)
+    try {
+        await layer.runStack(req, res, this.stack)
+        this.pass(req, res)
+    } catch(err) {}
   }
 
   /**
