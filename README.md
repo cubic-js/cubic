@@ -6,7 +6,7 @@
 
 <br>
 
-Blitz.js is a Node.js framework which allows you to build all application logic in components. The framework automatically exposes your components to a RESTful HTTP & Websocket API and takes care of authorization, rate limits and more independently. **TL;DR** - Blitz lets you focus exclusively on your app's code.
+Blitz.js is a Node.js framework which allows you to build all application logic inside components. The framework automatically exposes your components to a RESTful HTTP & Websocket API and takes care of authorization, rate limits and more independently. **TL;DR** - Blitz lets you focus exclusively on your app's code.
 
 <br>
 
