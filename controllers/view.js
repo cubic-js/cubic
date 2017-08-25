@@ -45,7 +45,7 @@ class ViewController {
       data,
       api
     }
-    return render(context)
+    return await render(context)
   }
 }
 
