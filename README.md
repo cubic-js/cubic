@@ -1,6 +1,9 @@
 [![blitz.js Authentication Server](/banner.png)](https://github.com/nexus-devs)
 
-- - - -
+## 
+
+<br> 
+
 **Simple JWT auth server used for [blitz.js](https://github.com/nexus-devs/blitz.js).**<br><br>
 
 ## Usage
