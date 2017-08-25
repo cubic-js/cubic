@@ -8,8 +8,8 @@
 
 ## Usage
 1. Generate an RSA key pair and put it in /config/certs (You can also use the existing ones for development)
-2. Make sure you're running an instance of mongodb on :27017
-3. `npm install && npm start`
+2. Make sure you're running an instance of mongodb and redis
+3. Hook the node into your [blitz.js](https://github.com/nexus-devs/blitz.js) setup
 <br>
 <br>
 
