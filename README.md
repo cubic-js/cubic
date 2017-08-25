@@ -1,7 +1,8 @@
 
 [![blitz.js API](/banner.png)](https://github.com/nexus-devs)
 
-- - - -
+## 
+
 <br>
 
 ## Blitz.js API Node
