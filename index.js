@@ -42,6 +42,14 @@ class View {
 
 
   /**
+   * Run any function from a remote process with `this` context
+   */
+  run (fn) {
+    return fn.apply(this)
+  }
+
+
+  /**
    * Hook node components for actual logic
    */
   async init() {
@@ -145,7 +153,7 @@ class View {
         component: endpoint.view,
         props: true
       }
-      let view = `const ${endpoint.view.replace(/\/|\\|\.|\-/g, "")} = require("${blitz.config[blitz.id].sourcePath.replace(/\\/g, "\\\\")}/${endpoint.view}").default`
+      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = require("${blitz.config[blitz.id].sourcePath.replace(/\\/g, "\\\\")}/${endpoint.view}").default`
       routes.push(route)
       views.find(el => el === view) ? null : views.push(view)
     })
