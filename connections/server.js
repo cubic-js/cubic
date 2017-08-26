@@ -6,7 +6,6 @@ const Io = require('./adapters/sockets.js')
 const Cache = require('../controllers/cache.js')
 const bodyParser = require('body-parser')
 const auth = require('../middleware/auth.js')
-const parser = require('../middleware/requestParser.js')
 const limit = require('../middleware/limiter.js')
 const logger = require('../middleware/logger.js')
 
@@ -42,9 +41,6 @@ class Server {
     // Enable JWT auth (native middleware)
     auth.configExpress(this.http.app)
     auth.configSockets(this.sockets)
-
-    // Parse URL Request into JSON Object
-    this.use((req, res, next) => parser.parse(req, res, next))
 
     // Use custom Logger for i/o
     if (blitz.config[blitz.id].useRequestLogger) {

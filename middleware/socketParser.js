@@ -15,6 +15,8 @@ class Converter {
       req.user = socket.user
       req.method = verb
       req.channel = 'Sockets'
+      req.query = {}
+      req.params = {}
 
       return req
     } else {
@@ -29,7 +31,7 @@ class Converter {
     // Default response value
     let res = {
       statusCode: 200,
-      body: '<empty>'
+      body: ''
     }
 
     // Socket.io ack passed?
@@ -55,6 +57,12 @@ class Converter {
       res.json = (data) => {
         data = JSON.stringify(data)
         return res.send(data)
+      }
+
+      res.redirect = (status, data) => {
+        status = typeof status === 'number' ? status : 302
+        data = typeof status === 'number' ? data : status
+        return res.status(status).send(data)
       }
     }
 
