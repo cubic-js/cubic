@@ -46,14 +46,6 @@ class Core {
   run (fn) {
     return fn.apply(this)
   }
-
-  /**
-   * Expect endpoint schema to be generated already on boot, so we'd just pull
-   * it from memory
-   */
-  generateEndpointSchema () {
-    return this.client.endpointController.endpoints
-  }
 }
 
 module.exports = process.env.isWorker ? new Core() : Core

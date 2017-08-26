@@ -7,7 +7,7 @@ module.exports = {
    * Core-Node config
    */
   endpointPath: path.join(__dirname, '/../endpoints/'),
-  endpointParent: path.join(__dirname, '/../Endpoint.js'),
+  endpointParent: path.join(__dirname, '/../lib/endpoint.js'),
 
   /**
    * Target Node URLs

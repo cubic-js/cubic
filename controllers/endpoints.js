@@ -7,6 +7,7 @@ const util = require('util')
 const _ = require('lodash')
 const mongodb = require('mongodb').MongoClient
 const CircularJSON = require('circular-json')
+const Response = require('../lib/response.js')
 
 /**
  * Interface for handling endpoints
@@ -54,15 +55,17 @@ class EndpointController {
    * Calls endpoint with given param Array
    */
   async callEndpoint (req, api) {
-    req.url = req.url.split('%20').join(' ')
-    const parsed = this.parse(req)
-    const invalid = this.validateRequest(req, parsed)
-    const Endpoint = require(parsed.endpoint.file)
-    const endpoint = new Endpoint(api, await this.db, req)
+    req.url = req.url === '' ? '/' : req.url.replace('%20', '')
+    const endpointSchema = this.findByUrl(req.url)
+    this.parse(req, endpointSchema)
+    const invalid = this.authorizeRequest(req, endpointSchema)
+    const Endpoint = require(endpointSchema.file)
+    const endpoint = new Endpoint(api, await this.db, req.url)
+    const res = new Response(api)
 
     // Apply to endpoint
     if (!invalid) {
-      return endpoint.main.apply(endpoint, parsed.query)
+      return endpoint.main.apply(endpoint, [req, res])
         .then(data => {
           return {
             statusCode: data.statusCode,
@@ -82,30 +85,6 @@ class EndpointController {
         })
     } else {
       return invalid
-    }
-  }
-
-  /**
-   * Check request method and authorization before processing request
-   */
-  validateRequest (req, parsed) {
-    if (!req.user.scp.includes(parsed.endpoint.scope) && !req.user.scp.includes('root-read-write')) {
-      return {
-        statusCode: 401,
-        body: {
-          error: 'Unauthorized',
-          reason: `Expected ${parsed.endpoint.scope}, got ${req.user.scp}.`
-        }
-      }
-    }
-    if (req.method.toLowerCase() !== parsed.endpoint.method.toLowerCase()) {
-      return {
-        statusCode: 405,
-        body: {
-          error: 'Method not allowed.',
-          reason: `Expected ${parsed.endpoint.method}, got ${req.method}.`
-        }
-      }
     }
   }
 
@@ -131,6 +110,30 @@ class EndpointController {
       }
     }
     return found
+  }
+
+  /**
+   * Check request method and authorization before processing request
+   */
+  authorizeRequest (req, endpoint) {
+    if (!req.user.scp.includes(endpoint.scope) && !req.user.scp.includes('root-read-write')) {
+      return {
+        statusCode: 401,
+        body: {
+          error: 'Unauthorized',
+          reason: `Expected ${endpoint.scope}, got ${req.user.scp}.`
+        }
+      }
+    }
+    if (req.method.toLowerCase() !== endpoint.method.toLowerCase()) {
+      return {
+        statusCode: 405,
+        body: {
+          error: 'Method not allowed.',
+          reason: `Expected ${endpoint.method}, got ${req.method}.`
+        }
+      }
+    }
   }
 
   /**
@@ -194,99 +197,85 @@ class EndpointController {
 
     // Assume dynamic endpoint if file not available
     catch (err) {
-      let path = this.parseURL(url).endpoint.file
+      let path = this.findByUrl(url).file
       return require(path)
     }
   }
 
   /**
-   * Parse all requested input
+   * Parse URL to assign placeholder data in case of socket.io connections
    */
-  parse (req) {
-    let parsed = this.parseURL(req.url)
-    this.parseParams(parsed.query, parsed.endpoint)
-    parsed.query = this.parseBody(req).concat(parsed.query)
-    return parsed
+  parse (req, endpoint) {
+    let placeholders = endpoint.route.split(':').length - 1
+    this.parseParams(req, endpoint)
+    this.parseQuery(req, endpoint)
   }
 
   /**
-   * Parse URL into filepath and query params
+   * Put placeholders from url into req.params
+   * E.g. /users/:id/tasks -> req.params.id holds the data in place of :id
    */
-  parseURL (url) {
-    url = url === '' ? '/' : url
-    let route = url.split('?')[0]
-    let endpoint = this.findByUrl(route)
-    let placeholders = endpoint.route.split(':').length - 1
-    let totalParams = placeholders + endpoint.query.length
-    let query = new Array(totalParams)
-
-    // Assign placeholder data
+  parseParams(req, endpoint) {
     let eurl = endpoint.route.split('/')
-    let curl = url.split('/')
+    let curl = req.url.split('/')
 
     for (let i = 0; i < eurl.length; i++) {
-      let index = 0
       let fragment = eurl[i]
       if (fragment.includes(':')) {
-        query[index] = curl[i]
-        index++
+        req.params[fragment.replace(":", "")] = curl[i]
       }
     }
+  }
 
-    // Get query params
+  /**
+   * Put query params into req.query
+   * E.g. /someroute?test=Kappa123 -> req.query.test = Kappa123
+   */
+  parseQuery(req, endpoint) {
     let regex = /(\?)([^=]+)\=([^&]+)/
+    let url = req.url
     let matching = regex.exec(url)
 
     while (matching) {
+      let key = matching[2]
       for (let i = 0; i < endpoint.query.length; i++) {
-        if (matching[2] === endpoint.query[i].name) {
-          query[i + placeholders] = matching[3]
+        if (key === endpoint.query[i].name) {
+          req.query[key] = matching[3]
         }
       }
       url = url.replace(matching[0], '').replace('&', '?')
       matching = regex.exec(url)
     }
-    return {
-      query: query,
-      endpoint: endpoint
-    }
+
+    this.parseQueryTypes(req, endpoint)
   }
 
   /**
    * Convert string params from URL to target type
    */
-  parseParams (query, endpoint) {
-    let placeholders = endpoint.route.split(':').length - 1
-    endpoint.query.forEach((param, i) => {
-      let index = i + placeholders
-      let value = query[index]
-      let def = typeof param.default === 'function' ? param.default() : param.default
+  parseQueryTypes (req, endpoint) {
+    endpoint.query.forEach(query => {
+      let def = typeof query.default === 'function' ? query.default() : query.default
+      let key = query.name
 
       // Convert value to target type
-      if (value) {
+      if (req.query[key]) {
         if (typeof def === 'number') {
-          query[index] = parseFloat(value)
+          req.query[key] = parseFloat(req.query[key])
         }
         if (typeof def === 'boolean') {
-          query[index] = value == 'true' || value == '1'
+          req.query[key] = req.query[key] == 'true' || req.query[key] == '1'
         }
         if (typeof def === 'object') {
-          query[index] = JSON.stringify(value)
+          req.query[key] = JSON.stringify(req.query[key])
         }
       }
 
       // No value given, use default
       else {
-        query[index] = def
+        req.query[key] = def
       }
     })
-  }
-
-  /**
-   * Parse body of incoming POST/PUT/etc requests
-   */
-  parseBody (req) {
-    return req.body && Object.keys(req.body).length > 0 ? [req.body] : []
   }
 }
 
