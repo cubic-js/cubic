@@ -10,8 +10,8 @@ class Auth extends Endpoint {
     this.schema.description = 'Testing method for checking root authorization'
   }
 
-  async main () {
-    return 'authorized'
+  async main (req, res) {
+    res.send('authorized')
   }
 }
 
