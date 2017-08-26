@@ -55,21 +55,6 @@ class Blitz {
   }
 
   /**
-   * Send config to be set on workers. This will be eval'd, so be careful.
-   */
-  setWorkerConfig (str) {
-    return new Promise(async resolve => {
-      let responses = 0
-      for (let id in blitz.nodes) {
-        let node = blitz.nodes[id]
-        let res = await this.send(node.workers, 'eval', str, "eval'd")
-        responses++
-        if (responses === Object.keys(blitz.nodes).length) resolve(res)
-      }
-    })
-  }
-
-  /**
    * Send a message to all workers of a node and resolve with response
    */
   send (workers, type, body, listener) {
