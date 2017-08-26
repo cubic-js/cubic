@@ -47,7 +47,9 @@ class EndpointController {
       exp: blitz.config[blitz.id].cacheDuration
     })
     return {
-      body: raw
+      statusCode: 200,
+      body: raw,
+      method: 'send'
     }
   }
 
