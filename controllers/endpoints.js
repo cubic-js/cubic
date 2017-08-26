@@ -58,34 +58,29 @@ class EndpointController {
     req.url = req.url === '' ? '/' : req.url.replace('%20', '')
     const endpointSchema = this.findByUrl(req.url)
     this.parse(req, endpointSchema)
-    const invalid = this.authorizeRequest(req, endpointSchema)
+    const unauthorized = this.authorizeRequest(req, endpointSchema)
     const Endpoint = require(endpointSchema.file)
     const endpoint = new Endpoint(api, await this.db, req.url)
-    const res = new Response(api)
 
-    // Apply to endpoint
-    if (!invalid) {
-      return endpoint.main.apply(endpoint, [req, res])
-        .then(data => {
-          return {
-            statusCode: data.statusCode,
-            method: data.method,
-            body: data.body || data
-          }
-        })
-        .catch(err => {
-          if (blitz.config.local.environment === 'development') {
-            console.log(err)
-          }
-          return {
-            statusCode: err.statusCode || 400,
-            method: err.method,
-            body: err.body || err
-          }
-        })
-    } else {
-      return invalid
-    }
+    return new Promise(resolve => {
+      const res = new Response(resolve, api)
+
+      // Apply to endpoint
+      if (!unauthorized) {
+        endpoint.main.apply(endpoint, [req, res])
+          .catch(err => {
+            if (blitz.config.local.environment === 'development') {
+              console.log(err)
+            }
+            resolve({
+              statusCode: 500,
+              body: err
+            })
+          })
+      } else {
+        resolve(unauthorized)
+      }
+    })
   }
 
   /**
@@ -118,7 +113,7 @@ class EndpointController {
   authorizeRequest (req, endpoint) {
     if (!req.user.scp.includes(endpoint.scope) && !req.user.scp.includes('root-read-write')) {
       return {
-        statusCode: 401,
+        statusCode: 403,
         body: {
           error: 'Unauthorized',
           reason: `Expected ${endpoint.scope}, got ${req.user.scp}.`
