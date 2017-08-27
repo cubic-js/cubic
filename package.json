@@ -15,7 +15,7 @@
     "bcrypt-as-promised": "^1.1.0",
     "blitz-js": "^0.2.0",
     "blitz-js-api": "^0.2.0",
-    "blitz-js-core": "^0.2.0",
+    "blitz-js-core": "^0.2.1",
     "blitz-js-util": "^0.2.0",
     "body-parser": "^1.17.2",
     "chalk": "^2.1.0",
