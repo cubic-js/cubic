@@ -58,7 +58,7 @@ class Server {
   }
 
   /**
-   * Allow appending native express middleware before custom adatper routes
+   * Allow appending native express middleware before custom adapter routes
    */
   appendMiddleware (fn) {
     this.http.app._router.stack.pop()
