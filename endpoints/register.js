@@ -19,8 +19,8 @@ class Authentication extends Endpoint {
     super(api, db, url)
   }
 
-  async main (req) {
-    return this.newUser(this.req)
+  async main (req, res) {
+    return this.newUser(req)
   }
 
   /**

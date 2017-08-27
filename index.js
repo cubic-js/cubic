@@ -68,6 +68,13 @@ class Auth {
     // Set proces state back to original
     process.env.isWorker = true
   }
+
+  /**
+   * Run any function from a remote process with `this` context
+   */
+  run (fn) {
+    return fn.apply(this)
+  }
 }
 
 module.exports = process.env.isWorker ? new Auth() : Auth

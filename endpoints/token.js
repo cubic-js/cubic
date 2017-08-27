@@ -15,25 +15,27 @@ const bcrypt = require('bcrypt-as-promised')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Authentication extends Endpoint {
-  constructor (api, db, req) {
-    super(api, db, req)
+  constructor (api, db, url) {
+    super(api, db, url)
     this.schema.method = 'POST'
   }
 
-  async main (auth) {
+  async main (req, res) {
+    let credentials = req.body
+
     // Credentials sent
-    if (auth.user_key) {
-      return this.matchCredentials(auth, this.req)
+    if (credentials.user_key) {
+      res.send(this.matchCredentials(credentials, req))
     }
 
     // Refresh Token sent
-    else if (auth.refresh_token) {
-      return this.matchRefreshToken(auth, this.req)
+    else if (credentials.refresh_token) {
+      res.send(this.matchRefreshToken(credentials, req))
     }
 
     // No Allowed content
     else {
-      throw ({
+      res.status(401).send({
         error: 'Unauthorized.',
         reason: 'Expected user credentials or refresh token. Got: ' + JSON.stringify(auth)
       })
