@@ -57,7 +57,7 @@ class EndpointController {
    * Calls endpoint with given param Array
    */
   async callEndpoint (req, api) {
-    req.url = req.url === '' ? '/' : req.url.replace('%20', '')
+    req.url = req.url === '' ? '/' : req.url.split('%20').join(' ')
     const endpointSchema = this.findByUrl(req.url)
     this.parse(req, endpointSchema)
     const unauthorized = this.authorizeRequest(req, endpointSchema)
@@ -66,6 +66,11 @@ class EndpointController {
 
     return new Promise(resolve => {
       const res = new Response(resolve, api)
+
+      // Apply benchmarking functions if benchmark=true
+      if (req.query.benchmark) {
+        this.benchmarkify(Endpoint, endpoint, res)
+      }
 
       // Apply to endpoint
       if (!unauthorized) {
@@ -81,6 +86,57 @@ class EndpointController {
           })
       } else {
         resolve(unauthorized)
+      }
+    })
+  }
+
+  /**
+   * Dynamically benchmark the execution time of each function in the endpoint
+   */
+  benchmarkify(Endpoint, endpoint, res) {
+    let _res = _.cloneDeep(res)
+    let timer = new Date()
+    let benchmark = {}
+
+    // Disable publish and caching
+    endpoint.publish = () => {}
+    endpoint.cache = () => {}
+
+    // Override original res.send so it won't be triggered in original function
+    res.send = (data) => {
+      // error? pass it through, otherwise do nothing
+      if (res.statusCode >= 400) {
+        res.send(data)
+      } else {}
+    }
+
+    Object.getOwnPropertyNames(Endpoint.prototype).forEach(property => {
+      if (property !== 'constructor') {
+        const _fn = endpoint[property]
+
+        endpoint[property] = function() {
+          const subtimer = new Date()
+          const value = _fn.apply(endpoint, arguments)
+
+          // Wait for promise before updating timers
+          if (value && value.then) {
+            value.then(() => {
+              benchmark[property] = (new Date - subtimer) + 'ms'
+              if (property === 'main') {
+                _res.send(benchmark)
+              }
+            })
+          }
+
+          // Update timers immediately
+          else {
+            benchmark[property] = (new Date - subtimer) + 'ms'
+            if (property === 'main') {
+              _res.send(benchmark)
+            }
+          }
+          return value
+        }
       }
     })
   }
