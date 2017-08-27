@@ -32,6 +32,7 @@ class Server {
    * Applies Middleware to adapters
    */
   applyMiddleware () {
+
     // Use BodyParser for Express
     this.http.app.use(bodyParser.urlencoded({
       extended: true
@@ -54,6 +55,15 @@ class Server {
     if (blitz.config[blitz.id].limiter.enabled) {
       this.use((req, res, next) => limit.check(req, res, next))
     }
+  }
+
+  /**
+   * Allow appending native express middleware before custom adatper routes
+   */
+  appendMiddleware (fn) {
+    this.http.app._router.stack.pop()
+    this.http.app.use(fn)
+    this.applyRoutes()
   }
 
   /**
