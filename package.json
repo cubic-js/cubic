@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-util": "^0.1.5",
+    "blitz-js-util": "^0.2.0",
     "body-parser": "^1.17.2",
     "chalk": "^2.1.0",
     "circular-json": "^0.3.3",
@@ -24,13 +24,5 @@
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.10",
     "socket.io": "^2.0.3"
-  },
-  "devDependencies": {
-    "bcrypt-as-promised": "^1.1.0",
-    "memory-fs": "^0.4.1",
-    "rand-token": "^0.3.0",
-    "webpack": "^3.5.5",
-    "webpack-dev-middleware": "^1.12.0",
-    "webpack-hot-middleware": "^2.18.2"
   }
 }
