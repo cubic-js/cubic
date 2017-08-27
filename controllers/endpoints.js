@@ -68,7 +68,7 @@ class EndpointController {
       const res = new Response(resolve, api)
 
       // Apply benchmarking functions if benchmark=true
-      if (req.query.benchmark) {
+      if (req.query.benchmark && blitz.config.local.environment === 'development') {
         this.benchmarkify(Endpoint, endpoint, res)
       }
 
@@ -95,7 +95,6 @@ class EndpointController {
    */
   benchmarkify(Endpoint, endpoint, res) {
     let _res = _.cloneDeep(res)
-    let timer = new Date()
     let benchmark = {}
 
     // Disable publish and caching
@@ -115,13 +114,14 @@ class EndpointController {
         const _fn = endpoint[property]
 
         endpoint[property] = function() {
-          const subtimer = new Date()
+          const t0 = process.hrtime()
           const value = _fn.apply(endpoint, arguments)
 
           // Wait for promise before updating timers
           if (value && value.then) {
             value.then(() => {
-              benchmark[property] = (new Date - subtimer) + 'ms'
+              const t1 = process.hrtime(t0)
+              benchmark[property] = `${(t1[0] * 1e9 + t1[1]) / 1e6}ms`
               if (property === 'main') {
                 _res.send(benchmark)
               }
@@ -130,7 +130,8 @@ class EndpointController {
 
           // Update timers immediately
           else {
-            benchmark[property] = (new Date - subtimer) + 'ms'
+            const t1 = process.hrtime(t0)
+            benchmark[property] = `${(t1[0] * 1e9 + t1[1]) / 1e6}ms`
             if (property === 'main') {
               _res.send(benchmark)
             }
