@@ -8,7 +8,6 @@ module.exports = {
   isCore: true,
   isApi: true,
 
-
   /**
    * Webpack config
    */
@@ -16,7 +15,6 @@ module.exports = {
     clientConfig: __dirname + "/webpack/client.config.js",
     serverConfig: __dirname + "/webpack/server.config.js"
   },
-
 
   /**
    * API node config
@@ -31,23 +29,20 @@ module.exports = {
     }
   },
 
-
   /**
    * Core-Node config
    */
   cacheDuration: 10,
-  sourcePath: __dirname + "/../view/src",
-  publicPath: __dirname + "/../view/public",
+  sourcePath: __dirname + "/../view/lib/src",
+  publicPath: __dirname + "/../view/lib/public",
   endpointPath: __dirname + "/../endpoints/",
-  endpointParent: __dirname + "/../Endpoint.js",
-
+  endpointParent: __dirname + "/../lib/endpoint.js",
 
   /**
    * Target Node URLs
    */
   apiURL: "http://localhost:3020",
   authURL: "http://localhost:3030",
-
 
   /**
    * Databases
@@ -56,13 +51,11 @@ module.exports = {
   mongoURL: "mongodb://localhost/blitz-js-view",
   cacheDB: 2,
 
-
   /**
    * Authentication Credentials
    */
   user_key: "dev",
   user_secret: "dev",
-
 
   /**
    * Cluster config

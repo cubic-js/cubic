@@ -40,14 +40,12 @@ class View {
     }
   }
 
-
   /**
    * Run any function from a remote process with `this` context
    */
   run (fn) {
     return fn.apply(this)
   }
-
 
   /**
    * Hook node components for actual logic
@@ -59,7 +57,6 @@ class View {
       await this.initWebpack()
     }
   }
-
 
   /**
    * Nodes must be required here, otherwise worker spawn will trigger them to create
@@ -87,7 +84,6 @@ class View {
     process.env.isWorker = true
   }
 
-
   /**
    * Initialize Webpack here if we're in production. Production assumes that
    * core workers and API nodes are on different machines. During develop-
@@ -98,10 +94,9 @@ class View {
     if (blitz.config.local.environment === "production") {
       this.initWebpackProd()
     } else {
-      this.initWebpackDev()
+      this.initWebpackOnApi()
     }
   }
-
 
   /**
    * Run webpack locally, assuming production environment.
@@ -117,7 +112,6 @@ class View {
       blitz.log.monitor("Webpack build successful", true, `${new Date - timer}ms`)
     }
   }
-
 
   /**
    * Hook HMR middleware for development
@@ -138,13 +132,71 @@ class View {
     })
   }
 
+  /**
+  * Hook HMR middleware into API node and bundle from there
+  */
+ async initWebpackOnApi() {
+   await blitz.nodes.view_api.run(function() {
+     const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
+     const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
+     const publicPath = clientConfig.output.path
+
+     // Dependencies
+     const webpack = require("webpack")
+     const util = require("util")
+     const fs = require("fs")
+     const path = require("path")
+     const readFile = (mfs, file) => mfs.readFileSync(path.join(publicPath, file), "utf-8")
+     const copyFile = (mfs, file) => util.promisify(fs.writeFile)(path.join(publicPath, file), readFile(mfs, file))
+
+     // Modify client config to work with hot middleware
+     clientConfig.entry.client = ["webpack-hot-middleware/client", clientConfig.entry.client]
+     clientConfig.output.filename = "[name].bundle.js"
+     clientConfig.plugins.push(
+       new webpack.HotModuleReplacementPlugin(),
+       new webpack.NoEmitOnErrorsPlugin()
+     )
+     const compiler = webpack([clientConfig, serverConfig])
+     const devMiddleware = require("webpack-dev-middleware")(compiler, {
+       noInfo: true,
+       publicPath: '/'
+     })
+     const hotMiddleware = require("webpack-hot-middleware")(compiler, {
+       log: null,
+       heartbeat: 1000
+     })
+
+     // Put middleware at start of stack
+     // Step 2: Attach the dev middleware to the compiler & the server
+     this.server.appendMiddleware(devMiddleware)
+
+     // Step 3: Attach the hot middleware to the compiler & the server
+     this.server.appendMiddleware(hotMiddleware)
+
+     compiler.plugin("done", stats => {
+       stats = stats.toJson()
+       if (stats.errors.length) {
+         throw stats.errors
+       }
+       stats.children.forEach(bundle => {
+         bundle.assets.forEach(asset => {
+           if (asset.name.includes('bundle') || asset.name.includes('manifest')) {
+             copyFile(devMiddleware.fileSystem, asset.name)
+           }
+         })
+       })
+     })
+   })
+ }
 
   /**
    * Register routes in vue-router file. It can't be done in runtime, so
    * we gotta ensure the file is ready before rendering anything.
    */
   async registerEndpoints() {
-    let endpoints = await blitz.nodes.view_core.generateEndpointSchema()
+    let endpoints = await blitz.nodes.view_core.run(function() {
+      return this.client.endpointController.endpoints
+    })
     let routes = []
     let views = []
     endpoints.forEach(endpoint => {
@@ -162,7 +214,7 @@ class View {
 
     // Inject view variables into router. We can't dynamically require views
     // at runtime, so we have to do it pre-build this way.
-    let viewFile = `${__dirname}/view/src/router/index.js`
+    let viewFile = `${__dirname}/lib/src/router/index.js`
     let viewInject = views.join("\n")
     let viewRegex = /^\/\/start-view-injection[\s\S]*\/\/end-view-injection$/im
     let viewOutput = await readFile(viewFile, "utf-8")
@@ -170,7 +222,7 @@ class View {
     await writeFile(viewFile, viewOutput)
 
     // Save Routes
-    let routeFile = `${__dirname}/view/src/router/routes.js`
+    let routeFile = `${__dirname}/lib/src/router/routes.js`
     let routeOutput = `/**
                     * Auto-generated routes from blitz.js view node.
                     * Components will be eval'd, so full functionality is preserved.

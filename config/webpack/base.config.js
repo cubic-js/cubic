@@ -6,7 +6,7 @@ const extractSass = new ExtractTextPlugin({
 })
 
 module.exports = {
-  context: __dirname,
+  context: __dirname + "/../../",
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
@@ -56,7 +56,9 @@ module.exports = {
   // Change how modules are resolved. (Places to look in, alias, etc)
   resolve: {
     alias: {
-      src: blitz.config[blitz.id].sourcePath
+      src: blitz.config[blitz.id].sourcePath,
+      // HMR will trigger a second vue instance without this
+      vue: __dirname + "/../../node_modules/vue"
     }
   },
 
