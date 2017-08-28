@@ -12,7 +12,9 @@ module.exports = {
   output: {
     path: blitz.config[blitz.id].publicPath,
     publicPath: "/",
-    filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js"
+    filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js",
+    hotUpdateChunkFilename: 'hot-update.js',
+    hotUpdateMainFilename: 'hot-update.json'
   },
 
   // Loaders which determine how file types are interpreted

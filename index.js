@@ -180,9 +180,7 @@ class View {
        }
        stats.children.forEach(bundle => {
          bundle.assets.forEach(asset => {
-           if (asset.name.includes('bundle') || asset.name.includes('manifest')) {
-             copyFile(devMiddleware.fileSystem, asset.name)
-           }
+            copyFile(devMiddleware.fileSystem, asset.name)
          })
        })
      })
