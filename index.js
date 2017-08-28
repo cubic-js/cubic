@@ -162,7 +162,7 @@ class View {
        publicPath: '/'
      })
      const hotMiddleware = require("webpack-hot-middleware")(compiler, {
-       log: null,
+       log: console.log,
        heartbeat: 1000
      })
 
@@ -180,7 +180,9 @@ class View {
        }
        stats.children.forEach(bundle => {
          bundle.assets.forEach(asset => {
-            copyFile(devMiddleware.fileSystem, asset.name)
+           if (asset.name.includes('bundle') || asset.name.includes('manifest')) {
+             copyFile(devMiddleware.fileSystem, asset.name)
+           }
          })
        })
      })
