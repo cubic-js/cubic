@@ -9,7 +9,7 @@ const extractSass = new ExtractTextPlugin({
 // Dependencies need to be handled differently in debug (see alias)
 let isDebug = false
 try {
-  const isDebug = fs.statSync('../../node_modules/')
+  isDebug = fs.statSync(__dirname + '/../../node_modules')
 } catch(err) {}
 
 // Actual config
@@ -86,7 +86,7 @@ module.exports = {
     alias: Object.assign({
       src: blitz.config[blitz.id].sourcePath,
       public: blitz.config[blitz.id].publicPath,
-    }, isDebug ? : {
+    }, isDebug ? {
       // HMR will trigger a second vue instance without this
       vue: __dirname + "/../../node_modules/vue"
     } : {})
