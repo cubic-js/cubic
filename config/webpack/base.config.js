@@ -49,7 +49,25 @@ module.exports = {
         test: /\.(jpe?g|png|gif|svg)$/i,
         loaders: [
           "file-loader?hash=sha512&digest=hex&name=[hash].[ext]",
-          "image-webpack-loader?bypassOnDebug&optimizationLevel=7&interlaced=false"
+          {
+            loader: 'image-webpack-loader',
+            query: {
+              mozjpeg: {
+                progressive: true,
+                quality: 100
+              },
+              gifsicle: {
+                interlaced: false
+              },
+              optipng: {
+                optimizationLevel: 4
+              },
+              pngquant: {
+                quality: 50-70,
+                speed: 3
+              }
+            }
+          }
         ]
       }
     ]
@@ -59,6 +77,7 @@ module.exports = {
   resolve: {
     alias: {
       src: blitz.config[blitz.id].sourcePath,
+      public: blitz.config[blitz.id].publicPath,
       // HMR will trigger a second vue instance without this
       vue: __dirname + "/../../node_modules/vue"
     }
