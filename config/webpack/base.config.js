@@ -9,12 +9,14 @@ const extractSass = new ExtractTextPlugin({
 // Dependencies need to be handled differently in debug (see alias)
 let isDebug = false
 try {
-  isDebug = fs.statSync(__dirname + '/../../node_modules')
-} catch(err) {}
+  fs.statSync(__dirname + '/../../../../node_modules')
+} catch(err) {
+  isDebug = true
+}
 
 // Actual config
 module.exports = {
-  context: isDebug ? __dirname + "/../../" : process.cwd,
+  context: __dirname + "/../../",
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
