@@ -14,7 +14,7 @@ try {
 
 // Actual config
 module.exports = {
-  context: __dirname + "/../../",
+  context: isDebug ? __dirname + "/../../" : process.cwd,
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
