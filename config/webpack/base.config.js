@@ -1,3 +1,4 @@
+const fs = require('fs')
 const isProd = blitz.config.local.environment !== "development"
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
@@ -5,6 +6,13 @@ const extractSass = new ExtractTextPlugin({
   disable: !isProd
 })
 
+// Dependencies need to be handled differently in debug (see alias)
+let isDebug = false
+try {
+  const isDebug = fs.statSync('../../node_modules/')
+} catch(err) {}
+
+// Actual config
 module.exports = {
   context: __dirname + "/../../",
 
@@ -12,9 +20,7 @@ module.exports = {
   output: {
     path: blitz.config[blitz.id].publicPath,
     publicPath: "/",
-    filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js",
-    //hotUpdateChunkFilename: 'hot-update.js',
-    //hotUpdateMainFilename: 'hot-update.json'
+    filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js"
   },
 
   // Loaders which determine how file types are interpreted
@@ -75,12 +81,15 @@ module.exports = {
 
   // Change how modules are resolved. (Places to look in, alias, etc)
   resolve: {
-    alias: {
+    // Resolve dependencies differently when in debug due to source code folder
+    // being different from current working directory
+    alias: Object.assign({
       src: blitz.config[blitz.id].sourcePath,
       public: blitz.config[blitz.id].publicPath,
+    }, isDebug ? : {
       // HMR will trigger a second vue instance without this
       vue: __dirname + "/../../node_modules/vue"
-    }
+    } : {})
   },
 
   // Plugins for post-bundle operations
