@@ -24,5 +24,10 @@
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.10",
     "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
+    "webpack": "^3.5.5",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-hot-middleware": "^2.18.2"
   }
 }
