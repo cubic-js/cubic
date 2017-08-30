@@ -41,12 +41,12 @@ class Limiter {
     }
 
     // User is root -> skip limiting
-    else if (req.user.scp.includes('root') || req.user.scp.includes('ignore-rate-limit')) {
+    else if (req.user.scp.includes('root') || req.user.scp.includes('ignore_rate_limit')) {
       return next()
     }
 
     // Token provided & privileged user -> No minDifference
-    else if (req.user.scp.includes('elevated')) {
+    else if (req.user.scp.includes('low_limit')) {
       lowLimit(req.user.uid, (err, timeLeft, actionsLeft) => this.limit(err, req, res, next, timeLeft, actionsLeft))
     }
 
