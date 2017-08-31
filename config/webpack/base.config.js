@@ -1,5 +1,6 @@
-const fs = require('fs')
 const isProd = blitz.config.local.environment !== "development"
+const fs = require('fs')
+const vueConfig = require('./vue.config.js')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
   filename: "[name].[chunkhash].css",
@@ -30,14 +31,7 @@ module.exports = {
     rules: [{
         test: /\.vue$/,
         loader: "vue-loader",
-        options: {
-          extractCSS: isProd ? true : false,
-          loaders: isProd ? {
-            scss: extractSass.extract({
-              use: "!css-loader!sass-loader?"
-            })
-          } : {}
-        }
+        options: vueConfig
       },
       {
         test: /\.js$/,
