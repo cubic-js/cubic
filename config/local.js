@@ -36,7 +36,7 @@ module.exports = {
   sourcePath: __dirname + "/../view/lib/src",
   publicPath: __dirname + "/../view/lib/public",
   endpointPath: __dirname + "/../endpoints/",
-  endpointParent: __dirname + "/../lib/endpoint.js",
+  endpointParent: __dirname + "/../endpoint.js",
 
   /**
    * Target Node URLs

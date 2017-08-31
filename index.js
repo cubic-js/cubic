@@ -194,7 +194,41 @@ class View {
    * we gotta ensure the file is ready before rendering anything.
    */
   async registerEndpoints() {
-    let endpoints = await blitz.nodes.view_core.run(function() {
+
+    // Get entry Directory where we assume the router to be located
+    const config = require(blitz.config[blitz.id].webpack.serverConfig)
+    let entryDir = config.entry.split("/")
+    entryDir.pop()
+    entryDir = path.resolve(entryDir.join("/")).replace(/\\/g, "/")
+
+    let { views, routes } = await this.getViewConstants(entryDir)
+
+    // Inject view variables into router. We can't dynamically require views
+    // at runtime, so we have to do it pre-build this way.
+    let viewFile = path.resolve(entryDir, 'router/index.js')
+    let viewInject = views.join("\n")
+    let viewRegex = /^\/\/start-view-injection[\s\S]*\/\/end-view-injection$/im
+    let viewOutput = await readFile(viewFile, "utf-8")
+    viewOutput = viewOutput.replace(viewRegex, viewInject)
+    await writeFile(viewFile, viewOutput)
+
+    // Save Routes
+    let routeFile = path.resolve(entryDir, 'router/routes.js')
+    let routeOutput = `/**
+                    * Auto-generated routes from blitz.js view node.
+                    * Components will be eval'd, so full functionality is preserved.
+                    */
+                    export default ${JSON.stringify(routes)}
+                    `
+    await writeFile(routeFile, routeOutput.replace(/^                 /gm, ""))
+  }
+
+
+  /**
+   * Generate plaintext constants which will be saved in the router file
+   */
+  async getViewConstants(entryDir) {
+    const endpoints = await blitz.nodes.view_core.run(function() {
       return this.client.endpointController.endpoints
     })
     let routes = []
@@ -205,31 +239,14 @@ class View {
         component: endpoint.view,
         props: true
       }
-      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = require("${blitz.config[blitz.id].sourcePath.replace(/\\/g, "\\\\")}/${endpoint.view}").default`
+      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = require("${entryDir}/${endpoint.view}").default`
       routes.push(route)
       views.find(el => el === view) ? null : views.push(view)
     })
     views.unshift("//start-view-injection")
     views.push("//end-view-injection")
 
-    // Inject view variables into router. We can't dynamically require views
-    // at runtime, so we have to do it pre-build this way.
-    let viewFile = `${__dirname}/lib/src/router/index.js`
-    let viewInject = views.join("\n")
-    let viewRegex = /^\/\/start-view-injection[\s\S]*\/\/end-view-injection$/im
-    let viewOutput = await readFile(viewFile, "utf-8")
-    viewOutput = viewOutput.replace(viewRegex, viewInject)
-    await writeFile(viewFile, viewOutput)
-
-    // Save Routes
-    let routeFile = `${__dirname}/lib/src/router/routes.js`
-    let routeOutput = `/**
-                    * Auto-generated routes from blitz.js view node.
-                    * Components will be eval'd, so full functionality is preserved.
-                    */
-                    export default ${JSON.stringify(routes)}
-                    `
-    await writeFile(routeFile, routeOutput.replace(/^                 /gm, ""))
+    return { views, routes }
   }
 }
 
