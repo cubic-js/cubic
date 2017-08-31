@@ -170,7 +170,7 @@ class EndpointController {
    * Check request method and authorization before processing request
    */
   authorizeRequest (req, endpoint) {
-    if (!req.user.scp.includes(endpoint.scope) && !req.user.scp.includes('root-read-write')) {
+    if (!req.user.scp.includes(endpoint.scope) && !req.user.scp.includes('write_root')) {
       return {
         statusCode: 403,
         body: {
