@@ -19,7 +19,6 @@ class Logger {
     this.addTimer(res)
 
     // Actual Console Output
-    blitz.log.info(this.prefix + chalk.grey(':: ' + new Date()))
     blitz.log.info(`${this.prefix}< ${this.user.uid}: ${req.method} ${req.url}`)
     next()
   }
