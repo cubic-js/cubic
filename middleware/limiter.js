@@ -41,7 +41,7 @@ class Limiter {
     }
 
     // User is root -> skip limiting
-    else if (req.user.scp.includes('root') || req.user.scp.includes('ignore_rate_limit')) {
+    else if (req.user.scp.includes('write_root') || req.user.scp.includes('ignore_rate_limit')) {
       return next()
     }
 
