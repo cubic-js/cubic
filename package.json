@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nexus-devs/blitz.js"
+    "url": "https://github.com/nexus-devs/blitz-js"
   },
   "scripts": {
     "start": "node ./index.js"
@@ -13,13 +13,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^1.0.3",
-    "bcrypt-as-promised": "^1.1.0",
-    "chalk": "^2.1.0",
-    "circular-json": "^0.3.3",
-    "keypair": "^1.0.1",
-    "lodash": "^4.17.4",
-    "mongodb": "^2.2.31",
-    "rand-token": "^0.3.0"
+    "blitz-js-api": "^0.4.0",
+    "blitz-js-auth": "^0.4.0",
+    "blitz-js-core": "^0.4.0",
+    "blitz-js-loader": "^0.4.0",
+    "blitz-js-view": "^0.4.0",
+    "deep-extend": "^0.5.0"
   }
 }
