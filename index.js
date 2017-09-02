@@ -5,7 +5,6 @@
 const local = require('./config/local.js')
 const preauth = require('./hooks/preauth.js')
 const purge = require('./hooks/purge.js')
-const worker = require('blitz-js-util')
 
 /**
  * Loader for auth-node system. For ease of maintenance, the auth-node consists
