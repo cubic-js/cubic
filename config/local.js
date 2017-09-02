@@ -1,4 +1,3 @@
-const fs = require('fs')
 const os = require('os')
 
 module.exports = {
@@ -47,11 +46,6 @@ module.exports = {
    */
   cacheDB: 1,
   cacheExp: 10,
-
-  /**
-   * Authorization properties
-   */
-  certPublic: fs.readFileSync(__dirname + '/certs/auth_public.pem', 'utf-8'),
 
   /**
    * Cluster config
