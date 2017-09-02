@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-util": "^0.2.0",
+    "blitz-js-ipc": "^0.4.2",
     "body-parser": "^1.17.2",
     "chalk": "^2.1.0",
     "circular-json": "^0.3.3",
