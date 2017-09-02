@@ -51,11 +51,9 @@ class View {
    * Hook node components for actual logic
    */
   async init() {
-    this.initBlitz()
-    if (blitz.config[blitz.id].isCore) {
-      await this.registerEndpoints()
-      await this.initWebpack()
-    }
+    await this.initBlitz()
+    await this.registerEndpoints()
+    await this.initWebpack()
   }
 
   /**
@@ -63,25 +61,12 @@ class View {
    * a new object on require due to process.env.isWorker = true. (which won't
    * work because no config is set)
    */
-  initBlitz() {
-    delete process.env.isWorker
+  async initBlitz() {
     const Core = require("blitz-js-core")
     const API = require("blitz-js-api")
-    const Blitz = require("blitz-js")(blitz.config.local)
 
-    // Apply config to nodes and hook them
-    let options = blitz.config[blitz.id]
-
-    // API node which controls incoming requests
-    options.id = "view_api"
-    blitz.use(new API(options))
-
-    // Core Node which processes incoming requests
-    options.id = "view_core"
-    blitz.use(new Core(options))
-
-    // Set proces state back to original
-    process.env.isWorker = true
+    await blitz.use(new API(blitz.config.view.api))
+    await blitz.use(new Core(blitz.config.view.core))
   }
 
   /**
@@ -103,8 +88,8 @@ class View {
    */
   async initWebpackProd() {
     const timer = new Date
-    const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
-    const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
+    const clientConfig = require(blitz.config.view.webpack.clientConfig)
+    const serverConfig = require(blitz.config.view.webpack.serverConfig)
     const compiled = await promisify(webpack)([clientConfig, serverConfig])
     if (compiled.errors) {
       throw compiled.errors
@@ -118,8 +103,8 @@ class View {
    */
   async initWebpackDev() {
     const timer = new Date
-    const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
-    const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
+    const clientConfig = require(blitz.config.view.webpack.clientConfig)
+    const serverConfig = require(blitz.config.view.webpack.serverConfig)
     const compiler = webpack([clientConfig, serverConfig])
     compiler.watch({}, (err, stats) => {
       if (err) {
@@ -137,8 +122,8 @@ class View {
   */
  async initWebpackOnApi() {
    await blitz.nodes.view_api.run(function() {
-     const clientConfig = require(blitz.config[blitz.id].webpack.clientConfig)
-     const serverConfig = require(blitz.config[blitz.id].webpack.serverConfig)
+     const clientConfig = require(blitz.config.view.webpack.clientConfig)
+     const serverConfig = require(blitz.config.view.webpack.serverConfig)
      const publicPath = clientConfig.output.path
 
      // Dependencies
@@ -196,7 +181,7 @@ class View {
   async registerEndpoints() {
 
     // Get entry Directory where we assume the router to be located
-    const config = require(blitz.config[blitz.id].webpack.serverConfig)
+    const config = require(blitz.config.view.webpack.serverConfig)
     let entryDir = config.entry.split("/")
     entryDir.pop()
     entryDir = path.resolve(entryDir.join("/")).replace(/\\/g, "/")
@@ -250,4 +235,4 @@ class View {
   }
 }
 
-module.exports = process.env.isWorker ? new View() : View
+module.exports = View

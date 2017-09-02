@@ -21,7 +21,7 @@ module.exports = {
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
-    path: blitz.config[blitz.id].publicPath,
+    path: blitz.config.view.core.publicPath,
     publicPath: "/",
     filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js"
   },
@@ -80,8 +80,8 @@ module.exports = {
     // Resolve dependencies differently when in debug due to source code folder
     // being different from current working directory
     alias: Object.assign({
-      src: blitz.config[blitz.id].sourcePath,
-      public: blitz.config[blitz.id].publicPath,
+      src: blitz.config.view.core.sourcePath,
+      public: blitz.config.view.core.publicPath,
     }, isDebug ? {
       // HMR will trigger a second vue instance without this
       vue: __dirname + "/../../node_modules/vue"

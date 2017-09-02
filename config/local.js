@@ -1,12 +1,44 @@
 const os = require('os')
 
 module.exports = {
+  api: {
+    port: 3020,
+    routes: __dirname + "/endpoints/routes.js",
+    events: __dirname + "/endpoints/events.js",
+    limiter: {
+      high: {
+        interval: 60000,
+        maxInInterval: 120
+      }
+    },
+   cacheExp: 10,
+   id: 'view_api'
+  },
 
-  /**
-   * Current Node Information
-   */
-  isCore: true,
-  isApi: true,
+  core: {
+    /**
+     * Databases
+     */
+    mongoPort: 27017,
+    mongoURL: "mongodb://localhost/blitz-js-view",
+    cacheDB: 2,
+
+    /**
+     * Endpoint config
+     */
+    endpointPath: __dirname + "/../endpoints/",
+    endpointParent: __dirname + "/../endpoint.js",
+    sourcePath: __dirname + "/../view/lib/src",
+    publicPath: __dirname + "/../view/lib/public",
+
+    /**
+     * Target Node URLs
+     */
+    apiURL: "http://localhost:3020",
+    authURL: "http://localhost:3030",
+
+    id: 'view_core'
+  },
 
   /**
    * Webpack config
@@ -17,48 +49,9 @@ module.exports = {
   },
 
   /**
-   * API node config
-   */
-  port: 3020,
-  routes: __dirname + "/endpoints/routes.js",
-  events: __dirname + "/endpoints/events.js",
-  limiter: {
-    high: {
-      interval: 60000,
-      maxInInterval: 120
-    }
-  },
-
-  /**
-   * Core-Node config
-   */
-  cacheDuration: 10,
-  sourcePath: __dirname + "/../view/lib/src",
-  publicPath: __dirname + "/../view/lib/public",
-  endpointPath: __dirname + "/../endpoints/",
-  endpointParent: __dirname + "/../endpoint.js",
-
-  /**
-   * Target Node URLs
-   */
-  apiURL: "http://localhost:3020",
-  authURL: "http://localhost:3030",
-
-  /**
-   * Databases
-   */
-  mongoPort: 27017,
-  mongoURL: "mongodb://localhost/blitz-js-view",
-  cacheDB: 2,
-
-  /**
-   * Authentication Credentials
-   */
-  user_key: "dev",
-  user_secret: "dev",
-
-  /**
    * Cluster config
    */
-  cores: Math.ceil(os.cpus().length / 2)
+  cores: Math.ceil(os.cpus().length / 2),
+  master: true,
+  id: 'view'
 }

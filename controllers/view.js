@@ -18,8 +18,8 @@ const api = new Blitz({
 /**
  * Render Dependencies
  */
-const sourcePath = blitz.config[blitz.id].sourcePath
-const publicPath = blitz.config[blitz.id].publicPath
+const sourcePath = blitz.config.view.core.sourcePath
+const publicPath = blitz.config.view.core.publicPath
 const createBundleRenderer = require("vue-server-renderer").createBundleRenderer
 
 /**
