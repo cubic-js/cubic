@@ -58,7 +58,7 @@ class Authentication extends Endpoint {
 
       // Set Options
       let data = {
-        scp: this.getFullScope(user.scope),
+        scp: user.scope,
         uid: user.user_id
       }
 
@@ -94,7 +94,7 @@ class Authentication extends Endpoint {
     // Valid User Found > Send token
     else {
       let data = {
-        scp: this.getFullScope(user.scope),
+        scp: user.scope,
         uid: user.user_id
       }
 
@@ -119,7 +119,7 @@ class Authentication extends Endpoint {
     })
 
     if (user) {
-      let arr_max = blitz.config.auth.maxLogsPerUser
+      let arr_max = blitz.config[blitz.id].maxLogsPerUser
       let arr_new = []
       let arr_exs = user.last_ip
 
@@ -153,11 +153,11 @@ class Authentication extends Endpoint {
    */
   getAccessToken (data) {
     let options = {
-      expiresIn: blitz.config.auth.exp,
-      algorithm: blitz.config.auth.alg,
-      issuer: blitz.config.auth.iss
+      expiresIn: blitz.config[blitz.id].exp,
+      algorithm: blitz.config[blitz.id].alg,
+      issuer: blitz.config[blitz.id].iss
     }
-    return jwt.sign(data, blitz.config.auth.certPrivate, options)
+    return jwt.sign(data, blitz.config[blitz.id].certPrivate, options)
   }
 
   /**
@@ -185,22 +185,6 @@ class Authentication extends Endpoint {
    */
   async isValidSecret (secret, localhash) {
     return bcrypt.compare(secret, localhash)
-  }
-
-  /**
-   * Extend given minimum scope with any higher
-   */
-  getFullScope (scope) {
-    let scopes = blitz.config.auth.scopes
-    let scopeSplit = scope.split(' ')
-    for (var i = 0; i < scopes.length; i++) {
-      scopeSplit.forEach((subscope) => {
-        if (scopes[i] === subscope) {
-          scope += ' ' + scopes.slice(0, i).join(' ')
-        }
-      })
-    }
-    return scope
   }
 
   /**

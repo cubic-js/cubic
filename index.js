@@ -14,67 +14,25 @@ const worker = require('blitz-js-util')
  */
 class Auth {
   constructor (options) {
-    // Process forked
-    if (process.env.isWorker) {
-      this.setup = worker.setGlobal()
-      this.setup.then(() => this.init())
-      worker.expose(this)
-    }
-
-    // Process not forked
-    else {
-      // Config which is called by blitz.js on blitz.use()
-      this.config = {
-        local: local,
-        provided: options
-      }
-
-      // Path for forking
-      this.filename = __filename
+    // Config which is called by blitz.js on blitz.use()
+    this.config = {
+      local: local,
+      provided: options
     }
   }
 
-  /**
-   * Hook node components for actual logic
-   */
-  init () {
-    /**
-     * Nodes must be required here, otherwise worker spawn will trigger them to create
-     * a new object on require due to process.env.isWorker = true. (which won't
-     * work because no config is set)
-     */
-    delete process.env.isWorker
-    const Core = require('blitz-js-core')
-    const API = require('blitz-js-api')
-    const Blitz = require('blitz-js')(blitz.config.local)
+  async init () {
+    const Core = require('../blitz-js-core')
+    const API = require('../blitz-js-api')
 
-    // Apply config to nodes and hook them
-    let options = blitz.config[blitz.id]
-    options.user_key += '-VerifyAuthWorker'
-    options.cores = 1
-
-    // API node which controls incoming requests
-    options.id = 'auth_api'
     //blitz.hook(options.id, purge.purgeInactiveUsers)
-    blitz.use(new API(options))
-    preauth.validateWorker()
+    blitz.use(new API(blitz.config.auth.api))
 
     // Core Node which processes incoming requests
-    options.id = 'auth_core'
-    blitz.hook(options.id, preauth.verifyUserIndices)
-    blitz.hook(options.id, preauth.manageDevUser)
-    blitz.use(new Core(options))
-
-    // Set proces state back to original
-    process.env.isWorker = true
-  }
-
-  /**
-   * Run any function from a remote process with `this` context
-   */
-  run (fn) {
-    return fn.apply(this)
+    blitz.hook(blitz.config.auth.core.id, preauth.verifyUserIndices)
+    await blitz.use(new Core(blitz.config.auth.core))
+    preauth.validateWorker()
   }
 }
 
-module.exports = process.env.isWorker ? new Auth() : Auth
+module.exports = Auth

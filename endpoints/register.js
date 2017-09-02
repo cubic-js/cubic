@@ -15,12 +15,8 @@ const bcrypt = require('bcrypt-as-promised')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Authentication extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
-  }
-
   async main (req, res) {
-    return this.newUser(req)
+    res.send(this.newUser(req))
   }
 
   /**
@@ -57,7 +53,7 @@ class Authentication extends Endpoint {
     })
 
     if (user) {
-      let arr_max = blitz.config.auth.maxLogsPerUser
+      let arr_max = blitz.config[blitz.id].maxLogsPerUser
       let arr_new = []
       let arr_exs = user.last_ip
 
