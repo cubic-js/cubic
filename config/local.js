@@ -23,12 +23,6 @@ module.exports = {
   redisPort: 6379,
 
   /**
-   * Authentication Credentials
-   */
-  user_key: 'dev',
-  user_secret: 'dev',
-
-  /**
    * Cluster config
    */
   cores: os.cpus().length
