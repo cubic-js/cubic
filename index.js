@@ -3,7 +3,6 @@
  * Web-API to get authentication for resource servers
  */
 const local = require("./config/local.js")
-const worker = require("blitz-js-util")
 const path = require('path')
 const fs = require("fs")
 const promisify = require("util").promisify
@@ -18,25 +17,9 @@ const webpack = require('webpack')
  */
 class View {
   constructor(options) {
-
-    // Process forked
-    if (process.env.isWorker) {
-      this.setup = worker.setGlobal()
-      this.setup.then(() => this.init())
-      worker.expose(this)
-    }
-
-    // Process not forked
-    else {
-
-      // Config which is called by blitz.js on blitz.use()
-      this.config = {
-        local: local,
-        provided: options
-      }
-
-      // Path for forking
-      this.filename = __filename
+    this.config = {
+      local: local,
+      provided: options
     }
   }
 
