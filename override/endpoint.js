@@ -15,10 +15,11 @@ class Endpoint {
      * Default schema for API calls
      */
     this.schema = {
-      query: [],
       scope: '',
       method: 'GET',
-      description: "There is no description for this endpoint yet."
+      description: "There is no description for this endpoint yet.",
+      limit: blitz.config[blitz.id].limit,
+      query: []
     }
     this.api = api
     this.db = db

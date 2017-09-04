@@ -27,7 +27,7 @@ module.exports = {
      * Endpoint config
      */
     endpointPath: __dirname + "/../endpoints/",
-    endpointParent: __dirname + "/../endpoint.js",
+    endpointParent: __dirname + "/../override/endpoint.js",
     sourcePath: __dirname + "/../view/lib/src",
     publicPath: __dirname + "/../view/lib/public",
 
