@@ -8,6 +8,7 @@ const _ = require('lodash')
 const mongodb = require('mongodb').MongoClient
 const CircularJSON = require('circular-json')
 const Response = require('../lib/response.js')
+const Limiter = require('../lib/limiter.js')
 
 /**
  * Interface for handling endpoints
@@ -16,15 +17,16 @@ class EndpointController {
   /**
    * Initialize Connections used by individual endpoints
    */
-  constructor () {
+  constructor() {
     this.db = mongodb.connect(blitz.config[blitz.id].mongoURL)
+    this.limiter = new Limiter()
     this.generateEndpointSchema()
   }
 
   /**
    * Calls endpoint with given param Array
    */
-  async getResponse (req, api) {
+  async getResponse(req, api) {
     try {
       return await this.sendRaw(req, api)
     } catch (err) {
@@ -35,7 +37,7 @@ class EndpointController {
   /**
    * Send raw file if available
    */
-  async sendRaw (req, api) {
+  async sendRaw(req, api) {
     let readFile = util.promisify(fs.readFile)
     let filename = blitz.config[blitz.id].publicPath + req.url
     let raw = await readFile(filename)
@@ -56,16 +58,20 @@ class EndpointController {
   /**
    * Calls endpoint with given param Array
    */
-  async callEndpoint (req, api) {
-    req.url = req.url === '' ? '/' : req.url.split('%20').join(' ')
-    const endpointSchema = this.findByUrl(req.url)
-    this.parse(req, endpointSchema)
-    const unauthorized = this.authorizeRequest(req, endpointSchema)
-    const Endpoint = require(endpointSchema.file)
-    const endpoint = new Endpoint(api, await this.db, req.url)
-
-    return new Promise(resolve => {
+  async callEndpoint(req, api) {
+    return new Promise(async resolve => {
+      req.url = req.url === '' ? '/' : req.url.split('%20').join(' ')
       const res = new Response(resolve, api)
+      const endpointSchema = this.findByUrl(req.url)
+      const limited = await this.limiter.check(req, endpointSchema)
+      if (limited) {
+        return res.status(429).send(limited)
+      }
+
+      this.parse(req, endpointSchema)
+      const unauthorized = this.authorizeRequest(req, endpointSchema)
+      const Endpoint = require(endpointSchema.file)
+      const endpoint = new Endpoint(api, await this.db, req.url)
 
       // Apply benchmarking functions if benchmark=true
       if (req.query.benchmark && blitz.config.local.environment === 'development') {
@@ -79,10 +85,7 @@ class EndpointController {
             if (blitz.config.local.environment === 'development') {
               console.log(err)
             }
-            resolve({
-              statusCode: 500,
-              body: err
-            })
+            res.status(500).send(err)
           })
       } else {
         resolve(unauthorized)
@@ -145,7 +148,7 @@ class EndpointController {
   /**
    * Get specific endpoint through url detection
    */
-  findByUrl (url) {
+  findByUrl(url) {
     let found = true
     let reqUrl = url.split('?')[0].split('/')
 
@@ -169,7 +172,7 @@ class EndpointController {
   /**
    * Check request method and authorization before processing request
    */
-  authorizeRequest (req, endpoint) {
+  authorizeRequest(req, endpoint) {
     if (!req.user.scp.includes(endpoint.scope) && !req.user.scp.includes('write_root')) {
       return {
         statusCode: 403,
@@ -193,7 +196,7 @@ class EndpointController {
   /**
    * Generates flat endpoint schema from endpoint tree
    */
-  generateEndpointSchema () {
+  generateEndpointSchema() {
     this.endpoints = []
     this.getEndpointTree(blitz.config[blitz.id].endpointPath)
 
@@ -211,7 +214,7 @@ class EndpointController {
   /**
    * Generates endpoint tree
    */
-  getEndpointTree (filename) {
+  getEndpointTree(filename) {
     let stats = fs.lstatSync(filename)
     let endpoint = {}
 
@@ -239,7 +242,7 @@ class EndpointController {
   /**
    * Get Endpoint from given URL
    */
-  async getEndpoint (url) {
+  async getEndpoint(url) {
     // Try to get raw file in public folder
     try {
       if (url.includes('../')) {
@@ -259,7 +262,7 @@ class EndpointController {
   /**
    * Parse URL to assign placeholder data in case of socket.io connections
    */
-  parse (req, endpoint) {
+  parse(req, endpoint) {
     let placeholders = endpoint.route.split(':').length - 1
     this.parseParams(req, endpoint)
     this.parseQuery(req, endpoint)
@@ -307,7 +310,7 @@ class EndpointController {
   /**
    * Convert string params from URL to target type
    */
-  parseQueryTypes (req, endpoint) {
+  parseQueryTypes(req, endpoint) {
     endpoint.query.forEach(query => {
       let def = typeof query.default === 'function' ? query.default() : query.default
       let key = query.name

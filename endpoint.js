@@ -14,6 +14,7 @@ class Endpoint {
       scope: '',
       method: 'GET',
       description: 'There is no description for this endpoint yet.',
+      limit: blitz.config[blitz.id].limit,
       query: []
     }
     this.api = api
