@@ -1,7 +1,7 @@
 {
   "name": "blitz-js-api",
   "version": "0.4.1",
-  "description": "⚡ API Node for blitz.js framework",
+  "description": "⚡ API Node for the blitz-js framework",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js"
@@ -22,7 +22,6 @@
     "lodash": "^4.17.4",
     "mime": "^1.4.0",
     "redis": "^2.8.0",
-    "rolling-rate-limiter": "^0.1.10",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {

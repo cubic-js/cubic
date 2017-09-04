@@ -6,7 +6,6 @@ const Io = require('./adapters/sockets.js')
 const Cache = require('../controllers/cache.js')
 const bodyParser = require('body-parser')
 const auth = require('../middleware/auth.js')
-const limit = require('../middleware/limiter.js')
 const logger = require('../middleware/logger.js')
 
 /**
@@ -50,11 +49,6 @@ class Server {
 
     // Get response from cache if available
     this.use((req, res, next) => this.cache.check(req, res, next))
-
-    // Rolling Rate Limit
-    if (blitz.config[blitz.id].limiter.enabled) {
-      this.use((req, res, next) => limit.check(req, res, next))
-    }
   }
 
   /**
