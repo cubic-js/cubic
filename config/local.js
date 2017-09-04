@@ -7,7 +7,7 @@ module.exports = {
    * Core-Node config
    */
   endpointPath: path.join(__dirname, '/../endpoints/'),
-  endpointParent: path.join(__dirname, '/../endpoint.js'),
+  endpointParent: path.join(__dirname, '/../lib/endpoint.js'),
 
   /**
    * Target Node URLs
@@ -16,6 +16,7 @@ module.exports = {
   authURL: 'http://localhost:3030',
 
   limit: {
+    disable: false,
     interval: 60000,
     maxInInterval: 180
   },
