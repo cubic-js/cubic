@@ -7,8 +7,8 @@ module.exports = {
     events: __dirname + "/endpoints/events.js",
     limiter: {
       high: {
-        interval: 60000,
-        maxInInterval: 120
+        interval: 180000,
+        maxInInterval: 360
       }
     },
    cacheExp: 10,
