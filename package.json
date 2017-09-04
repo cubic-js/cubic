@@ -14,8 +14,8 @@
   "dependencies": {
     "bcrypt": "^1.0.3",
     "bcrypt-as-promised": "^1.1.0",
-    "blitz-js-api": "^0.4.0",
-    "blitz-js-core": "^0.4.0",
+    "blitz-js-api": "^0.4.1",
+    "blitz-js-core": "^0.4.1",
     "body-parser": "^1.17.2",
     "chalk": "^2.1.0",
     "express": "^4.15.4",
@@ -23,5 +23,7 @@
     "mongodb": "^2.2.31",
     "rand-token": "^0.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "debug": "^3.0.1"
+  }
 }
