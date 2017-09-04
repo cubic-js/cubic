@@ -1,6 +1,6 @@
 {
   "name": "blitz-js-query-browser",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Blitz-js API connection module optimized for usage in browsers",
   "main": "index.js",
   "repository": {
