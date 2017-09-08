@@ -4,6 +4,7 @@ const local = require('./config/local.js')
 module.exports = function(config) {
   config = extend(local, config)
   const Blitz = require('blitz-js-loader')(config.blitz)
+  const intro = require('./logger.js')
 
   /**
    * Authentication node user management and token generation
