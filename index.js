@@ -20,33 +20,33 @@ module.exports = function(config) {
   /**
    * API node to distribute incoming requests to core nodes
    */
-   if (!config.api.disable) {
-     const Api = require('blitz-js-api')
-     config.api.hooks.forEach(hook => {
-       blitz.hook(Api, hook)
-     })
-     blitz.use(new Api(config.api))
-   }
+  if (!config.api.disable) {
+    const Api = require('blitz-js-api')
+    config.api.hooks.forEach(hook => {
+      blitz.hook(Api, hook)
+    })
+    blitz.use(new Api(config.api))
+  }
 
-   /**
-    * Core node which handles the actual processing of requests
-    */
-    if (!config.core.disable) {
-      const Core = require('blitz-js-core')
-      config.core.hooks.forEach(hook => {
-        blitz.hook(Core, hook)
-      })
-      blitz.use(new Core(config.core))
-    }
+  /**
+   * Core node which handles the actual processing of requests
+   */
+  if (!config.core.disable) {
+    const Core = require('blitz-js-core')
+    config.core.hooks.forEach(hook => {
+      blitz.hook(Core, hook)
+    })
+    blitz.use(new Core(config.core))
+  }
 
-   /**
-    * View node which renders visual webpages
-    */
-    if (!config.view.disable) {
-      const View = require('blitz-js-view')
-      config.view.hooks.forEach(hook => {
-        blitz.hook('view_core', hook)
-      })
-      blitz.use(new View(config.view))
-    }
+  /**
+   * View node which renders visual webpages
+   */
+  if (!config.view.disable) {
+    const View = require('blitz-js-view')
+    config.view.hooks.forEach(hook => {
+      blitz.hook('view_core', hook)
+    })
+    blitz.use(new View(config.view))
+  }
 }
