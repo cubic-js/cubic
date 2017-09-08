@@ -14,7 +14,7 @@ module.exports = merge(baseConfig, {
   // Entry point which guides to everything webpack is supposed to bundle
   // Use app so hot-module-reload can overwrite entry for that specific part
   entry: {
-    client: __dirname + "/../../lib/src/app-client.js"
+    client: __dirname + "/../../vue/app-client.js"
   },
 
   plugins: [

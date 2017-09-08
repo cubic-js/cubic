@@ -32,7 +32,7 @@ class ViewController {
   async render(url, data) {
     const serverBundle = require(path.join(publicPath, "vue-ssr-server-bundle.json"))
     const clientManifest = require(path.join(publicPath, "vue-ssr-client-manifest.json"))
-    const template = await readFile(path.join(sourcePath, "vue/index.template.html"), "utf-8")
+    const template = await readFile(path.join(__dirname, "../vue/index.template.html"), "utf-8")
     const renderer = createBundleRenderer(serverBundle, {
       template,
       clientManifest,

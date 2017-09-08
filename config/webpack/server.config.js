@@ -11,7 +11,7 @@ module.exports = merge(baseConfig, {
   name: "server",
 
   // Entry point which guides to everything webpack is supposed to bundle
-  entry: __dirname + "/../../lib/src/app-server.js",
+  entry: __dirname + "/../../vue/app-server.js",
 
   // Let webpack and vue-loader know we're rendering server-sided
   target: "node",

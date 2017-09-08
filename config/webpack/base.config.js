@@ -1,23 +1,14 @@
 const isProd = blitz.config.local.environment !== "development"
 const fs = require('fs')
-const vueConfig = require('./vue.config.js')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
   filename: "[name].[chunkhash].css",
   disable: !isProd
 })
-
-// Dependencies need to be handled differently in debug (see alias)
-let isDebug = false
-try {
-  fs.statSync(__dirname + '/../../../../node_modules')
-} catch(err) {
-  isDebug = true
-}
+const vueConfig = require('./vue.config.js')(extractSass)
 
 // Actual config
 module.exports = {
-  context: __dirname + "/../../",
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
@@ -65,7 +56,7 @@ module.exports = {
                 optimizationLevel: 4
               },
               pngquant: {
-                quality: 50-70,
+                quality: 50 - 70,
                 speed: 3
               }
             }
@@ -79,13 +70,13 @@ module.exports = {
   resolve: {
     // Resolve dependencies differently when in debug due to source code folder
     // being different from current working directory
-    alias: Object.assign({
+    alias: {
       src: blitz.config.view.core.sourcePath,
       public: blitz.config.view.core.publicPath,
-    }, isDebug ? {
-      // HMR will trigger a second vue instance without this
-      vue: __dirname + "/../../node_modules/vue"
-    } : {})
+      // HMR will load a separate vue instance (no router, no store) in the
+      // client bundle without this absolute reference
+      vue: __dirname + '/../../node_modules/vue'
+    }
   },
 
   // Plugins for post-bundle operations

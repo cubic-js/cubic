@@ -162,20 +162,14 @@ class View {
    * we gotta ensure the file is ready before rendering anything.
    */
   async registerEndpoints() {
-
-    // Get entry Directory where we assume the router to be located
-    const config = require(blitz.config.view.webpack.serverConfig)
-    let entryDir = config.entry.split("/")
-    entryDir.pop()
-    entryDir = path.resolve(entryDir.join("/")).replace(/\\/g, "/")
-
-    let { views, routes } = await this.getViewConstants(entryDir)
+    const entryDir = path.resolve(__dirname, 'vue')
+    const { views, routes } = await this.getViewConstants(entryDir)
 
     // Inject view variables into router. We can't dynamically require views
     // at runtime, so we have to do it pre-build this way.
-    let viewFile = path.resolve(entryDir, 'router/index.js')
-    let viewInject = views.join("\n")
-    let viewRegex = /^\/\/start-view-injection[\s\S]*\/\/end-view-injection$/im
+    const viewFile = path.resolve(entryDir, 'router/index.js')
+    const viewInject = views.join("\n")
+    const viewRegex = /^\/\/start-view-injection[\s\S]*\/\/end-view-injection$/im
     let viewOutput = await readFile(viewFile, "utf-8")
     viewOutput = viewOutput.replace(viewRegex, viewInject)
     await writeFile(viewFile, viewOutput)
@@ -191,11 +185,11 @@ class View {
     await writeFile(routeFile, routeOutput.replace(/^                 /gm, ""))
   }
 
-
   /**
    * Generate plaintext constants which will be saved in the router file
    */
-  async getViewConstants(entryDir) {
+  async getViewConstants() {
+    const srcDir = blitz.config.view.core.sourcePath.replace(/\\/g, '/')
     const endpoints = await blitz.nodes.view_core.run(function() {
       return this.client.endpointController.endpoints
     })
@@ -207,7 +201,7 @@ class View {
         component: endpoint.view,
         props: true
       }
-      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = require("${entryDir}/${endpoint.view}").default`
+      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = require("${srcDir}/${endpoint.view}").default`
       routes.push(route)
       views.find(el => el === view) ? null : views.push(view)
     })
