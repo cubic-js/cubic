@@ -7,6 +7,14 @@ const extractSass = new ExtractTextPlugin({
 })
 const vueConfig = require('./vue.config.js')(extractSass)
 
+// Dependencies need to be handled differently in debug (see alias)
+let isDebug = false
+try {
+  fs.statSync(__dirname + '/../../../../node_modules')
+} catch(err) {
+  isDebug = true
+}
+
 // Actual config
 module.exports = {
 
@@ -70,13 +78,13 @@ module.exports = {
   resolve: {
     // Resolve dependencies differently when in debug due to source code folder
     // being different from current working directory
-    alias: {
+    alias: Object.assign({
       src: blitz.config.view.core.sourcePath,
       public: blitz.config.view.core.publicPath,
-      // HMR will load a separate vue instance (no router, no store) in the
-      // client bundle without this absolute reference
-      vue: __dirname + '/../../node_modules/vue'
-    }
+    }, isDebug ? {
+      // HMR will trigger a second vue instance without this
+      vue: __dirname + "/../../node_modules/vue"
+    } : {})
   },
 
   // Plugins for post-bundle operations
