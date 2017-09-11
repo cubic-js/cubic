@@ -2,7 +2,7 @@
 
 ##  
 
-[![Discord](https://img.shields.io/discord/195582152849620992.svg)](https://discord.gg/AG8RPZ8) [![GitHub release](https://img.shields.io/github/release/nexus-devs/blitz-js.svg)]()
+[![GitHub release](https://img.shields.io/github/release/nexus-devs/blitz-js.svg)]()
 
 <br>
 
