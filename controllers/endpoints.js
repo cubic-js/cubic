@@ -146,30 +146,6 @@ class EndpointController {
   }
 
   /**
-   * Get specific endpoint through url detection
-   */
-  findByUrl(url) {
-    let found = true
-    let reqUrl = url.split('?')[0].split('/')
-
-    for (let endpoint of this.endpoints) {
-      let route = endpoint.route.split('/')
-      if (route.length === reqUrl.length) {
-        for (let i = 0; i < reqUrl.length; i++) {
-          if (route[i] !== reqUrl[i] && !route[i].includes(':')) {
-            found = false
-            break
-          } else if (i === reqUrl.length - 1) {
-            found = endpoint
-          }
-        }
-        if (found) break
-      }
-    }
-    return found
-  }
-
-  /**
    * Check request method and authorization before processing request
    */
   authorizeRequest(req, endpoint) {
@@ -257,6 +233,33 @@ class EndpointController {
       let path = this.findByUrl(url).file
       return require(path)
     }
+  }
+
+  /**
+   * Get specific endpoint through url detection
+   */
+  findByUrl(url) {
+    let found = false
+    let reqUrl = url.split('?')[0].split('/')
+
+    for (let endpoint of this.endpoints) {
+      let route = endpoint.route.split('/')
+
+      // Remove trailing empty el from `/` at end of route
+      if (!route[route.length - 1]) route.pop()
+      if (route.length === reqUrl.length) {
+        for (let i = 0; i < reqUrl.length; i++) {
+
+          if (route[i] !== reqUrl[i] && !route[i].includes(':')) {
+            break
+          } else if (i === reqUrl.length - 1) {
+            found = endpoint
+          }
+        }
+        if (found) break
+      }
+    }
+    return found
   }
 
   /**
