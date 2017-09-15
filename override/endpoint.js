@@ -7,19 +7,14 @@ const view = require("../controllers/view.js")
  * Any lower-level method extends this class
  */
 class Endpoint {
-  /**
-   * Describes Endpoint properties
-   */
   constructor(api, db, url) {
-    /**
-     * Default schema for API calls
-     */
     this.schema = {
       scope: '',
       method: 'GET',
       description: "There is no description for this endpoint yet.",
       limit: blitz.config[blitz.id].limit,
-      query: []
+      query: [],
+      view: '/app.vue'
     }
     this.api = api
     this.db = db

@@ -11,7 +11,9 @@ import routes from "./routes.js"
 // dynamically at runtime, so we have to do it pre-build. Names and paths are
 // generated from endpoint schema.
 //start-view-injection
+const appvue = require("D:/dev/nexus-stats/nexus-stats/config/../view//app.vue").default
 const templateswarframeindexvue = require("D:/dev/nexus-stats/nexus-stats/config/../view/templates/warframe/index.vue").default
+const templateswarframeitemsindexvue = require("D:/dev/nexus-stats/nexus-stats/config/../view/templates/warframe/items/index.vue").default
 //end-view-injection
 
 Vue.use(Router)

@@ -3,7 +3,6 @@ import { createApp } from './app.js'
 /**
  * Helper function for recursive asyncData calling of matched components
  */
-let params, api
 const callAsyncRecursive = (parent) => {
   // First object isn't passed as component array/collection
   if (parent.components) {
@@ -45,11 +44,6 @@ export default context => {
       // which is resolved when the action is complete and store state has been
       // updated.
       Promise.all(matchedComponents.map(loaded => {
-        params = {
-          store,
-          route: router.currentRoute
-        }
-        api = context.api
         return callAsyncRecursive(loaded)
       })).then(() => {
         // After all asyncData hooks are resolved, our store is now

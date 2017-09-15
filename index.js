@@ -39,11 +39,6 @@ class View {
     await this.initWebpack()
   }
 
-  /**
-   * Nodes must be required here, otherwise worker spawn will trigger them to create
-   * a new object on require due to process.env.isWorker = true. (which won't
-   * work because no config is set)
-   */
   async initBlitz() {
     const Core = require("blitz-js-core")
     const API = require("blitz-js-api")
