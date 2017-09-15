@@ -15,9 +15,9 @@
   "dependencies": {
     "blitz-js-api": "^0.4.3",
     "blitz-js-auth": "^0.4.3",
-    "blitz-js-core": "^0.4.3",
+    "blitz-js-core": "^0.4.5",
     "blitz-js-loader": "^0.4.2",
-    "blitz-js-view": "^0.4.5",
+    "blitz-js-view": "^0.4.6",
     "deep-extend": "^0.5.0"
   }
 }

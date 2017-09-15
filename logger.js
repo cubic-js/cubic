@@ -27,22 +27,22 @@ class Logger {
     console.log(chalk.grey("---------------------------------------------------------------"))
     console.log(" ")
     console.log(`
-                            \`\`
+                            ..
                             :Ndo-
                              .dMMms:
-                               sMMMMNh/\`
+                               sMMMMNh:.
                                 /NMMMMMMdo.
                                  .mMMMMMMMMd.
-                 /:-.\`            \`yMMMMMMMM/
+                 /:-..            \`yMMMMMMMM/
                 \`MMMMMMNmdys+-      /MMMMMMM/
                 \`MMNNMMMMMms:        -mMMMMM/
-                \`MMMh  ./\`            \`yMMMM/
+                \`MMMh  .:\`            \`yMMMM/
                 \`MMMMm.            \`:. .sMMM/
-                \`MMMMMN/        -odMMMMMMNMM/
-                \`MMMMMMMs      ./oyhdNMMMMMM/
+                \`MMMMMN.        -odMMMMMMNMM/
+                \`MMMMMMMs      .:oyhdNMMMMMM/
                 \`MMMMMMMMd.            \`.-::.
-                 yMMMMMMMMN:
-                  \`+hNMMMMMMs
+                 :MMMMMMMMN:
+                  \`:hNMMMMMMs
                      \`:sNMMMMd.      Blitz.js
                          -odMMN:      ${chalk.green(`v.${version}`)}
                             \`+hNo
