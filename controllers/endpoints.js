@@ -245,8 +245,9 @@ class EndpointController {
     for (let endpoint of this.endpoints) {
       let route = endpoint.route.split('/')
 
-      // Remove trailing empty el from `/` at end of route
-      if (!route[route.length - 1]) route.pop()
+      // Remove trailing empty el from `/` at end of route, but not if url is
+      // '/' (index)
+      if (!route[route.length - 1] && route.length > 2) route.pop()
       if (route.length === reqUrl.length) {
         for (let i = 0; i < reqUrl.length; i++) {
 
