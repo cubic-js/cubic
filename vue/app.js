@@ -14,13 +14,6 @@ import { sync } from "vuex-router-sync"
 // export a factory function for creating fresh app, router and store
 // instances
 export function createApp(context) {
-  const router = createRouter()
-  const store = createStore()
-
-  // sync the router with the vuex store.
-  // this registers `store.state.route`
-  sync(store, router)
-
   // We're on the server -> Get pre-connected api connection from node
   if (context) {
     Vue.prototype.$blitz = context.api
@@ -33,6 +26,12 @@ export function createApp(context) {
       //auth_url: 'https://auth.nexus-stats.com'
     })
   }
+  const router = createRouter()
+  const store = createStore(Vue.prototype.$blitz)
+
+  // sync the router with the vuex store.
+  // this registers `store.state.route`
+  sync(store, router)
 
   // create the app instance.
   // here we inject the router, store and ssr context to all child components,

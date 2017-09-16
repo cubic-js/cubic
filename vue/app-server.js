@@ -1,28 +1,5 @@
 import { createApp } from './app.js'
-
-/**
- * Helper function for recursive asyncData calling of matched components
- */
-const callAsyncRecursive = (parent) => {
-  // First object isn't passed as component array/collection
-  if (parent.components) {
-    parent.asyncData ? parent.asyncData() : 0
-    return callAsyncRecursive(parent.components)
-  }
-  // Sub components are traversed
-  else {
-    for (let property in parent) {
-      let obj = parent[property]
-      // More sub components? recursively traverse them too
-      if (obj.components) {
-        callAsyncRecursive(obj.components)
-      }
-      if (obj.asyncData) {
-        return obj.asyncData()
-      }
-    }
-  }
-}
+import { callAsyncRecursive } from './util/callAsyncRecursive.js'
 
 /**
  * Generate App with pre-fetched data in store state
@@ -44,7 +21,7 @@ export default context => {
       // which is resolved when the action is complete and store state has been
       // updated.
       Promise.all(matchedComponents.map(loaded => {
-        return callAsyncRecursive(loaded)
+        return callAsyncRecursive(loaded, store, router)
       })).then(() => {
         // After all asyncData hooks are resolved, our store is now
         // filled with the state needed to render the app.
