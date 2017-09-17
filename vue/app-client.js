@@ -49,10 +49,14 @@ router.onReady(() => {
       return next()
     }
 
+    // Start progress bar
     progress.start()
+
     // Register component's store modules, then call asyncData
     storeModules.map(register => register[0].bind({ $store: store })())
     await Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
+
+    // End loading bar
     progress.finish()
     next()
   })
