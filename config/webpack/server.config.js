@@ -25,6 +25,14 @@ module.exports = merge(baseConfig, {
     libraryTarget: "commonjs2"
   },
 
+  // Temporary fix for vue-touch-ssr (uses empty object instead of hammerjs)
+  // SSR-only (no `window` on server, don't need touch anyway)
+  resolve: {
+    alias: {
+      'hammerjs$': `${__dirname}/../../override/hammer.js`
+    }
+  },
+
   // Ignore node_modules, making the build much faster
   externals: nodeExternals(),
 

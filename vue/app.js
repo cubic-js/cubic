@@ -5,6 +5,7 @@
  * file. app.js simply exports a createApp function
  */
 import Vue from 'vue'
+import VueTouch from 'vue-touch-ssr'
 import App from 'src/app.vue'
 import Blitz from 'blitz-js-query-browser'
 import { createRouter } from "./router"
@@ -33,13 +34,16 @@ export function createApp(context) {
   // this registers `store.state.route`
   sync(store, router)
 
+  // Add vue-touch. Not sure if this should be added by default.
+  Vue.use(VueTouch)
+
   // create the app instance.
   // here we inject the router, store and ssr context to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = new Vue({
-      router,
-      store,
-      render: createElement => createElement(App)
+    router,
+    store,
+    render: createElement => createElement(App)
   })
   return { app, router, store }
 }
