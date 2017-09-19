@@ -1,4 +1,5 @@
 const merge = require("webpack-merge")
+const path = require('path')
 const baseConfig = require("./base.config.js")
 const nodeExternals = require("webpack-node-externals")
 const VueSSRServerPlugin = require("vue-server-renderer/server-plugin")
@@ -23,14 +24,6 @@ module.exports = merge(baseConfig, {
   output: {
     path: blitz.config.view.core.publicPath,
     libraryTarget: "commonjs2"
-  },
-
-  // Temporary fix for vue-touch-ssr (uses empty object instead of hammerjs)
-  // SSR-only (no `window` on server, don't need touch anyway)
-  resolve: {
-    alias: {
-      'hammerjs': `${__dirname}/../../override/hammer.js`
-    }
   },
 
   // Ignore node_modules, making the build much faster

@@ -5,7 +5,7 @@
  * file. app.js simply exports a createApp function
  */
 import Vue from 'vue'
-import VueTouch from 'vue-touch-ssr'
+import VueTouch from 'vue-touch-hotfix'
 import App from 'src/app.vue'
 import Blitz from 'blitz-js-query-browser'
 import { createRouter } from "./router"
