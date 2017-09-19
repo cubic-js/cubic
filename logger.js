@@ -44,7 +44,7 @@ class Logger {
                  :MMMMMMMMN:
                   \`:hNMMMMMMs
                      \`:sNMMMMd.      Blitz.js
-                         -odMMN:      ${chalk.green(`v.${version}`)}
+                         -odMMN:     ${chalk.green(`v.${version}`)}
                             \`+hNo
                                 \`
                          `)
