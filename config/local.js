@@ -17,8 +17,8 @@ module.exports = {
 
   limit: {
     disable: false,
-    interval: 60000,
-    maxInInterval: 180
+    interval: 5000,
+    maxInInterval: 20
   },
 
   /**
