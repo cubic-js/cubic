@@ -29,7 +29,7 @@ module.exports = merge(baseConfig, {
   // SSR-only (no `window` on server, don't need touch anyway)
   resolve: {
     alias: {
-      'hammerjs$': `${__dirname}/../../override/hammer.js`
+      'hammerjs': `${__dirname}/../../override/hammer.js`
     }
   },
 
