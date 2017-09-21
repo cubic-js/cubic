@@ -60,7 +60,9 @@ class Endpoint {
    * Render page with Vue.js
    */
   async render(data) {
-    return view.render(this.url, data)
+    const html = await view.render(this.url, data)
+    this.cache(html, blitz.config.view.api.cacheExp)
+    return html
   }
 }
 
