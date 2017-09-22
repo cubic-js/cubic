@@ -225,7 +225,10 @@ class EndpointController {
         throw 'Attempt to navigate outside of public folder not permitted.'
       }
       let check = util.promisify(fs.stat)
-      await check(blitz.config[blitz.id].publicPath + url)
+      const stat = await check(blitz.config[blitz.id].publicPath + url)
+      if (stat.isDirectory()) {
+        throw 'Can\'t send a full directory. Make sure to specify a file instead.'
+      }
     }
 
     // Assume dynamic endpoint if file not available
