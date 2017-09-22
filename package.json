@@ -41,6 +41,6 @@
     "type": "git",
     "url": "git+https://github.com/nexus-devs/blitz.js-core.git"
   },
-  "version": "0.4.10",
+  "version": "0.4.11",
   "devDependencies": {}
 }
