@@ -7,7 +7,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "blitz-js-api": "^0.4.3",
-    "blitz-js-core": "^0.4.7",
+    "blitz-js-core": "^0.4.8",
     "blitz-js-query": "^0.2.3",
     "blitz-js-query-browser": "^0.2.3",
     "css-loader": "^0.28.7",
