@@ -15,10 +15,10 @@
     "bcrypt": "^1.0.3",
     "bcrypt-as-promised": "^1.1.0",
     "blitz-js-api": "^0.4.3",
-    "blitz-js-core": "^0.4.8",
+    "blitz-js-core": "^0.4.9",
     "rand-token": "^0.3.0"
   },
   "devDependencies": {
-    "debug": "^3.0.1"
+    "debug": "^3.1.0"
   }
 }
