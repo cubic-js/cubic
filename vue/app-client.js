@@ -8,13 +8,17 @@ document.body.appendChild(progress.$el)
 
 // Global mixin that calls `asyncData` when a route component's params change
 Vue.mixin({
-  beforeRouteUpdate (to, from, next) {
+  async beforeRouteUpdate (to, from, next) {
     const { asyncData } = this.$options
+
     if (asyncData) {
-      asyncData({
+      progress.start()
+      await asyncData({
         store: this.$store,
         route: to
-      }).then(next).catch(next)
+      })
+      progress.finish()
+      next()
     } else {
       next()
     }
