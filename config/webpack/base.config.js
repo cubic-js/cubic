@@ -3,6 +3,7 @@ const fs = require('fs')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
   filename: "[name].[chunkhash].css",
+  allChunks: true,
   disable: !isProd
 })
 const vueConfig = require('./vue.config.js')(extractSass)
