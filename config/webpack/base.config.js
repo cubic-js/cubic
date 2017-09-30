@@ -33,11 +33,6 @@ module.exports = {
         options: vueConfig
       },
       {
-        test: /\.js$/,
-        loader: "babel-loader",
-        exclude: /node_modules/
-      },
-      {
         test: /\.s?[a|c]ss$/,
         use: isProd ? extractSass.extract({
           use: [{

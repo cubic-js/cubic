@@ -175,7 +175,7 @@ class View {
                     * Auto-generated routes from blitz.js view node.
                     * Components will be eval'd, so full functionality is preserved.
                     */
-                    export default ${JSON.stringify(routes)}
+                    export default ${JSON.stringify(routes, null, 2)}
                     `
     await writeFile(routeFile, routeOutput.replace(/^                 /gm, ""))
   }
@@ -196,7 +196,7 @@ class View {
         component: endpoint.view,
         props: true
       }
-      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = require("${srcDir}/${endpoint.view}").default`
+      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = () => import("${srcDir}/${endpoint.view}")`
       routes.push(route)
       views.find(el => el === view) ? null : views.push(view)
     })
