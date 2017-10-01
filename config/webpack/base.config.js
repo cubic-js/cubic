@@ -1,7 +1,11 @@
 const isProd = blitz.config.local.environment !== "development"
 const fs = require('fs')
+
+// Plugins
 const webpack = require('webpack')
 const envPlugin = new webpack.EnvironmentPlugin('NODE_ENV')
+const dedupePlugin = new webpack.optimize.DedupePlugin()
+const uglifyPlugin = new webpack.optimize.UglifyJsPlugin()
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
   filename: "[name].[chunkhash].css",
@@ -87,8 +91,10 @@ module.exports = {
 
   // Plugins for post-bundle operations
   plugins: isProd ? [
+    envPlugin,
     extractSass,
-    envPlugin
+    dedupePlugin,
+    uglifyPlugin
   ] : [
     extractSass
   ]
