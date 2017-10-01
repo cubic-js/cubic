@@ -13,11 +13,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-api": "^0.4.3",
-    "blitz-js-auth": "^0.4.6",
-    "blitz-js-core": "^0.4.9",
-    "blitz-js-loader": "^0.4.2",
-    "blitz-js-view": "^0.4.15",
+    "blitz-js-api": "^0.4.4",
+    "blitz-js-auth": "^0.4.7",
+    "blitz-js-core": "^0.4.10",
+    "blitz-js-loader": "^0.4.3",
+    "blitz-js-view": "^0.4.16",
     "deep-extend": "^0.5.0"
   }
 }
