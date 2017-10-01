@@ -69,6 +69,7 @@ class View {
     const clientConfig = require(blitz.config.view.webpack.clientConfig)
     const serverConfig = require(blitz.config.view.webpack.serverConfig)
     const compiled = await promisify(webpack)([clientConfig, serverConfig])
+
     if (compiled.errors) {
       throw compiled.errors
     } else {
