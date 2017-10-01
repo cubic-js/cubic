@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-ipc": "^0.4.4",
+    "blitz-js-ipc": "^0.4.5",
     "blitz-js-query": "^0.2.3",
     "circular-json": "^0.3.3",
     "deep-extend": "^0.5.0",
