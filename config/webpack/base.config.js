@@ -3,9 +3,7 @@ const fs = require('fs')
 
 // Plugins
 const webpack = require('webpack')
-const envPlugin = new webpack.EnvironmentPlugin('NODE_ENV')
-const dedupePlugin = new webpack.optimize.DedupePlugin()
-const uglifyPlugin = new webpack.optimize.UglifyJsPlugin()
+const MinifyCssPlugin = require('optimize-css-assets-webpack-plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
   filename: "[name].[chunkhash].css",
@@ -14,7 +12,7 @@ const extractSass = new ExtractTextPlugin({
 })
 const vueConfig = require('./vue.config.js')(extractSass)
 
-// Dependencies need to be handled differently in debug (see alias)
+// Dependencies need to be handled differently in debug (see webpack resolve)
 let isDebug = false
 try {
   fs.statSync(__dirname + '/../../../../node_modules')
@@ -91,10 +89,11 @@ module.exports = {
 
   // Plugins for post-bundle operations
   plugins: isProd ? [
-    envPlugin,
+    new webpack.EnvironmentPlugin('NODE_ENV'),
     extractSass,
-    dedupePlugin,
-    uglifyPlugin
+    new MinifyCssPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin()
   ] : [
     extractSass
   ]

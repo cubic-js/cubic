@@ -14,6 +14,7 @@
     "image-webpack-loader": "^3.4.2",
     "memory-fs": "^0.4.1",
     "node-sass": "^4.5.3",
+    "optimize-css-assets-webpack-plugin": "^3.2.0",
     "sass-loader": "^6.0.6",
     "vue": "^2.4.4",
     "vue-loader": "^13.0.5",
