@@ -17,7 +17,7 @@
     "blitz-js-auth": "^0.4.7",
     "blitz-js-core": "^0.4.10",
     "blitz-js-loader": "^0.4.4",
-    "blitz-js-view": "^0.4.18",
+    "blitz-js-view": "^0.4.20",
     "deep-extend": "^0.5.0"
   }
 }
