@@ -14,10 +14,10 @@
   "license": "MIT",
   "dependencies": {
     "blitz-js-api": "^0.4.4",
-    "blitz-js-auth": "^0.4.7",
-    "blitz-js-core": "^0.4.10",
+    "blitz-js-auth": "^0.4.8",
+    "blitz-js-core": "^0.4.12",
     "blitz-js-loader": "^0.4.4",
-    "blitz-js-view": "^0.4.20",
+    "blitz-js-view": "^0.4.21",
     "deep-extend": "^0.5.0"
   }
 }
