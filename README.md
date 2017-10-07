@@ -13,7 +13,7 @@ Blitz.js is a Node.js framework which allows you to build all application logic 
 ## Features
 - Strong separation of concerns. Build your app in components, then cluster and deploy these components how it fits your application best.
 
-- Built on top of Express and Socket.io to make use of full Real-Time Communications.
+- Built on top of Express and Socket.io to make full use of Real-Time Communications.
 
 - Express-like middleware support working the same way on all connection types.
 
