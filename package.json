@@ -1,7 +1,7 @@
 {
   "name": "blitz-js",
-  "version": "0.4.21",
-  "description": "⚡ Component-Based Node.js Server Framework",
+  "version": "0.4.22",
+  "description": "⚡ Ultra Modular Nodejs Framework",
   "main": "index.js",
   "repository": {
     "type": "git",
