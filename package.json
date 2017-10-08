@@ -4,6 +4,11 @@
   },
   "dependencies": {
     "autoprefixer": "^7.1.4",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-2": "^6.24.1",
     "blitz-js-api": "^0.4.4",
     "blitz-js-core": "^0.4.12",
     "blitz-js-query": "^0.2.3",
@@ -40,5 +45,8 @@
     "url": "git+https://github.com/nexus-devs/blitz.js-core.git"
   },
   "version": "0.5.0",
-  "devDependencies": {}
+  "devDependencies": {
+    "d3": "^4.11.0",
+    "tween.js": "^16.6.0"
+  }
 }

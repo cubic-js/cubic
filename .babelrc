@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [ "env", {
+      "targets": {
+        "browsers": [">2%", "not ie < 9", "last 4 versions"],
+        "modules": false,
+        "useBuiltIns": true
+      },
+      "uglify": true
+    }],
+    "stage-2"
+  ],
+  "plugins": [
+    "transform-runtime"
+  ],
+  "comments": false
+}

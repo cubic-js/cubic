@@ -32,11 +32,15 @@ module.exports = {
 
   // Loaders which determine how file types are interpreted
   module: {
-    rules: [{
+    rules: [
+      // This is our main loader for vue files
+      {
         test: /\.vue$/,
         loader: "vue-loader",
         options: vueConfig
       },
+      // SCSS compiler with extract-text-webpack-plugin to generate one css file
+      // from everything required for the current page
       {
         test: /\.s?[a|c]ss$/,
         use: isProd ? extractSass.extract({
@@ -46,6 +50,13 @@ module.exports = {
           fallback: "style-loader"
         }) : "sass-loader"
       },
+      // Transpile ES6/7 into older versions for better browser support
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      },
+      // Minify images
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         loaders: [
@@ -75,6 +86,10 @@ module.exports = {
     ]
   },
 
+  performance: {
+    hints: false
+  },
+
   // Change how modules are resolved. (Places to look in, alias, etc)
   resolve: {
     // Resolve dependencies differently when in debug due to source code folder
@@ -94,7 +109,15 @@ module.exports = {
     extractSass,
     new MinifyCssPlugin(),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: true,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
   ] : [
     extractSass
   ]
