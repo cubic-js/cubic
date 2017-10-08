@@ -4,9 +4,10 @@ const fs = require('fs')
 // Plugins
 const webpack = require('webpack')
 const MinifyCssPlugin = require('optimize-css-assets-webpack-plugin')
+const MinifyJsPlugin = require("babel-minify-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
-  filename: "[name].[chunkhash].css",
+  filename: "[name].[contenthash].css",
   allChunks: true,
   disable: !isProd
 })
@@ -27,7 +28,7 @@ module.exports = {
   output: {
     path: blitz.config.view.core.publicPath,
     publicPath: "/",
-    filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js"
+    filename: isProd ? "[name].bundle.[chunkhash].js" : "[name].bundle.js"
   },
 
   // Loaders which determine how file types are interpreted
@@ -87,7 +88,7 @@ module.exports = {
   },
 
   performance: {
-    hints: false
+    hints: isProd ? 'warning' : false
   },
 
   // Change how modules are resolved. (Places to look in, alias, etc)
@@ -109,15 +110,7 @@ module.exports = {
     extractSass,
     new MinifyCssPlugin(),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
+    new MinifyJsPlugin()
   ] : [
     extractSass
   ]

@@ -22,10 +22,22 @@ module.exports = merge(baseConfig, {
     // so that async chunks can be injected right after it.
     // this also enables better caching for your app/vendor code.
     new webpack.optimize.CommonsChunkPlugin({
-      name: "manifest",
-      minChunks: Infinity
+      name: "vendor",
+      minChunks: function (module) {
+        // a module is extracted into the vendor chunk if...
+        return (
+          // it's inside node_modules
+          /node_modules/.test(module.context) &&
+          // and not a CSS file (due to extract-text-webpack-plugin limitation)
+          !/\.css$/.test(module.request)
+        )
+      }
     }),
-
+    // extract webpack runtime & manifest to avoid vendor chunk hash changing
+    // on every build.
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest'
+    }),
     // This plugins generates `vue-ssr-client-manifest.json` in the
     // output directory.
     new VueSSRClientPlugin()

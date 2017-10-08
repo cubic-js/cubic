@@ -7,12 +7,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import routes from "./routes.js"
 
-// View paths will be automatically injected here. They can't be required
-// dynamically at runtime, so we have to do it pre-build. Names and paths are
-// generated from endpoint schema.
-//start-view-injection
-//end-view-injection
-
 Vue.use(Router)
 
 export function createRouter() {
@@ -28,16 +22,8 @@ export function createRouter() {
         }
       }
     },
-    routes: []
+    routes
   }
-
-  // Add auto-generated routes. For components we eval the unique variable name
-  // composed of the view without restricted characters
-  for (let route of routes) {
-    config.routes.push({
-      path: route.path,
-      component: eval(route.component.replace(/\/|\\|\.|\-/g, ""))
-    })
-  }
+  
   return new Router(config)
 }

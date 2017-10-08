@@ -54,6 +54,7 @@ class View {
    * replacement requires a webpack instance on the same process.
    */
   initWebpack() {
+    blitz.log.monitor('Started Webpack build process. This may take a while...', true, '')
     if (blitz.config.local.environment === "production") {
       this.initWebpackProd()
     } else {
@@ -158,27 +159,20 @@ class View {
    * we gotta ensure the file is ready before rendering anything.
    */
   async registerEndpoints() {
-    const entryDir = path.resolve(__dirname, 'vue')
-    const { views, routes } = await this.getViewConstants(entryDir)
-
-    // Inject view variables into router. We can't dynamically require views
-    // at runtime, so we have to do it pre-build this way.
-    const viewFile = path.resolve(entryDir, 'router/index.js')
-    const viewInject = views.join("\n")
-    const viewRegex = /^\/\/start-view-injection[\s\S]*\/\/end-view-injection$/im
-    let viewOutput = await readFile(viewFile, "utf-8")
-    viewOutput = viewOutput.replace(viewRegex, viewInject)
-    await writeFile(viewFile, viewOutput)
-
-    // Save Routes
-    let routeFile = path.resolve(entryDir, 'router/routes.js')
+    const routes = await this.getViewConstants()
     let routeOutput = `/**
-                    * Auto-generated routes from blitz.js view node.
-                    * Components will be eval'd, so full functionality is preserved.
+                    * Auto-generated routes from blitz.js view node. We can't
+                    * get them at runtime, so we need to save them like a config
+                    * file pre-build.
                     */
                     export default ${JSON.stringify(routes, null, 2)}
                     `
-    await writeFile(routeFile, routeOutput.replace(/^                 /gm, ""))
+
+    // Lazy cleanup for stringified functions
+    routeOutput = routeOutput.replace(/"\(\) \=\>/g, '() =>').replace(/`\)"/g, '`)')
+
+    // Save to file
+    await writeFile(path.join(__dirname, 'vue/router/routes.js'), routeOutput)
   }
 
   /**
@@ -190,21 +184,17 @@ class View {
       return this.client.endpointController.endpoints
     })
     let routes = []
-    let views = []
+
     endpoints.forEach(endpoint => {
       let route = {
         path: endpoint.route,
-        component: endpoint.view,
+        component: `() => import(\`${srcDir}/${endpoint.view}\`)`,
         props: true
       }
-      let view = `const ${endpoint.view.replace(/[^a-zA-Z\d_]/g, "")} = () => import("${srcDir}/${endpoint.view}")`
       routes.push(route)
-      views.find(el => el === view) ? null : views.push(view)
     })
-    views.unshift("//start-view-injection")
-    views.push("//end-view-injection")
 
-    return { views, routes }
+    return routes
   }
 }
 
