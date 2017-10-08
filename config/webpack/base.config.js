@@ -66,7 +66,8 @@ module.exports = {
               pngquant: {
                 quality: 50 - 70,
                 speed: 3
-              }
+              },
+              svgo: {}
             }
           }
         ]
