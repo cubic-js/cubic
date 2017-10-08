@@ -4,7 +4,7 @@
  * Dependencies
  */
 const local = require('./config/local.js')
-const ipc = require('blitz-js-ipc')
+const worker = require('blitz-js-loader/lib/worker')
 const Client = require('./controllers/api.js')
 
 /**
@@ -18,9 +18,9 @@ class Core {
   constructor (options) {
     // Process forked
     if (process.env.isWorker) {
-      this.setup = ipc.setGlobal()
+      this.setup = worker.setGlobal()
       this.setup.then(() => this.init())
-      ipc.expose(this)
+      worker.expose(this)
     }
 
     // Process not forked
