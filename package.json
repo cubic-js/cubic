@@ -9,7 +9,6 @@
     "babel-minify-webpack-plugin": "^0.2.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-2": "^6.24.1",
     "blitz-js-api": "^0.4.4",
     "blitz-js-core": "^0.4.12",
     "blitz-js-query": "^0.2.3",
