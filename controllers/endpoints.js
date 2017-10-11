@@ -155,7 +155,8 @@ class EndpointController {
         body: {
           error: 'Unauthorized',
           reason: `Expected ${endpoint.scope}, got ${req.user.scp}.`
-        }
+        },
+        method: 'send'
       }
     }
     if (req.method.toLowerCase() !== endpoint.method.toLowerCase()) {
@@ -164,7 +165,8 @@ class EndpointController {
         body: {
           error: 'Method not allowed.',
           reason: `Expected ${endpoint.method}, got ${req.method}.`
-        }
+        },
+        method: 'send'
       }
     }
   }
