@@ -10,6 +10,10 @@ Blitz.js is a Node.js framework which allows you to build all application logic 
 
 <br>
 
+**Note:** Blitz.js, as is, is solely focused on supporting our needs [@nexus-stats](https://github.com/nexus-devs/nexus-stats). However, we believe that guiding the design of this framework with a real project, solving real problems will ultimately result in a better outcome than trying to generically fit everyone. 
+
+<br>
+
 ## Features
 - Strong separation of concerns. Build your app in components, then cluster and deploy these components how it fits your application best.
 
