@@ -1,7 +1,7 @@
 {
   "name": "blitz-js",
-  "version": "0.4.21",
-  "description": "⚡ Component-Based Node.js Server Framework",
+  "version": "0.5.4",
+  "description": "⚡ Ultra Modular Nodejs Framework",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "blitz-js-auth": "^0.5.1",
     "blitz-js-core": "^0.5.1",
     "blitz-js-loader": "^0.5.0",
-    "blitz-js-view": "^0.5.4",
+    "blitz-js-view": "^0.5.5",
     "deep-extend": "^0.5.0"
   }
 }
