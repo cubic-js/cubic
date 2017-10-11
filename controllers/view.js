@@ -6,13 +6,16 @@ const fs = require("fs")
 const readFile = util.promisify(fs.readFile)
 const path = require("path")
 
-/** Load API node connection which will be used for server-side data-fetching
+/**
+ * Load API node connection which will be used for server-side data-fetching
  * Without this, we'd have to create a new instance on every request
  */
 const Blitz = require('blitz-js-query')
 const api = new Blitz({
-  user_key: blitz.config[blitz.id].user_key,
-  user_secret: blitz.config[blitz.id].user_secret
+  api_url: blitz.config.view.client.api,
+  auth_url: blitz.config.view.client.auth,
+  user_key: blitz.config.view.client.user_key || blitz.config[blitz.id].user_key,
+  user_secret: blitz.config.view.client.user_secret || blitz.config[blitz.id].user_secret
 })
 
 /**

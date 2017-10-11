@@ -35,6 +35,16 @@ module.exports = {
   },
 
   /**
+   * Web client config
+   */
+  client: {
+    api: 'http://localhost:3010',
+    auth: 'http://localhost:3030',
+    user_key: '',
+    user_secret: ''
+  },
+
+  /**
    * Webpack config
    */
   webpack: {
