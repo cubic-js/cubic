@@ -7,8 +7,7 @@ module.exports = (extractSass) => {
     loaders: isProd ? {
       scss: extractSass.extract({
         use: "!css-loader!sass-loader?"
-      }),
-      js: 'babel-loader'
+      })
     } : {},
     postcss: [
       require('autoprefixer')({

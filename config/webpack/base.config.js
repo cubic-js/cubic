@@ -109,7 +109,6 @@ module.exports = {
     new webpack.EnvironmentPlugin('NODE_ENV'),
     extractSass,
     new MinifyCssPlugin(),
-    new webpack.optimize.DedupePlugin(),
     new MinifyJsPlugin()
   ] : [
     extractSass
