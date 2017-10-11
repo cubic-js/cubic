@@ -3,18 +3,17 @@ const fs = require('fs')
 
 // Plugins
 const webpack = require('webpack')
-const envPlugin = new webpack.EnvironmentPlugin('NODE_ENV')
-const dedupePlugin = new webpack.optimize.DedupePlugin()
-const uglifyPlugin = new webpack.optimize.UglifyJsPlugin()
+const MinifyCssPlugin = require('optimize-css-assets-webpack-plugin')
+const MinifyJsPlugin = require("babel-minify-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
-  filename: "[name].[chunkhash].css",
+  filename: "[name].[contenthash].css",
   allChunks: true,
   disable: !isProd
 })
 const vueConfig = require('./vue.config.js')(extractSass)
 
-// Dependencies need to be handled differently in debug (see alias)
+// Dependencies need to be handled differently in debug (see webpack resolve)
 let isDebug = false
 try {
   fs.statSync(__dirname + '/../../../../node_modules')
@@ -29,16 +28,20 @@ module.exports = {
   output: {
     path: blitz.config.view.core.publicPath,
     publicPath: "/",
-    filename: isProd ? "[name].bundle.[hash].js" : "[name].bundle.js"
+    filename: isProd ? "[name].bundle.[chunkhash].js" : "[name].bundle.js"
   },
 
   // Loaders which determine how file types are interpreted
   module: {
-    rules: [{
+    rules: [
+      // This is our main loader for vue files
+      {
         test: /\.vue$/,
         loader: "vue-loader",
         options: vueConfig
       },
+      // SCSS compiler with extract-text-webpack-plugin to generate one css file
+      // from everything required for the current page
       {
         test: /\.s?[a|c]ss$/,
         use: isProd ? extractSass.extract({
@@ -48,6 +51,13 @@ module.exports = {
           fallback: "style-loader"
         }) : "sass-loader"
       },
+      // Transpile ES6/7 into older versions for better browser support
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      },
+      // Minify images
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         loaders: [
@@ -68,12 +78,17 @@ module.exports = {
               pngquant: {
                 quality: 50 - 70,
                 speed: 3
-              }
+              },
+              svgo: {}
             }
           }
         ]
       }
     ]
+  },
+
+  performance: {
+    hints: isProd ? 'warning' : false
   },
 
   // Change how modules are resolved. (Places to look in, alias, etc)
@@ -91,10 +106,10 @@ module.exports = {
 
   // Plugins for post-bundle operations
   plugins: isProd ? [
-    envPlugin,
+    new webpack.EnvironmentPlugin('NODE_ENV'),
     extractSass,
-    dedupePlugin,
-    uglifyPlugin
+    new MinifyCssPlugin(),
+    new MinifyJsPlugin()
   ] : [
     extractSass
   ]

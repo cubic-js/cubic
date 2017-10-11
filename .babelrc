@@ -1,0 +1,15 @@
+{
+  "presets": [
+    [ "env", {
+      "targets": {
+        "browsers": [">5%"],
+        "modules": false
+      }
+    }]
+  ],
+  "plugins": [
+    "transform-runtime",
+    "syntax-dynamic-import"
+  ],
+  "comments": false
+}
