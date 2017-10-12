@@ -40,8 +40,8 @@ module.exports = {
   client: {
     api: 'http://localhost:3010',
     auth: 'http://localhost:3030',
-    user_key: '',
-    user_secret: ''
+    user_key: null,
+    user_secret: null
   },
 
   /**

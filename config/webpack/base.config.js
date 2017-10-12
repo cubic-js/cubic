@@ -105,12 +105,16 @@ module.exports = {
   },
 
   // Plugins for post-bundle operations
-  plugins: isProd ? [
+  plugins: (isProd ? [
     new webpack.EnvironmentPlugin('NODE_ENV'),
-    extractSass,
     new MinifyCssPlugin(),
     new MinifyJsPlugin()
-  ] : [
-    extractSass
-  ]
+  ] : [])
+  .concat([
+    extractSass,
+    new webpack.DefinePlugin({
+      '$api_url': JSON.stringify(blitz.config.view.client.api),
+      '$auth_url': JSON.stringify(blitz.config.view.client.auth)
+    })
+  ])
 }
