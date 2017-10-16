@@ -12,7 +12,7 @@
     "babel-preset-env": "^1.6.0",
     "blitz-js-api": "^0.5.1",
     "blitz-js-core": "^0.5.1",
-    "blitz-js-query": "^0.2.3",
+    "blitz-js-query": "^0.2.7",
     "blitz-js-query-browser": "^0.2.3",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.1",
@@ -22,18 +22,18 @@
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "sass-loader": "^6.0.6",
     "uglifyjs-webpack-plugin": "^1.0.0-beta.3",
-    "vue": "^2.4.4",
-    "vue-loader": "^13.2.1",
-    "vue-router": "^2.7.0",
-    "vue-server-renderer": "^2.4.4",
+    "vue": "^2.5.2",
+    "vue-loader": "^13.3.0",
+    "vue-router": "^3.0.1",
+    "vue-server-renderer": "^2.5.2",
     "vue-style-loader": "^3.0.3",
-    "vue-template-compiler": "^2.4.4",
+    "vue-template-compiler": "^2.5.2",
     "vue-touch-hotfix": "^2.0.0-beta.4",
-    "vuex": "^2.4.1",
-    "vuex-router-sync": "^4.3.2",
-    "webpack": "^3.6.0",
+    "vuex": "^3.0.0",
+    "vuex-router-sync": "^5.0.0",
+    "webpack": "^3.7.1",
     "webpack-dev-middleware": "^1.12.0",
-    "webpack-hot-middleware": "^2.19.1",
+    "webpack-hot-middleware": "^2.20.0",
     "webpack-merge": "^4.1.0",
     "webpack-node-externals": "^1.6.0"
   },
@@ -46,10 +46,5 @@
     "type": "git",
     "url": "git+https://github.com/nexus-devs/blitz.js-core.git"
   },
-  "version": "0.5.7",
-  "devDependencies": {
-    "d3": "^4.11.0",
-    "deep-extend": "^0.5.0",
-    "tween.js": "^16.6.0"
-  }
+  "version": "0.5.7"
 }
