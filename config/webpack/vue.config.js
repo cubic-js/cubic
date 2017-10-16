@@ -9,10 +9,10 @@ module.exports = (extractSass) => {
         use: "!css-loader!sass-loader?"
       })
     } : {},
-    postcss: [
-      require('autoprefixer')({
+    postLoaders: {
+      css: require('autoprefixer')({
         browsers: ['last 3 versions']
       })
-    ]
+    }
   }
 }

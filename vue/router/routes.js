@@ -1,57 +1,58 @@
 /**
-   * Auto-generated routes from blitz.js view node.
-   * Components will be eval'd, so full functionality is preserved.
-   */
-   export default [
+                    * Auto-generated routes from blitz.js view node. We can't
+                    * get them at runtime, so we need to save them like a config
+                    * file pre-build.
+                    */
+                    export default [
   {
     "path": "/branding",
-    "component": "pages/branding.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/branding.vue`),
     "props": true
   },
   {
     "path": "/company",
-    "component": "pages/company.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/company.vue`),
     "props": true
   },
   {
     "path": "/contact",
-    "component": "pages/contact.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/contact.vue`),
     "props": true
   },
   {
     "path": "/contribute",
-    "component": "pages/contribute.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/contribute.vue`),
     "props": true
   },
   {
     "path": "/imprint",
-    "component": "pages/imprint.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/imprint.vue`),
     "props": true
   },
   {
     "path": "/",
-    "component": "/app.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view//app.vue`),
     "props": true
   },
   {
     "path": "/open-source",
-    "component": "pages/open-source.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/open-source.vue`),
     "props": true
   },
   {
     "path": "/privacy",
-    "component": "pages/privacy.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/privacy.vue`),
     "props": true
   },
   {
     "path": "/warframe",
-    "component": "pages/warframe/index.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/warframe/index.vue`),
     "props": true
   },
   {
     "path": "/warframe/items/:item",
-    "component": "pages/warframe/items/index.vue",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/warframe/items/index.vue`),
     "props": true
   }
 ]
-   
+                    

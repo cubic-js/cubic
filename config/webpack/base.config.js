@@ -3,8 +3,6 @@ const fs = require('fs')
 
 // Plugins
 const webpack = require('webpack')
-const MinifyCssPlugin = require('optimize-css-assets-webpack-plugin')
-const MinifyJsPlugin = require("babel-minify-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
   filename: "[name].[contenthash].css",
@@ -87,10 +85,6 @@ module.exports = {
     ]
   },
 
-  performance: {
-    hints: isProd ? 'warning' : false
-  },
-
   // Change how modules are resolved. (Places to look in, alias, etc)
   resolve: {
     // Resolve dependencies differently when in debug due to source code folder
@@ -107,8 +101,6 @@ module.exports = {
   // Plugins for post-bundle operations
   plugins: (isProd ? [
     new webpack.EnvironmentPlugin('NODE_ENV'),
-    new MinifyCssPlugin(),
-    new MinifyJsPlugin()
   ] : [])
   .concat([
     extractSass,
