@@ -1,4 +1,4 @@
-const Connection = require("./connection.js")
+import Connection from './connection.js'
 
 class Blitz {
 

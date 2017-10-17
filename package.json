@@ -1,6 +1,6 @@
 {
   "name": "blitz-js-query-browser",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Blitz-js API connection module optimized for usage in browsers",
   "main": "./lib/index.js",
   "repository": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babelrc-rollup": "^3.0.0",
     "rollup": "^0.50.0",

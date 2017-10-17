@@ -2,13 +2,15 @@
   "presets": [
     [ "env", {
       "targets": {
-        "modules": false,
         "browsers": [">2%", "last 5 versions", "not ie <= 8"]
       }
     }]
   ],
   "plugins": [
+    "transform-runtime",
     "external-helpers"
   ],
-  "comments": false
+  "runtimeHelpers": true,
+  "comments": false,
+  "exclude": "node_modules/**"
 }
