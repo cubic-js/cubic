@@ -53,7 +53,9 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: blitz.config.view.core.sourcePath
+        include: [
+          blitz.config.view.core.sourcePath
+        ]
       },
       // Minify images
       {
