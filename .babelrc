@@ -1,0 +1,14 @@
+{
+  "presets": [
+    [ "env", {
+      "targets": {
+        "modules": false,
+        "browsers": [">2%", "last 5 versions", "not ie <= 8"]
+      }
+    }]
+  ],
+  "plugins": [
+    "external-helpers"
+  ],
+  "comments": false
+}

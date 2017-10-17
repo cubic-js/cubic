@@ -81,7 +81,7 @@ class Connection {
    */
   async request(verb, query) {
     let delay = this.options.ignore_limiter ? 0 : 20
-    let res = await this.queue.delay(() => this.req(verb, query), 'push', delay)
+    let res = await this.queue.delay(() => this.req(verb, query), delay)
     return this.errCheck(res, verb, query)
   }
 
@@ -97,14 +97,14 @@ class Connection {
    */
   async retry (res, verb, query) {
     let delay = parseInt(res.body.reason.replace(/[^0-9]+/g, '')) || 500
-    let reres = await this.queue.delay(() => this.req(verb, query), 'unshift', delay)
+    let reres = await this.queue.delay(() => this.req(verb, query), delay, 30000, 'unshift')
     return this.errCheck(reres, verb, query)
   }
 
   /**
    * Handles Error Responses
    */
-  async errCheck(res, verb, query) {
+  async errCheck(res = {}, verb, query) {
     // Response not 1xx, 2xx, 3xx?
     if (res.body && parseInt(res.statusCode.toString()[0]) > 3) {
       // If expired: Get new token w/ refresh token & retry method

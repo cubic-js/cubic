@@ -1,4 +1,4 @@
-const Connection = require("./lib/connection.js")
+const Connection = require("./connection.js")
 
 class Blitz {
 
