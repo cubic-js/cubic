@@ -53,34 +53,32 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        include: blitz.config.view.core.sourcePath
       },
       // Minify images
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loaders: [
-          "file-loader?hash=sha512&digest=hex&name=[hash].[ext]",
-          {
-            loader: 'image-webpack-loader',
-            query: {
-              mozjpeg: {
-                progressive: true,
-                quality: 100
-              },
-              gifsicle: {
-                interlaced: false
-              },
-              optipng: {
-                optimizationLevel: 4
-              },
-              pngquant: {
-                quality: 50 - 70,
-                speed: 3
-              },
-              svgo: {}
-            }
+        loader: 'image-webpack-loader',
+        options: {
+          name: '[name].[hash].[ext]',
+          query: {
+            mozjpeg: {
+              progressive: true,
+              quality: 100
+            },
+            gifsicle: {
+              interlaced: false
+            },
+            optipng: {
+              optimizationLevel: 4
+            },
+            pngquant: {
+              quality: 50 - 70,
+              speed: 3
+            },
+            svgo: {}
           }
-        ]
+        }
       }
     ]
   },
