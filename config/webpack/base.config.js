@@ -55,7 +55,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [
-          blitz.config.view.core.sourcePath,
+          path.resolve(blitz.config.view.core.sourcePath),
           path.resolve(__dirname, '../../vue')
         ]
       },
