@@ -1,5 +1,6 @@
 const isProd = blitz.config.local.environment !== "development"
 const fs = require('fs')
+const path = require('path')
 
 // Plugins
 const webpack = require('webpack')
@@ -54,7 +55,8 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [
-          blitz.config.view.core.sourcePath
+          blitz.config.view.core.sourcePath,
+          path.resolve(__dirname, '../../vue')
         ]
       },
       // Minify images
