@@ -46,9 +46,20 @@ class Blitz {
   /**
    * Subscribe to certain endpoints
    */
-  async subscribe(endpoint) {
+  async subscribe (endpoint, fn) {
     await this.connecting
-    this.emit("subscribe", endpoint)
+    this.emit('subscribe', endpoint)
+
+    // Function passed? Listen to subscribed endpoint directly.
+    this.on(endpoint, fn)
+  }
+
+  /**
+   * Unsubscribe from endpoints again
+   */
+  async unsubscribe (endpoint) {
+    await this.connecting
+    this.connection.client.off(endpoint)
   }
 
 
