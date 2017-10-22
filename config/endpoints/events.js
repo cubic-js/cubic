@@ -20,6 +20,11 @@ module.exports = (sockets, cache) => {
       socket.join(endpoint)
       socket.emit('subscribed', endpoint)
     })
+    socket.on('unsubscribe', endpoint => {
+      blitz.log.verbose('Socket.io | ' + socket.user.uid + ' left ' + endpoint)
+      socket.leave(endpoint)
+      socket.emit('unsubscribed', endpoint)
+    })
 
     socket.on('disconnect', () => {
       blitz.log.verbose('Socket.io | ' + socket.user.uid + ' disconnected from ' + socket.nsp.name)
