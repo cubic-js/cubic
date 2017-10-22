@@ -59,6 +59,7 @@ class Blitz {
    */
   async unsubscribe (endpoint) {
     await this.connecting
+    this.emit('unsubscribe', endpoint)
     this.connection.client.off(endpoint)
   }
 
