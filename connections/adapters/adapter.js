@@ -32,7 +32,12 @@ class Adapter {
     let response = await this.request.getResponse(req)
     let url = req.url.split('/')
 
-    if (url[url.length - 1].split('.')[1] && response.statusCode <= 400) {
+    // Clarification: the first condition here checks if the last URL fragment
+    // contains a dot BEFORE the RESTful query (starting with ?). This means
+    // that the resource is a raw file, so we should send it as such.
+    // Example: /some/resource/to/image.png?param=0.5
+    //                                 ^ detected  ^ not detected
+    if (url[url.length - 1].split('?')[0].split('.')[1] && response.statusCode <= 400) {
       let data = new Buffer(response.body || '', 'base64')
       res.header('content-type', mime.lookup(req.url))
       res.end(data)
