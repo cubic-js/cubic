@@ -55,7 +55,7 @@ class CacheController {
     let url = req.url.split('/')
 
     // File extension in URL? Send raw file as base64 buffer.
-    if (url[url.length - 1].split('.')[1]) {
+    if (url[url.length - 1].split('?')[0].split('.')[1]) {
       let bufferData = new Buffer(cached.data, 'base64')
       res.header('content-type', mime.lookup(req.url))
       res.end(bufferData)
