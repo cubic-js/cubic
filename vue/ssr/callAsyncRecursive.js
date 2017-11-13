@@ -4,11 +4,7 @@
 const callAsyncRecursive = async (parent, store, router) => {
   // Traverse components if available
   if (parent.components) {
-    await callAsyncRecursive(parent.components, store, router)
-  }
-  // Register dynamic store modules in component first
-  if (parent.beforeCreate) {
-    parent.beforeCreate[0].bind({ $store: store })()
+    await Promise.all(Object.keys(parent.components).map(c => callAsyncRecursive(parent.components[c], store, router)))
   }
   // Main parent or traversed child has asyncData -> call
   if (parent.asyncData) {

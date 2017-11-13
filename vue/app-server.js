@@ -1,5 +1,7 @@
 import { createApp } from './app.js'
-import { callAsyncRecursive } from './util/callAsyncRecursive.js'
+import { callAsyncRecursive } from './ssr/callAsyncRecursive.js'
+import { registerStoreModules } from './ssr/registerStoreModules.js'
+import root from 'src/app.vue'
 
 /**
  * Generate App with pre-fetched data in store state
@@ -14,15 +16,26 @@ export default context => {
 
     // Wait until router has resolved possible async hooks
     router.onReady(async () => {
-      const matchedComponents = router.getMatchedComponents()
+      const routerView = router.getMatchedComponents()
+
+      // Register all dynamic store modules in components first since asyncData
+      // functions will likely depend on them. This also avoids the necessity to
+      // load dependencies first if they're already present in the template.
+
+      // router-view doesn't contain root template, so we call it additionally
+      registerStoreModules(root, store)
+      routerView.map(component => registerStoreModules(component, store))
+
 
       // Call asyncData hooks on components matched by the route recursively.
       // A asyncData hook dispatches a store action and returns a Promise,
       // which is resolved when the action is complete and store state has been
       // updated.
-      await Promise.all(matchedComponents.map(loaded => {
-        return callAsyncRecursive(loaded, store, router)
-      }))
+
+      // router-view doesn't contain root template, so we call it additionally
+      await callAsyncRecursive(root, store, router)
+      await Promise.all(routerView.map(component => callAsyncRecursive(component, store, router)))
+
       // After all asyncData hooks are resolved, our store is now
       // filled with the state needed to render the app.
       // Expose the state on the render context, and let the request handler
