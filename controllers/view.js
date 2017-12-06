@@ -14,8 +14,8 @@ const Blitz = require('blitz-js-query')
 const api = new Blitz({
   api_url: blitz.config.view.client.api,
   auth_url: blitz.config.view.client.auth,
-  user_key: blitz.config.view.client.user_key || blitz.config[blitz.id].user_key,
-  user_secret: blitz.config.view.client.user_secret || blitz.config[blitz.id].user_secret
+  user_key: blitz.config.view.client.user_key || blitz.config[blitz.id].userKey,
+  user_secret: blitz.config.view.client.user_secret || blitz.config[blitz.id].userSecret
 })
 
 /**

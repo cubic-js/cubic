@@ -107,8 +107,10 @@ module.exports = {
   .concat([
     extractSass,
     new webpack.DefinePlugin({
-      '$api_url': JSON.stringify(blitz.config.view.client.api),
-      '$auth_url': JSON.stringify(blitz.config.view.client.auth)
+      '$apiUrl': JSON.stringify(blitz.config.view.client.apiUrl),
+      '$authUrl': JSON.stringify(blitz.config.view.client.authUrl),
+      '$userKey': JSON.stringify(blitz.config.view.client.userKey),
+      '$userSecret': JSON.stringify(blitz.config.view.client.userSecret)
     })
   ])
 }

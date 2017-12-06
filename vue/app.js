@@ -23,8 +23,8 @@ export function createApp(context) {
   // We're on the client -> load API connection
   else {
     Vue.prototype.$blitz = new Blitz({
-      api_url: $api_url,
-      auth_url: $auth_url
+      api_url: $apiUrl,
+      auth_url: $authUrl
     })
   }
   const router = createRouter()
