@@ -18,7 +18,7 @@ class EndpointController {
    * Initialize Connections used by individual endpoints
    */
   constructor() {
-    this.db = mongodb.connect(blitz.config[blitz.id].mongoURL)
+    this.db = mongodb.connect(blitz.config[blitz.id].mongoUrl)
     this.limiter = new Limiter()
     this.generateEndpointSchema()
   }
@@ -46,7 +46,7 @@ class EndpointController {
       scope: '',
       key: req.url,
       value: raw,
-      exp: blitz.config[blitz.id].cacheDuration
+      exp: 60 // 1 minute
     })
     return {
       statusCode: 200,

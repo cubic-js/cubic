@@ -12,9 +12,14 @@ module.exports = {
   /**
    * Target Node URLs
    */
-  apiURL: 'http://localhost:3010',
-  authURL: 'http://localhost:3030',
+  apiUrl: 'http://localhost:3010',
+  authUrl: 'http://localhost:3030',
+  userKey: undefined,
+  userSecret: undefined,
 
+  /**
+   * Rate limit global settings (when not overriden in endpoint)
+   */
   limit: {
     disable: false,
     interval: 5000,
@@ -24,9 +29,8 @@ module.exports = {
   /**
    * Databases
    */
-  mongoPort: 27017,
-  mongoURL: 'mongodb://localhost/blitz-js-core',
-  redisPort: 6379,
+  mongoUrl: 'mongodb://localhost/blitz-js-core',
+  redisUrl: 'redis://localhost'
 
   /**
    * Cluster config

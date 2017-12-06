@@ -17,15 +17,15 @@ class Client {
     let options = {
 
       // Connection Settings
-      api_url: blitz.config[blitz.id].apiURL,
-      auth_url: blitz.config[blitz.id].authURL,
+      api_url: blitz.config[blitz.id].apiUrl,
+      auth_url: blitz.config[blitz.id].authUrl,
       use_socket: true,
       namespace: '/root',
       ignore_limiter: true,
 
       // Authentication Settings
-      user_key: blitz.config[blitz.id].user_key,
-      user_secret: blitz.config[blitz.id].user_secret
+      user_key: blitz.config[blitz.id].userKey,
+      user_secret: blitz.config[blitz.id].userSecret
     }
 
     // Connect to api-node
