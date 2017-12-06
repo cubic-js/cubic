@@ -7,8 +7,7 @@ module.exports = {
     /**
      * Databases
      */
-    cacheDB: 3,
-    mongoURL: 'mongodb://localhost/blitz-js-auth',
+    cacheDb: 3,
 
     /**
      * Blitz information
@@ -28,14 +27,13 @@ module.exports = {
     /**
      * Databases
      */
-    mongoPort: 27017,
-    mongoURL: 'mongodb://localhost/blitz-js-auth',
+    mongoUrl: 'mongodb://localhost/blitz-js-auth',
 
     /**
      * Target Node URLs
      */
-    apiURL: 'http://localhost:3030',
-    authURL: 'http://localhost:3030',
+    apiUrl: 'http://localhost:3030',
+    authUrl: 'http://localhost:3030',
 
     /**
      * Logic-specific
