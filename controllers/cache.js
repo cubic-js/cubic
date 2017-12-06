@@ -6,10 +6,7 @@ class CacheController {
    * Connect to db 1 which is used for caching
    */
   constructor () {
-    this.client = redis.createClient({
-      host: blitz.config[blitz.id].redisHost,
-      port: blitz.config[blitz.id].redisPort
-    })
+    this.client = redis.createClient(blitz.config[blitz.id].redisUrl)
     this.client.select(blitz.config[blitz.id].cacheDb)
   }
 
