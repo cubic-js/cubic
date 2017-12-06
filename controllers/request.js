@@ -1,7 +1,7 @@
 const CircularJSON = require('circular-json')
 
 /**
- * Checks request against endpoints given by dbs node
+ * Checks request against endpoints given by core node
  */
 class RequestController {
   /**

@@ -22,14 +22,13 @@ module.exports = {
   /**
    * Databases
    */
-  mongoPort: 27017,
-  mongoURL: 'mongodb://localhost/blitz-js-api',
+  redisHost: "127.0.0.1",
   redisPort: 6379,
 
   /**
    * Cache settings
    */
-  cacheDB: 1,
+  cacheDb: 1,
   cacheExp: 10,
 
   /**
