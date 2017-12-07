@@ -30,7 +30,7 @@ module.exports = {
    * Databases
    */
   mongoUrl: 'mongodb://localhost/blitz-js-core',
-  redisUrl: 'redis://localhost'
+  redisUrl: 'redis://localhost',
 
   /**
    * Cluster config
