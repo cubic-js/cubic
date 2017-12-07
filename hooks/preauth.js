@@ -41,7 +41,7 @@ class PreAuth {
    * Set mongo indices to optimize queries for user_key and refresh tokens
    */
   async verifyUserIndices () {
-    let db = await mongodb.connect(blitz.config.auth_core.mongoURL)
+    let db = await mongodb.connect(blitz.config.auth_core.mongoUrl)
     blitz.log.verbose('Auth      | verifying user indices')
     mongoVerifySingleIndex(db, 'users', {
       'refresh_token': 1
@@ -61,7 +61,7 @@ class PreAuth {
       const bcrypt = require('bcrypt-as-promised')
       const randtoken = require('rand-token')
       const mongodb = require('mongodb').MongoClient
-      const db = await mongodb.connect(blitz.config.auth.core.mongoURL)
+      const db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
 
       // Core-node attempts to connect
       if (req.body && req.body.user_key) {

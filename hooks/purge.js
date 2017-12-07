@@ -6,7 +6,7 @@ const mongodb = require('mongodb').MongoClient
 class Purge {
   async purgeInactiveUsers () {
     if (blitz.config.local.environment === 'production' && blitz.config[blitz.id].purgeMaxLimit > 0) {
-      let db = await mongodb.connect(blitz.config[blitz.id].mongoURL)
+      let db = await mongodb.connect(blitz.config[blitz.id].mongoUrl)
       setInterval(() => {
         let limit = new Date() - blitz.config[blitz.id].purgeMaxLimit
         db.collection('users').remove({
