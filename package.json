@@ -11,7 +11,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "blitz-js-api": "^0.5.7",
-    "blitz-js-core": "^0.5.4",
+    "blitz-js-core": "^0.5.5",
     "blitz-js-query": "^0.2.17",
     "blitz-js-query-browser": "^0.2.7",
     "css-loader": "^0.28.7",
