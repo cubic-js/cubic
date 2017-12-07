@@ -15,7 +15,7 @@
     "bcrypt": "^1.0.3",
     "bcrypt-as-promised": "^1.1.0",
     "blitz-js-api": "^0.5.7",
-    "blitz-js-core": "^0.5.4",
+    "blitz-js-core": "^0.5.5",
     "rand-token": "^0.3.0"
   },
   "devDependencies": {
