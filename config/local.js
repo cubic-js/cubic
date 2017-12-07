@@ -22,7 +22,7 @@ module.exports = {
   /**
    * Databases
    */
-  redisUrl: 'redis://localhost'
+  redisUrl: 'redis://localhost',
 
   /**
    * Cache settings
