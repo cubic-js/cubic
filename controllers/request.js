@@ -12,6 +12,37 @@ class RequestController {
   }
 
   /**
+   * Send request to responding node
+   */
+  send (req) {
+    return new Promise(async resolve => {
+      let nodes = await this.check(req)
+      let sockets = nodes.sockets
+
+      // At least one socket replied
+      if (sockets) {
+        let socket = sockets[0]
+
+        // Generate unique callback for emit & pass to responding node
+        req.id = process.hrtime().join('').toString()
+        socket.emit('req', CircularJSON.stringify(req))
+        blitz.log.silly('API       | Request sent')
+
+        // Listen to socket for response.
+        socket.once(req.id, data => {
+          blitz.log.silly('API       | Request successful - Sending data to client')
+          resolve(data)
+        })
+      }
+
+      // No sockets available
+      else {
+        resolve(nodes.error)
+      }
+    })
+  }
+
+  /**
    * Check if resource nodes are busy
    */
   check (req) {
@@ -45,7 +76,7 @@ class RequestController {
             if (sockets.length > 0) {
               resolve({
                 available: true,
-                sockets: sockets
+                sockets
               })
             } else {
               resolve({
@@ -72,37 +103,6 @@ class RequestController {
           }
         })
       }, blitz.config[blitz.id].requestTimeout)
-    })
-  }
-
-  /**
-   * Send request to responding node
-   */
-  send (req) {
-    return new Promise(async resolve => {
-      let nodes = await this.check(req)
-      let sockets = nodes.sockets
-
-      // At least one socket replied
-      if (sockets) {
-        let socket = sockets[0]
-
-        // Generate unique callback for emit & pass to responding node
-        req.id = process.hrtime().join('').toString()
-        socket.emit('req', CircularJSON.stringify(req))
-        blitz.log.silly('API       | Request sent')
-
-        // Listen to socket for response.
-        socket.once(req.id, data => {
-          blitz.log.silly('API       | Request successful - Sending data to client')
-          resolve(data)
-        })
-      }
-
-      // No sockets available
-      else {
-        resolve(nodes.error)
-      }
     })
   }
 }
