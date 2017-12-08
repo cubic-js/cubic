@@ -16,7 +16,7 @@
     "blitz-js-loader": "^0.5.0",
     "blitz-js-query": "^0.2.12",
     "lodash": "^4.17.4",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.0.0-rc0",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.10"
   }
