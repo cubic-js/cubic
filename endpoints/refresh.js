@@ -75,7 +75,7 @@ class Refresh extends Endpoint {
     })
 
     if (user) {
-      let arr_max = blitz.config[blitz.id].maxLogsPerUser
+      let arr_max = blitz.config.auth.maxLogsPerUser
       let arr_new = []
       let arr_exs = user.last_ip
 
@@ -108,12 +108,15 @@ class Refresh extends Endpoint {
    * Signs new Access Token
    */
   getAccessToken(data) {
+    let key = blitz.config.auth.certPrivate
+    let passphrase = blitz.config.auth.certPass
     let options = {
-      expiresIn: blitz.config[blitz.id].exp,
-      algorithm: blitz.config[blitz.id].alg,
-      issuer: blitz.config[blitz.id].iss
+      expiresIn: blitz.config.auth.exp,
+      algorithm: blitz.config.auth.alg,
+      issuer: blitz.config.auth.iss
     }
-    return jwt.sign(data, blitz.config[blitz.id].certPrivate, options)
+
+    return jwt.sign(data, passphrase ? { key, passphrase } : key, options)
   }
 
   /**

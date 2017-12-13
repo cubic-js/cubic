@@ -18,13 +18,6 @@ module.exports = {
 
   core: {
     /**
-     * token config
-     */
-    iss: 'http://localhost:3030',
-    exp: '1h',
-    alg: 'RS256',
-
-    /**
      * Databases
      */
     mongoUrl: 'mongodb://localhost/blitz-js-auth',
@@ -39,16 +32,23 @@ module.exports = {
      * Logic-specific
      */
     endpointPath: __dirname + '/../endpoints/',
-    maxLogsPerUser: 50, // Max number of ip logs for authentication
     id: 'auth_core',
     cores: Math.ceil(os.cpus().length / 2)
   },
+
+  /**
+   * Token config
+   */
+  iss: 'http://localhost:3030',
+  exp: '1h',
+  alg: 'RS256',
 
   /**
    * User maintenance information
    */
   purgeInterval: 3600000, // Interval to check for inactive users (in ms)
   purgeMaxLimit: 2592000000, // Age at which user is considered inactive (in ms)
+  maxLogsPerUser: 50, // Max number of ip logs for authentication
   // Production only. Set to 0 to disable pruge.
 
   /**

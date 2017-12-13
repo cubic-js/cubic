@@ -41,7 +41,7 @@ class PreAuth {
    * Set mongo indices to optimize queries for user_key and refresh tokens
    */
   async verifyUserIndices () {
-    let db = await mongodb.connect(blitz.config.auth_core.mongoUrl)
+    let db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
     blitz.log.verbose('Auth      | verifying user indices')
     mongoVerifySingleIndex(db, 'users', {
       'refresh_token': 1
@@ -76,12 +76,14 @@ class PreAuth {
           } catch(err) {
             return next()
           }
+          let key = blitz.config.auth.certPrivate
+          let passphrase = blitz.config.auth.certPass
           let refresh_token = user.refresh_token
           let access_token = jwt.sign({
             scp: user.scope,
             uid: user.user_id
-          }, blitz.config.auth_api.certPrivate, {
-            algorithm: blitz.config.auth.core.alg
+          }, passphrase ? { key, passphrase } : key, {
+            algorithm: blitz.config.auth.alg
           })
 
           // Send back tokens

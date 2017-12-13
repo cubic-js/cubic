@@ -5,10 +5,10 @@ const mongodb = require('mongodb').MongoClient
  */
 class Purge {
   async purgeInactiveUsers () {
-    if (blitz.config.local.environment === 'production' && blitz.config[blitz.id].purgeMaxLimit > 0) {
-      let db = await mongodb.connect(blitz.config[blitz.id].mongoUrl)
+    if (blitz.config.local.environment === 'production' && blitz.config.auth.purgeMaxLimit > 0) {
+      let db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
       setInterval(() => {
-        let limit = new Date() - blitz.config[blitz.id].purgeMaxLimit
+        let limit = new Date() - blitz.config.auth.purgeMaxLimit
         db.collection('users').remove({
           'last_ip.0.accessed': {
             $lt: limit

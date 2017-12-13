@@ -53,7 +53,7 @@ class Authentication extends Endpoint {
     })
 
     if (user) {
-      let arr_max = blitz.config[blitz.id].maxLogsPerUser
+      let arr_max = blitz.config.auth.maxLogsPerUser
       let arr_new = []
       let arr_exs = user.last_ip
 
