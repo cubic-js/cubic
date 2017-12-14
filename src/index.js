@@ -51,7 +51,7 @@ class Blitz {
     this.emit('subscribe', endpoint)
 
     // Function passed? Listen to subscribed endpoint directly.
-    this.on(endpoint, fn)
+    fn ? this.on(endpoint, fn) : null
   }
 
   /**
