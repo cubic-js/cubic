@@ -9,7 +9,7 @@ const randtoken = require('rand-token')
 /**
  * Secret Secrecy
  */
-const bcrypt = require('bcrypt-as-promised')
+const bcrypt = require('bcryptjs')
 
 /**
  * Contains multi-purpose functions for child-methods and provides default values

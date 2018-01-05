@@ -1,5 +1,5 @@
 const mongodb = require('mongodb').MongoClient
-const bcrypt = require('bcrypt-as-promised')
+const bcrypt = require('bcryptjs')
 const mongoVerifySingleIndex = async (db, col, index) => {
   // Verify index
   db.collection(col).createIndex(index)
