@@ -60,7 +60,7 @@ module.exports = {
         ]
       },
       // Minify images
-      /**{
+      {
         test: /\.(jpe?g|png|gif|svg)$/i,
         loader: 'image-webpack-loader',
         options: {
@@ -83,7 +83,7 @@ module.exports = {
             svgo: {}
           }
         }
-      }**/
+      }
     ]
   },
 
