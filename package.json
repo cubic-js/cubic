@@ -13,10 +13,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "blitz-js-loader": "^0.5.2",
-    "blitz-js-query": "^0.2.17",
+    "blitz-js-loader": "^0.5.8",
+    "blitz-js-query": "^0.2.18",
     "lodash": "^4.17.4",
-    "mongodb": "^3.0.0-rc0",
+    "mongodb": "^3.0.1",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.10"
   }
