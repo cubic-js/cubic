@@ -25,11 +25,9 @@ module.exports = (sockets, cache) => {
       socket.leave(endpoint)
       socket.emit('unsubscribed', endpoint)
     })
-
     socket.on('disconnect', () => {
       blitz.log.verbose('Socket.io | ' + socket.user.uid + ' disconnected from ' + socket.nsp.name)
     })
-
     socket.emit('ready')
   })
 
@@ -55,11 +53,9 @@ module.exports = (sockets, cache) => {
     socket.on('cache', data => {
       cache.save(data.key, data.value, data.exp, data.scope)
     })
-
     socket.on('disconnect', () => {
       blitz.log.verbose('Socket.io | ' + socket.user.uid + ' disconnected from ' + socket.nsp.name)
     })
-
     socket.emit('ready')
   })
 }
