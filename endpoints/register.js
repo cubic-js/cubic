@@ -29,7 +29,7 @@ class Authentication extends Endpoint {
     let user = {
       user_id: 'unidentified-' + randtoken.uid(16),
       user_key: user_key,
-      user_secret: await this.hash(user_secret),
+      user_secret: await this.hash(user_secret, 8),
       scope: 'basic-read',
       refresh_token: null,
       last_ip: []
