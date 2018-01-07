@@ -28,7 +28,7 @@ class PreAuth {
     blitz.nodes.auth_api.post('/authenticate', async(req, res, next) => {
       // Load dependencies inside function because it's used in another process
       const jwt = require('jsonwebtoken')
-      const bcrypt = require('bcrypt-as-promised')
+      const bcrypt = require('bcryptjs')
       const randtoken = require('rand-token')
       const mongodb = require('mongodb').MongoClient
       const db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
