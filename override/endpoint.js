@@ -16,7 +16,7 @@ class Endpoint {
       view: '/app.vue'
     }
     this.api = api
-    this.db = db.db(blitz.config[blitz.id].mongoDb)
+    this.db = db ? db.db(blitz.config[blitz.id].mongoDb) : 0
     this.url = url
   }
 
