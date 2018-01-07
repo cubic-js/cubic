@@ -20,7 +20,8 @@ module.exports = {
     /**
      * Databases
      */
-    mongoUrl: 'mongodb://localhost/blitz-js-auth',
+    mongoUrl: 'mongodb://localhost/',
+    mongoDb: 'blitz-js-auth'
 
     /**
      * Target Node URLs

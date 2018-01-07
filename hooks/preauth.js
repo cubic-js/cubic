@@ -1,33 +1,7 @@
 const mongodb = require('mongodb').MongoClient
 const bcrypt = require('bcryptjs')
 const mongoVerifySingleIndex = async (db, col, index) => {
-  // Verify index
-  db.collection(col).createIndex(index)
-
-  // Verbose log string
-  let str = 'Auth      | verified '
-
-  // Get obj length
-  let objLength = Object.keys(index).map(key => index.hasOwnProperty(key)).length
-
-  // Append possible compound
-  if (objLength > 1) {
-    str += 'compound '
-  }
-
-  // Append names
-  let i = 0
-  for (let key in index) {
-    if (index.hasOwnProperty(key)) {
-      str += key
-      if (i < objLength - 1) str += '/'
-      i++
-    }
-  }
-
-  // Log
-  str += ' index'
-  blitz.log.silly(str)
+  db.db(blitz.config.auth.core.mongoDb).collection(col).createIndex(index)
 }
 
 /**
@@ -43,12 +17,8 @@ class PreAuth {
   async verifyUserIndices () {
     let db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
     blitz.log.verbose('Auth      | verifying user indices')
-    mongoVerifySingleIndex(db, 'users', {
-      'refresh_token': 1
-    })
-    mongoVerifySingleIndex(db, 'users', {
-      'user_key': 1
-    })
+    mongoVerifySingleIndex(db, 'users', { refresh_token: 1 })
+    mongoVerifySingleIndex(db, 'users', { user_key: 1 })
   }
 
   /**
@@ -65,7 +35,7 @@ class PreAuth {
 
       // Core-node attempts to connect
       if (req.body && req.body.user_key) {
-        let user = await db.collection('users').findOne({
+        let user = await db.db(blitz.config.auth.core.mongoDb).collection('users').findOne({
           user_key: req.body.user_key
         })
 

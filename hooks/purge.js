@@ -9,7 +9,7 @@ class Purge {
       let db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
       setInterval(() => {
         let limit = new Date() - blitz.config.auth.purgeMaxLimit
-        db.collection('users').remove({
+        db.db(blitz.config.auth.core.mongoDb).collection('users').remove({
           'last_ip.0.accessed': {
             $lt: limit
           }
