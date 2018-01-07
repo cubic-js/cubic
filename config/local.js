@@ -13,7 +13,8 @@ module.exports = {
     /**
      * Databases
      */
-    mongoUrl: 'mongodb://localhost/blitz-js-view',
+    mongoUrl: 'mongodb://localhost/',
+    mongoDb: 'blitz-js-view',
     cacheDb: 2,
 
     /**

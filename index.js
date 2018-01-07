@@ -58,7 +58,7 @@ class View {
     if (blitz.config.local.environment === "production") {
       this.initWebpackProd()
     } else {
-      this.initWebpackOnApi()
+      this.initWebpackDev()
     }
   }
 
@@ -79,28 +79,9 @@ class View {
   }
 
   /**
-   * Hook HMR middleware for development
-   */
-  async initWebpackDev() {
-    const timer = new Date
-    const clientConfig = require(blitz.config.view.webpack.clientConfig)
-    const serverConfig = require(blitz.config.view.webpack.serverConfig)
-    const compiler = webpack([clientConfig, serverConfig])
-    compiler.watch({}, (err, stats) => {
-      if (err) {
-        throw err
-      }
-      stats = stats.toJson()
-      if (stats.errors.length) {
-        throw stats.errors
-      }
-    })
-  }
-
-  /**
   * Hook HMR middleware into API node and bundle from there
   */
- async initWebpackOnApi() {
+ async initWebpackDev() {
    await blitz.nodes.view_api.run(function() {
      const clientConfig = require(blitz.config.view.webpack.clientConfig)
      const serverConfig = require(blitz.config.view.webpack.serverConfig)
