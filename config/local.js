@@ -29,7 +29,8 @@ module.exports = {
   /**
    * Databases
    */
-  mongoUrl: 'mongodb://localhost/blitz-js-core',
+  mongoUrl: 'mongodb://localhost/',
+  mongoDb: 'blitz-js-core',
   redisUrl: 'redis://localhost',
 
   /**
