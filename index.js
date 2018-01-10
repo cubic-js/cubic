@@ -1,8 +1,3 @@
-'use strict'
-
-/**
- * Dependencies
- */
 const local = require('./config/local.js')
 const worker = require('blitz-js-loader/lib/worker')
 const Client = require('./controllers/api.js')
