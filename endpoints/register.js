@@ -29,7 +29,7 @@ class Authentication extends Endpoint {
     let user = {
       user_id: 'unidentified-' + randtoken.uid(16),
       user_key: user_key,
-      user_secret: await this.hash(user_secret, 8),
+      user_secret: await bcrypt.hash(user_secret, 8),
       scope: 'basic-read',
       refresh_token: null,
       last_ip: []
@@ -80,13 +80,6 @@ class Authentication extends Endpoint {
         upsert: true
       })
     }
-  }
-
-  /**
-   * Generates hash for user secret
-   */
-  async hash (secret) {
-    return bcrypt.hash(secret, await bcrypt.genSalt(10), null)
   }
 }
 

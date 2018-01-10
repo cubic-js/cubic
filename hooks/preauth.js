@@ -19,6 +19,7 @@ class PreAuth {
     blitz.log.verbose('Auth      | verifying user indices')
     mongoVerifySingleIndex(db, 'users', { refresh_token: 1 })
     mongoVerifySingleIndex(db, 'users', { user_key: 1 })
+    db.close()
   }
 
   /**
@@ -73,6 +74,8 @@ class PreAuth {
       else {
         return next()
       }
+
+      db.close()
     })
   }
 }
