@@ -1,6 +1,3 @@
-/**
- * Dependencies
- */
 const local = require('./config/local.js')
 const ipc = require('blitz-js-loader/lib/worker')
 const Server = require('./connections/server.js')
