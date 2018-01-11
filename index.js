@@ -35,8 +35,12 @@ class View {
    */
   async init() {
     await this.initBlitz()
-    await this.registerEndpoints()
-    await this.initWebpack()
+    if (!blitz.config.view.core.disable) {
+      await this.registerEndpoints()
+    }
+    if (!blitz.config.view.core.disable && !blitz.config.view.skipWebpackBuild) {
+      await this.initWebpack()
+    }
   }
 
   async initBlitz() {
@@ -55,11 +59,9 @@ class View {
    */
   initWebpack() {
     blitz.log.monitor('Started Webpack build process. This may take a while...', true, '')
-    if (blitz.config.local.environment === "production" &&
-        !blitz.config.view.core.disable &&
-        !blitz.config.view.skipWebpackBuild) {
+    if (blitz.config.local.environment === "production") {
       this.initWebpackProd()
-    } else if (blitz.config.local.environment === 'development') {
+    } else {
       this.initWebpackDev()
     }
   }
