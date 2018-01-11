@@ -55,9 +55,11 @@ class View {
    */
   initWebpack() {
     blitz.log.monitor('Started Webpack build process. This may take a while...', true, '')
-    if (blitz.config.local.environment === "production") {
+    if (blitz.config.local.environment === "production" &&
+        !blitz.config.view.core.disable &&
+        !blitz.config.view.skipWebpackBuild) {
       this.initWebpackProd()
-    } else {
+    } else if (blitz.config.local.environment === 'development') {
       this.initWebpackDev()
     }
   }
@@ -104,12 +106,10 @@ class View {
      )
      const compiler = webpack([clientConfig, serverConfig])
      const devMiddleware = require("webpack-dev-middleware")(compiler, {
-       noInfo: true,
        publicPath: '/'
      })
      const hotMiddleware = require("webpack-hot-middleware")(compiler, {
-       log: console.log,
-       heartbeat: 1000
+       heartbeat: 100
      })
 
      // Put middleware at start of stack

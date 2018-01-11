@@ -53,6 +53,11 @@ module.exports = {
   },
 
   /**
+   * View related settings
+   */
+  skipWebpackBuild: false,
+
+  /**
    * Cluster config
    */
   cores: Math.ceil(os.cpus().length / 2),
