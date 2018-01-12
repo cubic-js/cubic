@@ -81,8 +81,12 @@ class Connection {
    */
   async request(verb, query) {
     let delay = this.options.ignore_limiter ? 0 : 20
-    let res = await this.queue.delay(() => this.req(verb, query), delay)
-    return this.errCheck(res, verb, query)
+    try {
+      let res = await this.queue.delay(() => this.req(verb, query), delay)
+      return this.errCheck(res, verb, query)
+    } catch (err) {
+      throw new Error(err)
+    }
   }
 
   /**
