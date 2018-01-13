@@ -19,13 +19,13 @@ module.exports = function(config) {
   /**
    * API node to distribute incoming requests to core nodes
    */
-  config.api.hooks.forEach(hook => blitz.hook(Api, hook))
+  config.api.hooks.forEach(hook => blitz.hook(config.api.id || Api, hook))
   blitz.use(new Api(config.api))
 
   /**
    * Core node which handles the actual processing of requests
    */
-  config.core.hooks.forEach(hook => blitz.hook(Core, hook))
+  config.core.hooks.forEach(hook => blitz.hook(config.core.id || Core, hook))
   blitz.use(new Core(config.core))
 
   /**
