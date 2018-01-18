@@ -26,7 +26,7 @@ class PreAuth {
    * Set up manual endpoint for auth worker to authenticate against
    */
   validateWorker () {
-    blitz.nodes.auth_api.post('/authenticate', async(req, res, next) => {
+    blitz.nodes.[blitz.config.auth.api.id].post('/authenticate', async(req, res, next) => {
       // Load dependencies inside function because it's used in another process
       const jwt = require('jsonwebtoken')
       const bcrypt = require('bcryptjs')

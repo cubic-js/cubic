@@ -24,13 +24,17 @@ class Auth {
     const Core = require('blitz-js-core')
     const API = require('blitz-js-api')
 
-    //blitz.hook(options.id, purge.purgeInactiveUsers)
+    ///blitz.hook(options.id, purge.purgeInactiveUsers)
     blitz.use(new API(blitz.config.auth.api))
 
     // Core Node which processes incoming requests
-    blitz.hook(blitz.config.auth.core.id, preauth.verifyUserIndices)
+    blitz.hook(blitz.config.auth.api.id, preauth.verifyUserIndices)
     await blitz.use(new Core(blitz.config.auth.core))
-    preauth.validateWorker()
+
+    // Hook auth listener manually before node is connected
+    if (!blitz.config.auth.api.disable) {
+      preauth.validateWorker()
+    }
   }
 }
 
