@@ -32,7 +32,7 @@ class Auth {
     await blitz.use(new Core(blitz.config.auth.core))
 
     // Hook auth listener manually before node is connected
-    if (!blitz.config.auth.api.disable) {
+    if (!blitz.config.auth.api.disable && !blitz.config.auth.disable) {
       preauth.validateWorker()
     }
   }
