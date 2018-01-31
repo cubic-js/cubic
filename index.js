@@ -28,7 +28,7 @@ class Auth {
     blitz.use(new API(blitz.config.auth.api))
 
     // Core Node which processes incoming requests
-    blitz.hook(blitz.config.auth.api.id, preauth.verifyUserIndices)
+    blitz.hook(blitz.config.auth.core.id, preauth.verifyUserIndices)
     await blitz.use(new Core(blitz.config.auth.core))
 
     // Hook auth listener manually before node is connected
