@@ -44,7 +44,7 @@ class View {
   }
 
   async initBlitz() {
-    const Core = require("blitz-js-core")
+    const Core = require("../blitz-js-core")
     const API = require("blitz-js-api")
 
     await blitz.use(new API(blitz.config.view.api))
@@ -108,10 +108,12 @@ class View {
      )
      const compiler = webpack([clientConfig, serverConfig])
      const devMiddleware = require("webpack-dev-middleware")(compiler, {
-       publicPath: '/'
+       publicPath: '/',
+       logLevel: 'warn'
      })
      const hotMiddleware = require("webpack-hot-middleware")(compiler, {
-       heartbeat: 100
+       heartbeat: 100,
+       noInfo: true
      })
 
      // Put middleware at start of stack
