@@ -24,7 +24,7 @@ class Auth {
     const Core = require('blitz-js-core')
     const API = require('blitz-js-api')
 
-    ///blitz.hook(options.id, purge.purgeInactiveUsers)
+    // API node for distributing requests
     blitz.use(new API(blitz.config.auth.api))
 
     // Core Node which processes incoming requests
