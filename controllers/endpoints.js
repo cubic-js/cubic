@@ -4,6 +4,7 @@
 const fs = require('fs')
 const path = require('path')
 const util = require('util')
+const decache = require('decache')
 const _ = require('lodash')
 const mongodb = require('mongodb').MongoClient
 const CircularJSON = require('circular-json')
@@ -235,7 +236,19 @@ class EndpointController {
 
     // Assume dynamic endpoint if file not available
     catch (err) {
+      const dev = blitz.config.local.environment === 'development'
+
+      // Regenerate endpoints in dev mode so we needn't restart the full stack
+      // for changes
+      dev ? this.generateEndpointSchema() : null
+
+      // Get file path for our endpoint
       let path = this.findByUrl(url).file
+
+      // Remove node's require cache while in dev mode so we needn't restart
+      // to see endpoint changes
+      dev ? decache(path) : null
+
       return require(path)
     }
   }
