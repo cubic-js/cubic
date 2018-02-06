@@ -101,14 +101,13 @@ class View {
 
      // Modify client config to work with hot middleware
      clientConfig.entry.client = ["webpack-hot-middleware/client", clientConfig.entry.client]
-     clientConfig.output.filename = "[name].bundle.js"
+     clientConfig.output.filename = "dev-[name].bundle.js"
      clientConfig.plugins.push(
-       new webpack.HotModuleReplacementPlugin(),
-       new webpack.NoEmitOnErrorsPlugin()
+       new webpack.HotModuleReplacementPlugin()
      )
      const compiler = webpack([clientConfig, serverConfig])
      const devMiddleware = require("webpack-dev-middleware")(compiler, {
-       publicPath: '/',
+       publicPath: clientConfig.output.publicPath,
        logLevel: 'warn'
      })
      const hotMiddleware = require("webpack-hot-middleware")(compiler, {
