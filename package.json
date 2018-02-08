@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "blitz-js-api": "^0.5.13",
-    "blitz-js-auth": "^0.5.24",
+    "blitz-js-auth": "^0.5.25",
     "blitz-js-core": "^0.5.14",
     "blitz-js-loader": "^0.5.15",
     "blitz-js-view": "^0.5.32",
