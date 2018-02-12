@@ -36,6 +36,8 @@ Like any level-2 blitz-js package, this package consists of a blitz-js core and
 api node, much like a regular blitz-js project. These are the main endpoints
 that are exposed on the API:
 
+<br>
+
 ### /authenticate - [/endpoints/authenticate.js](/endpoints/authenticate.js)
 
 Used to verify a user that is stored in the auth database. If the user/password
@@ -52,6 +54,9 @@ or forged by an attacker. By signing the token with RSA keys, we can
 later use the public key on blitz-js-api nodes to verify the signature - without
 exposing our private key in case of a security breach.
 
+
+<br>
+
 ### /refresh - [/endpoints/refresh.js](/endpoints/refresh.js)
 
 Used to generate new access tokens from the provided refresh token.
@@ -65,6 +70,9 @@ The reason access tokens are short-lived is to reduce the time an attacker gets
 in the case of access tokens being leaked. There's no way to revoke the
 permissions granted by stateless JWTs, but it's easy to revoke a single refresh
 token.
+
+
+<br>
 
 ### /register - [/endpoints/register.js](/endpoints/register.js)
 
