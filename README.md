@@ -36,8 +36,7 @@ Like any level-2 blitz-js package, this package consists of a blitz-js core and
 api node, much like a regular blitz-js project. These are the main endpoints
 that are exposed on the API:
 
-### /authenticate
-[/endpoints/authenticate.js](/endpoints/authenticate.js)
+### /authenticate - [/endpoints/authenticate.js](/endpoints/authenticate.js)
 
 Used to verify a user that is stored in the auth database. If the user/password
 matches, this returns an **access_token** and **refresh_token**.
@@ -53,8 +52,7 @@ or forged by an attacker. By signing the token with RSA keys, we can
 later use the public key on blitz-js-api nodes to verify the signature - without
 exposing our private key in case of a security breach.
 
-### /refresh
-[/endpoints/refresh.js](/endpoints/refresh.js)
+### /refresh - [/endpoints/refresh.js](/endpoints/refresh.js)
 
 Used to generate new access tokens from the provided refresh token.
 
@@ -68,8 +66,7 @@ in the case of access tokens being leaked. There's no way to revoke the
 permissions granted by stateless JWTs, but it's easy to revoke a single refresh
 token.
 
-### /register
-[/endpoints/register.js](/endpoints/register.js)
+### /register - [/endpoints/register.js](/endpoints/register.js)
 
 Used to save new users to the database. Passwords are hashed with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) at 8
 salt rounds.
@@ -124,56 +121,56 @@ be returned.
 
 **POST /authenticate**
 >Body:
-```
-{
-  user_key: <username>,
-  user_secret: <password>
-}
-```
-Response:
-```
-{
-  access_token: <access_token>,
-  refresh_token: <refresh_token>
-}
-```
-On Failure:
-```
-{
-  error: <error type>,
-  reason: <error description>
-}
-```
+>```
+>{
+>  user_key: <username>,
+>  user_secret: <password>
+>}
+>```
+>Response:
+>```
+>{
+>  access_token: <access_token>,
+>  refresh_token: <refresh_token>
+>}
+>```
+>On Failure:
+>```
+>{
+>  error: <error type>,
+>  reason: <error description>
+>}
+>```
 
 **POST /refresh**
 >Body:
-```
-{
-  refresh_token: <refresh_token>
-}
-```
-Response:
-```
-{
-  access_token: <access_token>
-}
-```
-On Failure:
-```
-{
-  error: <error type>,
-  reason: <error description>
-}
-```
+>```
+>{
+>  refresh_token: <refresh_token>
+>}
+>```
+>Response:
+>```
+>{
+>  access_token: <access_token>
+>}
+>```
+>On Failure:
+>```
+>{
+>  error: <error type>,
+>  reason: <error description>
+>}
+>```
 
 **GET /register**
 > Response:
-```
-{
-  user_key: <username>,
-  user_secret: <password>
-}
-```
+>```
+>{
+>  user_key: <username>,
+>  user_secret: <password>
+>}
+>```
 
 
 <br>
