@@ -10,7 +10,6 @@
 With the [blitz-js](https://github.com/nexus-devs/blitz-js) loader:
 ```js
 const Blitz = require('blitz-js')({
-  // ...
   auth: {
     exp: '1h', // access token expiration date
     alg: 'RS256', // JWT signatrure algorithm
@@ -22,8 +21,7 @@ const Blitz = require('blitz-js')({
     core: {}, // See blitz-js-core for options. Just ensure that the api server
               // is the same as the auth server.
     api: {}   // See blitz-js-api for options.
-  },
-  // ...
+  }
 })
 ```
 **Note:** All options are **optional** in dev mode. Everything should work out
