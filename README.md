@@ -30,7 +30,7 @@ of the box. For production, you **must** make sure to provide custom RSA certs.
 <br>
 
 ## How does it work?
-**Imagine this:** You're a happy little web-app that wants to get data from an API. However,
+**Imagine this:** You're a happy little web-app that wants to get data from a Web API. However,
 that API endpoint is only open to authorized users. The API will only let us in if we show
 it a document of who we are which is signed by a trusted authority.<br>
 
