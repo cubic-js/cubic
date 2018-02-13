@@ -12,8 +12,8 @@ With the [blitz-js](https://github.com/nexus-devs/blitz-js) loader:
 const Blitz = require('blitz-js')({
   auth: {
     exp: '1h', // access token expiration date
-    alg: 'RS256', // JWT signatrure algorithm
-    certPrivate: fs.readFileSync('path/to/rsa/private.key', 'utf-8'),  // Private key for JWT signature
+    alg: 'RS256', // JWT signature algorithm
+    certPrivate: fs.readFileSync('path/to/rsa/private.key', 'utf-8'), // Private key for JWT signature
     certPublic: fs.readFileSync('path/to/rsa/public.key', 'utf-8'), // Public key for verifying JWTs
     certPass: 'secret', // Secret used to encrypt the RSA keys (optional)
     maxLogsPerUser: 50, // Number of access logs to store for each user
