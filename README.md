@@ -4,7 +4,7 @@
 
 <br>
 
-**Simple OAuth2 server used for [blitz-js](https://github.com/nexus-devs/blitz-js).**<br><br>
+**Simple OAuth2 server used for [blitz-js](https://github.com/nexus-devs/blitz-js).**<br> Built on [blitz-js-api](https://github.com/nexus-devs/blitz-js-api) and [blitz-js-core](https://github.com/nexus-devs/blitz-js-core).<br><br>
 
 ## Usage
 With the [blitz-js](https://github.com/nexus-devs/blitz-js) loader:
@@ -49,8 +49,7 @@ rundown of the main endpoints that are exposed on the auth API:
 
 <br>
 
-### /authenticate - [/endpoints/authenticate.js](/endpoints/authenticate.js)
-
+## /authenticate
 Used to verify a user that is stored in the auth database. If the user/password
 matches, this returns an **access_token** and **refresh_token**.
 
@@ -68,7 +67,7 @@ exposing our private key in case of a security breach.
 
 <br>
 
-### /refresh - [/endpoints/refresh.js](/endpoints/refresh.js)
+## /refresh
 
 Used to generate new access tokens from the provided refresh token.
 
@@ -85,7 +84,7 @@ token.
 
 <br>
 
-### /register - [/endpoints/register.js](/endpoints/register.js)
+## /register
 
 Used to save new users to the database. Passwords are hashed with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) at 8
 salt rounds.
