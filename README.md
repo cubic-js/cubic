@@ -2,9 +2,10 @@
 
 ##
 
-<br>
+<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/blitz-js">blitz-js</a>. Everything built on <a href="https://github.com/nexus-devs/blitz-js-api">blitz-js-api</a> and <a href="https://github.com/nexus-devs/blitz-js-core">blitz-js-core</a>.</p>
 
-Simple OAuth2 server used for [blitz-js](https://github.com/nexus-devs/blitz-js). Built on [blitz-js-api](https://github.com/nexus-devs/blitz-js-api) and [blitz-js-core](https://github.com/nexus-devs/blitz-js-core).<br><br>
+<br>
+<br>
 
 ## Usage
 With the [blitz-js](https://github.com/nexus-devs/blitz-js) loader:
