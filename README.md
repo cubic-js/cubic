@@ -33,8 +33,10 @@ of the box. For production, you **must** make sure to provide custom RSA certs.
 
 ## How does it work?
 Like any level-2 blitz-js package, this package consists of a blitz-js core and
-api node, much like a regular blitz-js project. These are the main endpoints
-that are exposed on the API:
+api node, much like a regular blitz-js project. You don't have to bother with
+these concepts when building your application, but it might help your understanding
+of the framework in general, so here are the main endpoints that are exposed
+on the API:
 
 <br>
 
