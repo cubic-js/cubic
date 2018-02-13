@@ -30,11 +30,22 @@ of the box. For production, you **must** make sure to provide custom RSA certs.
 <br>
 
 ## How does it work?
-Like any level-2 blitz-js package, this package consists of a blitz-js core and
-api node, much like a regular blitz-js project. You don't have to bother with
-these concepts when building your application, but it might help your understanding
-of the framework in general, so here are the main endpoints that are exposed
-on the API:
+**Imagine this:** You're a happy little web-app that wants to get data from an API. However,
+that API endpoint is only open to authorized users. The API will only let us in if we show
+it a document of who we are which is signed by a trusted authority.<br>
+
+In our case, the auth server is that trusted authority. To get the document, we just
+need to provide the username and passphrase used when registering our account and
+we'll get the signed document (the access token) in return.<br>
+
+Since the access token is signed by the trusted authority, the API believes what the access
+token tells about the user and sees if they have the required permission to access the desired
+API endpoint.
+
+[![model](https://i.imgur.com/w1cZgwz.png)](https://i.imgur.com/w1cZgwz.png)
+You usually don't have to bother with these concepts when building your application,
+but it might help your understanding of the framework in general, so here's a quick
+rundown of the main endpoints that are exposed on the auth API:
 
 <br>
 
