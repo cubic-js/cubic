@@ -176,7 +176,7 @@ be returned.
 <br>
 
 
-## Override options
+## Override config
 Since the blitz-js-auth server is completely based on a regular blitz-js setup,
 we can configure the blitz-js-api and blitz-js-core options individually.
 Below are the overrides used by default.
