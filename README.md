@@ -1,4 +1,4 @@
-[![blitz.js Authentication Server](/banner.png)](https://github.com/nexus-devs)
+[![blitz-js-auth](/banner.png)](https://github.com/nexus-devs)
 
 ##
 
@@ -12,21 +12,22 @@ With the [blitz-js](https://github.com/nexus-devs/blitz-js) loader:
 ```js
 const Blitz = require('blitz-js')({
   auth: {
-    exp: '1h', // access token expiration date
-    alg: 'RS256', // JWT signature algorithm
-    certPrivate: fs.readFileSync('path/to/rsa/private.key', 'utf-8'), // Private key for JWT signature
-    certPublic: fs.readFileSync('path/to/rsa/public.key', 'utf-8'), // Public key for verifying JWTs
-    certPass: 'secret', // Secret used to encrypt the RSA keys (optional)
-    maxLogsPerUser: 50, // Number of access logs to store for each user
-
-    core: {}, // See blitz-js-core for options. Just ensure that the api server
-              // is the same as the auth server.
-    api: {}   // See blitz-js-api for options.
+    options,
+    api: { options },
+    core: { options }
   }
 })
 ```
-**Note:** All options are **optional** in dev mode. Everything should work out
-of the box. For production, you **must** make sure to provide custom RSA certs.
+| Option        | Default       | Description   |
+|:------------- |:------------- |:------------- |
+| exp   | `'1h'`   | Access token expiration date since being issued. |
+| alg   | `'RS256'`  | JWT signature algorithm |
+| certPrivate | none | String of private RSA key used for JWT signature. (This is set automatically in dev mode) |
+| certPublic | none | String of public RSA key used to verify JWT signature. (Set automatically in dev mode) |
+| certPass | none | Optional secret to decrypt the provided RSA keys |
+| maxLogsPerUser | `50` | Number of access logs for each user |
+
+See override configs for the `api` and `core` key [below](https://github.com/nexus-devs/blitz-js-auth#override-config).
 
 <br>
 
@@ -45,12 +46,29 @@ API endpoint.
 
 [![model](https://i.imgur.com/WKjqjoT.png)](https://i.imgur.com/WKjqjoT.png)
 You usually don't have to bother with these concepts when building your application,
-but it might help your understanding of the framework in general, so here's a quick
-rundown of the main endpoints that are exposed on the auth API:
+but it might help your understanding of the framework in general. If you wanna
+know even more details, here's a quick rundown of the main endpoints that are
+exposed on the auth API:
 
 <br>
 
 ## /authenticate
+**POST /authenticate**
+>Body:
+>```
+>{
+>  user_key: <username>,
+>  user_secret: <password>
+>}
+>```
+>Response:
+>```
+>{
+>  access_token: <access_token>,
+>  refresh_token: <refresh_token>
+>}
+>```
+
 Used to verify a user that is stored in the auth database. If the user/password
 matches, this returns an **access_token** and **refresh_token**.
 
@@ -69,6 +87,19 @@ exposing our private key in case of a security breach.
 <br>
 
 ## /refresh
+**POST /refresh**
+>Body:
+>```
+>{
+>  refresh_token: <refresh_token>
+>}
+>```
+>Response:
+>```
+>{
+>  access_token: <access_token>
+>}
+>```
 
 Used to generate new access tokens from the provided refresh token.
 
@@ -86,6 +117,14 @@ token.
 <br>
 
 ## /register
+**GET /register**
+> Response:
+>```
+>{
+>  user_key: <username>,
+>  user_secret: <password>
+>}
+>```
 
 Used to save new users to the database. Passwords are hashed with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) at 8
 salt rounds.
@@ -136,60 +175,27 @@ be returned.
 
 <br>
 
-## API Specs
 
-**POST /authenticate**
->Body:
->```
->{
->  user_key: <username>,
->  user_secret: <password>
->}
->```
->Response:
->```
->{
->  access_token: <access_token>,
->  refresh_token: <refresh_token>
->}
->```
->On Failure:
->```
->{
->  error: <error type>,
->  reason: <error description>
->}
->```
+## Override options
+Since the blitz-js-auth server is completely based on a regular blitz-js setup,
+we can configure the blitz-js-api and blitz-js-core options individually.
+Below are the overrides used by default.
 
-**POST /refresh**
->Body:
->```
->{
->  refresh_token: <refresh_token>
->}
->```
->Response:
->```
->{
->  access_token: <access_token>
->}
->```
->On Failure:
->```
->{
->  error: <error type>,
->  reason: <error description>
->}
->```
+#### blitz-js-api
+| Api Option        | Override       | Description   |
+|:------------- |:------------- |:------------- |
+| port   | `3030`   | Port to listen on for requests. |
+| cacheDb| `3`  | Redis database used to store cache data. |
+| id     | `'auth_api'` | Custom id to identify specific nodes. |
 
-**GET /register**
-> Response:
->```
->{
->  user_key: <username>,
->  user_secret: <password>
->}
->```
+#### blitz-js-core
+| Core Option        | Override       | Description   |
+|:------------- |:------------- |:------------- |
+| mongoUrl | `'mongodb://localhost/'`   | Base URL for mongodb connection. |
+| mongoDb  | `'blitz-js-auth'`  | Mongodb database to use in endpoints by default |
+| apiUrl   | `'http://localhost:3030'` | API to serve requests on. |
+| authUrl  | `'http://localhost:3030'` | Auth server to authenticate on. (same as API) |
+| id       | `'auth_core'` | Custom id to identify specific nodes.
 
 
 <br>
