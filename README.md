@@ -2,7 +2,7 @@
 
 ##
 
-<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/blitz-js">blitz-js</a>. Everything is built on <a href="https://github.com/nexus-devs/blitz-js-api">blitz-js-api</a> and <a href="https://github.com/nexus-devs/blitz-js-core">blitz-js-core</a>.</p>
+<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/blitz-js">blitz-js</a>. Built on <a href="https://github.com/nexus-devs/blitz-js-api">blitz-js-api</a> and <a href="https://github.com/nexus-devs/blitz-js-core">blitz-js-core</a>.</p>
 
 <br>
 <br>
