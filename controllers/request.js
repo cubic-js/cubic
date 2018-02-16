@@ -1,12 +1,7 @@
-const CircularJSON = require('circular-json')
-
 /**
  * Checks request against endpoints given by core node
  */
 class RequestController {
-  /**
-   * Controls Request processing
-   */
   async getResponse (req) {
     return this.send(req)
   }
@@ -25,7 +20,7 @@ class RequestController {
 
         // Generate unique callback for emit & pass to responding node
         req.id = process.hrtime().join('').toString()
-        socket.emit('req', CircularJSON.stringify(req))
+        socket.emit('req', req)
         blitz.log.silly('API       | Request sent')
 
         // Listen to socket for response.
