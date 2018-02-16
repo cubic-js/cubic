@@ -38,20 +38,11 @@ class Server {
   }
 
   /**
-   * Allow appending native express middleware before custom adapter routes
-   */
-  appendMiddleware (fn) {
-    this.http.app._router.stack.pop()
-    this.http.app.use(fn)
-    this.applyRoutes()
-  }
-
-  /**
    * Apply Routes/Events after Middleware for correct order
    */
   applyRoutes () {
     require(blitz.config[blitz.id].routes)(this.http)
-    require(blitz.config[blitz.id].events)(this.sockets, this.cache)
+    require(blitz.config[blitz.id].events)(this.sockets)
   }
 
   /**
