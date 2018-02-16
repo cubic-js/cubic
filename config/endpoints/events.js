@@ -2,6 +2,23 @@
  * Event Configuration for Socket.io Server
  */
 
+// Subscriptions
+function subscribe(endpoint, socket) {
+  blitz.log.verbose(`Socket.io | ${socket.user.uid} subscribed to ${endpoint}`)
+  socket.join(endpoint)
+  socket.emit('subscribed', endpoint)
+}
+function unsubscribe(endpoint, socket) {
+  blitz.log.verbose(`Socket.io | ${socket.user.uid} unsubscribed from ${endpoint}`)
+  socket.leave(endpoint)
+  socket.emit('unsubscribed', endpoint)
+}
+
+// Disconnect message
+function disconnect(socket) {
+  blitz.log.verbose(`Socket.io | ${socket.user.uid} disconnected from ${socket.nsp.name}`)
+}
+
 module.exports = (sockets, cache) => {
   /**
    * Default namespace
@@ -15,19 +32,11 @@ module.exports = (sockets, cache) => {
     socket.on('DELETE', (req, res) => sockets.prepass(socket, 'DELETE', req, res))
 
     // Subscriptions
-    socket.on('subscribe', endpoint => {
-      blitz.log.verbose('Socket.io | ' + socket.user.uid + ' subscribed to ' + endpoint)
-      socket.join(endpoint)
-      socket.emit('subscribed', endpoint)
-    })
-    socket.on('unsubscribe', endpoint => {
-      blitz.log.verbose('Socket.io | ' + socket.user.uid + ' left ' + endpoint)
-      socket.leave(endpoint)
-      socket.emit('unsubscribed', endpoint)
-    })
-    socket.on('disconnect', () => {
-      blitz.log.verbose('Socket.io | ' + socket.user.uid + ' disconnected from ' + socket.nsp.name)
-    })
+    socket.on('subscribe', endpoint => subscribe(endpoint, socket))
+    socket.on('unsubscribe', endpoint => unsubscribe(endpoint, socket))
+
+    // Connection listeners
+    socket.on('disconnect', () => disconnect(socket))
     socket.emit('ready')
   })
 
@@ -36,11 +45,8 @@ module.exports = (sockets, cache) => {
    */
   sockets.root.on('connect', socket => {
     // Subscriptions
-    socket.on('subscribe', endpoint => {
-      blitz.log.verbose('Socket.io | ' + socket.user.uid + ' subscribed to ' + endpoint)
-      socket.join(endpoint)
-      socket.emit('subscribed', endpoint)
-    })
+    socket.on('subscribe', endpoint => subscribe(endpoint, socket))
+    socket.on('unsubscribe', endpoint => unsubscribe(endpoint, socket))
 
     // Listen to Updates from core node and publish to subscribers
     socket.on('publish', update => {
@@ -53,9 +59,9 @@ module.exports = (sockets, cache) => {
     socket.on('cache', data => {
       cache.save(data.key, data.value, data.exp, data.scope)
     })
-    socket.on('disconnect', () => {
-      blitz.log.verbose('Socket.io | ' + socket.user.uid + ' disconnected from ' + socket.nsp.name)
-    })
+
+    // Connection listeners
+    socket.on('disconnect', () => disconnect(socket))
     socket.emit('ready')
   })
 }
