@@ -4,7 +4,6 @@
 const HTTP = require('./adapters/http.js')
 const Io = require('./adapters/sockets.js')
 const Cache = require('../controllers/cache.js')
-const bodyParser = require('body-parser')
 const auth = require('../middleware/auth.js')
 const logger = require('../middleware/logger.js')
 
@@ -31,15 +30,6 @@ class Server {
    * Applies Middleware to adapters
    */
   applyMiddleware () {
-
-    // Use BodyParser for Express
-    this.http.app.use(bodyParser.urlencoded({
-      extended: true
-    }))
-      .use(bodyParser.json())
-
-    // Enable JWT auth (native middleware)
-    auth.configExpress(this.http.app)
     auth.configSockets(this.sockets)
 
     // Use custom Logger for i/o
