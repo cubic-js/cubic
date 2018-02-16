@@ -12,6 +12,14 @@ Connection packages to connect to <a href="https://github.com/nexus-devs/blitz-j
 
 <br>
 
+## Other Supported Platforms
+
+| Platform           | Install        | Description   |
+|:------------- |:------------- |:------------- |
+| [python](https://github.com/nexus-devs/blitz-js-query/tree/python) | pip | For usage in Python. Official Socket.io version updates are slow, HTTP might have to be explicitly enabled |
+
+<br>
+
 ## Usage
 ```js
 const Blitz = require("blitz-js-query")
@@ -139,13 +147,6 @@ blitz.emit(ev, data)
 
 <br>
 
-## Other Supported Platforms
-
-| Platform           | Install        | Description   |
-|:------------- |:------------- |:------------- |
-| [python](https://github.com/nexus-devs/blitz-js-query/tree/python) | pip | For usage in Python. Official Socket.io version updates are slow, HTTP might have to be explicitly enabled |
-
-<br>
 
 ## License
 [MIT](https://github.com/nexus-devs/npm-blitz-query/blob/master/LICENSE.md)
