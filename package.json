@@ -1,7 +1,7 @@
 {
   "name": "blitz-js",
   "version": "0.5.45",
-  "description": "⚡ Ultra Modular Nodejs Framework",
+  "description": "⚡ Fully Modular JavaScript App Platform",
   "main": "index.js",
   "repository": {
     "type": "git",
