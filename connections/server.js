@@ -3,8 +3,7 @@
  */
 const HTTP = require('./adapters/http.js')
 const Io = require('./adapters/sockets.js')
-const Cache = require('../controllers/cache.js')
-const auth = require('../middleware/auth.js')
+const cache = require('../middleware/cache.js')
 const logger = require('../middleware/logger.js')
 
 /**
@@ -14,11 +13,10 @@ class Server {
   /**
    * Loads up HTTP/Sockets server and modifies it
    */
-  constructor () {
+  constructor (port) {
     // Build up Server
-    this.http = new HTTP(blitz.config[blitz.id].port)
+    this.http = new HTTP(port)
     this.sockets = new Io(this.http.server)
-    this.cache = new Cache()
 
     // Config Express & Sockets.io
     this.setRequestClient()
@@ -30,15 +28,13 @@ class Server {
    * Applies Middleware to adapters
    */
   applyMiddleware () {
-    auth.configSockets(this.sockets)
-
     // Use custom Logger for i/o
     if (blitz.config[blitz.id].useRequestLogger) {
-      this.use((req, res, next) => logger.log(req, res, next))
+      this.use(logger.log)
     }
 
     // Get response from cache if available
-    this.use((req, res, next) => this.cache.check(req, res, next))
+    this.use(cache.check)
   }
 
   /**

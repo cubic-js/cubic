@@ -16,8 +16,14 @@ class SocketAdapter extends Adapter {
     // Listen on server
     this.io = io.listen(server)
 
+    // Add auth token verification middleware
+    this.io.use(middleware.verifySocket)
+    this.use(middleware.verifyExpiration)
+
     // Create root namespace
     this.root = this.io.of('/root')
+    this.root.use(middleware.verifySocket)
+    this.root.use(middleware.authorizeRoot)
   }
 
   /**
