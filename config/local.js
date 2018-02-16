@@ -1,23 +1,16 @@
-const os = require('os')
-
 module.exports = {
 
   /**
    * Current Node Information
    */
   port: 3010,
-  routes: __dirname + '/endpoints/routes.js',
-  events: __dirname + '/endpoints/events.js',
+  routes: __dirname + '/../connections/entry/routes.js',
+  events: __dirname + '/../connections/entry/events.js',
 
   /**
    * Core Node Config
    */
   requestTimeout: 1000,
-
-  /**
-   * Middleware Options
-   */
-  useRequestLogger: true,
 
   /**
    * Databases
@@ -29,9 +22,4 @@ module.exports = {
    */
   cacheDb: 1,
   cacheExp: 10,
-
-  /**
-   * Cluster config
-   */
-  cores: os.cpus().length
 }
