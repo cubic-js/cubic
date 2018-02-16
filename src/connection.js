@@ -110,17 +110,13 @@ class Connection {
    */
   async errCheck(res = {}, verb, query) {
     // Response not 1xx, 2xx, 3xx?
-    if (res.body && parseInt(res.statusCode.toString()[0]) > 3) {
+    if (typeof res.body === 'object' && parseInt(res.statusCode.toString()[0]) > 3) {
+
       // If expired: Get new token w/ refresh token & retry method
-      if (typeof res.body === 'string' && res.body.includes('jwt expired')) {
+      if (res.body.reason.includes('jwt expired')) {
         await this.reload()
         return this.request(verb, query)
       }
-
-      // Error responses may need to be parsed additionally
-      try {
-        res.body = JSON.parse(res.body)
-      } catch (err) {}
 
       // Rate Limited
       if (res.body.error && res.body.error.includes('Rate limit') && !this.options.ignore_limiter) {
