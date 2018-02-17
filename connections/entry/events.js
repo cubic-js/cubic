@@ -20,8 +20,8 @@ function disconnect(socket) {
   blitz.log.verbose(`Socket.io | ${socket.user.uid} disconnected from ${socket.nsp.name}`)
 }
 
-module.exports = (sockets, id) => {
-  const cache = new Cache(id)
+module.exports = (sockets, config) => {
+  const cache = new Cache(config)
 
   /**
    * Default namespace

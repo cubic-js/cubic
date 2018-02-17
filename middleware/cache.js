@@ -2,8 +2,8 @@ const redis = require('redis')
 const mime = require('mime')
 
 class CacheController {
-  constructor (id) {
-    this.config = blitz.config[id]
+  constructor (config) {
+    this.config = config
     this.client = redis.createClient(this.config.redisUrl)
     this.client.select(this.config.cacheDb)
   }
