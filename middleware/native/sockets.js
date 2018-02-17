@@ -69,4 +69,4 @@ class SocketMiddleware {
   }
 }
 
-module.exports = new SocketsMiddleware
+module.exports = new SocketMiddleware

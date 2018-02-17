@@ -1,7 +1,7 @@
 /**
  * Event Configuration for Socket.io Server
  */
-const cache = require('../../middleware/cache.js')
+const Cache = require('../../middleware/cache.js')
 
 // Subscriptions
 function subscribe(endpoint, socket) {
@@ -20,7 +20,9 @@ function disconnect(socket) {
   blitz.log.verbose(`Socket.io | ${socket.user.uid} disconnected from ${socket.nsp.name}`)
 }
 
-module.exports = (sockets) => {
+module.exports = (sockets, id) => {
+  const cache = new Cache(id)
+
   /**
    * Default namespace
    */

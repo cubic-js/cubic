@@ -2,15 +2,16 @@ const redis = require('redis')
 const mime = require('mime')
 
 class CacheController {
-  constructor () {
-    this.client = redis.createClient(blitz.config[blitz.id].redisUrl)
-    this.client.select(blitz.config[blitz.id].cacheDb)
+  constructor (id) {
+    this.config = blitz.config[id]
+    this.client = redis.createClient(this.config.redisUrl)
+    this.client.select(this.config.cacheDb)
   }
 
   /**
    * Saves string as key value
    */
-  save (key, value, exp = blitz.config[blitz.id].cacheExp, scope) {
+  save (key, value, exp = this.config.cacheExp, scope) {
     value = JSON.stringify({
       data: value,
       type: typeof value,
@@ -84,4 +85,4 @@ class CacheController {
   }
 }
 
-module.exports = new CacheController
+module.exports = CacheController
