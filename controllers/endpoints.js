@@ -3,11 +3,10 @@
  */
 const fs = require('fs')
 const path = require('path')
-const util = require('util')
+const { promisify } = require('util')
 const decache = require('decache')
 const _ = require('lodash')
 const mongodb = require('mongodb').MongoClient
-const CircularJSON = require('circular-json')
 const Response = require('../lib/response.js')
 const Limiter = require('../lib/limiter.js')
 
@@ -39,7 +38,7 @@ class EndpointController {
    * Send raw file if available
    */
   async sendRaw(req, api) {
-    let readFile = util.promisify(fs.readFile)
+    let readFile = promisify(fs.readFile)
     let filename = blitz.config[blitz.id].publicPath + req.url
     let raw = await readFile(filename)
 
@@ -227,7 +226,7 @@ class EndpointController {
       if (url.includes('../')) {
         throw 'Attempt to navigate outside of public folder not permitted.'
       }
-      let check = util.promisify(fs.stat)
+      let check = promisify(fs.stat)
       const stat = await check(blitz.config[blitz.id].publicPath + url)
       if (stat.isDirectory()) {
         throw 'Can\'t send a full directory. Make sure to specify a file instead.'
