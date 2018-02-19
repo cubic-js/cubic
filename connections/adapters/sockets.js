@@ -43,10 +43,8 @@ class SocketAdapter extends Adapter {
     let res = this.convertRes(socket, ack)
     let layer = new Layer()
 
-    try {
-      await layer.runStack(req, res, this.stack)
-      this.pass(req, res)
-    } catch(err) {}
+    await layer.runStack(req, res, this.stack)
+    this.pass(req, res)
   }
 
   /**
