@@ -17,7 +17,12 @@ class Auth {
    */
   async req(verb, query) {
     let res = await new Promise(resolve => this.client.emit(verb, query, resolve))
-    res = JSON.parse(res.body)
+    try {
+      res = JSON.parse(res.body)
+    } catch (err) {
+      throw res
+    }
+
     if (res.error) {
       throw res
     } else {
@@ -61,9 +66,12 @@ class Auth {
       this.refresh_token = res.refresh_token
     } catch (err) {
       let t = err.reason ? parseInt(err.reason.replace(/[^0-9]+/g, '')) : 5000
-      console.error('blitz-js-query encountered an error while authenticating:')
-      console.error(err)
-      console.error(`retrying in ${t}ms \n`)
+
+      if (err.statusCode !== 503) {
+        console.error('blitz-js-query encountered an error while authenticating:')
+        console.error(err)
+        console.error(`retrying in ${t}ms \n`)
+      }
       await timeout(() => this.getToken(), t)
     }
   }
