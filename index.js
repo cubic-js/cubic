@@ -1,46 +1,23 @@
 const local = require('./config/local.js')
-const worker = require('blitz-js-loader/lib/worker')
 const Client = require('./controllers/api.js')
+const _ = require('lodash')
 
-/**
- * Describes parent class which controls all objects handling input/output
- */
 class Core {
-  /**
-   * Set config for blitz.js to merge
-   * @constructor
-   */
   constructor (options) {
-    // Process forked
-    if (process.env.isWorker) {
-      this.setup = worker.setGlobal()
-      this.setup.then(() => this.init())
-      worker.expose(this)
-    }
-
-    // Process not forked
-    else {
-      // Config which is called by blitz.js on blitz.use()
-      this.config = {
-        local: local,
-        provided: options
-      }
-
-      // Path for forking
-      this.filename = __filename
+    this.config = {
+      local: local,
+      provided: options
     }
   }
 
-  init () {
-    this.client = new Client()
-  }
+  init() {
+    const id = this.config.provided.group ? this.config.provided.group + '.core' : 'core'
+    const config = _.get(blitz.config, id)
+    config.prefix = config.prefix || `${config.group ? config.group + ' ' : ''}core`.padEnd(10)
 
-  /**
-   * Run any function from a remote process with `this` context
-   */
-  run (fn) {
-    return fn.apply(this)
+    this.Endpoint = require(config.endpointParent)
+    this.client = new Client(config)
   }
 }
 
-module.exports = process.env.isWorker ? new Core() : Core
+module.exports = Core

@@ -1,7 +1,7 @@
 /**
  * Dependencies
  */
-const BlitzQuery = require('blitz-js-query')
+const BlitzQuery = require('../../blitz-js-query/src/index.js')
 const EndpointController = require('./endpoints.js')
 
 /**
@@ -11,27 +11,29 @@ class Client {
   /**
    * Connect to blitz.js API node
    */
-  constructor () {
+  constructor (config) {
+    this.config = config
+
     // blitz-js-query options
     let options = {
 
       // Connection Settings
-      api_url: blitz.config[blitz.id].apiUrl,
-      auth_url: blitz.config[blitz.id].authUrl,
+      api_url: config.apiUrl,
+      auth_url: config.authUrl,
       use_socket: true,
       namespace: '/root',
       ignore_limiter: true,
 
       // Authentication Settings
-      user_key: blitz.config[blitz.id].userKey,
-      user_secret: blitz.config[blitz.id].userSecret
+      user_key: config.userKey,
+      user_secret: config.userSecret
     }
 
     // Connect to api-node
     this.api = new BlitzQuery(options)
 
     // Load Endpoint Controller
-    this.endpointController = new EndpointController()
+    this.endpointController = new EndpointController(config)
     this.init()
   }
 
@@ -43,12 +45,13 @@ class Client {
     this.listen()
 
     // Listen on Reconnect
+    let name = this.config.master ? this.config.master + ' core' : 'core'
     this.api.on('connect', () => {
-      blitz.log.verbose('Core      | ' + [blitz.id] + ' worker connected to target API')
+      blitz.log.verbose(`${this.config.prefix} | connected to target API`)
     })
 
     this.api.on('disconnect', () => {
-      blitz.log.verbose('Core      | ' + [blitz.id] + ' worker disconnected from target API')
+      blitz.log.verbose(`${this.config.prefix} | disconnected from target API`)
     })
   }
 
@@ -68,7 +71,7 @@ class Client {
       // Check if file available
       try {
         await this.endpointController.getEndpoint(req.url)
-        blitz.log.silly('Core      | Check successful')
+        blitz.log.silly(`${this.config.prefix} | Check successful`)
         this.api.emit(req.id, {
           available: true
         })
@@ -76,7 +79,7 @@ class Client {
 
       // Not available -> let other nodes respond
       catch (err) {
-        blitz.log.silly('Core      | Checked file not available')
+        blitz.log.silly(`${this.config.prefix} | Checked file not available`)
         this.api.emit(req.id, {
           available: false
         })
@@ -89,10 +92,10 @@ class Client {
    */
   listenForRequests () {
     this.api.on('req', async req => {
-      blitz.log.silly('Core      | Request received')
-      req = JSON.parse(req)
+      blitz.log.silly(`${this.config.prefix} | Request received`)
+
       let res = await this.endpointController.getResponse(req, this.api)
-      blitz.log.silly('Core      | Request resolved')
+      blitz.log.silly(`${this.config.prefix} | Request resolved`)
       this.api.emit(req.id, res)
     })
   }

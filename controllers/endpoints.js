@@ -17,9 +17,10 @@ class EndpointController {
   /**
    * Initialize Connections used by individual endpoints
    */
-  constructor() {
-    this.db = mongodb.connect(blitz.config[blitz.id].mongoUrl)
-    this.limiter = new Limiter()
+  constructor(config) {
+    this.config = config
+    this.db = mongodb.connect(this.config.mongoUrl)
+    this.limiter = new Limiter(config)
     this.generateEndpointSchema()
   }
 
@@ -39,7 +40,7 @@ class EndpointController {
    */
   async sendRaw(req, api) {
     let readFile = promisify(fs.readFile)
-    let filename = blitz.config[blitz.id].publicPath + req.url
+    let filename = this.config.publicPath + req.url
     let raw = await readFile(filename)
 
     api.emit('cache', {
@@ -63,22 +64,26 @@ class EndpointController {
       req.url = req.url === '' ? '/' : req.url.split('%20').join(' ')
       const res = new Response(resolve, api)
       const endpointSchema = this.findByUrl(req.url)
-      const limited = await this.limiter.check(req, endpointSchema)
+      const limited = await this.limiter.check(req, endpointSchema, this.config)
+
+      // Reject if rate limit kicked in
       if (limited) {
         return res.status(429).send(limited)
       }
 
+      // Generate target endpoint
       this.parse(req, endpointSchema)
       const unauthorized = this.authorizeRequest(req, endpointSchema)
+      const db = (await this.db).db(this.config.mongoDb)
       const Endpoint = require(endpointSchema.file)
-      const endpoint = new Endpoint(api, await this.db, req.url)
+      const endpoint = new Endpoint(api, db, req.url)
 
       // Apply benchmarking functions if benchmark=true
       if (req.query.benchmark && blitz.config.local.environment === 'development') {
         this.benchmarkify(Endpoint, endpoint, res)
       }
 
-      // Apply to endpoint
+      // Apply request to endpoint
       if (!unauthorized) {
         endpoint.main.apply(endpoint, [req, res])
           .catch(err => {
@@ -176,7 +181,7 @@ class EndpointController {
    */
   generateEndpointSchema() {
     this.endpoints = []
-    this.getEndpointTree(blitz.config[blitz.id].endpointPath)
+    this.getEndpointTree(this.config.endpointPath)
 
     // Reorder items which must not override previous url's with similar route
     // e.g. /something/:id must not be routed before /something/else
@@ -211,7 +216,7 @@ class EndpointController {
       // Routes
       endpoint.name = path.basename(filename).replace('.js', '')
       endpoint.file = filename
-      let route = endpoint.file.replace(blitz.config[blitz.id].endpointPath, '').replace('.js', '')
+      let route = endpoint.file.replace(this.config.endpointPath, '').replace('.js', '')
       endpoint.route = endpoint.url ? endpoint.url : route
       this.endpoints.push(endpoint)
     }
@@ -227,7 +232,7 @@ class EndpointController {
         throw 'Attempt to navigate outside of public folder not permitted.'
       }
       let check = promisify(fs.stat)
-      const stat = await check(blitz.config[blitz.id].publicPath + url)
+      const stat = await check(this.config.publicPath + url)
       if (stat.isDirectory()) {
         throw 'Can\'t send a full directory. Make sure to specify a file instead.'
       }
