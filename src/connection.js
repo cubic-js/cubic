@@ -1,4 +1,4 @@
-import Auth from './auth.js'
+const Auth = require('./auth.js')
 const io = require("socket.io-client")
 const queue = require("async-delay-queue")
 const timeout = (fn, s) => {
@@ -35,7 +35,7 @@ class Connection {
    * Get Tokens and build client
    */
   async connect() {
-    await this.auth.authorize().then(() => this.setClient())
+    return this.auth.authorize().then(() => this.setClient())
   }
 
   /**
@@ -163,4 +163,4 @@ class Connection {
   }
 }
 
-export default Connection
+module.exports = Connection
