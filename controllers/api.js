@@ -1,8 +1,6 @@
-/**
- * Dependencies
- */
 const BlitzQuery = require('../../blitz-js-query/src/index.js')
 const EndpointController = require('./endpoints.js')
+const CircularJSON = require('circular-json') // required for passing req object
 
 /**
  * Connects to local API Node & handles basic cycles
@@ -93,6 +91,7 @@ class Client {
   listenForRequests () {
     this.api.on('req', async req => {
       blitz.log.silly(`${this.config.prefix} | Request received`)
+      req = CircularJSON.parse(req)
 
       let res = await this.endpointController.getResponse(req, this.api)
       blitz.log.silly(`${this.config.prefix} | Request resolved`)
