@@ -20,7 +20,7 @@ class HttpAdapter extends Adapter {
             .use(bodyParser.json())
 
     const middleware = new Middleware(config)
-    this.app.use(middleware.auth)
+    this.app.use(middleware.auth.bind(middleware))
     this.server = http.createServer(this.app)
     this.server.listen(config.port)
   }

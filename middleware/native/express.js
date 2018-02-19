@@ -39,7 +39,7 @@ class ExpressMiddleware {
     // No token provided
     else {
       blitz.log.verbose(`${this.config.prefix} | (http) ${req.user.uid} connected without token`)
-      next()
+      return next()
     }
   }
 }
