@@ -14,8 +14,8 @@ class Server {
    * Loads up HTTP/Sockets server and modifies it
    */
   constructor (config) {
-    this.http = new HTTP(config.port)
-    this.sockets = new Sockets(this.http.server)
+    this.http = new HTTP(config)
+    this.sockets = new Sockets(config, this.http.server)
     this.cache = new Cache(config)
     this.setRequestClient()
     this.applyMiddleware()

@@ -22,6 +22,7 @@ function disconnect(socket) {
 
 module.exports = (sockets, config) => {
   const cache = new Cache(config)
+  const node = `${config.group ? config.group + ' ' : ''}api`.padEnd(10)
 
   /**
    * Default namespace
@@ -53,7 +54,7 @@ module.exports = (sockets, config) => {
 
     // Listen to Updates from core node and publish to subscribers
     socket.on('publish', update => {
-      blitz.log.verbose('API       | > publishing data for ' + update.endpoint)
+      blitz.log.verbose(`${node} | > publishing data for ${update.endpoint}`)
       sockets.io.to(update.endpoint).emit(update.endpoint, update.data)
       sockets.root.to(update.endpoint).emit(update.endpoint, update.data)
     })

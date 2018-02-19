@@ -4,7 +4,9 @@ class SocketMiddleware {
    * rather than on a per-request basis.
    */
   verifySocket(socket, next) {
-    let ip = socket.handshake.headers['x-forwarded-for'] ||
+    const group = socket.blitz.config.group
+    const node = `${group ? group + ' ' : ''}api`.padEnd(10)
+    const ip = socket.handshake.headers['x-forwarded-for'] ||
       socket.handshake.address.address ||
       socket.request.connection.remoteAddress
     socket.user = {
@@ -19,13 +21,13 @@ class SocketMiddleware {
       // Set req.user from token
       try {
         socket.user = jwt.verify(token, blitz.config[blitz.id].certPublic)
-        blitz.log.verbose(`Socket.io | ${ip} connected as ${socket.user.uid} on ${socket.nsp.name}`)
+        blitz.log.verbose(`${node} | (ws) ${ip} connected as ${socket.user.uid} on ${socket.nsp.name}`)
         return next()
       }
 
       // Invalid Token
       catch (err) {
-        blitz.log.verbose(`Socket.io | ${socket.user.uid} rejected (${err}) on ${socket.nsp.name}`)
+        blitz.log.verbose(`${node} | (ws) ${socket.user.uid} rejected (${err}) on ${socket.nsp.name}`)
         return next({
           error: 'Invalid Token',
           reason: err
@@ -35,7 +37,7 @@ class SocketMiddleware {
 
     // No Token provided
     else {
-      blitz.log.verbose(`Socket.io | ${socket.user.uid} connected without token on ${socket.nsp.name}`)
+      blitz.log.verbose(`${node} | (ws) ${socket.user.uid} connected without token on ${socket.nsp.name}`)
       return next()
     }
   }
@@ -45,7 +47,7 @@ class SocketMiddleware {
    */
   verifyExpiration(req, res, next) {
     if (new Date().getTime() / 1000 - req.user.exp > 0) {
-      blitz.log.verbose(`Socket.io | ${req.user.uid} rejected (jwt expired)`)
+      blitz.log.verbose(`${node} | (ws) ${req.user.uid} rejected (jwt expired)`)
       return next({
         error: 'Invalid Token',
         reason: 'jwt expired'
@@ -64,9 +66,9 @@ class SocketMiddleware {
     }
 
     // No criteria matched
-    blitz.log.verbose('Socket.io | Rejected connection to ' + socket.nsp.name)
+    blitz.log.verbose(`${node} | (ws) Rejected connection to ${socket.nsp.name}`)
     return next(new Error(`Rejected connection to ${socket.nsp.name}`))
   }
 }
 
-module.exports = new SocketMiddleware
+module.exports = SocketMiddleware
