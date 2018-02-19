@@ -31,8 +31,8 @@ class SocketAdapter extends Adapter {
    */
   async prepass (socket, verb, request, ack) {
     // Modify req/res object to allow same middleware approach as in express
-    let req = converter.convertReq(request, socket, verb)
-    let res = converter.convertRes(socket, ack)
+    let req = this.convertReq(request, socket, verb)
+    let res = this.convertRes(socket, ack)
     let layer = new Layer()
 
     try {
