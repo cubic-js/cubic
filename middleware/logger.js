@@ -4,6 +4,10 @@ const chalk = require('chalk')
  * Logger Middleware
  */
 class Logger {
+  constructor(config) {
+    this.node = `${config.group ? config.group + ' ' : ''}api`.padEnd(10)
+  }
+
   /**
    * Console logs complete output
    * @param {object} req - HTTP request object
@@ -29,9 +33,9 @@ class Logger {
    */
   setPrefix (req) {
     if (req.channel === 'Sockets') {
-      this.prefix = chalk.grey('Socket.io | ')
+      this.prefix = chalk.grey(`${this.node} | (ws) `)
     } else {
-      this.prefix = chalk.grey('HTTPS     | ')
+      this.prefix = chalk.grey(`${this.node} | (http) `)
     }
   }
 
@@ -114,4 +118,4 @@ class Logger {
   }
 }
 
-module.exports = new Logger
+module.exports = Logger

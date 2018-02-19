@@ -17,21 +17,14 @@ class SocketAdapter extends Adapter {
     this.io = io.listen(server)
 
     // Add auth token verification middleware
-    const middleware = new Middleware()
-
-    // Add config object to socket so we can log which node we're on. For some
-    // dumb reason socket.io applies a different context to all mw functions.
-    this.io.use((socket, next) => {
-      socket.blitz = { config }
-      next()
-    })
-    this.io.use(middleware.verifySocket)
-    this.use(middleware.verifyExpiration)
+    const middleware = new Middleware(config)
+    this.io.use(middleware.verifySocket.bind(middleware))
+    this.use(middleware.verifyExpiration.bind(middleware))
 
     // Create root namespace
     this.root = this.io.of('/root')
-    this.root.use(middleware.verifySocket)
-    this.root.use(middleware.authorizeRoot)
+    this.root.use(middleware.verifySocket.bind(middleware))
+    this.root.use(middleware.authorizeRoot.bind(middleware))
   }
 
   /**

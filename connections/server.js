@@ -4,7 +4,7 @@
 const HTTP = require('./adapters/http.js')
 const Sockets = require('./adapters/sockets.js')
 const Cache = require('../middleware/cache.js')
-const logger = require('../middleware/logger.js')
+const Logger = require('../middleware/logger.js')
 
 /**
  * Procedurally builds up http/sockets server
@@ -17,6 +17,7 @@ class Server {
     this.http = new HTTP(config)
     this.sockets = new Sockets(config, this.http.server)
     this.cache = new Cache(config)
+    this.logger = new Logger(config)
     this.setRequestClient()
     this.applyMiddleware()
     this.applyRoutes(config)
@@ -26,8 +27,8 @@ class Server {
    * Applies Middleware to adapters
    */
   applyMiddleware () {
-    this.use(logger.log)
-    this.use(this.cache.check)
+    this.use(this.logger.log.bind(this.logger))
+    this.use(this.cache.check.bind(this.cache))
   }
 
   /**
