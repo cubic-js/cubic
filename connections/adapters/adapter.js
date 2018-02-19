@@ -6,12 +6,12 @@ const mime = require('mime')
  * Class describing connection adapter / Request Handler for different channel
  */
 class Adapter {
-  constructor (port) {
+  constructor (config) {
     // Create empty adapter middleware stack
     this.stack = []
 
     // Bind Request Controller to object
-    this.request = new Request()
+    this.request = new Request(config)
   }
 
   /**

@@ -5,7 +5,7 @@ const chalk = require('chalk')
  */
 class Logger {
   constructor(config) {
-    this.node = `${config.group ? config.group + ' ' : ''}api`.padEnd(10)
+    this.config = config
   }
 
   /**
@@ -33,9 +33,9 @@ class Logger {
    */
   setPrefix (req) {
     if (req.channel === 'Sockets') {
-      this.prefix = chalk.grey(`${this.node} | (ws) `)
+      this.prefix = chalk.grey(`${this.config.prefix} | (ws) `)
     } else {
-      this.prefix = chalk.grey(`${this.node} | (http) `)
+      this.prefix = chalk.grey(`${this.config.prefix} | (http) `)
     }
   }
 

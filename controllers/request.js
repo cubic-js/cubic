@@ -2,6 +2,10 @@
  * Checks request against endpoints given by core node
  */
 class RequestController {
+  constructor (config) {
+    this.config = config
+  }
+
   async getResponse (req) {
     return this.send(req)
   }
@@ -21,11 +25,11 @@ class RequestController {
         // Generate unique callback for emit & pass to responding node
         req.id = process.hrtime().join('').toString()
         socket.emit('req', req)
-        blitz.log.silly('API       | Request sent')
+        blitz.log.silly(`${this.config.prefix} | Request sent`)
 
         // Listen to socket for response.
         socket.once(req.id, data => {
-          blitz.log.silly('API       | Request successful - Sending data to client')
+          blitz.log.silly(`${this.config.prefix} | Request successful - Sending data to client`)
           resolve(data)
         })
       }
@@ -50,7 +54,7 @@ class RequestController {
 
       // Send check to root nsp
       this.client.root.emit('check', request)
-      blitz.log.silly('API       | Check broadcasted')
+      blitz.log.silly(`${this.config.prefix} | Check broadcasted`)
 
       // Listen to all sockets in root nsp for response
       let sio = Object.keys(this.client.root.sockets)
@@ -62,7 +66,7 @@ class RequestController {
 
           // Check successful
           if (res.available) {
-            blitz.log.silly('API       | Check acknowledged')
+            blitz.log.silly(`${this.config.prefix} | Check acknowledged`)
             sockets.push(socket)
           }
 
@@ -97,7 +101,7 @@ class RequestController {
             body: 'All nodes currently busy. Please try again later.'
           }
         })
-      }, blitz.config[blitz.id].requestTimeout)
+      }, this.config.requestTimeout)
     })
   }
 }

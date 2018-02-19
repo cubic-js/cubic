@@ -1,6 +1,8 @@
+const jwt = require('jsonwebtoken')
+
 class ExpressMiddleware {
   constructor(config) {
-    this.node = `${config.group ? config.group + ' ' : ''}api`.padEnd(10)
+    this.config = config
   }
 
   /**
@@ -19,14 +21,14 @@ class ExpressMiddleware {
 
       // Set req.user from token
       try {
-        req.user = jwt.verify(token, blitz.config[blitz.id].certPublic)
-        blitz.log.verbose(`${this.node} | (http) ${ip} connected as ${req.user.uid}`)
+        req.user = jwt.verify(token, this.config.certPublic)
+        blitz.log.verbose(`${this.config.prefix} | (http) ${ip} connected as ${req.user.uid}`)
         return next()
       }
 
       // Invalid Token
       catch (err) {
-        blitz.log.verbose(`${this.node} | (http) ${ip} rejected (${err})`)
+        blitz.log.verbose(`${this.config.prefix} | (http) ${ip} rejected (${err})`)
         return res.status(400).json({
           error: 'Invalid Token',
           reason: err
@@ -36,7 +38,7 @@ class ExpressMiddleware {
 
     // No token provided
     else {
-      blitz.log.verbose(`${this.node} | (http) ${req.user.uid} connected without token`)
+      blitz.log.verbose(`${this.config.prefix} | (http) ${req.user.uid} connected without token`)
       next()
     }
   }

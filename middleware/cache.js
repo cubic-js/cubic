@@ -18,7 +18,7 @@ class CacheController {
       scope: scope
     })
     key = key.toLowerCase().split(' ').join('%20')
-    blitz.log.verbose('API       | < caching data for ' + key)
+    blitz.log.verbose(`${this.config.prefix} | < caching data for ${key}`)
     this.client.setex(key, exp, value)
   }
 
@@ -77,7 +77,7 @@ class CacheController {
       key = key.toLowerCase().split(' ').join('%20')
       this.client.get(key, (err, res) => {
         if (res) {
-          blitz.log.verbose('API       | > returning cached data for ' + key)
+          blitz.log.verbose(`${this.config.prefix} | > returning cached data for ${key}`)
           resolve(JSON.parse(res))
         } else resolve(null)
       })

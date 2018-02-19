@@ -9,7 +9,7 @@ const Middleware = require('../../middleware/native/express.js')
  */
 class HttpAdapter extends Adapter {
   constructor (config) {
-    super()
+    super(config)
 
     // Load Express
     this.app = express()

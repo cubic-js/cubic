@@ -11,7 +11,7 @@ class SocketAdapter extends Adapter {
    * Constructs Socket
    */
   constructor (config, server) {
-    super()
+    super(config)
 
     // Listen on server
     this.io = io.listen(server)
