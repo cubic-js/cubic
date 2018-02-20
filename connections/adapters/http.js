@@ -16,6 +16,10 @@ class HttpAdapter extends Adapter {
 
     // Start HTTP server.
     this.app.set('port', config.port)
+    this.app.use((req, res, next) => {
+      res.header("X-powered-by", "Blitz-js")
+      next()
+    })
     this.app.use(bodyParser.urlencoded({ extended: true }))
             .use(bodyParser.json())
 

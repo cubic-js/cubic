@@ -25,24 +25,24 @@ class CacheController {
   /**
    * Middleware function. Respond if data present, Next if not
    */
-  async check (req, res, next) {
+  async check (req, res) {
     let cached = await this.get(req.url)
 
     if (cached) {
       // Authorized
       if (req.user.scp.includes(cached.scope)) {
         this.respond(cached, req, res)
+        throw '(cache) break middleware chain'
       }
 
       // Unauthorized, reject
       else {
         res.status(401).json({
-          error: 'Unauthorized.',
+          error: 'Unauthorized for cached data.',
           reason: `Expected scope: ${cached.scope}. Got ${req.user.scp}.`
         })
+        throw 'Unauthorized for cached data.'
       }
-    } else {
-      next()
     }
   }
 

@@ -1,7 +1,6 @@
 const Adapter = require('./adapter.js')
 const io = require('socket.io')
 const Middleware = require('../../middleware/native/sockets.js')
-const Layer = require('../layers.js')
 
 /**
  * Handles all I/O for Socket.io
@@ -34,10 +33,15 @@ class SocketAdapter extends Adapter {
     // Modify req/res object to allow same middleware approach as in express
     let req = this.convertReq(request, socket, verb)
     let res = this.convertRes(socket, ack)
-    let layer = new Layer()
 
-    await layer.runStack(req, res, this.stack)
-    this.pass(req, res)
+    try {
+      await this.stack.run(req, res)
+      await this.pass(req, res)
+    } catch (err) {
+      if (err instanceof Error) {
+        throw err
+      }
+    }
   }
 
   /**

@@ -14,17 +14,15 @@ class Logger {
    * @param {object} res - HTTP response object
    * @param {function} next - Next middleware function
    */
-  log (req, res, next) {
+  log (req, res) {
     // Prepare output
     this.setPrefix(req)
     this.setUser(req)
-    this.logErr(next)
     this.logRes(res)
     this.addTimer(res)
 
     // Actual Console Output
     blitz.log.info(`${this.prefix}< ${this.user.uid}: ${req.method} ${req.url}`)
-    next()
   }
 
   /**
@@ -50,20 +48,6 @@ class Logger {
       this.user.uid = req.user.uid
     } else {
       this.user.uid = chalk.green(req.user.uid)
-    }
-  }
-
-  /**
-   * Log any errors passed to next()
-   * @param {function} next - Next middleware function
-   */
-  logErr (next) {
-    let _next = next
-    next = (err) => {
-      _next(err)
-      if (err) {
-        blitz.log.info(this.prefix + chalk.red('> ') + err)
-      }
     }
   }
 
@@ -111,8 +95,7 @@ class Logger {
 
         // Time Logging
         let diff = process.hrtime(timestart)
-        blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`))
-        blitz.log.info(' ')
+        blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms\n`))
       }
     }
   }

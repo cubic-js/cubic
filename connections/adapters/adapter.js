@@ -1,5 +1,5 @@
 const Request = require('../../controllers/request.js')
-const Layer = require('../layers.js')
+const Stack = require('async-middleware-stack')
 const mime = require('mime')
 
 /**
@@ -8,7 +8,7 @@ const mime = require('mime')
 class Adapter {
   constructor (config) {
     // Create empty adapter middleware stack
-    this.stack = []
+    this.stack = new Stack(config)
 
     // Bind Request Controller to object
     this.request = new Request(config)
@@ -18,11 +18,14 @@ class Adapter {
    * Functions to run before allowing request
    */
   async prepass (req, res) {
-    const layer = new Layer()
     try {
-      await layer.runStack(req, res, this.stack)
-      this.pass(req, res)
-    } catch(err) {}
+      await this.stack.run(req, res)
+      await this.pass(req, res)
+    } catch (err) {
+      if (err instanceof Error) {
+        throw err
+      }
+    }
   }
 
   /**
@@ -46,16 +49,8 @@ class Adapter {
     }
   }
 
-  /**
-   * Accepts middleware to run before this.pass()
-   */
-  use (route, fn, verb) {
-    let middleware = {
-      method: verb || 'ANY',
-      route: typeof route === 'string' ? route : '*',
-      fn: typeof fn === 'function' ? fn : route
-    }
-    this.stack.unshift(middleware)
+  use(route, fn, verb) {
+    this.stack.use(route, fn, verb)
   }
 }
 

@@ -49,15 +49,14 @@ class SocketMiddleware {
   /**
    * Check for JWT expiration on each request additionally.
    */
-  verifyExpiration(req, res, next) {
+  verifyExpiration(req, res) {
     if (new Date().getTime() / 1000 - req.user.exp > 0) {
       blitz.log.verbose(`${this.config.prefix} | (ws) ${req.user.uid} rejected (jwt expired)`)
-      return next({
+      res.send({
         error: 'Invalid Token',
         reason: 'jwt expired'
       })
-    } else {
-      return next()
+      throw 'Invalid token. JWT expired.'
     }
   }
 
