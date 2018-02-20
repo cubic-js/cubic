@@ -34,13 +34,9 @@ class SocketAdapter extends Adapter {
     let req = this.convertReq(request, socket, verb)
     let res = this.convertRes(socket, ack)
 
-    try {
-      await this.stack.run(req, res)
+    let passed = await this.stack.run(req, res)
+    if (passed) {
       await this.pass(req, res)
-    } catch (err) {
-      if (err instanceof Error) {
-        throw err
-      }
     }
   }
 

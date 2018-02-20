@@ -86,7 +86,7 @@ class Logger {
     let _send = res.send
     let prefix = this.prefix
 
-    res.send = function (body) {
+    res.send = res.json = function (body) {
       // Response Logic
       if (typeof body === 'object') {
         _json.call(this, body)

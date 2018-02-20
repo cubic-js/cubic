@@ -31,17 +31,15 @@ class CacheController {
     if (cached) {
       // Authorized
       if (req.user.scp.includes(cached.scope)) {
-        this.respond(cached, req, res)
-        throw '(cache) break middleware chain'
+        return this.respond(cached, req, res)
       }
 
       // Unauthorized, reject
       else {
-        res.status(401).json({
+        return res.status(401).json({
           error: 'Unauthorized for cached data.',
           reason: `Expected scope: ${cached.scope}. Got ${req.user.scp}.`
         })
-        throw 'Unauthorized for cached data.'
       }
     }
   }
@@ -62,9 +60,9 @@ class CacheController {
     // Primitive data type / objects
     else {
       if (cached.type === 'json') {
-        res.json(cached.data)
+        return res.json(cached.data)
       } else {
-        res.send(cached.data)
+        return res.send(cached.data)
       }
     }
   }

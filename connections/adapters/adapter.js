@@ -18,13 +18,9 @@ class Adapter {
    * Functions to run before allowing request
    */
   async prepass (req, res) {
-    try {
-      await this.stack.run(req, res)
+    let passed = await this.stack.run(req, res)
+    if (passed) {
       await this.pass(req, res)
-    } catch (err) {
-      if (err instanceof Error) {
-        throw err
-      }
     }
   }
 
