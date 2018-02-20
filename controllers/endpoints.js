@@ -266,17 +266,21 @@ class EndpointController {
     let reqUrl = url.split('?')[0].split('/')
 
     for (let endpoint of this.endpoints) {
-      let route = endpoint.route.split('/')
+      let route = endpoint.url ? endpoint.url.split('/') : false ||
+                  (this.config.baseUrl + endpoint.route).split('/')
 
       // Remove trailing empty el from `/` at end of route, but not if url is
       // '/' (index)
       if (!route[route.length - 1] && route.length > 2) route.pop()
       if (route.length === reqUrl.length) {
         for (let i = 0; i < reqUrl.length; i++) {
-
+          // Current element doesn't match and isn't placeholder?
           if (route[i] !== reqUrl[i] && !route[i].includes(':')) {
             break
-          } else if (i === reqUrl.length - 1) {
+          }
+
+          // Is last compared element in url?
+          else if (i === reqUrl.length - 1) {
             found = endpoint
           }
         }

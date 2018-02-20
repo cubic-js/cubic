@@ -5,6 +5,7 @@ module.exports = {
    */
   endpointPath: `${process.cwd()}/api`,
   endpointParent: __dirname + '/../lib/endpoint.js',
+  baseUrl: '',
 
   /**
    * Target Node URLs
