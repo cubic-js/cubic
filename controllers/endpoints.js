@@ -80,16 +80,23 @@ class EndpointController {
     return new Promise(async resolve => {
       const res = new Response(resolve, api)
       const endpoint = this.findByUrl(req.url)
-      await this.stack.run(req, res, endpoint)
 
-      // Generate target endpoint
-      const db = (await this.db).db(this.config.mongoDb)
-      const Component = require(endpoint.file)
-      const component = new Component(api, db, req.url)
+      try {
+        await this.stack.run(req, res, endpoint)
 
-      // Apply request to endpoint
-      if (!res.sent) {
-        await component.main(req, res)
+        // Generate target endpoint
+        const db = (await this.db).db(this.config.mongoDb)
+        const Component = require(endpoint.file)
+        const component = new Component(api, db, req.url)
+
+        // Apply request to endpoint
+        if (!res.sent) {
+          await component.main(req, res)
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          throw err
+        }
       }
     })
   }
