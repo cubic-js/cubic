@@ -82,13 +82,11 @@ class EndpointController {
       const endpoint = this.findByUrl(req.url)
       const passed = await this.stack.run(req, res, endpoint)
 
+      // Execute target endpoint
       if (passed) {
-        // Generate target endpoint
         const db = (await this.db).db(this.config.mongoDb)
         const Component = require(endpoint.file)
         const component = new Component(api, db, req.url)
-
-        // Apply request to endpoint
         await component.main(req, res)
       }
     })
