@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken')
 
 class ExpressMiddleware {
-  constructor(config) {
+  constructor (config) {
     this.config = config
   }
 
   /**
    * Verify JWT signature/expiration date and add user to `req` object.
    */
-  auth(req, res, next) {
+  auth (req, res, next) {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     req.user = {
       uid: ip,
@@ -41,6 +41,11 @@ class ExpressMiddleware {
       blitz.log.verbose(`${this.config.prefix} | (http) ${req.user.uid} connected without token`)
       return next()
     }
+  }
+
+  decode (req, res, next) {
+    req.url = req.url === '' ? '/' : decodeURI(req.url)
+    next()
   }
 }
 

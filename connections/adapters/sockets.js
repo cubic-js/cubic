@@ -49,7 +49,7 @@ class SocketAdapter extends Adapter {
       let url = verb === 'GET' ? request : request.url
 
       req.body = request.body
-      req.url = url
+      req.url = url === '' ? '/' : decodeURI(url)
       req.user = socket.user
       req.method = verb
       req.channel = 'Sockets'
