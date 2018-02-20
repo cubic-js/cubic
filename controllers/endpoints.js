@@ -7,8 +7,12 @@ const { promisify } = require('util')
 const decache = require('decache')
 const _ = require('lodash')
 const mongodb = require('mongodb').MongoClient
+const Stack = require('./middleware.js')
 const Response = require('../lib/response.js')
-const Limiter = require('../lib/limiter.js')
+const Limiter = require('../middleware/limiter.js')
+const url = require('../middleware/url.js')
+const auth = require('../middleware/auth.js')
+const method = require('../middleware/method.js')
 
 /**
  * Interface for handling endpoints
@@ -20,8 +24,21 @@ class EndpointController {
   constructor(config) {
     this.config = config
     this.db = mongodb.connect(this.config.mongoUrl)
+    this.stack = new Stack(config)
     this.limiter = new Limiter(config)
     this.generateEndpointSchema()
+    this.applyMiddleware()
+  }
+
+  /**
+   * Add middleware functions to be executed before request is passed to
+   * endpoint.
+   */
+  applyMiddleware() {
+    this.stack.use(this.limiter.check.bind(this.limiter))
+    this.stack.use(url.parse.bind(url))
+    this.stack.use(auth.verify.bind(auth))
+    this.stack.use(method.verify.bind(method))
   }
 
   /**
@@ -61,119 +78,20 @@ class EndpointController {
    */
   async callEndpoint(req, api) {
     return new Promise(async resolve => {
-      req.url = req.url === '' ? '/' : req.url.split('%20').join(' ')
       const res = new Response(resolve, api)
-      const endpointSchema = this.findByUrl(req.url)
-      const limited = await this.limiter.check(req, endpointSchema, this.config)
-
-      // Reject if rate limit kicked in
-      if (limited) {
-        return res.status(429).send(limited)
-      }
+      const endpoint = this.findByUrl(req.url)
+      await this.stack.run(req, res, endpoint)
 
       // Generate target endpoint
-      this.parse(req, endpointSchema)
-      const unauthorized = this.authorizeRequest(req, endpointSchema)
       const db = (await this.db).db(this.config.mongoDb)
-      const Endpoint = require(endpointSchema.file)
-      const endpoint = new Endpoint(api, db, req.url)
-
-      // Apply benchmarking functions if benchmark=true
-      if (req.query.benchmark && blitz.config.local.environment === 'development') {
-        this.benchmarkify(Endpoint, endpoint, res)
-      }
+      const Component = require(endpoint.file)
+      const component = new Component(api, db, req.url)
 
       // Apply request to endpoint
-      if (!unauthorized) {
-        endpoint.main.apply(endpoint, [req, res])
-          .catch(err => {
-            if (blitz.config.local.environment === 'development') {
-              console.log(err)
-            }
-            res.status(500).send(err)
-          })
-      } else {
-        resolve(unauthorized)
+      if (!res.sent) {
+        await component.main(req, res)
       }
     })
-  }
-
-  /**
-   * Dynamically benchmark the execution time of each function in the endpoint
-   */
-  benchmarkify(Endpoint, endpoint, res) {
-    let _res = _.cloneDeep(res)
-    let benchmark = {}
-
-    // Disable publish and caching
-    endpoint.publish = () => {}
-    endpoint.cache = () => {}
-
-    // Override original res.send so it won't be triggered in original function
-    res.send = (data) => {
-      // error? pass it through, otherwise do nothing
-      if (res.statusCode >= 400) {
-        res.send(data)
-      } else {}
-    }
-
-    Object.getOwnPropertyNames(Endpoint.prototype).forEach(property => {
-      if (property !== 'constructor') {
-        const _fn = endpoint[property]
-
-        endpoint[property] = function() {
-          const t0 = process.hrtime()
-          const value = _fn.apply(endpoint, arguments)
-
-          // Wait for promise before updating timers
-          if (value && value.then) {
-            value.then(() => {
-              const t1 = process.hrtime(t0)
-              benchmark[property] = `${(t1[0] * 1e9 + t1[1]) / 1e6}ms`
-              if (property === 'main') {
-                _res.send(benchmark)
-              }
-            })
-          }
-
-          // Update timers immediately
-          else {
-            const t1 = process.hrtime(t0)
-            benchmark[property] = `${(t1[0] * 1e9 + t1[1]) / 1e6}ms`
-            if (property === 'main') {
-              _res.send(benchmark)
-            }
-          }
-          return value
-        }
-      }
-    })
-  }
-
-  /**
-   * Check request method and authorization before processing request
-   */
-  authorizeRequest(req, endpoint) {
-    if (!req.user.scp.includes(endpoint.scope) && !req.user.scp.includes('write_root')) {
-      return {
-        statusCode: 403,
-        body: {
-          error: 'Unauthorized',
-          reason: `Expected ${endpoint.scope}, got ${req.user.scp}.`
-        },
-        method: 'send'
-      }
-    }
-    if (req.method.toLowerCase() !== endpoint.method.toLowerCase()) {
-      return {
-        statusCode: 405,
-        body: {
-          error: 'Method not allowed.',
-          reason: `Expected ${endpoint.method}, got ${req.method}.`
-        },
-        method: 'send'
-      }
-    }
   }
 
   /**
@@ -288,82 +206,6 @@ class EndpointController {
       }
     }
     return found
-  }
-
-  /**
-   * Parse URL to assign placeholder data in case of socket.io connections
-   */
-  parse(req, endpoint) {
-    let placeholders = endpoint.route.split(':').length - 1
-    this.parseParams(req, endpoint)
-    this.parseQuery(req, endpoint)
-  }
-
-  /**
-   * Put placeholders from url into req.params
-   * E.g. /users/:id/tasks -> req.params.id holds the data in place of :id
-   */
-  parseParams(req, endpoint) {
-    let eurl = endpoint.route.split('/')
-    let curl = req.url.split('/')
-
-    for (let i = 0; i < eurl.length; i++) {
-      let fragment = eurl[i]
-      if (fragment.includes(':')) {
-        req.params[fragment.replace(":", "")] = curl[i]
-      }
-    }
-  }
-
-  /**
-   * Put query params into req.query
-   * E.g. /someroute?test=Kappa123 -> req.query.test = Kappa123
-   */
-  parseQuery(req, endpoint) {
-    let regex = /(\?)([^=]+)\=([^&]+)/
-    let url = req.url
-    let matching = regex.exec(url)
-
-    while (matching) {
-      let key = matching[2]
-      for (let i = 0; i < endpoint.query.length; i++) {
-        if (key === endpoint.query[i].name) {
-          req.query[key] = matching[3]
-        }
-      }
-      url = url.replace(matching[0], '').replace('&', '?')
-      matching = regex.exec(url)
-    }
-
-    this.parseQueryTypes(req, endpoint)
-  }
-
-  /**
-   * Convert string params from URL to target type
-   */
-  parseQueryTypes(req, endpoint) {
-    endpoint.query.forEach(query => {
-      let def = typeof query.default === 'function' ? query.default() : query.default
-      let key = query.name
-
-      // Convert value to target type
-      if (req.query[key]) {
-        if (typeof def === 'number') {
-          req.query[key] = parseFloat(req.query[key])
-        }
-        if (typeof def === 'boolean') {
-          req.query[key] = req.query[key] == 'true' || req.query[key] == '1'
-        }
-        if (typeof def === 'object') {
-          req.query[key] = JSON.stringify(req.query[key])
-        }
-      }
-
-      // No value given, use default
-      else {
-        req.query[key] = def
-      }
-    })
   }
 }
 

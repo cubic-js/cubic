@@ -15,33 +15,39 @@ const RateLimiter = require('rolling-rate-limiter')
  */
 class Limiter {
   constructor(config) {
+    this.config = config
     this.redis = Redis.createClient(config.redisUrl)
   }
 
   /**
    * Check if user has exceeded their rate limits for this endpoint
    */
-  async check (req, endpoint, config) {
+  async check (req, res, endpoint) {
 
     // User is root -> skip limiting
     if (req.user.scp.includes('write_root') ||
         req.user.scp.includes('ignore_rate_limit') ||
         (endpoint.limit && endpoint.limit.disable)) {
-      return false
+      return
     }
 
     // Limit with rate specified in endpoint
-    return new Promise(resolve => {
+    const limited = await new Promise(resolve => {
       const limit = RateLimiter(Object.assign({
         redis: this.redis,
         namespace: 'rate-limiter'
-      }, endpoint.limit || config.limit))
+      }, endpoint.limit || this.config.limit))
 
       // Cached value is `uid + url` e.g. nakroma/v1/foo/bar
       limit(req.user.uid + endpoint.route, (err, time, actions) => {
         this.limit(err, time, actions, resolve)
       })
     })
+
+    // Reject request if limited
+    if (limited) {
+      return res.status(429).send(limited)
+    }
   }
 
   /**
