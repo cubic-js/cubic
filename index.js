@@ -32,7 +32,6 @@ class View {
       const controller = blitz.nodes.view.core.client.endpointController
       endpoints.override(controller)
       endpoints.rebuild(controller)
-      //controller.stack.use(middleware.sendView.bind(middleware))
       this.webpackServer = new WebpackServer()
     }
   }
