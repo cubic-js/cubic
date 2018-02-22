@@ -54,7 +54,7 @@ class CacheController {
     if (url[url.length - 1].split('?')[0].split('.')[1]) {
       let bufferData = new Buffer(cached.data, 'base64')
       res.header('content-type', mime.getType(req.url))
-      res.end(bufferData)
+      return res.end(bufferData)
     }
 
     // Primitive data type / objects
