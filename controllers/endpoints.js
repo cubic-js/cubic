@@ -11,6 +11,7 @@ const Stack = require('async-middleware-stack')
 const Response = require('../lib/response.js')
 const Limiter = require('../middleware/limiter.js')
 const url = require('../middleware/url.js')
+const query = require('../middleware/query.js')
 const auth = require('../middleware/auth.js')
 const method = require('../middleware/method.js')
 
@@ -37,8 +38,9 @@ class EndpointController {
   applyMiddleware() {
     this.stack.use(this.limiter.check.bind(this.limiter))
     this.stack.use(url.parse.bind(url))
-    this.stack.use(auth.verify.bind(auth))
-    this.stack.use(method.verify.bind(method))
+    this.stack.use(query.verify)
+    this.stack.use(auth.verify)
+    this.stack.use(method.verify)
   }
 
   /**
@@ -57,8 +59,8 @@ class EndpointController {
    */
   async sendRaw(req, api) {
     let readFile = promisify(fs.readFile)
-    let filename = this.config.publicPath + req.url
-    let raw = await readFile(filename)
+    let filepath = this.config.publicPath + req.url
+    let raw = await readFile(filepath)
 
     api.emit('cache', {
       scope: '',
@@ -113,25 +115,25 @@ class EndpointController {
   /**
    * Generates endpoint tree
    */
-  getEndpointTree(filename) {
-    let stats = fs.lstatSync(filename)
+  getEndpointTree(filepath) {
+    let stats = fs.lstatSync(filepath)
     let endpoint = {}
 
     // Folder
     if (stats.isDirectory()) {
-      fs.readdirSync(filename).map(child => {
-        return this.getEndpointTree(filename + '/' + child)
+      fs.readdirSync(filepath).map(child => {
+        return this.getEndpointTree(filepath + '/' + child)
       })
     }
 
     // File -> Set endpoint config
     else {
-      let Endpoint = require(filename.replace('//', '/'))
+      let Endpoint = require(filepath.replace('//', '/'))
       let endpoint = new Endpoint().schema
 
       // Routes
-      endpoint.name = path.basename(filename).replace('.js', '')
-      endpoint.file = filename
+      endpoint.name = path.basename(filepath).replace('.js', '')
+      endpoint.file = filepath
       let route = endpoint.file.replace(this.config.endpointPath, '').replace('.js', '')
       endpoint.route = endpoint.url ? endpoint.url : route
       this.endpoints.push(endpoint)
@@ -177,7 +179,7 @@ class EndpointController {
    * Get specific endpoint through url detection
    */
   findByUrl(url) {
-    url = url === '' ? '/' : url.split('%20').join(' ')
+    url = url === '' ? '/' : url.split('%20').join(' ') // empty url? => '/'
     let found = false
     let reqUrl = url.split('?')[0].split('/')
 
