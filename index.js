@@ -1,5 +1,5 @@
-const Core = require("../blitz-js-core")
-const API = require("../blitz-js-api")
+const Core = require("blitz-js-core")
+const API = require("blitz-js-api")
 const local = require("./config/local.js")
 const WebpackServer = require('./controllers/webpack.js')
 const endpoints = require('./override/endpoints.js')
