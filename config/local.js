@@ -3,6 +3,7 @@ module.exports = {
   /**
    * Core-Node config
    */
+  publicPath:`${process.cwd()}/assets`,
   endpointPath: `${process.cwd()}/api`,
   endpointParent: __dirname + '/../lib/endpoint.js',
   baseUrl: '',
