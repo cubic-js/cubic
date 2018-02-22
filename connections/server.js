@@ -14,13 +14,20 @@ class Server {
    * Loads up HTTP/Sockets server and modifies it
    */
   constructor (config) {
-    this.http = new HTTP(config)
-    this.sockets = new Sockets(config, this.http.server)
+    this.config = config
     this.cache = new Cache(config)
     this.logger = new Logger(config)
+    this.http = new HTTP(config)
+    this.sockets = new Sockets(config, this.http.server)
+  }
+
+  /**
+   * Open up connection listeners
+   */
+  init () {
     this.setRequestClient()
     this.applyMiddleware()
-    this.applyRoutes(config)
+    this.applyRoutes(this.config)
   }
 
   /**

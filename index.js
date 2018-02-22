@@ -16,6 +16,7 @@ class API {
     config.prefix = config.prefix || `${config.group ? config.group + ' ' : ''}api`.padEnd(10)
 
     this.server = new Server(config)
+    this.server.init()
   }
 
   /**
