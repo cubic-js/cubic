@@ -55,7 +55,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [
-          path.resolve(blitz.config.view.core.sourcePath),
+          path.resolve(blitz.config.view.sourcePath),
           path.resolve(__dirname, '../../vue')
         ]
       },
@@ -92,7 +92,7 @@ module.exports = {
     // Resolve dependencies differently when in debug due to source code folder
     // being different from current working directory
     alias: Object.assign({
-      src: blitz.config.view.core.sourcePath,
+      src: blitz.config.view.sourcePath,
       public: blitz.config.view.core.publicPath,
     }, isDebug ? {
       // HMR will trigger a second vue instance without this

@@ -14,14 +14,14 @@ const Blitz = require('blitz-js-query')
 const api = new Blitz({
   api_url: blitz.config.view.client.apiUrl,
   auth_url: blitz.config.view.client.authUrl,
-  user_key: blitz.config[blitz.id].userKey,
-  user_secret: blitz.config[blitz.id].userSecret
+  user_key: blitz.config.view.core.userKey,
+  user_secret: blitz.config.view.core.userSecret
 })
 
 /**
  * Render Dependencies
  */
-const sourcePath = blitz.config.view.core.sourcePath
+const sourcePath = blitz.config.view.sourcePath
 const publicPath = blitz.config.view.core.publicPath
 const createBundleRenderer = require("vue-server-renderer").createBundleRenderer
 

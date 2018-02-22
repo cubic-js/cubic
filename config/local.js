@@ -1,12 +1,14 @@
-const os = require('os')
-
 module.exports = {
   api: {
     port: 3020,
     routes: __dirname + '/endpoints/routes.js',
     events: __dirname + '/endpoints/events.js',
     cacheExp: 10,
-    id: 'view_api'
+
+    /**
+     * Blitz information
+     */
+    group: 'view'
   },
 
   core: {
@@ -20,10 +22,8 @@ module.exports = {
     /**
      * Endpoint config
      */
-    endpointPath: __dirname + '/../vue/endpoints',
+    endpointPath: `${process.cwd()}/view/endpoints`,
     endpointParent: __dirname + '/../override/endpoint.js',
-    sourcePath: __dirname + '/../view',
-    publicPath: __dirname + '/../assets',
 
     /**
      * Target Node URLs
@@ -31,7 +31,10 @@ module.exports = {
     apiUrl: 'http://localhost:3020',
     authUrl: 'http://localhost:3030',
 
-    id: 'view_core'
+    /**
+     * Blitz information
+     */
+    group: 'view'
   },
 
   /**
@@ -48,19 +51,10 @@ module.exports = {
    * Webpack config
    */
   webpack: {
+    skipBuild: false,
     clientConfig: __dirname + '/webpack/client.config.js',
     serverConfig: __dirname + '/webpack/server.config.js'
   },
-
-  /**
-   * View related settings
-   */
-  skipWebpackBuild: false,
-
-  /**
-   * Cluster config
-   */
-  cores: Math.ceil(os.cpus().length / 2),
-  master: true,
-  id: 'view'
+  sourcePath: `${process.cwd()}/view`,
+  sitesPath: `${process.cwd()}/view/sites`
 }

@@ -1,6 +1,5 @@
 const view = require("../controllers/view.js")
 
-
 /**
  * Class describing generic database/calculation methods
  * Any lower-level method extends this class
@@ -10,13 +9,11 @@ class Endpoint {
     this.schema = {
       scope: '',
       method: 'GET',
-      description: "There is no description for this endpoint yet.",
-      limit: blitz.config[blitz.id].limit,
       query: [],
       view: '/app.vue'
     }
     this.api = api
-    this.db = db ? db.db(blitz.config[blitz.id].mongoDb) : 0
+    this.db = db
     this.url = url
   }
 

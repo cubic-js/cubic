@@ -2,7 +2,9 @@
  * Event Configuration for Socket.io Server
  */
 
-module.exports = (sockets, cache) => {
+module.exports = (sockets) => {
+  const cache = blitz.nodes.view.api.server.cache
+
   /**
    * Default namespace
    */

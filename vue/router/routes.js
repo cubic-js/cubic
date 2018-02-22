@@ -5,58 +5,63 @@
                     */
                     export default [
   {
-    "path": "/branding",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/branding.vue`),
-    "props": true
-  },
-  {
-    "path": "/company",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/company.vue`),
-    "props": true
-  },
-  {
-    "path": "/contact",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/contact.vue`),
-    "props": true
-  },
-  {
-    "path": "/contribute",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/contribute.vue`),
-    "props": true
-  },
-  {
-    "path": "/imprint",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/imprint.vue`),
-    "props": true
-  },
-  {
     "path": "/",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view//app.vue`),
-    "props": true
-  },
-  {
-    "path": "/open-source",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/open-source.vue`),
-    "props": true
-  },
-  {
-    "path": "/privacy",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/privacy.vue`),
-    "props": true
-  },
-  {
-    "path": "/warframe",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/warframe/index.vue`),
-    "props": true
-  },
-  {
-    "path": "/warframe/search",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/warframe/search.vue`),
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//app.vue`),
     "props": true
   },
   {
     "path": "/warframe/items/:item",
-    "component": () => import(`D:/dev/nexus-stats/nexus-stats/config/../view/pages/warframe/items/price.vue`),
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/warframe/items/price.vue`),
+    "props": true
+  },
+  {
+    "path": "/branding",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/branding.vue`),
+    "props": true
+  },
+  {
+    "path": "/company",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/company.vue`),
+    "props": true
+  },
+  {
+    "path": "/contact",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/contact.vue`),
+    "props": true
+  },
+  {
+    "path": "/contribute",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/contribute.vue`),
+    "props": true
+  },
+  {
+    "path": "/imprint",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/imprint.vue`),
+    "props": true
+  },
+  {
+    "path": "/open-source",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/open-source.vue`),
+    "props": true
+  },
+  {
+    "path": "/privacy",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/privacy.vue`),
+    "props": true
+  },
+  {
+    "path": "/warframe/",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/warframe/index.vue`),
+    "props": true
+  },
+  {
+    "path": "/warframe/items/price",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/warframe/items/price.vue`),
+    "props": true
+  },
+  {
+    "path": "/warframe/search",
+    "component": () => import(`D:/dev/nexus-stats/nexus-stats/view//sites/warframe/search.vue`),
     "props": true
   }
 ]
