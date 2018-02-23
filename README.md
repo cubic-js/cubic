@@ -1,4 +1,4 @@
-[![blitz.js](blob:https://imgur.com/71a8ffa4-e7b3-4f13-ae45-959d26a634d9)](https://github.com/nexus-devs)
+[![blitz.js](https://i.imgur.com/94FGvVT.png)](https://github.com/nexus-devs)
 
 ##  
 
