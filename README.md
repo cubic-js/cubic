@@ -1,13 +1,11 @@
 
-[![blitz.js API](/banner.png)](https://github.com/nexus-devs)
+[![blitz.js API](https://i.imgur.com/iZZkPod.png)](https://github.com/nexus-devs)
 
-## 
+##
+
+<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/blitz-js'>blitz-js</a> endpoint components.</p>
 
 <br>
-
-## Nexus Core Resource Node
-Node.js server for data-processing of fundamental statistics. Uses the standard [nexus-stats-api](https://github.com/nexus-devs/npm-nexus-api) module to connect to the nexus-stats infrastructure.
-- - - -
 <br>
 
 ## Method Handling
