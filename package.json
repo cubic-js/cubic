@@ -1,6 +1,6 @@
 {
   "name": "blitz-js-core",
-  "version": "0.5.14",
+  "version": "1.0.0",
   "description": "⚡ Core Node for blitz.js framework",
   "main": "index.js",
   "scripts": {
