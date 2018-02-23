@@ -1,29 +1,26 @@
-const BlitzLoader = require('../blitz-js-loader')
+const BlitzLoader = require('blitz-js-loader')
+const Auth = require('blitz-js-auth')
+const Api = require('blitz-js-api')
+const Core = require('blitz-js-core')
+const View = require('blitz-js-view')
 const intro = require('./intro.js')
-const Auth = require('../blitz-js-auth')
-const Api = require('../blitz-js-api')
-const Core = require('../blitz-js-core')
-const View = require('../blitz-js-view')
 
 class Blitz {
+  constructor (config) {
+    const Blitz = BlitzLoader(config)
+    intro.roll()
+    return Blitz
+  }
+
   /**
    * Load blitz-js with default nodes
    */
-  load (config) {
-    this.init(config)
+  bootstrap () {
     blitz.use(new Api())
     blitz.use(new Core())
     blitz.use(new Auth())
     blitz.use(new View())
   }
-
-  /**
-   * Load blitz-js without default nodes
-   */
-  init (config) {
-    BlitzLoader(config)
-    intro.roll()
-  }
 }
 
-module.exports = new Blitz
+module.exports = Blitz
