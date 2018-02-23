@@ -1,4 +1,4 @@
-[![blitz.js](/banner.png)](https://github.com/nexus-devs)
+[![blitz.js](https://i.imgur.com/lotIdMo.png)](https://github.com/nexus-devs)
 
 ##  
 
@@ -6,32 +6,31 @@
 
 <br>
 
-Blitz.js is a Node.js framework which allows you to build all application logic inside components. The framework automatically exposes your components to a RESTful HTTP & Websocket API and takes care of authorization, rate limits and more independently. **TL;DR** - Blitz lets you focus exclusively on your app's own code.
-
-<br>
-
-**Note:** Blitz.js is currently solely focused on supporting our needs at [@nexus-stats](https://github.com/nexus-devs/nexus-stats). However, we believe that guiding the design of this framework with a real project and solving real problems, will ultimately result in a better outcome than trying to generically fit everyone. 
+Blitz-js is a minimal full-stack framework for real-time applications that puts
+the developer first. Be it frontend development in ES7+ thanks to webpack and babel,
+hot-module-replacement for your view, or component-based API endpoints to keep
+your backend tidy - all without having to bother about manual setups.
 
 <br>
 
 ## Features
-- Strong separation of concerns. Build your app in components, then cluster and deploy these components how it fits your application best.
+Out of the box, blitz-js comes with everything needed to create a full-size
+web application for modern standards:
+- Full OAuth2 integration
+- Vue.js as UI rendering engine
+- Webpack for optimal dev & prod bundling
+- Rate limits and caching on a per endpoint-component basis
+- Automatically exposed API endpoints to HTTP and WebSockets
+- Pub/Sub model for real-time data
 
-- Built on top of Express and Socket.io to make full use of Real-Time Communications.
-
-- Express-like middleware support for all incoming requests, applied to both HTTP and Websocket requests.
-
-- Per-component adjustable caching and rate limiting.
-
-- Full OAuth2 integration.
-
-- Deep integration with Vue.js as default rendering engine.
-
-- Hot Module Replacement out of the box.
+As you can see, we keep blitz-js fairly opinionated, because it allows us to
+focus on one solution and make its usage as convenient as possible.
+However, the fully modular nature of the framework allows to easily modify existing
+nodes, so you'll never be locked in with what *we* think is best.
 
 <br>
 
-## Example
+## Usage
 
 ```javascript
 require("blitz-js")()
@@ -59,6 +58,7 @@ Now visit `localhost:3010/foo` to get your `bar`.
 
 <br>
 
+
 ## Configuration
 ```javascript
 require("blitz-js")({ key: value })
@@ -66,8 +66,8 @@ require("blitz-js")({ key: value })
 
 | Key           | Value         | Description   |
 |:------------- |:------------- |:------------- |
-| environment   | development   | / | 
-| environment   | production    | / | 
+| environment   | development   | / |
+| environment   | production    | / |
 | logLevel      | info          | Default log level. Logs limited information about the node status. |
 | logLevel      | error         | Error Log Level. Helpful for automated tests. |
 | logLevel      | verbose       | Verbose log level. Includes Request Timestamps, Socket Connections, Config events, etc. |
