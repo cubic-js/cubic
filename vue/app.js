@@ -7,7 +7,7 @@
 import Vue from 'vue'
 import VueTouch from 'vue-touch-hotfix'
 import App from 'src/app.vue'
-import Blitz from 'blitz-js-query-browser'
+import Blitz from 'blitz-js-query'
 import { createRouter } from "./router"
 import { createStore } from "./store"
 import { sync } from "vuex-router-sync"
