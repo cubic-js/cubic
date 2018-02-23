@@ -11,7 +11,7 @@ module.exports = {
   /**
    * Target Node URLs
    */
-  apiUrl: 'http://localhost:3001',
+  apiUrl: 'http://localhost:3003',
   authUrl: 'http://localhost:3030',
   userKey: undefined,
   userSecret: undefined,
