@@ -1,4 +1,4 @@
-[![blitz-js-auth](/banner.png)](https://github.com/nexus-devs)
+[![blitz-js-auth](https://i.imgur.com/8m8Ewsm.png)](https://github.com/nexus-devs)
 
 ##
 
@@ -8,15 +8,12 @@
 <br>
 
 ## Usage
-With the [blitz-js](https://github.com/nexus-devs/blitz-js) loader:
 ```js
-const Blitz = require('blitz-js')({
-  auth: {
-    options,
-    api: { options },
-    core: { options }
-  }
-})
+const Blitz = require('blitz-js')
+const Auth = require('blitz-js-auth')
+const blitz = new Blitz()
+
+blitz.use(new Auth(options))
 ```
 | Option        | Default       | Description   |
 |:------------- |:------------- |:------------- |
@@ -26,15 +23,15 @@ const Blitz = require('blitz-js')({
 | certPublic | none | String of public RSA key used to verify JWT signature. (Set automatically in dev mode) |
 | certPass | none | Optional secret to decrypt the provided RSA keys |
 | maxLogsPerUser | `50` | Number of access logs for each user |
-
-See override configs for the `api` and `core` key [below](https://github.com/nexus-devs/blitz-js-auth#override-config).
+| api | `<object>` | Configure internal blitz-js-api node. See [override options](#override-config) below. |
+| core | `<object>` | Configure internal blitz-js-core node. |
 
 <br>
 
 ## How does it work?
 **Imagine this:** You're a happy little web-app that wants to get data from a Web API. However,
 that API endpoint is only open to authorized users. The API will only let us in if we show
-it a document of who we are which is signed by a trusted authority.<br>
+it a document explaining who we are, which is signed by a trusted authority.<br>
 
 In our case, the auth server is that trusted authority. To get the document, we just
 need to provide the username and passphrase used when registering our account and
@@ -137,7 +134,7 @@ the API node and how we can read the data from blitz-js-core endpoints.
 
 ### On the client
 For **http** requests, just put the access token in the auth header.<br>
-With node requests, the options object would look something like this:
+With node's 'requests' library, the options object would look something like this:
 ```js
 {
   header: {
@@ -153,6 +150,9 @@ Just put this as the options object when connecting:
   query: 'bearer=<access_token>'
 }
 ```
+Note that these things are taken care of automatically with the [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
+package. The examples merely serve for clarification, but you shouldn't actually
+have to use them manually.
 
 ### On the API node
 On the API node we have a default middleware function that verifies the
@@ -186,7 +186,7 @@ Below are the overrides used by default.
 |:------------- |:------------- |:------------- |
 | port   | `3030`   | Port to listen on for requests. |
 | cacheDb| `3`  | Redis database used to store cache data. |
-| id     | `'auth_api'` | Custom id to identify specific nodes. |
+| group     | `'auth'` | Group which sub-node is attached to. |
 
 #### blitz-js-core
 | Core Option        | Override       | Description   |
@@ -195,7 +195,7 @@ Below are the overrides used by default.
 | mongoDb  | `'blitz-js-auth'`  | Mongodb database to use in endpoints by default |
 | apiUrl   | `'http://localhost:3030'` | API to serve requests on. |
 | authUrl  | `'http://localhost:3030'` | Auth server to authenticate on. (same as API) |
-| id       | `'auth_core'` | Custom id to identify specific nodes.
+| group       | `'auth'` | Group which sub-node is attached to. |
 
 
 <br>

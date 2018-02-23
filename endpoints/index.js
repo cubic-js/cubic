@@ -1,4 +1,4 @@
-const Endpoint = require(blitz.config[blitz.id].endpointParent)
+const Endpoint = require(blitz.config.auth.core.endpointParent)
 
 class Index extends Endpoint {
   constructor(api, db, url) {

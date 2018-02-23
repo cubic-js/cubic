@@ -1,5 +1,3 @@
-const os = require('os')
-
 module.exports = {
   api: {
     port: 3030,
@@ -12,8 +10,7 @@ module.exports = {
     /**
      * Blitz information
      */
-    id: 'auth_api',
-    cores: Math.ceil(os.cpus().length / 2)
+    group: 'auth'
   },
 
   core: {
@@ -33,8 +30,11 @@ module.exports = {
      * Logic-specific
      */
     endpointPath: __dirname + '/../endpoints/',
-    id: 'auth_core',
-    cores: Math.ceil(os.cpus().length / 2)
+
+    /**
+     * Blitz information
+     */
+    group: 'auth'
   },
 
   /**
@@ -50,10 +50,4 @@ module.exports = {
   purgeInterval: 3600000, // Interval to check for inactive users (in ms)
   purgeMaxLimit: 2592000000, // Age at which user is considered inactive (in ms)
   maxLogsPerUser: 50, // Max number of ip logs for authentication
-  // Production only. Set to 0 to disable pruge.
-
-  /**
-   * Cluster config
-   */
-  master: true,
 }

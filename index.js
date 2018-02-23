@@ -1,7 +1,5 @@
-/**
- * blitz.js authentication server
- * Web-API to get authentication for resource servers
- */
+const Core = require('blitz-js-core')
+const API = require('blitz-js-api')
 const local = require('./config/local.js')
 const preauth = require('./hooks/preauth.js')
 const purge = require('./hooks/purge.js')
@@ -13,7 +11,6 @@ const purge = require('./hooks/purge.js')
  */
 class Auth {
   constructor (options) {
-    // Config which is called by blitz.js on blitz.use()
     this.config = {
       local: local,
       provided: options
@@ -21,20 +18,16 @@ class Auth {
   }
 
   async init () {
-    const Core = require('blitz-js-core')
-    const API = require('blitz-js-api')
 
     // API node for distributing requests
-    blitz.use(new API(blitz.config.auth.api))
-
-    // Core Node which processes incoming requests
-    blitz.hook(blitz.config.auth.core.id, preauth.verifyUserIndices)
-    await blitz.use(new Core(blitz.config.auth.core))
-
-    // Hook auth listener manually before node is connected
-    if (!blitz.config.auth.api.disable && !blitz.config.auth.disable) {
+    await blitz.use(new API(blitz.config.auth.api))
+    if (!blitz.config.auth.api.disable) {
       preauth.validateWorker()
     }
+
+    // Core Node which processes incoming requests
+    blitz.hook('auth.core', preauth.verifyUserIndices)
+    await blitz.use(new Core(blitz.config.auth.core))
   }
 }
 

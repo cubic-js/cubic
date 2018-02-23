@@ -1,50 +1,45 @@
 const mongodb = require('mongodb').MongoClient
 const bcrypt = require('bcryptjs')
-const mongoVerifySingleIndex = async (db, col, index) => {
-  db.db(blitz.config.auth.core.mongoDb).collection(col).createIndex(index)
-}
+const jwt = require('jsonwebtoken')
+const randtoken = require('rand-token')
 
-/**
- * Pre-Auth Class used for establishing connections to auth core node
- * Note: the middleware function must be complete, meaning no references to
- * any values outside of its own scope. We'll run that function on a whole
- * different process.
- */
 class PreAuth {
   /**
    * Set mongo indices to optimize queries for user_key and refresh tokens
    */
   async verifyUserIndices () {
-    let db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
+    const client = await mongodb.connect(blitz.config.auth.core.mongoUrl)
+    const db = client.db(blitz.config.auth.core.mongoDb)
+    const mongoVerifySingleIndex = async (db, col, index) => {
+      db.collection(col).createIndex(index)
+    }
+
     mongoVerifySingleIndex(db, 'users', { refresh_token: 1 })
     mongoVerifySingleIndex(db, 'users', { user_key: 1 })
-    db.close()
+    client.close()
   }
 
   /**
-   * Set up manual endpoint for auth worker to authenticate against
+   * Set up manual endpoint for auth worker to authenticate against. This solves
+   * the chicken-egg problem of letting the auth worker authenticate itself.
    */
   validateWorker () {
-    blitz.nodes[blitz.config.auth.api.id].post('/authenticate', async(req, res, next) => {
-      // Load dependencies inside function because it's used in another process
-      const jwt = require('jsonwebtoken')
-      const bcrypt = require('bcryptjs')
-      const randtoken = require('rand-token')
-      const mongodb = require('mongodb').MongoClient
-      const db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
-
+    blitz.nodes.auth.api.use('/authenticate', async(req, res) => {
       // Core-node attempts to connect
       if (req.body && req.body.user_key) {
-        let user = await db.db(blitz.config.auth.core.mongoDb).collection('users').findOne({
+        const client = await mongodb.connect(blitz.config.auth.core.mongoUrl)
+        const db = client.db(blitz.config.auth.core.mongoDb)
+        const user = await db.collection('users').findOne({
           user_key: req.body.user_key
         })
 
         // Check if secret matches
-        if (user && user.scope.includes('root')) {
+        if (user && user.scope.includes('write_auth')) {
           try {
             await bcrypt.compare(req.body.user_secret, user.user_secret)
           } catch(err) {
-            return next()
+            client.close()
+            throw 'Invalid password.'
           }
           let key = blitz.config.auth.certPrivate
           let passphrase = blitz.config.auth.certPass
@@ -56,26 +51,28 @@ class PreAuth {
             algorithm: blitz.config.auth.alg
           })
 
+          // Cleanup
+          client.close()
+          this.removeMiddleware(blitz.nodes.auth.api.server.http.stack.stack, '/authenticate')
+          this.removeMiddleware(blitz.nodes.auth.api.server.sockets.stack.stack, '/authenticate')
+
           // Send back tokens
-          return res.json({
+          res.json({
             access_token: access_token,
             refresh_token: refresh_token
           })
         }
-
-        // Password not matching
-        else {
-          return next()
-        }
+        client.close()
       }
+    }, 'POST')
+  }
 
-      // Normal Authentication attempt
-      else {
-        return next()
-      }
-
-      db.close()
-    })
+  /**
+   * Remove middleware again after auth worker has been verified
+   */
+  removeMiddleware(stack, route) {
+    const index = stack.findIndex(mw => mw.route === route)
+    stack.splice(index, 1)
   }
 }
 
