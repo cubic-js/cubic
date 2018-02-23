@@ -1,6 +1,6 @@
 module.exports = {
   api: {
-    port: 3020,
+    port: 3000,
     routes: __dirname + '/endpoints/routes.js',
     events: __dirname + '/endpoints/events.js',
     cacheExp: 10,
