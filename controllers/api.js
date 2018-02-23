@@ -1,4 +1,4 @@
-const BlitzQuery = require('../../blitz-js-query/src/index.js')
+const BlitzQuery = require('blitz-js-query')
 const EndpointController = require('./endpoints.js')
 const CircularJSON = require('circular-json') // required for passing req object
 
