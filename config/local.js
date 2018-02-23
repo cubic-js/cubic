@@ -28,7 +28,7 @@ module.exports = {
     /**
      * Target Node URLs
      */
-    apiUrl: 'http://localhost:3020',
+    apiUrl: 'http://localhost:3000',
     authUrl: 'http://localhost:3030',
 
     /**
@@ -41,7 +41,7 @@ module.exports = {
    * Web client config
    */
   client: {
-    apiUrl: 'http://localhost:3010',
+    apiUrl: 'http://localhost:3003',
     authUrl: 'http://localhost:3030',
     userKey: null,
     userSecret: null

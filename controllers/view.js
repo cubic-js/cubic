@@ -12,8 +12,8 @@ const path = require("path")
  */
 const Blitz = require('blitz-js-query')
 const api = new Blitz({
-  api_url: blitz.config.view.client.apiUrl,
-  auth_url: blitz.config.view.client.authUrl,
+  api_url: blitz.config.view.core.apiUrl,
+  auth_url: blitz.config.view.core.authUrl,
   user_key: blitz.config.view.core.userKey,
   user_secret: blitz.config.view.core.userSecret
 })
