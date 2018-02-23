@@ -20,7 +20,7 @@ blitz.use(new Api(options))
 ```
 | Option        | Default       | Description   |
 |:------------- |:------------- |:------------- |
-| port   | `3001`   | Port to listen on for requests. |
+| port   | `3003`   | Port to listen on for requests. |
 | redisUrl | `'redis://localhost'` | Base URL for redis connection. |
 | cacheDb | `1` | Redis database used to store cache data. |
 | cacheExp | `10` | Time in seconds until cached data expires when no explicit duration is specified. |

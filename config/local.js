@@ -3,7 +3,7 @@ module.exports = {
   /**
    * Current Node Information
    */
-  port: 3001,
+  port: 3003,
   routes: __dirname + '/../connections/entry/routes.js',
   events: __dirname + '/../connections/entry/events.js',
 
