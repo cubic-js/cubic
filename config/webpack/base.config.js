@@ -58,31 +58,6 @@ module.exports = {
           path.resolve(blitz.config.view.sourcePath),
           path.resolve(__dirname, '../../vue')
         ]
-      },
-      // Minify images
-      {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: 'image-webpack-loader',
-        options: {
-          name: '[name].[hash].[ext]',
-          query: {
-            mozjpeg: {
-              progressive: true,
-              quality: 100
-            },
-            gifsicle: {
-              interlaced: false
-            },
-            optipng: {
-              optimizationLevel: 4
-            },
-            pngquant: {
-              quality: 50 - 70,
-              speed: 3
-            },
-            svgo: {}
-          }
-        }
       }
     ]
   },
