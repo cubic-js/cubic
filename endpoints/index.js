@@ -7,7 +7,7 @@ class Index extends Endpoint {
   }
 
   async main(req, res) {
-    res.send('Use the /authenticate endpoint for user/secret auth or /refresh for further refresh-token based authentication. New users can be created at /register .')
+    res.send('<p style="font-family: sans-serif">Use the <b>/authenticate</b> endpoint for initial authentication or <b>/refresh</b> to get new access tokens. New users can be created at <b>/register</b>.<br><br> For full docs, please refer to the blitz-js-auth <a href="https://github.com/nexus-devs/blitz-js-auth">github repo</a>.</p>')
   }
 }
 
