@@ -15,6 +15,11 @@ const bcrypt = require('bcryptjs')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Authentication extends Endpoint {
+  constructor(api, db, url) {
+    super(api, db, url)
+    this.schema.method = 'POST'
+  }
+
   async main (req, res) {
     res.send(this.newUser(req))
   }
