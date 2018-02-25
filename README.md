@@ -115,6 +115,13 @@ token.
 
 ## /register
 **GET /register**
+>Body:
+>```
+>{
+>  user_key: <username>,
+>  user_secret: <password>
+>}
+>```
 > Response:
 >```
 >{
