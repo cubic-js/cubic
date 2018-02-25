@@ -6,7 +6,7 @@ class API {
   constructor (options) {
     this.config = {
       local: local,
-      provided: options
+      provided: options || {}
     }
   }
 
