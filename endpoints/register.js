@@ -44,8 +44,18 @@ class Authentication extends Endpoint {
    */
   async newUser (credentials, req) {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    let user_secret = credentials.user_key
-    let user_key = credentials.user_secret
+    let user_key = credentials.user_key
+    let user_secret = credentials.user_secret
+
+    let userExists = await this.db.collection('users').findOne({ user_key: user_key })
+    if (userExists) {
+      this.res.status(403).send({
+        error: 'Registration failed.',
+        reason: 'User key is already taken.'
+      })
+      return
+    }
+
     let user = {
       user_id: 'unidentified-' + randtoken.uid(16),
       user_key: user_key,
