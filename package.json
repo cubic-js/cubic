@@ -1,6 +1,6 @@
 {
   "name": "blitz-js-auth",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "⚡ Auth Node for blitz.js framework",
   "main": "index.js",
   "scripts": {
