@@ -21,7 +21,21 @@ class Authentication extends Endpoint {
   }
 
   async main (req, res) {
-    res.send(this.newUser(req))
+    let credentials = req.body
+    this.res = res
+
+    // Credentials sent
+    if (credentials.user_key && credentials.user_secret) {
+      // Send to user
+    }
+
+    // No allowed content
+    else {
+      res.status(401).send({
+        error: 'Unauthorized.',
+        reason: 'Expected user credentials. Got: ' + JSON.stringify(credentials)
+      })
+    }
   }
 
   /**
