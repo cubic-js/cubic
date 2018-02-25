@@ -49,12 +49,42 @@ will go until we get a response:
 
 [![mode](https://i.imgur.com/9tH6ctn.png)](https://i.imgur.com/9tH6ctn.png)
 
-This is only half the way a request goes. To see what happens once the request
+This is only one half of the way a request goes. To see what happens once the request
 is sent to a connected core node, check out [blitz-js-core](https://github.com/nexus-dev/blitz-js-core).
 
 <br>
 
-## RESTful requests
+## Writing custom middleware
+If you need to access the `req`, `res` objects before they're sent to the
+core node, you can simply add your custom function to the async middleware
+stack. It behaves much like express middleware, but takes advantage of ES7
+async.
+
+### Example
+```js
+blitz.nodes.api.use('/ferret', async (req, res) => {
+
+  // Return image of angry ferret if the user isn't tobi.
+  if (req.user.uid !== 'tobi') {
+    let image = await getSomeAngryFerretPictures()
+    return res.send(image) // we MUST return a truthy value to stop the mw stack.
+  }
+
+  // Proceed to the secret ferret endpoint if the user actually is tobi.
+})
+```
+We recommend reading through the full docs at the [async-middleware-stack](https://github.com/Kaptard/async-middleware-stack)
+repo if you need further information.
+
+### Native Middleware
+If necessary, you can still add native connection middleware which runs before
+our own.
+```js
+let api = require('path/to/api/node.js')
+
+blitz.nodes.api.server.http.app.use((req, res, next) => {}) // Native Express Middleware
+blitz.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Socket.io Middleware
+```
 
 <br>
 
@@ -83,7 +113,7 @@ async main(req, res) {
 ### Subscribing with blitz-js-query
 ```js
 const Client = require('blitz-js-query')
-const client = new Client({ /** options **/ })
+const client = new Client(options)
 
 // Subscribe
 client.subscribe('/api/resource/to/listen/on', data => {
@@ -94,51 +124,43 @@ client.subscribe('/api/resource/to/listen/on', data => {
 client.unsubscribe('/api/resource/to/listen/on')
 ```
 
-### Subscribing with Socket.io
-```js
-const socket = require('socket.io-client')('http://target-host.tld')
+<br>
 
-// Subscribe
+## RESTful requests with Socket.io
+While usually we recommend [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
+for client connections, you might find yourself in a situation where you can
+only use Socket.io directly, so here's a quick rundown how it works with blitz-js.
+
+#### GET
+```javascript
+socket.emit("GET", "/foo", data => {
+  // Do something with response data
+})
+```
+
+#### POST, PUT, etc
+```javascript
+socket.emit("POST", {
+  url: "/bar",
+  body: "Your POST data"
+}, data => {
+  // Do something with response data
+})
+```
+
+#### Subscribing
+```js
 socket.emit('subscribe', '/api/resource/to/listen/on')
 socket.on('/api/resource/to/listen/on', data => {
-  console.log(data)
+  // Do something with newly updated data
 })
+```
 
-// Unsubscribe
+#### Unsubscribing
+```js
 socket.emit('unsubscribe', '/api/resource/to/listen/on')
 socket.off('/api/resource/to/listen/on')
 ```
-
-<br>
-
-## Writing Middleware
-The server also provides a simple express-like middleware stack to be executed before each request gets passed to another node, but **after** native express/socket middleware.<br>
-
-### Example
-```javascript
-let api = require('path/to/api/node.js')
-
-api.use((req, res, next) => {
-    if (req.user.uid === 'foo') {
-        res.send('bar') // Same as res.status(200).send('bar')
-    } else {
-        next(new Error('I\'m a teapot')) // Sends error and stops further actions
-    }
-})
-```
-Note that socket requests get modified to behave just like an express request, thus enabling the use of middleware functions fitting all connection types.
-
-### Native Middleware
-If necessary, you can still target native connection middleware which runs before the one explained above.
-```javascript
-let api = require('path/to/api/node.js')
-
-api.http.app.use((req, res, next) => {}) // Native Express Middleware
-api.sockets.io.use((socket, next) => {}) // Native Socket.io Middleware
-```
-Keep in mind that native socket middleware won't allow you to respond to requests with callback functions as of v1.7.3 or lower.
-
-<br>
 
 ## License
 [MIT](/LICENSE.md)
