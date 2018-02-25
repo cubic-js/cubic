@@ -26,7 +26,8 @@ class Authentication extends Endpoint {
 
     // Credentials sent
     if (credentials.user_key && credentials.user_secret) {
-      // Send to user
+      let user_id = await this.newUser(credentials, req)
+      if (user_id) res.send(user_id)
     }
 
     // No allowed content
@@ -41,10 +42,10 @@ class Authentication extends Endpoint {
   /**
    * Generate new User into db and return credentials to use
    */
-  async newUser (req) {
+  async newUser (credentials, req) {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    let user_secret = randtoken.uid(64)
-    let user_key = randtoken.uid(64)
+    let user_secret = credentials.user_key
+    let user_key = credentials.user_secret
     let user = {
       user_id: 'unidentified-' + randtoken.uid(16),
       user_key: user_key,
@@ -57,8 +58,7 @@ class Authentication extends Endpoint {
     this.db.collection('users').insertOne(user)
     await this.saveIP(user_key, ip, 'register', true)
     return ({
-      user_key: user_key,
-      user_secret: user_secret
+      user_id: user.user_id
     })
   }
 

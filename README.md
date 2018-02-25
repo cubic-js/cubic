@@ -125,13 +125,12 @@ token.
 > Response:
 >```
 >{
->  user_key: <username>,
->  user_secret: <password>
+>  user_id: <uid>
 >}
 >```
 
 Used to save new users to the database. Passwords are hashed with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) at 8
-salt rounds.  
+salt rounds. 
 Please make sure you're using HTTPS, otherwise someone could intercept the plaintext password.
 
 <br>
