@@ -47,6 +47,14 @@ class Authentication extends Endpoint {
     let user_key = credentials.user_key
     let user_secret = credentials.user_secret
 
+    if (!user_key.trim() || !user_secret.trim()) {
+      this.res.status(403).send({
+        error: 'Registration failed.',
+        reason: 'User key or secret is empty.'
+      })
+      return
+    }
+
     let userExists = await this.db.collection('users').findOne({ user_key: user_key })
     if (userExists) {
       this.res.status(403).send({
