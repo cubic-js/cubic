@@ -18,6 +18,9 @@ const blitz = new Blitz()
 
 blitz.use(new Api(options))
 ```
+This will open a web server on localhost:3003 which serves data from connected
+blitz-js-core nodes.
+
 | Option        | Default       | Description   |
 |:------------- |:------------- |:------------- |
 | port   | `3003`   | Port to listen on for requests. |
@@ -47,7 +50,7 @@ All without having to think about which protocol we're working with.
 For further understanding, here's a simple model showing the way a request
 will go until we get a response:
 
-[![mode](https://i.imgur.com/9tH6ctn.png)](https://i.imgur.com/9tH6ctn.png)
+[![model](https://i.imgur.com/9tH6ctn.png)](https://i.imgur.com/9tH6ctn.png)
 
 This is only one half of the way a request goes. To see what happens once the request
 is sent to a connected core node, check out [blitz-js-core](https://github.com/nexus-dev/blitz-js-core).
@@ -126,7 +129,7 @@ client.unsubscribe('/api/resource/to/listen/on')
 
 <br>
 
-## RESTful requests with Socket.io
+## Making requests as a client
 While usually we recommend [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
 for client connections, you might find yourself in a situation where you can
 only use Socket.io directly, so here's a quick rundown how it works with blitz-js.
