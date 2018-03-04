@@ -15,14 +15,9 @@ class Logger {
    * @param {function} next - Next middleware function
    */
   log (req, res) {
-    // Prepare output
     this.setPrefix(req)
     this.setUser(req)
-    this.logRes(res)
-    this.addTimer(res)
-
-    // Actual Console Output
-    blitz.log.info(`${this.prefix}< ${this.user.uid}: ${req.method} ${req.url}`)
+    this.addTimer(req, res)
   }
 
   /**
@@ -44,35 +39,10 @@ class Logger {
   setUser (req) {
     this.user = {}
 
-    if (req.user.scp.includes('basic')) {
-      this.user.uid = req.user.uid
-    } else {
+    if (req.user.scp) {
       this.user.uid = chalk.green(req.user.uid)
-    }
-  }
-
-  /**
-   * Log Output of res.send
-   * @param {object} res - HTTP response object
-   */
-  logRes (res) {
-    let _send = res.send
-    let prefix = this.prefix
-
-    res.send = function (body) {
-      _send.call(this, body)
-
-      // Output is error? (4xx/5xx/etc)
-      let io = '> '
-      if (res.statusCode.toString()[0] < 4) {
-        io = chalk.green(io)
-      } else {
-        io = chalk.red(io)
-      }
-
-      if (body) {
-        blitz.log.info(prefix + io + res.statusCode + ': ' + body.replace(/\r?\n|\r/g, ' ').slice(0, 100) + (body.length > 100 ? '...' : ''))
-      }
+    } else {
+      this.user.uid = req.user.uid
     }
   }
 
@@ -80,11 +50,13 @@ class Logger {
    * Add Timer to original res.send
    * @param {object} res - HTTP response object
    */
-  addTimer (res) {
+  addTimer (req, res) {
     let timestart = process.hrtime()
     let _json = res.json
     let _send = res.send
+    let _this = this
     let prefix = this.prefix
+    let log = ''
 
     res.send = res.json = function (body) {
       // Response Logic
@@ -93,9 +65,24 @@ class Logger {
       } else {
         _send.call(this, body)
 
-        // Time Logging
+        // Log request
+        log += `${_this.prefix}< ${_this.user.uid}: ${req.method} ${req.url}\n`
+
+        // Log response
+        let io = '> '
+        if (res.statusCode.toString()[0] < 4) {
+          io = chalk.green(io)
+        } else {
+          io = chalk.red(io)
+        }
+        if (body) {
+          log += `${prefix}${io}${res.statusCode}: ${body.replace(/\r?\n|\r/g, ' ').slice(0, 100)}${body.length > 100 ? '...' : ''}\n`
+        }
+
+        // Log time
         let diff = process.hrtime(timestart)
-        blitz.log.info(prefix + chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms\n`))
+        log += `${prefix}${chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`)}\n`
+        blitz.log.info(log)
       }
     }
   }
