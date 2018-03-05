@@ -102,15 +102,14 @@ it with HTTP webhooks](https://github.com/nexus-devs/blitz-js-api/issues/19).
 ### Publishing new data on blitz-js-core
 ```js
 // inside a blitz-js-core endpoint
-// ...
 async main(req, res) {
+
   // Publish new data on the current endpoint
   this.publish(`My data has updated! [${new Date}]`)
 
   // Or publish data on another URL
   this.publish('Somebody else\'s data has updated!', '/some/other/url')
 }
-// ...
 ```
 
 ### Subscribing with blitz-js-query
