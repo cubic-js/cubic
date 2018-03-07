@@ -99,7 +99,7 @@ Blitz-js's Pub/Sub model is one of the most important features for applications
 relying on real-time data. Instead of polling for new data every x seconds,
 we simply listen to an API resource and get notified on changes.
 
-[![pub/sub model](https://i.imgur.com/LvDzCYx.png)](https://i.imgur.com/LvDzCYx.png)
+[![pub/sub model](https://i.imgur.com/y5EfDkC.png)](https://i.imgur.com/y5EfDkC.png)
 
 Right now this **only works for Socket.io**, but there's an [open issue to integrate
 it with HTTP webhooks](https://github.com/nexus-devs/blitz-js-api/issues/19).
