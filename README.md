@@ -42,6 +42,8 @@ Socket.io by default)
 This way our middleware functions and routed endpoints will work for *all*
 connection types, with no need to adjust them individually.
 
+<br>
+
 For further understanding, here's a simple model showing the way a request
 will go until we get a response:
 
