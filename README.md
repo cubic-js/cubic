@@ -67,10 +67,13 @@ blitz.nodes.api.use('/ferret', async (req, res) => {
   // Return image of angry ferret if the user isn't tobi.
   if (req.user.uid !== 'tobi') {
     let image = await getSomeAngryFerretPictures()
-    return res.send(image) // we MUST return a truthy value to stop the mw stack.
+
+    // we MUST return a truthy value to stop the middleware chain from executing
+    return res.send(image)
   }
 
-  // Proceed to the secret ferret endpoint if the user actually is tobi.
+  // If nothing is returned, we'll assume the user is tobi and proceed with the
+  // next middleware function
 })
 ```
 We recommend reading through the full docs at the [async-middleware-stack](https://github.com/Kaptard/async-middleware-stack)
@@ -80,8 +83,6 @@ repo if you need further information.
 If necessary, you can still add native connection middleware which runs before
 our own.
 ```js
-let api = require('path/to/api/node.js')
-
 blitz.nodes.api.server.http.app.use((req, res, next) => {}) // Native Express Middleware
 blitz.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Socket.io Middleware
 ```
