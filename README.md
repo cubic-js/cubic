@@ -34,12 +34,15 @@ blitz-js-core nodes.
 <br>
 
 ## How does it work?
-At its core, the blitz-js-api server is a load balancer that creates a common
-interface for request objects of every protocol that is specified in an adapter.
-Currently this includes HTTP and Websockets (Socket.io).
+At its core, blitz-js-api is a load balancer for connected blitz-js-core nodes.
+What makes it special is that it allows the use of custom connection adapters
+that create a common `req` and `res` object from any connection type. (HTTP &
+Socket.io by default)
 
-Combined with express-like async middleware, this allows for modular
-features such as:
+This way our middleware functions and routed endpoints will work for *all*
+connection types, with no need to adjust them individually.
+
+Combined with express-like async middleware, this allows for modular features such as:
 - Automatic caching
 - Automatic auth token verification
 - Dynamic rate limits
@@ -50,7 +53,7 @@ All without having to think about which protocol we're working with.
 For further understanding, here's a simple model showing the way a request
 will go until we get a response:
 
-[![model](https://i.imgur.com/9tH6ctn.png)](https://i.imgur.com/9tH6ctn.png)
+[![model](https://i.imgur.com/JjUKPuk.png)](https://i.imgur.com/JjUKPuk.png)
 
 This is only one half of the way a request goes. To see what happens once the request
 is sent to a connected core node, check out [blitz-js-core](https://github.com/nexus-dev/blitz-js-core).
