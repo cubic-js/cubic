@@ -42,14 +42,6 @@ Socket.io by default)
 This way our middleware functions and routed endpoints will work for *all*
 connection types, with no need to adjust them individually.
 
-Combined with express-like async middleware, this allows for modular features such as:
-- Automatic caching
-- Automatic auth token verification
-- Dynamic rate limits
-- Custom request loggers
-- And anything else that you can think of
-
-All without having to think about which protocol we're working with.
 For further understanding, here's a simple model showing the way a request
 will go until we get a response:
 
