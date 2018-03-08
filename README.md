@@ -8,46 +8,33 @@
 <br>
 <br>
 
-## Method Handling
-**Basic Usage:**
-Imagine having a script saved as `/methods/warframe/v1/items/statistics.js`. Once connected, we'll let the API node know that there's an available resource at the given path (api.nexus-stats.com/warframe/v1/items/statistics). This will automatically generate a route on our RESTful API at runtime and will be repeated for all methods saved in the `methods/` folder.
-<br>
-<br>
-### Endpoint Customization
-With the example above in mind, we can further control the endpoints through each classes' schema attribute: <br>
-<br>
+## Usage
+```js
+const Blitz = require('blitz-js')
+const Core = require('blitz-js-core')
+const blitz = new Blitz()
 
-> **Schema:**
-```javascript
-resource: ["item", "component"]
+blitz.use(new Core(options))
 ```
-> **Express Route:** `/items/:item/:component/method`
-<br>
-<br>
+This will create a core node that connects to the API node on localhost:3003
+and listen to any incoming requests. We'll being using this for our application
+logic.
 
-> **Schema:**
-```javascript
-params: [
-    {
-        name: "timestart",
-        type: "number",
-        default: () => {
-        return new Date().getTime() / 1 // current time
-    },
-        description: "Returns data recorded between timestart and timeend"
-    },
-    {
-         name: "timeend",
-         type: "number",
-         default: () => {
-              return new Date(new Date().setDate(new Date().getDate() - 21)) / 1 // 3 weeks ago
-         },
-         description: "Returns data recorded between timestart and timeend"
-    }]
-```
-> **Express Route:** `/items/method?timestart=1490717012&timeend=1490817012`
+| Option        | Default       | Description   |
+|:------------- |:------------- |:------------- |
+| publicPath   | `process.cwd()/assets`   | Folder containing publically accessible files. |
+| endpointPath | `process.cwd()/api` | Folder to read API endpoints from. |
+| endpointParent | internal | Parent class that API endpoints will extend. |
+| baseUrl | none | Path to prepend to each route found in endpoints folder. |
+| apiUrl | `'http://localhost:3003'` | API node to connect to |
+| authUrl | `'http://localhost:3030'` | Auth node to authenticate at |
+| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [blitz-js-auth](https://github.com/nexus-devs/blitz-js-auth) for reference) |
+| userSecret | none | User secret to authenticate with. Handled the same way as above. |
+| mongoUrl | `'mongodb://localhost'` | Mongodb connection string. |
+| mongoDb | `'blitz-js-core'` | Database to select by default. |
+| redisUrl | `'redis://localhost' | Redis connection string. |
+
 <br>
 
-### Authorization
-You can also choose which minimum scopes to grant access to, e.g. `scope: "elevated-read-write"`. The API node will automatically include any higher scopes in the permission hierarchy.
-
+## License
+[MIT](/LICENSE.md)
