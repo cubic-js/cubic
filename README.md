@@ -97,45 +97,6 @@ blitz.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Socket.io 
 
 <br>
 
-## Pub/Sub model
-Blitz-js's Pub/Sub model is one of the most important features for applications
-relying on real-time data. Instead of polling for new data every x seconds,
-we simply listen to an API resource and get notified on changes.
-
-[![pub/sub model](https://i.imgur.com/y5EfDkC.png)](https://i.imgur.com/y5EfDkC.png)
-
-Right now this **only works for Socket.io**, but there's an [open issue to integrate
-it with HTTP webhooks](https://github.com/nexus-devs/blitz-js-api/issues/19).
-
-### Publishing new data on blitz-js-core
-```js
-// inside a blitz-js-core endpoint
-async main(req, res) {
-
-  // Publish new data on the current endpoint
-  this.publish(`My data has updated! [${new Date}]`)
-
-  // Or publish data on another URL
-  this.publish('Somebody else\'s data has updated!', '/some/other/url')
-}
-```
-
-### Subscribing with blitz-js-query
-```js
-const Client = require('blitz-js-query')
-const client = new Client(options)
-
-// Subscribe
-client.subscribe('/api/resource/to/listen/on', data => {
-  console.log(data) // Will log the endpoint data on every update
-})
-
-// Unsubscribe
-client.unsubscribe('/api/resource/to/listen/on')
-```
-
-<br>
-
 ## Making requests as a client
 We heavily recommend using [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
 since it takes care of authorization, rate limits and potential downtimes automatically.
