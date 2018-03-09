@@ -2,7 +2,7 @@
 
 ##
 
-Connection packages to connect to <a href="https://github.com/nexus-devs/blitz-js-api">blitz.js</a> API nodes. Choose your target platform from the available branches.
+Connection packages to connect to <a href='https://github.com/nexus-devs/blitz-js-api'>blitz.js</a> API nodes. Choose your target platform from the available branches.
 
 <br>
 
@@ -16,34 +16,34 @@ Connection packages to connect to <a href="https://github.com/nexus-devs/blitz-j
 
 | Platform           | Install        | Description   |
 |:------------- |:------------- |:------------- |
-| [python](https://github.com/nexus-devs/blitz-js-query/tree/python) | pip | For usage in Python. Official Socket.io version updates are slow, HTTP might have to be explicitly enabled |
+| [python](https://github.com/nexus-devs/blitz-js-query/tree/python) | pip | For usage in Python. Might have to enable HTTP explicitly since Socket.io isn't that well maintained on python.
 
 <br>
 
 ## Usage
 ```js
-const Blitz = require("blitz-js-query")
+const Blitz = require('blitz-js-query')
 const blitz = new Blitz()
 
-blitz.get("/foo").then(res => console.log(res.body)) // bar
+blitz.get('/foo').then(res => console.log(res.body)) // bar
 ```
 
 <br>
 
 ## Configuration
 ```javascript
-const Blitz = require("blitz-js-query")
+const Blitz = require('blitz-js-query')
 const blitz = new Blitz({key: value})
 ```
 
 | Key           | Default         | Description   |
 |:------------- |:------------- |:------------- |
-| api_url | "http://localhost:3010/" | URL of blitz.js API-Node to connect to |
-| auth_url | "http://localhost:3030/" | URL of blitz.js Auth-Node to authenticate with |
-| namespace | "/" | Socket.io namespace to connect to |
-| user_key | null | User key obtained via Auth-Node registration |
-| user_secret | null | User secret obtained via Auth-Node |
-| ignore_limiter | false | Whether or not to disable the default rate limit adaptions. Disabling this only makes sense if you connect as a user who won't face rate limits. If you disable it anyway, expect all your requests to get blocked. |
+| api_url | `'http://localhost:3003/'` | URL of blitz.js API-Node to connect to |
+| auth_url | `'http://localhost:3030/'` | URL of blitz.js Auth-Node to authenticate with |
+| namespace | `'/'` | Socket.io namespace to connect to |
+| user_key | `null` | User key obtained via Auth-Node registration |
+| user_secret | `null` | User secret obtained via Auth-Node |
+| ignore_limiter | `false` | Whether or not to disable the default rate limit adaptions. Disabling this only makes sense if you connect as a user who won't face rate limits. If you disable it anyway, expect all your requests to get blocked. |
 
 <br>
 <br>

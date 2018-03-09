@@ -6,12 +6,11 @@ class Blitz {
    * Merge default options with client options
    */
   constructor(options) {
-    this.connecting = null
     this.options = Object.assign({
 
       // Resource Config
-      api_url: "http://localhost:3010/",
-      auth_url: "http://localhost:3030/",
+      api_url: 'http://localhost:3003/',
+      auth_url: 'http://localhost:3030/',
 
       // Connection Config
       namespace: '/',
@@ -22,11 +21,11 @@ class Blitz {
       ignore_limiter: false
     }, options)
 
-    // Remove "/" from url's
+    // Remove '/' from end of connection URLs
     let api = this.options.api_url
     let auth = this.options.auth_url
-    this.options.api_url = api[api.length - 1] === "/" ? api.slice(0, -1) : api
-    this.options.auth_url = auth[auth.length - 1] === "/" ? auth.slice(0, -1) : auth
+    this.options.api_url = api[api.length - 1] === '/' ? api.slice(0, -1) : api
+    this.options.auth_url = auth[auth.length - 1] === '/' ? auth.slice(0, -1) : auth
 
     this.connect()
   }
@@ -91,7 +90,7 @@ class Blitz {
   }
 
   get(query) {
-    return this.query("GET", query)
+    return this.query('GET', query)
   }
 
   post(url, body) {
@@ -99,7 +98,7 @@ class Blitz {
       url: url,
       body: body
     }
-    return this.query("POST", query)
+    return this.query('POST', query)
   }
 
   put(url, body) {
@@ -107,7 +106,7 @@ class Blitz {
       url: url,
       body: body
     }
-    return this.query("PUT", query)
+    return this.query('PUT', query)
   }
 
   patch(url, body) {
@@ -115,7 +114,7 @@ class Blitz {
       url: url,
       body: body
     }
-    return this.query("PATCH", query)
+    return this.query('PATCH', query)
   }
 
   delete(url, body) {
@@ -123,7 +122,7 @@ class Blitz {
       url: url,
       body: body
     }
-    return this.query("DELETE", query)
+    return this.query('DELETE', query)
   }
 }
 
