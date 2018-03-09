@@ -18,8 +18,16 @@ const blitz = new Blitz()
 
 blitz.use(new Api(options))
 ```
-This will open a web server on localhost:3003 which serves data from connected
-blitz-js-core nodes.
+This will open a web server on `localhost:3003` which serves data from connected
+blitz-js-core nodes. No further setup needed - the [core nodes](https://github.com/nexus-devs/blitz-js-core) are where our application logic goes.
+
+<br>
+
+## Options
+
+```js
+blitz.use(new Api(options))
+```
 
 | Option        | Default       | Description   |
 |:------------- |:------------- |:------------- |
@@ -129,40 +137,10 @@ client.unsubscribe('/api/resource/to/listen/on')
 <br>
 
 ## Making requests as a client
-While usually we recommend [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
-for client connections, you might find yourself in a situation where you can
-only use Socket.io directly, so here's a quick rundown how it works with blitz-js.
-
-#### GET
-```javascript
-socket.emit("GET", "/foo", data => {
-  // Do something with response data
-})
-```
-
-#### POST, PUT, etc
-```javascript
-socket.emit("POST", {
-  url: "/bar",
-  body: "Your POST data"
-}, data => {
-  // Do something with response data
-})
-```
-
-#### Subscribing
-```js
-socket.emit('subscribe', '/api/resource/to/listen/on')
-socket.on('/api/resource/to/listen/on', data => {
-  // Do something with newly updated data
-})
-```
-
-#### Unsubscribing
-```js
-socket.emit('unsubscribe', '/api/resource/to/listen/on')
-socket.off('/api/resource/to/listen/on')
-```
+We heavily recommend using [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
+since it takes care of authorization, rate limits and potential downtimes automatically.
+This package is also used to connect core nodes to API nodes, so we most likely
+won't be slacking with its maintenance.
 
 ## License
 [MIT](/LICENSE.md)
