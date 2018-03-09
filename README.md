@@ -23,23 +23,6 @@ blitz-js-core nodes. No further setup needed - the [core nodes](https://github.c
 
 <br>
 
-## Options
-
-```js
-blitz.use(new Api(options))
-```
-
-| Option        | Default       | Description   |
-|:------------- |:------------- |:------------- |
-| port   | `3003`   | Port to listen on for requests. |
-| redisUrl | `'redis://localhost'` | Base URL for redis connection. |
-| cacheDb | `1` | Redis database used to store cache data. |
-| cacheExp | `10` | Time in seconds until cached data expires when no explicit duration is specified. |
-| requestTimeout | `1000` | Time to wait in ms when sending request to core node before assuming timeout. |
-| routes | `'/connections/entry/routes.js'` | Entry point for HTTP requests via express. (No need to modify unless you're building something very exotic.) |
-| events | `'/connections/entry/events.js'` | Entry point for WS requests via Socket.io. |
-
-<br>
 
 ## How does it work?
 At its core, blitz-js-api is a load balancer for connected blitz-js-core nodes.
@@ -102,6 +85,26 @@ We heavily recommend using [blitz-js-query](https://github.com/nexus-devs/blitz-
 since it takes care of authorization, rate limits and potential downtimes automatically.
 This package is also used to connect core nodes to API nodes, so we most likely
 won't be slacking with its maintenance.
+
+<br>
+
+## Options
+
+```js
+blitz.use(new Api(options))
+```
+
+| Option        | Default       | Description   |
+|:------------- |:------------- |:------------- |
+| port   | `3003`   | Port to listen on for requests. |
+| redisUrl | `'redis://localhost'` | Base URL for redis connection. |
+| cacheDb | `1` | Redis database used to store cache data. |
+| cacheExp | `10` | Time in seconds until cached data expires when no explicit duration is specified. |
+| requestTimeout | `1000` | Time to wait in ms when sending request to core node before assuming timeout. |
+| routes | `'/connections/entry/routes.js'` | Entry point for HTTP requests via express. (No need to modify unless you're building something very exotic.) |
+| events | `'/connections/entry/events.js'` | Entry point for WS requests via Socket.io. |
+
+<br>
 
 ## License
 [MIT](/LICENSE.md)
