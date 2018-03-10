@@ -18,6 +18,13 @@ class Core {
     this.Endpoint = require(config.endpointParent)
     this.client = new Client(config)
   }
+
+  /**
+   * Convenience methods that can be called from other nodes more easily
+   */
+  use(fn) {
+    return this.client.endpointController.stack.use(fn)
+  }
 }
 
 module.exports = Core
