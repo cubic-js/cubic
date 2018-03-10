@@ -153,6 +153,8 @@ blitz.use(new Core(options))
 | mongoDb | `'blitz-js-core'` | Database to select by default. |
 | redisUrl | `'redis://localhost'`` | Redis connection string. |
 
+<br>
+
 #### Endpoint Schema
 ```js
 class Endpoint extends EndpointParent {
@@ -169,6 +171,8 @@ class Endpoint extends EndpointParent {
 | query | `[]` | (optional) Array specifying rules for query params (see object format below)
 | limit | see below | Object describing rate limit specifications. See keys and default values below
 
+<br>
+
 #### Endpoint Query Object
 ```js
 this.schema.query = [{
@@ -183,6 +187,8 @@ this.schema.query = [{
 | default | none | (optional) Default value for query key. Can be raw value or a function returning a value. If a default value is given, its data type is automatically enforced on user input. E.g. you can't provide numbers if the default value is a string.
 | required | `false` | (optional) Whether the query key is required on user input. Will return a 400 error if no matching key is given.
 | description | `''` | (optional) Description for the given key. Useful for automated API documentation.
+
+<br>
 
 #### Endpoint Rate Limits
 ```js
