@@ -22,6 +22,22 @@ logic.
 
 <br>
 
+## How does it work?
+Whenever a user requests a URL on the API node, that request is actually being
+processed at the core node.
+
+The API checks every core node for an endpoint
+component that matches the desired URL and the first core node to respond
+affirmatively gets to process the request and return a response.
+
+[![model](https://i.imgur.com/E4Lnnqx.png)](https://i.imgur.com/E4Lnnqx.png)
+
+Should no core node find a matching endpoint, we return a '404, not found'.
+Should all core nodes fail to respond to the initial check within one
+second, we respond with a '503, All nodes currently busy'.
+
+<br>
+
 ## Endpoint components
 To respond to requests, blitz-js-core looks for endpoint components in the
 **/api** folder in the current working directory. These components are
