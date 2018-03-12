@@ -110,18 +110,21 @@ blitz.delete(url, body)
 
 <br>
 
-### Socket.io
+### Pub/Sub
 
 ```js
-blitz.subscribe(endpoint)
+blitz.subscribe(endpoint, fn)
 ```
->Subscribe to updates on a specific endpoint. Updates can be listened to via `blitz.on(endpoint, fn)`.
+>Subscribe to updates on a specific endpoint.
 
 | Argument | Description | Default |
 |:------------- |:------------- |:------------- |
-| endpoint | URL to listen for updates on, without domain. e.g. `/foo` | None |
+| endpoint | URL to listen for updates on, without domain. e.g. `'/foo'` | None |
+| fn | Function to run when updates are received. Takes the new data as argument. | None |
 
 <br>
+
+### Socket.io
 
 ```js
 blitz.on(ev, fn)
