@@ -98,14 +98,19 @@ within the given timeframe. The response is looked up on the api node directly,
 ```js
 this.publish(data, url)
 ```
-Publishes data in [blitz-js's Pub/Sub model](https://github.com/nexus-devs/blitz-js/#pub/sub-model).
+Publishes data in [blitz-js's Pub/Sub model](https://i.imgur.com/y5EfDkC.png).
 This is important for real-time data, as every subscribed client will receive
 the published changes immediately.
+
+[![pub/sub model](https://i.imgur.com/y5EfDkC.png)](https://i.imgur.com/y5EfDkC.png)
 
 | Param        | Default       | Description   |
 |:------------- |:------------- |:------------- |
 | data | none | Data to publish to subscribed clients. |
 | url | `this.url` | (optional) URL to publish the data on. Useful when a POST endpoint changes the data of another GET endpoint. |
+
+Have a look at [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
+for instructions on how to subscribe to endpoints.
 
 #### Endpoint Schema
 ```js
