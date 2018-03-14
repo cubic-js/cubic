@@ -38,7 +38,7 @@ existing nodes, so you'll never be locked in with what *we* think is best.
 
 ## Getting started in 5 minutes
 Before you get started, make sure you have [redis](https://redis.io/) and
-[mongodb](https://www.mongodb.com/) running on their default ports.<br>
+[mongodb](https://www.mongodb.com/download-center?jmp=nav#community) running on their default ports.<br>
 If you have to install these first, I apologize for lying about the "5 minutes"
 in the title. If not, you'll have a blast!
 
