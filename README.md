@@ -2,111 +2,89 @@
 
 ##  
 
-[![GitHub release](https://img.shields.io/github/release/nexus-devs/blitz-js.svg)]()
+[![npm](https://img.shields.io/npm/v/blitz-js.svg)](https://npmjs.org/blitz-js)
+![Node version](http://img.shields.io/badge/node-> 8.10.LTS-brightgreen.svg)
+![bitHound](https://img.shields.io/bithound/dependencies/github/nexus-devs/blitz-js.svg)
+
 
 <br>
 
-Blitz-js is a minimal full-stack framework for real-time applications that puts
-the developer first. Be it frontend development in ES7+ thanks to webpack and babel,
+Blitz-js is a modular full-stack framework for real-time applications that puts
+the developer first. Be it frontend development in ES7+,
 hot-module-replacement for your view, or component-based API endpoints to keep
-your backend tidy - all without having to bother about manual setups.
+your backend tidy - blitz-js gives you all of that out of the box with
+**no tedious setups**. It just works.
 
 <br>
 
 ## Features
-Out of the box, blitz-js comes with everything needed to create a full-size
+Blitz-js comes with everything needed to create a full-size
 web application for modern standards:
-- Full OAuth2 integration
 - Vue.js as UI rendering engine
 - Webpack for optimal dev & prod bundling
+- Full OAuth2 integration
+- Pub/Sub model for real-time data
 - Rate limits and caching on a per endpoint-component basis
 - Automatically exposed API endpoints to HTTP and WebSockets
-- Pub/Sub model for real-time data
+- Decoupled API servers from CPU intensive endpoints for efficient scaling with
+  docker
 
-As you can see, we keep blitz-js fairly opinionated, because it allows us to
-focus on one solution and make its usage as convenient as possible.
-However, the fully modular nature of the framework allows to easily modify existing
-nodes, so you'll never be locked in with what *we* think is best.
-
-<br>
-
-## Usage
-
-```javascript
-require("blitz-js")()
-
-const Auth = require("blitz-js-auth")
-blitz.use(new Auth()) // Authentication server which generates user tokens
-
-const API = require("blitz-js-api")
-blitz.use(new API()) // Public api node which will get data from the resource node below
-
-const Core = require("blitz-js-core")
-blitz.use(new Core()) // Resource node which processes your application logic
-```
-Now visit `localhost:3010/foo` to get your `bar`.
+We keep blitz-js fairly opinionated, because it allows us to
+focus on one solution and make its usage as convenient and effective as possible.
+However, the fully modular nature of the framework allows to easily modify
+existing nodes, so you'll never be locked in with what *we* think is best.
 
 <br>
 
-## Available Nodes
-| RepositoryLink          | Description   |
-|:------------- |:------------- |
-| [blitz-js-api](https://github.com/nexus-devs/blitz-js-api) | RESTful API with WebSocket support which authorizes and distributes requests to the resource node. |
-| [blitz-js-core](https://github.com/nexus-devs/blitz-js-core) | Resource Server for simple endpoint implementation to the API node. |
-| [blitz-js-auth](https://github.com/nexus-devs/blitz-js-auth) | Authentication Server for creating users and providing JSON Web Tokens to grant authorization on the API node.
-| [blitz-js-view](https://github.com/nexus-devs/blitz-js-view) | View node for rendering web pages.
+## Getting started in 5 minutes
+Before you get started, make sure you have [redis](https://redis.io/) and
+[mongodb](https://www.mongodb.com/) running on their default ports.<br>
+If you have to install these first, I apologize for lying about the "5 minutes"
+in the title. If not, you'll have a blast!
 
-<br>
-
-
-## Configuration
-```javascript
-require("blitz-js")({ key: value })
+### Install
+Select your project folder and run the following:
+```sh
+npm init
+npm install blitz-js
 ```
 
-| Key           | Value         | Description   |
-|:------------- |:------------- |:------------- |
-| environment   | development   | / |
-| environment   | production    | / |
-| logLevel      | info          | Default log level. Logs limited information about the node status. |
-| logLevel      | error         | Error Log Level. Helpful for automated tests. |
-| logLevel      | verbose       | Verbose log level. Includes Request Timestamps, Socket Connections, Config events, etc. |
-| logLevel      | silly         | Silly log level. Includes internal information on which routes are being bound, diagnostics and lifecycle details. |
+### Entrypoint
+Next we'll create **index.js** as our entrypoint to the server
+```js
+// index.js
+const Blitz = require('blitz-js')
+const blitz = new Blitz()
 
-Configuration settings will be accessible via `blitz.config.local`. For configuration of individual nodes, check out their repositories below.
-
-<br>
-
-## Hooks
-Hooks allow you to execute functions right before a certain node launches. Within the function, you'll have access to `blitz.config[node]` with all the options you've set in `blitz.use()`.
-
-### Example
-```javascript
-require("blitz-js")()
-
-let options = { ferret: "tobi" }
-let hookFn = () => console.log(blitz.config.api.ferret)
-
-let API = require("blitz-js-api")
-blitz.hook(API, hookFn)
-blitz.use(new API(options)) // logs "tobi"
+// Load auth, view and api nodes needed for a basic setup
+blitz.bootstrap()
 ```
-The stack of hook functions will be saved in `blitz.nodes[node].hooks`.
+
+### Ready to go
+Now all we need to do is run
+```sh
+node index.js
+```
+And blitz-js will automatically create some default API endpoints and views
+that you can learn the basics from. <br>
+Check out `localhost:3000` to have a look at the view server.
+
+If everything went right, **you'll find an interactive tutorial on that server**,
+asking you to hack the site. You'll have to work on the site's own code to
+fulfill some **objectives** and proceed. There'll be plenty of tips though, so
+it shouldn't be too hard. In fact, there's always a full solution available
+to each objective at all times.
 
 <br>
 
-## API Packages
-We also provide client packages to connect to any blitz.js API, so you needn't worry about accessibility for developers! <br>
+## Getting ready for production
+For advanced usage that you'll need in production, have a look at [blitz-js-loader](https://github.com/nexus-devs/blitz-js-loader). It lets you
+load every single node individually, pass custom configs and create your own
+group of blitz-js nodes.
 
-
->**npm**: [blitz-js-query](https://www.npmjs.com/package/blitz-js-query)<br>
->**pip**: [blitz-js-query](https://pypi.python.org/pypi?:action=display&name=blitz-js-query)
-<br>
-
-## Further Documentation
-Coming soon
-
-<br>
+We cannot stress enough how important this is for production, especially if
+you aim to containerize your application, since every node can be
+split up into a separate process this way.
 
 ## License
 [MIT](/LICENSE)
