@@ -22,7 +22,7 @@ module.exports = {
     /**
      * Endpoint config
      */
-    endpointPath: `${process.cwd()}/view/endpoints`,
+    endpointPath: `${process.cwd()}/ui/endpoints`,
     endpointParent: __dirname + '/../override/endpoint.js',
 
     /**
@@ -55,6 +55,6 @@ module.exports = {
     clientConfig: __dirname + '/webpack/client.config.js',
     serverConfig: __dirname + '/webpack/server.config.js'
   },
-  sourcePath: `${process.cwd()}/view`,
-  sitesPath: `${process.cwd()}/view/sites`
+  sourcePath: `${process.cwd()}/ui`,
+  sitesPath: `${process.cwd()}/ui/sites`
 }
