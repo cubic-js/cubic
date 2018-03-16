@@ -1,0 +1,8 @@
+@mixin gradient-background($top, $bot) {
+  background: transparent;
+  background: linear-gradient($top, $bot);
+}
+@mixin gradient-background-dg($top, $bot) {
+  background: transparent;
+  background: linear-gradient(to bottom right, $top, $bot);
+}
