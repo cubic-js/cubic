@@ -1,15 +1,33 @@
 const isProd = blitz.config.local.environment !== "development"
+const webpack = require('webpack')
 const fs = require('fs')
 const path = require('path')
 
 // Plugins
-const webpack = require('webpack')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const extractSass = new ExtractTextPlugin({
   filename: "[name].[contenthash].css",
   allChunks: true,
   disable: !isProd
 })
+
+// Super hacky fix for multiple builds in dev mode. Seems to be a very wide
+// spread issue, no fix from webpack though, but some awesome people on
+// github fixed it: https://github.com/webpack/watchpack/issues/25#issuecomment-368402851
+function TimeFixPlugin() {
+	this.apply = function (compiler) {
+		var timefix = 11000
+		compiler.plugin('watch-run', (watching, callback) => {
+			watching.startTime += timefix
+			callback()
+		})
+		compiler.plugin('done', (stats) => {
+			stats.startTime -= timefix
+		})
+	}
+}
+
+// Config
 const vueConfig = require('./vue.config.js')(extractSass)
 
 // Dependencies need to be handled differently in debug (see webpack resolve)
@@ -81,6 +99,7 @@ module.exports = {
   ] : [])
   .concat([
     extractSass,
+    new TimeFixPlugin(),
     new webpack.DefinePlugin({
       '$apiUrl': JSON.stringify(blitz.config.view.client.apiUrl),
       '$authUrl': JSON.stringify(blitz.config.view.client.authUrl),
