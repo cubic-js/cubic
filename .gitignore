@@ -1,9 +1,2 @@
-# https://git-scm.com/docs/gitignore
-# https://help.github.com/articles/ignoring-files
-# Example .gitignore files: https://github.com/github/gitignore
-/bower_components/
+/vue/router/routes.js
 /node_modules/
-.idea/
-/out/
-/view/public/*bundle.*
-/view/public/*manifest.*
