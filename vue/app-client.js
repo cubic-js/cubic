@@ -3,7 +3,7 @@ import { createApp } from './app.js'
 import { callAsyncRecursive } from './ssr/callAsyncRecursive.js'
 import { registerStoreModules } from './ssr/registerStoreModules.js'
 import root from 'src/app.vue'
-import Progress from 'src/components/ui/progress.vue'
+import Progress from 'src/components/progress.vue'
 
 // Register global progress bar
 const progress = Vue.prototype.$progress = new Vue(Progress).$mount()
