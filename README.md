@@ -3,8 +3,8 @@
 ##  
 
 [![npm](https://img.shields.io/npm/v/blitz-js.svg)](https://npmjs.org/blitz-js)
-![Node version](http://img.shields.io/badge/node-+8.10.LTS-brightgreen.svg)
-![bitHound](https://img.shields.io/bithound/dependencies/github/nexus-devs/blitz-js.svg)
+[![Node version](http://img.shields.io/badge/node-+8.10.LTS-brightgreen.svg)](https://nodejs.org/en/)
+[![bitHound](https://img.shields.io/bithound/dependencies/github/nexus-devs/blitz-js.svg)](https://www.bithound.io/github/nexus-devs/blitz-js/master/dependencies/npm)
 
 
 <br>
