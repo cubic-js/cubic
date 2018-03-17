@@ -1,6 +1,11 @@
 const fs = require('fs')
 const path = require('path')
 
+/**
+ * Endpoint controller which implicitly uses the default endpoint for all
+ * requests if no explicit endpoint is given. They would all just call
+ * `this.render(req)` anyway, so this abstraction saves a lot of time.
+ */
 class EndpointController {
   /**
    * Override original endpoint controller with custom loading functions to
