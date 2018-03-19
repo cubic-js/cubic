@@ -1,6 +1,6 @@
 {
   "name": "blitz-js-query",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Blitz-js API connection module.",
   "main": "./lib/index.js",
   "repository": {
