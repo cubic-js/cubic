@@ -8,6 +8,9 @@ const callAsyncRecursive = async (parent, store, router) => {
   }
   // Main parent or traversed child has asyncData -> call
   if (parent.asyncData) {
+    parent.$router = router
+    parent.$store = store
+    parent.$blitz = store.$blitz
     return parent.asyncData({
       store,
       route: router.currentRoute

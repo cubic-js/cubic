@@ -74,7 +74,13 @@ router.onReady(() => {
     progress.start()
 
     // Call asyncData
-    await Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
+    await Promise.all(asyncDataHooks.map(asyncData => {
+      const parent = matched[0]
+      parent.$router = router
+      parent.$store = store
+      parent.$blitz = store.$blitz
+      return asyncData.bind(parent)({ store, route: to })
+    }))
 
     // End loading bar
     progress.finish()
