@@ -44,7 +44,6 @@ module.exports = {
   // Output file which will be loaded by Vue (server & client side)
   output: {
     path: blitz.config.view.core.publicPath,
-    publicPath: "/",
     filename: isProd ? "[name].bundle.[chunkhash].js" : "[name].bundle.js"
   },
 
