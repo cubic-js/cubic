@@ -3,6 +3,7 @@ const Auth = require('blitz-js-auth')
 const Api = require('blitz-js-api')
 const Core = require('blitz-js-core')
 const View = require('blitz-js-view')
+const defaults = require('blitz-js-defaults')
 const intro = require('./intro.js')
 
 class Blitz {
@@ -26,6 +27,7 @@ class Blitz {
    */
   bootstrap () {
     this.init()
+    defaults.verify()
     blitz.use(new Api())
     blitz.use(new Core())
     blitz.use(new Auth())
