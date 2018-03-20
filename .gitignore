@@ -1,2 +1,4 @@
 node_modules
 config/certs
+assets/dev-*.bundle.js
+assets/vue-ssr*.json
