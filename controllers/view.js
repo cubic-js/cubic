@@ -41,41 +41,13 @@ class ViewController {
       clientManifest,
       runInNewContext: false
     })
+    const render = util.promisify(renderer.renderToString)
     const context = {
       url,
       data,
       api
     }
-
-    // Inject vue-meta head and return rendered html
-    return new Promise((resolve, reject) => {
-      renderer.renderToString(context, (error, html) => {
-        if (error) return reject(error.stack)
-        const bodyOpt = { body: true }
-        const {
-          title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
-        } = context.meta.inject()
-        resolve(`
-          <!doctype html>
-          <html data-vue-meta-server-rendered ${htmlAttrs.text()}>
-            <head>
-              ${meta.text()}
-              ${title.text()}
-              ${link.text()}
-              ${style.text()}
-              ${script.text()}
-              ${noscript.text()}
-            </head>
-            <body ${bodyAttrs.text()}>
-              ${html}
-              <script src="/assets/vendor.bundle.js"></script>
-              <script src="/assets/client.bundle.js"></script>
-              ${script.text(bodyOpt)}
-            </body>
-          </html>
-        `)
-      })
-    })
+    return await render(context)
   }
 }
 

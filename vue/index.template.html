@@ -1,10 +1,12 @@
-<html>
+{{ meta.inject() }}
+<html data-vue-meta-server-rendered {{{ meta.htmlAttrs.text() }}}>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
+    {{{ meta.meta.text() + meta.title.text() + meta.link.text() + meta.style.text() + meta.script.text() + meta.noscript.text() }}}
   </head>
-  <body>
+  <body {{{ meta.bodyAttrs.text() }}}>
     <!--vue-ssr-outlet-->
   </body>
 </html>

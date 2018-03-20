@@ -48,7 +48,7 @@ export default context => {
       context.state = store.state
 
       // Finally, add meta tags to context for injection in renderer
-      context.meta = meta
+      context.meta = { inject: function () { Object.assign(this, meta.inject()) }}
 
       resolve(app)
     })
