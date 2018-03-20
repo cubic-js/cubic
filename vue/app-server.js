@@ -11,6 +11,9 @@ export default context => {
     const { app, router, store } = createApp(context)
     const { url } = context
 
+    // Init vue-meta
+    const meta = app.$meta()
+
     // Set router's location
     router.push(url)
 
@@ -43,6 +46,10 @@ export default context => {
       // store to pick-up the server-side state without having to duplicate
       // the initial data fetching on the client.
       context.state = store.state
+
+      // Finally, add meta tags to context for injection in renderer
+      context.meta = meta
+
       resolve(app)
     })
   })

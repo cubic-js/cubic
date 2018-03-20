@@ -5,9 +5,11 @@
  */
 import Vue from 'vue'
 import Router from 'vue-router'
-import routes from "./routes.js"
+import routes from './routes.js'
+import Meta from 'vue-meta'
 
 Vue.use(Router)
+Vue.use(Meta, { keyName: 'head' })
 
 export function createRouter() {
   const config = {
@@ -24,6 +26,5 @@ export function createRouter() {
     },
     routes
   }
-  
   return new Router(config)
 }
