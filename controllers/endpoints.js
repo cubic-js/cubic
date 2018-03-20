@@ -168,8 +168,9 @@ class EndpointController {
       let path = this.findByUrl(url).file
 
       // Remove node's require cache while in dev mode so we needn't restart
-      // to see endpoint changes
-      dev ? decache(path) : null
+      // to see endpoint changes. Disabled for default endpoint because of
+      // blitz-js-view's endpoint handling.
+      dev && path !== this.config.endpointParent ? decache(path) : null
 
       return require(path)
     }
