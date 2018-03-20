@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  outline: none;
+}
+
+*::-webkit-scrollbar-track
+{
+	background-color: transparent;
+}
+
+
+*::-webkit-scrollbar
+{
+	width: 8px;
+  height: 8px;
+	background-color: $color-bg-dark;
+}
+
+*::-webkit-scrollbar-thumb
+{
+  border-radius: 2px;
+	background-color: rgba(77, 82, 87, 0.7);
+}

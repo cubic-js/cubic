@@ -1,0 +1,16 @@
+{
+  "name": "blitz-js-defaults",
+  "version": "1.0.0",
+  "description": "Default project setup for blitz-js bootstrap.",
+  "main": "index.js",
+  "dependencies": {
+    "ncp": "^2.0.0",
+    "username": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kaptard",
+  "license": "MIT"
+}
