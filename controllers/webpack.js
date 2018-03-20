@@ -113,7 +113,7 @@ class WebpackServer {
    compiler.plugin("done", stats => {
      stats = stats.toJson()
      if (stats.errors.length) {
-       throw stats.errors
+       console.error(stats.error)
      }
      stats.children.forEach(bundle => {
        bundle.assets.forEach(asset => {
