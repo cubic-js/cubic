@@ -43,6 +43,16 @@ class Blitz {
 
 
   /**
+   * Change authentication username at runtime (useful for webclients)
+   */
+  async login(user, secret) {
+    this.connection.auth.options.user_key = user
+    this.connection.auth.options.user_secret = secret
+    this.connection.reload(false)
+  }
+
+
+  /**
    * Subscribe to certain endpoints
    */
   async subscribe (endpoint, fn) {

@@ -1,6 +1,6 @@
 import Auth from './auth.js'
-const io = require("socket.io-client")
-const queue = require("async-delay-queue")
+const io = require('socket.io-client')
+const queue = require('async-delay-queue')
 const timeout = (fn, s) => {
   return new Promise(resolve => setTimeout(() => resolve(fn()), s))
 }
@@ -14,6 +14,13 @@ class Connection {
   }
 
   /**
+   * Get Tokens and build client
+   */
+  async connect() {
+    return this.auth.authorize().then(() => this.setClient())
+  }
+
+  /**
    * Socket.io client with currently stored tokens
    */
   setClient() {
@@ -23,7 +30,7 @@ class Connection {
 
     // Connect to parent namespace
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
-    this.client.on("disconnect", () => {
+    this.client.on('disconnect', () => {
       this.reload()
     })
 
@@ -32,21 +39,14 @@ class Connection {
   }
 
   /**
-   * Get Tokens and build client
-   */
-  async connect() {
-    return this.auth.authorize().then(() => this.setClient())
-  }
-
-  /**
    * Close existing connection and start new with available tokens
    */
-  async reconnect() {
+  async reconnect(refresh) {
     this.client.disconnect()
-    await this.auth.reauthorize()
+    await this.auth.authorize(refresh)
     this.client.io.opts.query = this.auth.access_token ? 'bearer=' + this.auth.access_token : null
     this.client.connect()
-    this.client.once("connect", () => {
+    this.client.once('connect', () => {
       this.reconnecting = null
     })
 
@@ -55,11 +55,14 @@ class Connection {
   }
 
   /**
-   * Initialize full reset
+   * Initialize full reset, make sure we don't reconnect multiple times as that
+   * would result in a never-ending chain. The `refresh` arg tells if we should
+   * use the refresh token or login directly. Will be `true` by default if
+   * refresh token is present.
    */
-  reload() {
+  reload(refresh) {
     if (!this.reconnecting) {
-      this.reconnecting = this.reconnect()
+      this.reconnecting = this.reconnect(refresh)
     }
     return this.reconnecting
   }
@@ -68,11 +71,11 @@ class Connection {
    * Rejoin Socket.IO subscriptions after connection is lost
    */
   resub() {
-    this.client.on("subscribed", sub => {
+    this.client.on('subscribed', sub => {
       if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
     })
-    this.client.on("connect", () => {
-      this.subscriptions.forEach(sub => this.client.emit("subscribe", sub))
+    this.client.on('connect', () => {
+      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
     })
   }
 

@@ -1,4 +1,4 @@
-const io = require("socket.io-client")
+const io = require('socket.io-client')
 const timeout = (fn, s) => {
   return new Promise(resolve => setTimeout(() => resolve(fn()), s))
 }
@@ -9,7 +9,7 @@ const timeout = (fn, s) => {
 class Auth {
   constructor (options) {
     this.options = options
-    this.client = io.connect(this.options.auth_url + "/")
+    this.client = io.connect(this.options.auth_url + '/')
   }
 
   /**
@@ -31,20 +31,11 @@ class Auth {
   }
 
   /**
-   * Get tokens for API authentication if credentials provided
+   * Get tokens for API authentication if credentials are provided
    */
-  async authorize () {
+  async authorize (refresh = this.refresh_token) {
     if (this.options.user_key && this.options.user_secret) {
-      return this.getToken()
-    }
-  }
-
-  /**
-   * Refresh tokens if possible
-   */
-  async reauthorize () {
-    if (this.options.user_key && this.options.user_secret) {
-      return this.refreshToken()
+      return (refresh ? this.refreshToken() : this.getToken())
     }
   }
 
@@ -58,7 +49,7 @@ class Auth {
     }
 
     try {
-      let res = await this.req("POST", {
+      let res = await this.req('POST', {
         url: '/authenticate',
         body: auth_request
       })
@@ -89,7 +80,7 @@ class Auth {
 
       // Send to /auth endpoint
       try {
-        let res = await this.req("POST", {
+        let res = await this.req('POST', {
           url: '/refresh',
           body: auth_request
         })

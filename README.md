@@ -124,6 +124,20 @@ blitz.subscribe(endpoint, fn)
 
 <br>
 
+### Authentication
+```js
+blitz.login(user, secret)
+```
+>Re-authorizes as a specific user at runtime. Usually users should be logged in
+through the constructor options.
+
+| Argument | Description | Default |
+|:------------- |:------------- |:------------- |
+| user | User id, equal to `user_key` when registering. | None |
+| secret | User password, equal to `user_secret` when registering. | None |
+
+<br>
+
 ### Socket.io
 
 ```js
