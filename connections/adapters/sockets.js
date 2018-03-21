@@ -1,5 +1,6 @@
 const Adapter = require('./adapter.js')
 const io = require('socket.io')
+const URL = require('url')
 const Middleware = require('../../middleware/native/sockets.js')
 
 /**
@@ -47,14 +48,14 @@ class SocketAdapter extends Adapter {
     if (request) {
       let req = {}
       let url = verb === 'GET' ? request : request.url
+      let parsed = URL.parse(`https://blitz.js${url}`, true) // domain is irrelevant
 
       req.body = request.body
       req.url = url === '' ? '/' : decodeURI(url)
       req.user = socket.user
       req.method = verb
-      req.channel = 'Sockets'
-      req.query = {}
-      req.params = {}
+      req.query = parsed.query
+      req.params = {} // will get populated on blitz-js-core
 
       return req
     } else {
