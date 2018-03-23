@@ -34,7 +34,7 @@ class Auth {
    * Get tokens for API authentication if credentials are provided
    */
   async authorize (refresh = this.refresh_token) {
-    if (this.options.user_key && this.options.user_secret) {
+    if ((this.options.user_key && this.options.user_secret) || refresh) {
       return (refresh ? this.refreshToken() : this.getToken())
     }
   }
