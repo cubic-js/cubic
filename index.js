@@ -18,7 +18,9 @@ class Blitz {
     try { blitz }
     catch (err) {
       load(this.options)
-      intro.roll()
+      if (this.options.logLevel !== 'silent') {
+        intro.roll()
+      }
     }
   }
 
