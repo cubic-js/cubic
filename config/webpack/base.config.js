@@ -102,8 +102,6 @@ module.exports = {
     new webpack.DefinePlugin({
       '$apiUrl': JSON.stringify(blitz.config.view.client.apiUrl),
       '$authUrl': JSON.stringify(blitz.config.view.client.authUrl),
-      '$userKey': JSON.stringify(blitz.config.view.client.userKey),
-      '$userSecret': JSON.stringify(blitz.config.view.client.userSecret)
     })
   ])
 }
