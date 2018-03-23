@@ -68,7 +68,7 @@ class Client {
     this.api.on('check', async req => {
       // Check if file available
       try {
-        await this.endpointController.getEndpoint(req.url)
+        await this.endpointController.getEndpoint(req.url, req.method)
         blitz.log.silly(`${this.config.prefix} | Check successful`)
         this.api.emit(req.id, {
           available: true

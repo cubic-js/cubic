@@ -81,7 +81,7 @@ class EndpointController {
   async callEndpoint(req, api) {
     return new Promise(async resolve => {
       const res = new Response(resolve, api)
-      const endpoint = this.findByUrl(req.url)
+      const endpoint = this.findByUrl(req.url, req.method)
       const passed = await this.stack.run(req, res, endpoint)
 
       // Execute target endpoint
@@ -143,7 +143,7 @@ class EndpointController {
   /**
    * Get Endpoint from given URL
    */
-  async getEndpoint(url) {
+  async getEndpoint(url, method) {
     // Try to get raw file in public folder
     try {
       if (url.includes('../')) {
@@ -165,7 +165,7 @@ class EndpointController {
       dev ? this.generateEndpointSchema() : null
 
       // Get file path for our endpoint
-      let path = this.findByUrl(url).file
+      let path = this.findByUrl(url, method).file
 
       // Remove node's require cache while in dev mode so we needn't restart
       // to see endpoint changes. Disabled for default endpoint because of
@@ -179,12 +179,16 @@ class EndpointController {
   /**
    * Get specific endpoint through url detection
    */
-  findByUrl(url) {
+  findByUrl(url, method) {
     url = url === '' ? '/' : url.split('%20').join(' ') // empty url? => '/'
     let found = false
     let reqUrl = url.split('?')[0].split('/')
 
     for (let endpoint of this.endpoints) {
+      // Skip endpoint if RESTful method doesn't match
+      if (endpoint.method !== method) continue
+
+      // Get route from provided URL or from base-url + file route
       let route = endpoint.url ? endpoint.url.split('/') : false ||
                   (this.config.baseUrl + endpoint.route).split('/')
 
