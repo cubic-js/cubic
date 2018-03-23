@@ -138,6 +138,44 @@ through the constructor options.
 
 <br>
 
+```js
+blitz.setRefreshToken(token)
+```
+>Manually set the refresh token. This way user credentials needn't be exposed.
+
+| Argument | Description | Default |
+|:------------- |:------------- |:------------- |
+| token | `refresh_token` to use. | None |
+
+<br>
+
+```js
+blitz.getRefreshToken()
+```
+>Retrieve current refresh token. Will await any existing authentication
+process. Useful if the initial login can be done through user/pass but
+the refresh token needs to be stored for subsequent logins.
+
+<br>
+
+```js
+blitz.setAccessToken(token)
+```
+>Manually set the access token. This will expire on the next refresh.
+
+| Argument | Description | Default |
+|:------------- |:------------- |:------------- |
+| token | `access_token` to use. | None |
+
+<br>
+
+```js
+blitz.getRefreshToken()
+```
+>Retrieve current access token. Will await any existing authentication process.
+
+<br>
+
 ### Socket.io
 
 ```js

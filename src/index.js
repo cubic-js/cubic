@@ -43,16 +43,6 @@ class Blitz {
 
 
   /**
-   * Change authentication username at runtime (useful for webclients)
-   */
-  async login(user, secret) {
-    this.connection.auth.options.user_key = user
-    this.connection.auth.options.user_secret = secret
-    this.connection.reload(false)
-  }
-
-
-  /**
    * Subscribe to certain endpoints
    */
   async subscribe (endpoint, fn) {
@@ -62,6 +52,7 @@ class Blitz {
     // Function passed? Listen to subscribed endpoint directly.
     fn ? this.on(endpoint, fn) : null
   }
+
 
   /**
    * Unsubscribe from endpoints again
@@ -133,6 +124,58 @@ class Blitz {
       body: body
     }
     return this.query('DELETE', query)
+  }
+
+  /**
+   * Change user at runtime. Automatically reloads connection.
+   */
+  async login(user, secret) {
+    this.connection.auth.options.user_key = user
+    this.connection.auth.options.user_secret = secret
+    return this.connection.reload(false)
+  }
+
+
+  /**
+   * Manually set refresh token. This way user credentials won't be exposed
+   * to this package.
+   */
+  async setRefreshToken(token) {
+    await this.connecting
+    await this.connection.reconnecting
+    this.connection.auth.refresh_token = token
+  }
+
+
+  /**
+   * Retrieve current refresh token. Will await any existing authentication
+   * processes. Useful if the initial login can be done through user/pass but
+   * the refresh token needs to be stored for subsequent logins.
+   */
+  async getRefreshToken() {
+    await this.connecting
+    await this.connection.reconnecting
+    return this.connection.auth.refresh_token
+  }
+
+
+  /**
+   * Manually set access token.
+   */
+  async setAccessToken(token) {
+    await this.connecting
+    await this.connection.reconnecting
+    this.connection.auth.access_token = token
+  }
+
+
+  /**
+   * Retrieve current access token.
+   */
+  async getAccessToken() {
+    await this.connecting
+    await this.connection.reconnecting
+    return this.connection.auth.access_token
   }
 }
 
