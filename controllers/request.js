@@ -51,7 +51,8 @@ class RequestController {
       let sockets = []
       let request = {
         id: process.hrtime().join('').toString(),
-        url: req.url
+        url: req.url,
+        method: req.method
       }
 
       // Send check to root nsp
