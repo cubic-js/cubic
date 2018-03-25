@@ -13,7 +13,6 @@ const Limiter = require('../middleware/limiter.js')
 const url = require('../middleware/url.js')
 const query = require('../middleware/query.js')
 const auth = require('../middleware/auth.js')
-const method = require('../middleware/method.js')
 
 /**
  * Interface for handling endpoints
@@ -40,7 +39,6 @@ class EndpointController {
     this.stack.use(url.parse.bind(url))
     this.stack.use(query.verify)
     this.stack.use(auth.verify)
-    this.stack.use(method.verify)
   }
 
   /**
