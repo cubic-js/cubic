@@ -7,7 +7,7 @@ class Query {
       if (param.required && !req.query[param.name]) {
         return res.status(400).send({
           error: 'Missing query param.',
-          reason: `Expected ${param.name} param. Your URL should look something like: ${req.url}${req.url.includes('?') ? '&' : '?'}${param.name}=${param.default}`
+          reason: `Expected ${param.name} param. Your URL should look something like: ${req.url}${req.url.includes('?') ? '&' : '?'}${param.name}=${param.default ? param.default : 'value'}`
         })
       }
     }
