@@ -25,7 +25,7 @@ class RequestController {
         let socket = sockets[0]
 
         // Generate unique callback for emit & pass to responding node
-        req.id = process.hrtime().join('').toString()
+        req.id = `req-${req.url}-${process.hrtime().join('').toString()}`
         socket.emit('req', CircularJSON.stringify(req))
         blitz.log.silly(`${this.config.prefix} | Request sent`)
 
@@ -50,7 +50,7 @@ class RequestController {
     return new Promise((resolve, reject) => {
       let sockets = []
       let request = {
-        id: process.hrtime().join('').toString(),
+        id: `check-${req.url}-${process.hrtime().join('').toString()}`,
         url: req.url,
         method: req.method
       }
