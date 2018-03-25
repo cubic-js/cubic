@@ -1,5 +1,6 @@
 const redis = require('redis')
 const mime = require('mime')
+const { promisify } = require('util')
 
 class CacheController {
   constructor (config) {
@@ -11,15 +12,15 @@ class CacheController {
   /**
    * Saves string as key value
    */
-  save (key, value, exp = this.config.cacheExp, scope) {
+  async save (key, value, exp = this.config.cacheExp, scope) {
     value = JSON.stringify({
       data: value,
       type: typeof value,
       scope: scope
     })
-    key = key.toLowerCase().split(' ').join('%20')
+    key = encodeURI(key)
     blitz.log.verbose(`${this.config.prefix} | < caching data for ${key}`)
-    this.client.setex(key, exp, value)
+    return promisify(this.client.setex).bind(this.client)(key, exp, value)
   }
 
   /**
@@ -30,7 +31,7 @@ class CacheController {
 
     if (cached) {
       // Authorized
-      if (req.user.scp.includes(cached.scope)) {
+      if (!cached.scope || req.user.scp.includes(cached.scope)) {
         return this.respond(cached, req, res)
       }
 
@@ -70,16 +71,14 @@ class CacheController {
   /**
    * Get Data from cache. If not present, have it calculated
    */
-  get (key) {
-    return new Promise((resolve, reject) => {
-      key = key.toLowerCase().split(' ').join('%20')
-      this.client.get(key, (err, res) => {
-        if (res) {
-          blitz.log.verbose(`${this.config.prefix} | > returning cached data for ${key}`)
-          resolve(JSON.parse(res))
-        } else resolve(null)
-      })
-    })
+  async get (key) {
+    const res = await promisify(this.client.get).bind(this.client)(encodeURI(key))
+    if (res) {
+      blitz.log.verbose(`${this.config.prefix} | > returning cached data for ${key}`)
+      return JSON.parse(res)
+    } else {
+      return
+    }
   }
 }
 

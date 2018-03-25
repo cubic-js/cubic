@@ -57,11 +57,13 @@ module.exports = (sockets, config) => {
       blitz.log.verbose(`${node} | > publishing data for ${update.endpoint}`)
       sockets.io.to(update.endpoint).emit(update.endpoint, update.data)
       sockets.root.to(update.endpoint).emit(update.endpoint, update.data)
+      socket.emit(update.id, 'done')
     })
 
     // Listen for Cache updates
-    socket.on('cache', data => {
-      cache.save(data.key, data.value, data.exp, data.scope)
+    socket.on('cache', async data => {
+      await cache.save(data.key, data.value, data.exp, data.scope)
+      socket.emit(data.id, 'done')
     })
 
     // Connection listeners
