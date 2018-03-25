@@ -1,6 +1,5 @@
 const assert = require('assert')
 
-
 /**
  * Tests for properly responding to usual requests.
  */
@@ -45,7 +44,7 @@ describe('Requests', function () {
   })
 
   // Raw file check
-  it('should send buffer of guy fieri', async function () {
+  it('should send buffer of guy fieri on GET /guy-fieri.jpg', async function () {
     const res = await blitz.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/guy-fieri.jpg',

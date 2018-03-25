@@ -1,9 +1,8 @@
 const assert = require('assert')
 const loader = require('blitz-js-loader')
-const Api = require('blitz-js-api')
+const Api = require('../../blitz-js-api')
 const Auth = require('blitz-js-auth')
 const Core = require(process.cwd())
-
 
 /**
  * Load up blitz-js api to connect to and auth node to authenticate at.
@@ -23,7 +22,7 @@ before(async () => {
  * Test for properly connecting to blitz-js-api node.
  */
 describe('Connection', function () {
-  this.timeout(30000)
+  this.timeout(10000)
 
   // Connect to API node
   it('should emit "ready" when connected to the API node', function (done) {
