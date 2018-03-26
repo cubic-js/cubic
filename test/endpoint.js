@@ -3,7 +3,7 @@ const assert = require('assert')
 /**
  * Test for endpoint parent class functionality
  */
-describe('Connection', async function() {
+describe('Endpoints', async function() {
   let api, mongo, db, endpoint
 
   // Prepare endpoint
