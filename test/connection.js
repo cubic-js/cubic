@@ -26,9 +26,7 @@ describe('Connection', function () {
 
   // Connect to API node
   it('should emit "ready" when connected to the API node', function (done) {
-    blitz.nodes.core.client.api.on('ready', () => {
-      done()
-    })
+    blitz.nodes.core.client.api.on('ready', done)
   })
 
   // Respond to check
