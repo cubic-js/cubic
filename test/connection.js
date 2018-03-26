@@ -1,6 +1,6 @@
 const assert = require('assert')
 const loader = require('blitz-js-loader')
-const Api = require('../../blitz-js-api')
+const Api = require('blitz-js-api')
 const Auth = require('blitz-js-auth')
 const Core = require(process.cwd())
 
