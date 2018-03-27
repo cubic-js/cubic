@@ -25,6 +25,7 @@ before(async function() {
  * Test for properly connecting to blitz-js-api node.
  */
 describe('Server', function () {
+  this.timeout(20000)
   it('should open HTTP server on localhost:3003', async function () {
     try {
       await request.get('http://localhost:3003')
@@ -37,5 +38,10 @@ describe('Server', function () {
   it('should open Socket.io server on localhost:3003', async function () {
     const client = new Client()
     await client.connecting
+  })
+
+  // Core nodes
+  it('should have core nodes connect to root namespace', function(done) {
+    blitz.nodes.api.server.sockets.root.on('connect', () => done())
   })
 })
