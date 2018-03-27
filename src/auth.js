@@ -56,7 +56,7 @@ class Auth {
       this.access_token = res.access_token
       this.refresh_token = res.refresh_token
     } catch (err) {
-      let t = err.reason ? parseInt(err.reason.replace(/[^0-9]+/g, '')) : 5000
+      let t = err.reason ? parseInt(err.reason.replace(/[^0-9]+/g, '')) : 500
 
       if (err.statusCode !== 503) {
         console.error('blitz-js-query encountered an error while authenticating:')
