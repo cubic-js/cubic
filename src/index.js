@@ -38,7 +38,6 @@ class Blitz {
     this.connection = new Connection(this.options)
     this.connecting = this.connection.connect()
     await this.connecting
-    this.connecting = null
   }
 
 
