@@ -49,7 +49,7 @@ class Blitz {
     this.emit('subscribe', endpoint)
 
     // Function passed? Listen to subscribed endpoint directly.
-    fn ? this.on(endpoint, fn) : null
+    return fn ? this.on(endpoint, fn) : null
   }
 
 
@@ -68,7 +68,7 @@ class Blitz {
    */
   async on(ev, func) {
     await this.connecting
-    this.connection.client.on(ev, func)
+    return this.connection.client.on(ev, func)
   }
 
 
