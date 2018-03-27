@@ -165,6 +165,7 @@ class Blitz {
     await this.connecting
     await this.connection.reconnecting
     this.connection.auth.access_token = token
+    return this.connection.reload()
   }
 
 
