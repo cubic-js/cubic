@@ -85,24 +85,6 @@ class SocketAdapter extends Adapter {
           // Multi request. No errors will occur but this shouldn't happen
         }
       }
-
-      // Apply Status before res.send
-      res.status = (code) => {
-        res.statusCode = code
-        return res
-      }
-
-      // Pseudo res.json to stay parallel with express
-      res.json = (data) => {
-        data = JSON.stringify(data)
-        return res.send(data)
-      }
-
-      res.redirect = (status, data) => {
-        status = typeof status === 'number' ? status : 302
-        data = typeof status === 'number' ? data : status
-        return res.status(status).send(data)
-      }
     }
 
     // Non-ack request
@@ -112,19 +94,24 @@ class SocketAdapter extends Adapter {
         res.body = data
         socket.emit('res', res.msg)
       }
-
-      // Apply Status before res.send
-      res.status = (code) => {
-        res.statusCode = code
-        return res
-      }
-
-      // Pseudo res.json to stay parallel with express
-      res.json = (data) => {
-        data = JSON.stringify(data)
-        return res.send(data)
-      }
     }
+
+    // Apply Status before res.send
+    res.status = (code) => {
+      res.statusCode = code
+      return res
+    }
+    res.json = (data) => {
+      data = JSON.stringify(data)
+      return res.send(data)
+    }
+    res.redirect = (status, data) => {
+      status = typeof status === 'number' ? status : 302
+      data = typeof status === 'number' ? data : status
+      return res.status(status).send(data)
+    }
+    res.header = () => res
+    res.end = (data) => res.send(data)
 
     // Modified res object
     return res
