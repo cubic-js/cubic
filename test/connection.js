@@ -22,7 +22,6 @@ before(async () => {
  * Test for properly connecting to blitz-js-api node.
  */
 describe('Connection', function () {
-  this.timeout(10000)
 
   // Connect to API node
   it('should emit "ready" when connected to the API node', function (done) {
