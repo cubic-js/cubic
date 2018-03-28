@@ -103,7 +103,7 @@ class Connection {
    * Retry failed requests
    */
   async retry (res, verb, query) {
-    let delay = parseInt(res.body.reason.replace(/[^0-9]+/g, '')) || 500
+    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : 500
     let reres = await this.queue.delay(() => this.req(verb, query), delay, 30000, 'unshift')
     return this.errCheck(reres, verb, query)
   }
@@ -117,7 +117,7 @@ class Connection {
     if (parseInt(res.statusCode.toString()[0]) > 3) {
 
       // If expired: Get new token w/ refresh token & retry method
-      if (res.body.reason && res.body.reason.includes('jwt expired')) {
+      if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
         await this.reload()
         return this.retry(verb, query)
       }
@@ -133,7 +133,7 @@ class Connection {
       }
 
       // Unhandled error
-      throw err
+      throw new Error(JSON.stringify(res.body))
     }
 
     // No Error
