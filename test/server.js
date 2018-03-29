@@ -10,7 +10,6 @@ const request = require('request-promise')
  * Load up blitz-js api to connect to and auth node to authenticate at.
  */
 before(async function() {
-  this.timeout(10000)
   loader({ logLevel: 'silent' })
   await blitz.use(new Auth())
   await blitz.use(new Api())
@@ -25,7 +24,6 @@ before(async function() {
  * Test for properly connecting to blitz-js-api node.
  */
 describe('Server', function () {
-  this.timeout(20000)
   it('should open HTTP server on localhost:3003', async function () {
     try {
       await request.get('http://localhost:3003')

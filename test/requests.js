@@ -1,12 +1,11 @@
 const assert = require('assert')
-const Client = require('../../blitz-js-query')
+const Client = require('blitz-js-query')
 
 /**
  * Tests for properly responding to usual requests.
  */
 describe('Requests', function () {
   let client, api, mongo, db, endpoint
-  this.timeout(10000)
 
   before(async function() {
     client = new Client()
@@ -25,20 +24,25 @@ describe('Requests', function () {
   // POST check on same URL
   it('should respond with "foo" on POST /foo', async function () {
     const payload = 'foo'
-    const res = await client.post({ url: '/foo', body: payload })
+    const res = await client.post('/foo', payload)
     assert(res === payload)
   })
 
   // Raw file check
   it('should send buffer of guy fieri on GET /guy-fieri.jpg', async function () {
     const res = await client.get('/guy-fieri.jpg')
-    assert(res instanceof Buffer)
+    assert(res.type === 'Buffer' || res instanceof Buffer)
   })
 
   // Pub/Sub
-  it('should emit event on incoming publish request', function(done) {
+  it('should emit event with "foo" on /test when published.', function(done) {
     const endpoint = new blitz.nodes.core.Endpoint(api, db, '/test')
-    client.subscribe('/test', done)
-    endpoint.publish('foo')
+    client.subscribe('/test', foo => {
+      assert(foo === 'foo')
+      done()
+    })
+    // For some reason eventEmitter.on() isn't fully synchronous? Just some
+    // weird node or socket.io bug again. Adding a tiny delay solves it.
+    setTimeout(() => endpoint.publish('foo'), 1)
   })
 })
