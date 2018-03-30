@@ -68,11 +68,10 @@ class Authentication extends Endpoint {
       user_id: 'unidentified-' + randtoken.uid(16),
       user_key: user_key,
       user_secret: await bcrypt.hash(user_secret, 8),
-      scope: 'basic-read',
+      scope: '',
       refresh_token: null,
       last_ip: []
     }
-
     this.db.collection('users').insertOne(user)
     await this.saveIP(user_key, ip, 'register', true)
     return ({
