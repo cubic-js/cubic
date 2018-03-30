@@ -57,7 +57,7 @@ class Refresh extends Endpoint {
       let access_token = auth.getAccessToken(data)
 
       // Save IP
-      auth.saveIP.bind(this)(user.user_key, ip, 'refresh token', true)
+      auth.saveIP.bind(this)(user.user_key, ip, 'refresh', true)
       return ({ access_token })
     }
   }

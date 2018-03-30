@@ -44,7 +44,7 @@ class Authentication extends Endpoint {
     try {
       await bcrypt.compare(credentials.user_secret, user.user_secret)
     } catch (err) {
-      auth.saveIP.bind(this)(credentials.user_key, ip, 'credentials', false)
+      auth.saveIP.bind(this)(credentials.user_key, ip, 'authenticate', false)
       return this.res.status(403).send({
         error: 'Unauhtorized.',
         reason: 'Credentials not recognized.'
@@ -52,7 +52,7 @@ class Authentication extends Endpoint {
     }
 
     // Valid User Found
-    auth.saveIP.bind(this)(user.user_key, ip, 'credentials', true)
+    auth.saveIP.bind(this)(user.user_key, ip, 'authenticate', true)
 
     // Set Options
     let data = {
