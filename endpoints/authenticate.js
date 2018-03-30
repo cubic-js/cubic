@@ -42,7 +42,7 @@ class Authentication extends Endpoint {
     })
 
     try {
-      await this.isValidSecret(credentials.user_secret, user.user_secret)
+      await bcrypt.compare(credentials.user_secret, user.user_secret)
     } catch (err) {
       auth.saveIP.bind(this)(credentials.user_key, ip, 'credentials', false)
       return this.res.status(403).send({
@@ -88,13 +88,6 @@ class Authentication extends Endpoint {
       upsert: true
     })
     return refresh_token
-  }
-
-  /**
-   * Compares Bcrypt hash w/ supplied secret
-   */
-  async isValidSecret(secret, localhash) {
-    return bcrypt.compare(secret, localhash)
   }
 }
 
