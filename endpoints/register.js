@@ -1,14 +1,7 @@
 const Endpoint = require(blitz.config.auth.core.endpointParent)
-
-/**
- * JSON Web Tokens modules to generate tokens
- */
-const jwt = require('jsonwebtoken')
-const randtoken = require('rand-token')
-
-/**
- * Secret Secrecy
- */
+const auth = require('../lib/auth.js')
+const crypto = require('crypto')
+const randtoken = require('rand-token').generator({ source: crypto.randomBytes })
 const bcrypt = require('bcryptjs')
 
 /**
@@ -25,9 +18,9 @@ class Authentication extends Endpoint {
     this.res = res
 
     // Credentials sent
-    if (credentials.user_key && credentials.user_secret) {
-      let user_id = await this.newUser(credentials, req)
-      if (user_id) res.send(user_id)
+    if (credentials.user_id && credentials.user_secret) {
+      let user_key = await this.newUser(credentials, req)
+      if (user_key) res.send({ user_key })
     }
 
     // No allowed content
@@ -44,78 +37,36 @@ class Authentication extends Endpoint {
    */
   async newUser (credentials, req) {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    let user_key = credentials.user_key
+    let user_id = credentials.user_id
     let user_secret = credentials.user_secret
 
-    if (!user_key.trim() || !user_secret.trim()) {
-      this.res.status(403).send({
+    if (!user_id.trim() || !user_secret.trim()) {
+      return this.res.status(400).send({
         error: 'Registration failed.',
         reason: 'User key or secret is empty.'
       })
-      return
     }
 
-    let userExists = await this.db.collection('users').findOne({ user_key: user_key })
+    let userExists = await this.db.collection('users').findOne({ user_id })
     if (userExists) {
-      this.res.status(403).send({
+      return this.res.status(409).send({
         error: 'Registration failed.',
         reason: 'User key is already taken.'
       })
-      return
     }
 
     let user = {
-      user_id: 'unidentified-' + randtoken.uid(16),
-      user_key: user_key,
+      user_id,
+      user_key: `${user_id}-${randtoken.generate(32)}`,
       user_secret: await bcrypt.hash(user_secret, 8),
       scope: '',
       refresh_token: null,
       last_ip: []
     }
     this.db.collection('users').insertOne(user)
-    await this.saveIP(user_key, ip, 'register', true)
-    return ({
-      user_id: user.user_id
-    })
-  }
+    auth.saveIP.bind(this)(user.user_key, ip, 'register', true)
 
-  /**
-   * Logs most recent IPs for users
-   */
-  async saveIP (user_key, ip, grant_type, authorized) {
-    // Get length of existing logs
-    let user = await this.db.collection('users').findOne({
-      user_key: user_key
-    })
-
-    if (user) {
-      let arr_max = blitz.config.auth.maxLogsPerUser
-      let arr_new = []
-      let arr_exs = user.last_ip
-
-      // If arr max is reached: delete oldest
-      if (arr_exs.length >= arr_max) arr_exs.splice(arr_max - 1)
-
-      // Add Newest
-      arr_exs.unshift({
-        ip: ip,
-        grant_type: grant_type,
-        success: authorized,
-        accessed: new Date().toISOString()
-      })
-      arr_new = arr_exs
-
-      // Save new array to db
-      await this.db.collection('users').updateOne({
-        'user_key': user_key
-      }, {
-        $set: {
-          'last_ip': arr_new
-        }
-      }, {
-        upsert: true
-      })
-    }
+    return user_id
   }
 }
 

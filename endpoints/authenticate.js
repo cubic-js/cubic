@@ -1,14 +1,7 @@
 const Endpoint = require(blitz.config.auth.core.endpointParent)
-
-/**
- * JSON Web Tokens modules to generate tokens
- */
-const jwt = require('jsonwebtoken')
-const randtoken = require('rand-token')
-
-/**
- * Secret Secrecy
- */
+const auth = require('../lib/auth.js')
+const crypto = require('crypto')
+const randtoken = require('rand-token').generator({ source: crypto.randomBytes })
 const bcrypt = require('bcryptjs')
 
 /**
@@ -51,11 +44,15 @@ class Authentication extends Endpoint {
     try {
       await this.isValidSecret(credentials.user_secret, user.user_secret)
     } catch (err) {
-      return this.unauthorized(credentials.user_key, ip, 'credentials')
+      auth.saveIP.bind(this)(credentials.user_key, ip, 'credentials', false)
+      return this.res.status(403).send({
+        error: 'Unauhtorized.',
+        reason: 'Credentials not recognized.'
+      })
     }
 
     // Valid User Found
-    this.saveIP(user.user_key, ip, 'credentials', true)
+    auth.saveIP.bind(this)(user.user_key, ip, 'credentials', true)
 
     // Set Options
     let data = {
@@ -64,87 +61,33 @@ class Authentication extends Endpoint {
     }
 
     // Get Tokens
-    let accessToken = this.getAccessToken(data)
-    let refreshToken = user.refresh_token ? user.refresh_token : this.generateRefreshToken(user.user_key)
+    let access_token = auth.getAccessToken(data)
+    let refresh_token = user.refresh_token || await this.generateRefreshToken(user.user_key)
 
-    return ({
-      access_token: accessToken,
-      refresh_token: refreshToken
-    })
-  }
-
-  /**
-   * Logs most recent IPs for users
-   */
-  async saveIP(user_key, ip, grant_type, authorized) {
-    // Get length of existing logs
-    let user = await this.db.collection('users').findOne({
-      user_key: user_key
-    })
-
-    if (user) {
-      let arr_max = blitz.config.auth.maxLogsPerUser
-      let arr_new = []
-      let arr_exs = user.last_ip
-
-      // If arr max is reached: delete oldest
-      if (arr_exs.length >= arr_max) arr_exs.splice(arr_max - 1)
-
-      // Add Newest
-      arr_exs.unshift({
-        ip: ip,
-        grant_type: grant_type,
-        success: authorized,
-        accessed: new Date().toISOString()
-      })
-      arr_new = arr_exs
-
-      // Save new array to db
-      await this.db.collection('users').updateOne({
-        'user_key': user_key
-      }, {
-        $set: {
-          'last_ip': arr_new
-        }
-      }, {
-        upsert: true
-      })
-    }
-  }
-
-  /**
-   * Signs new Access Token
-   */
-  getAccessToken(data) {
-    let key = blitz.config.auth.certPrivate
-    let passphrase = blitz.config.auth.certPass
-    let options = {
-      expiresIn: blitz.config.auth.exp,
-      algorithm: blitz.config.auth.alg,
-      issuer: blitz.config.auth.iss
-    }
-
-    return jwt.sign(data, passphrase ? { key, passphrase } : key, options)
+    return ({ access_token, refresh_token })
   }
 
   /**
    * Generate random Refresh Token & save in user doc
    */
-  generateRefreshToken(user_key) {
-    // Generate Unique Token for Refresh
-    let refreshToken = user_key + randtoken.uid(256)
+  async generateRefreshToken(user_key) {
+    const refresh_token = user_key + randtoken.generate(64)
+
+    // Prevent same token for multiple users
+    const exists = await this.db.collection('users').findOne({ refresh_token })
+    if (exists) {
+      return this.generateRefreshToken(user_key) // retry
+    }
 
     // Save Refresh Token in DB
     this.db.collection('users').updateOne({
-      'user_key': user_key
+      user_key
     }, {
-      $set: {
-        'refresh_token': refreshToken
-      }
+      $set: { refresh_token }
     }, {
       upsert: true
     })
-    return refreshToken
+    return refresh_token
   }
 
   /**
@@ -152,17 +95,6 @@ class Authentication extends Endpoint {
    */
   async isValidSecret(secret, localhash) {
     return bcrypt.compare(secret, localhash)
-  }
-
-  /**
-   * Sends error to web client and logs IP if provided
-   */
-  unauthorized(user_key, ip, grant_type) {
-    if (user_key && ip) this.saveIP(user_key, ip, grant_type, false)
-    this.res.status(403).send({
-      error: 'Unauhtorized.',
-      reason: 'Credentials not recognized.'
-    })
   }
 }
 
