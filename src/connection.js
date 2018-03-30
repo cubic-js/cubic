@@ -84,12 +84,8 @@ class Connection {
    */
   async request(verb, query) {
     let delay = this.options.ignore_limiter ? 0 : 20
-    try {
-      let res = await this.queue.delay(() => this.req(verb, query), delay)
-      return this.errCheck(res, verb, query)
-    } catch (err) {
-      throw new Error(err)
-    }
+    let res = await this.req(verb, query)
+    return this.errCheck(res, verb, query)
   }
 
   /**
@@ -104,6 +100,7 @@ class Connection {
    */
   async retry (res, verb, query) {
     let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : 500
+    delay = isNaN(delay) ? 500 : delay
     let reres = await this.queue.delay(() => this.req(verb, query), delay, 30000, 'unshift')
     return this.errCheck(reres, verb, query)
   }
@@ -119,7 +116,7 @@ class Connection {
       // If expired: Get new token w/ refresh token & retry method
       if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
         await this.reload()
-        return this.retry(verb, query)
+        return this.retry(res, verb, query)
       }
 
       // Rate Limited
@@ -129,7 +126,7 @@ class Connection {
 
       // Nodes are busy -> retry
       if (res.statusCode === 503) {
-        return this.retry(verb, query)
+        return this.retry(res, verb, query)
       }
 
       // Unhandled error
