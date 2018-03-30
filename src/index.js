@@ -66,9 +66,9 @@ class Blitz {
   /**
    * Event listening for socket.io
    */
-  async on(ev, func) {
+  async on(ev, fn) {
     await this.connecting
-    return this.connection.client.on(ev, func)
+    return this.connection.client.on(ev, fn)
   }
 
 
