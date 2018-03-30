@@ -68,7 +68,7 @@ class Authentication extends Endpoint {
     this.db.collection('users').insertOne(user)
     auth.saveIP.bind(this)(user.user_key, ip, 'register', true)
 
-    return user_id
+    return user.user_key
   }
 }
 
