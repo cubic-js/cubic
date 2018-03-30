@@ -178,7 +178,7 @@ class EndpointController {
    * Get specific endpoint through url detection
    */
   findByUrl(url, method) {
-    url = url === '' ? '/' : url.split('%20').join(' ') // empty url? => '/'
+    url = url === '' ? '/' : decodeURI(url) // empty url? => '/'
     let found = false
     let reqUrl = url.split('?')[0].split('/')
 
