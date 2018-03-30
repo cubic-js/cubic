@@ -36,7 +36,7 @@ class Authentication extends Endpoint {
    * Generate new User into db and return credentials to use
    */
   async newUser (credentials, req) {
-    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    let ip = req.user.uid
     let user_id = credentials.user_id
     let user_secret = credentials.user_secret
 
