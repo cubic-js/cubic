@@ -57,6 +57,7 @@ class Auth {
       this.refresh_token = res.refresh_token
     } catch (err) {
       let t = err.reason ? parseInt(err.reason.replace(/[^0-9]+/g, '')) : 500
+      t = isNaN(t) ? 500 : t
 
       if (err.statusCode !== 503) {
         console.error('blitz-js-query encountered an error while authenticating:')
