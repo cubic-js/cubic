@@ -76,6 +76,14 @@ class Blitz {
   }
 
   /**
+   * Event listening for socket.io
+   */
+  async once(ev, fn) {
+    await this.connections()
+    return this.connection.client.once(ev, fn)
+  }
+
+  /**
    * Expose Socket client emit
    */
   async emit(ev, data) {
