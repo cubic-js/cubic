@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "node_modules/.bin/rollup -m -c build/rollup.config.js",
-    "test": "mocha --exit -s 10000 --timeout 10000 test/connection.js test/requests.js test/pubsub.js test/auth.js"
+    "test": "mocha --exit -s 20000 --timeout 10000 test/connection.js test/requests.js test/pubsub.js test/auth.js"
   },
   "author": "Kaptard",
   "license": "MIT",

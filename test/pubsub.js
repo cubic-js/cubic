@@ -20,7 +20,7 @@ describe('Pub/Sub', function () {
     clientDefault.get('/pub-sub')
   })
 
-  it('should not receive no events when unsubscribed', function (done) {
+  it('should not receive events when unsubscribed', function (done) {
     let receivedDefault, receivedAuth
     clientDefault.subscribe('/pub-sub', data => {
       assert(data === 'pub')

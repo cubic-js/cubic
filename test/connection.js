@@ -36,7 +36,7 @@ describe('Connection', function () {
   })
 
   it('should reconnect to the server when connections are lost', async function() {
-    this.timeout = 20000
+    this.timeout(20000)
     let connection = new Promise(resolve => {
       let connect = setInterval(() => {
         if (clientAuthSocket) {
@@ -64,11 +64,8 @@ describe('Connection', function () {
     // Run reconnect test multiple times. We've not made the best experiences
     // with socket.io's reconnect reliability in the past, especially when
     // there were many reconnects within a short period of time.
-    for (let i = 0; i < 10; i++) {
-      console.log('commence')
+    for (let i = 0; i < 5; i++) {
       await reconnect()
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      console.log('passed')
     }
   })
 })
