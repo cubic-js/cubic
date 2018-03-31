@@ -30,7 +30,6 @@ class Blitz {
     this.connect()
   }
 
-
   /**
    * Connect by getting tokens and setting up clients
    */
@@ -40,43 +39,47 @@ class Blitz {
     await this.connecting
   }
 
+  /**
+   * Helper function to await all existing connections/reconnections
+   */
+  async connections() {
+    await this.connecting
+    await this.connection.reconnecting
+  }
 
   /**
    * Subscribe to certain endpoints
    */
   async subscribe (endpoint, fn) {
-    await this.connecting
+    await this.connections()
     this.emit('subscribe', endpoint)
 
     // Function passed? Listen to subscribed endpoint directly.
     return fn ? this.on(endpoint, fn) : null
   }
 
-
   /**
    * Unsubscribe from endpoints again
    */
   async unsubscribe (endpoint) {
-    await this.connecting
+    await this.connections()
     this.emit('unsubscribe', endpoint)
     this.connection.client.off(endpoint)
   }
-
 
   /**
    * Event listening for socket.io
    */
   async on(ev, fn) {
-    await this.connecting
+    await this.connections()
     return this.connection.client.on(ev, fn)
   }
-
 
   /**
    * Expose Socket client emit
    */
   async emit(ev, data) {
-    await this.connecting
+    await this.connections()
     this.connection.client.emit(ev, data)
   }
 
@@ -85,7 +88,7 @@ class Blitz {
    * RESTful methods for manual interaction
    */
   async query(verb, query) {
-    await this.connecting
+    await this.connections()
     return this.connection.request(verb, query)
   }
 
@@ -129,22 +132,20 @@ class Blitz {
    * Change user at runtime. Automatically reloads connection.
    */
   async login(user, secret) {
+    await this.connections()
     this.connection.auth.options.user_key = user
     this.connection.auth.options.user_secret = secret
     return this.connection.reload(false)
   }
-
 
   /**
    * Manually set refresh token. This way user credentials won't be exposed
    * to this package.
    */
   async setRefreshToken(token) {
-    await this.connecting
-    await this.connection.reconnecting
+    await this.connections()
     this.connection.auth.refresh_token = token
   }
-
 
   /**
    * Retrieve current refresh token. Will await any existing authentication
@@ -152,29 +153,24 @@ class Blitz {
    * the refresh token needs to be stored for subsequent logins.
    */
   async getRefreshToken() {
-    await this.connecting
-    await this.connection.reconnecting
+    await this.connections()
     return this.connection.auth.refresh_token
   }
-
 
   /**
    * Manually set access token.
    */
   async setAccessToken(token) {
-    await this.connecting
-    await this.connection.reconnecting
+    await this.connections()
     this.connection.auth.access_token = token
     return this.connection.reload()
   }
-
 
   /**
    * Retrieve current access token.
    */
   async getAccessToken() {
-    await this.connecting
-    await this.connection.reconnecting
+    await this.connections()
     return this.connection.auth.access_token
   }
 }

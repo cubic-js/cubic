@@ -47,7 +47,7 @@ class Connection {
     this.client.io.opts.query = this.auth.access_token ? 'bearer=' + this.auth.access_token : null
     this.client.connect()
     this.client.once('connect', () => {
-      this.reconnecting = null
+      this.reconnecting = Promise.resolve()
     })
 
     // Retry if server unreachable
