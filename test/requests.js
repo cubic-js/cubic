@@ -31,4 +31,11 @@ describe('Requests', function () {
     const auth = await clientAuth.delete('/delete', 'ok')
     assert(def === 'ok' && auth === 'ok')
   })
+
+  // Other
+  it('should retry requests when the server is busy', async function() {
+    global.retryCounter = 0
+    const res = await clientDefault.get('/retry')
+    assert(res === 'ok')
+  })
 })
