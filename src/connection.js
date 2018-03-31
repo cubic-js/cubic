@@ -52,6 +52,7 @@ class Connection {
 
     // Retry if server unreachable
     await timeout(() => this.client.connected ? null : this.reload(), 1000)
+    await this.reconnecting
   }
 
   /**
@@ -60,8 +61,8 @@ class Connection {
    * use the refresh token or login directly. Will be `true` by default if
    * refresh token is present.
    */
-  reload(refresh) {
-    if (!this.reconnecting) {
+  async reload(refresh) {
+    if (!await this.reconnecting) {
       this.reconnecting = this.reconnect(refresh)
     }
     return this.reconnecting
