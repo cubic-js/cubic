@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "async-middleware-stack": "^1.0.1",
-    "blitz-js-query": "^1.0.6",
+    "blitz-js-query": "^1.0.7",
     "circular-json": "^0.5.1",
     "decache": "^4.4.0",
     "lodash": "^4.17.5",
