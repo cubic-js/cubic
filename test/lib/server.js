@@ -1,7 +1,7 @@
 const loader = require('blitz-js-loader')
-const Api = require('../../../blitz-js-api')
-const Auth = require('../../../blitz-js-auth')
-const Core = require('../../../blitz-js-core')
+const Api = require('blitz-js-api')
+const Auth = require('blitz-js-auth')
+const Core = require('blitz-js-core')
 
 class Server {
   async init() {
