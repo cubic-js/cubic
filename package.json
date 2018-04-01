@@ -13,8 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "blitz-js-api": "^1.0.5",
-    "blitz-js-core": "^1.0.6",
+    "blitz-js-api": "^1.0.8",
+    "blitz-js-core": "^1.0.8",
     "rand-token": "^0.4.0"
   },
   "devDependencies": {
