@@ -4,7 +4,7 @@
   "description": "⚡ API Node for the cubic framework",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --exit -s 10000 --timeout 10000 test/server.js test/requests.js"
+    "test": "mocha --exit -s 30000 --timeout 30000 test/server.js test/requests.js"
   },
   "repository": {
     "type": "git",
