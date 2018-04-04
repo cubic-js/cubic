@@ -1,7 +1,7 @@
 {
   "name": "blitz-js-api",
   "version": "1.0.8",
-  "description": "⚡ API Node for the blitz-js framework",
+  "description": "⚡ API Node for the cubic framework",
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit -s 10000 --timeout 10000 test/server.js test/requests.js"
@@ -25,7 +25,7 @@
     "socket.io": "^2.1.0"
   },
   "devDependencies": {
-    "blitz-js-auth": "^1.0.7",
+    "blitz-js-auth": "^1.0.8",
     "blitz-js-core": "^1.0.8",
     "blitz-js-loader": "^1.0.4",
     "blitz-js-query": "^1.0.7",
