@@ -1,0 +1,12 @@
+pipeline:
+  test:
+    image: node
+    commands:
+      - npm install
+      - npm test
+
+services:
+  mongodb:
+    image: mongo
+  redis:
+    image: redis
