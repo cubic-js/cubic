@@ -1,5 +1,5 @@
-const Core = require('blitz-js-core')
-const API = require('blitz-js-api')
+const Core = require('cubic-core')
+const API = require('cubic-api')
 const local = require('./config/local.js')
 const preauth = require('./hooks/preauth.js')
 const purge = require('./hooks/purge.js')
@@ -7,7 +7,7 @@ const purge = require('./hooks/purge.js')
 /**
  * Loader for auth-node system. For ease of maintenance, the auth-node consists
  * of a core-node that is connected to its own api-node as web server, much
- * like a regular blitz.js project
+ * like a regular cubic project
  */
 class Auth {
   constructor (options) {
@@ -20,14 +20,14 @@ class Auth {
   async init () {
 
     // API node for distributing requests
-    await blitz.use(new API(blitz.config.auth.api))
-    if (!blitz.config.auth.api.disable) {
+    await cubic.use(new API(cubic.config.auth.api))
+    if (!cubic.config.auth.api.disable) {
       preauth.validateWorker()
     }
 
     // Core Node which processes incoming requests
-    blitz.hook('auth.core', preauth.verifyUserIndices)
-    await blitz.use(new Core(blitz.config.auth.core))
+    cubic.hook('auth.core', preauth.verifyUserIndices)
+    await cubic.use(new Core(cubic.config.auth.core))
   }
 }
 

@@ -8,8 +8,8 @@ class PreAuth {
    * Set mongo indices to optimize queries for user_key and refresh tokens
    */
   async verifyUserIndices () {
-    const client = await mongodb.connect(blitz.config.auth.core.mongoUrl)
-    const db = client.db(blitz.config.auth.core.mongoDb)
+    const client = await mongodb.connect(cubic.config.auth.core.mongoUrl)
+    const db = client.db(cubic.config.auth.core.mongoDb)
     const mongoVerifySingleIndex = async (db, col, index) => {
       db.collection(col).createIndex(index)
     }
@@ -24,11 +24,11 @@ class PreAuth {
    * the chicken-egg problem of letting the auth worker authenticate itself.
    */
   validateWorker () {
-    blitz.nodes.auth.api.use('/authenticate', async(req, res) => {
+    cubic.nodes.auth.api.use('/authenticate', async(req, res) => {
       // Core-node attempts to connect
       if (req.body && req.body.user_key) {
-        const client = await mongodb.connect(blitz.config.auth.core.mongoUrl)
-        const db = client.db(blitz.config.auth.core.mongoDb)
+        const client = await mongodb.connect(cubic.config.auth.core.mongoUrl)
+        const db = client.db(cubic.config.auth.core.mongoDb)
         const user = await db.collection('users').findOne({
           user_key: req.body.user_key
         })
@@ -41,20 +41,20 @@ class PreAuth {
             client.close()
             throw 'Invalid password.'
           }
-          let key = blitz.config.auth.certPrivate
-          let passphrase = blitz.config.auth.certPass
+          let key = cubic.config.auth.certPrivate
+          let passphrase = cubic.config.auth.certPass
           let refresh_token = user.refresh_token
           let access_token = jwt.sign({
             scp: user.scope,
             uid: user.user_id
           }, passphrase ? { key, passphrase } : key, {
-            algorithm: blitz.config.auth.alg
+            algorithm: cubic.config.auth.alg
           })
 
           // Cleanup
           client.close()
-          this.removeMiddleware(blitz.nodes.auth.api.server.http.stack.stack, '/authenticate')
-          this.removeMiddleware(blitz.nodes.auth.api.server.sockets.stack.stack, '/authenticate')
+          this.removeMiddleware(cubic.nodes.auth.api.server.http.stack.stack, '/authenticate')
+          this.removeMiddleware(cubic.nodes.auth.api.server.sockets.stack.stack, '/authenticate')
 
           // Send back tokens
           res.json({

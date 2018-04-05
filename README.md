@@ -1,19 +1,19 @@
-[![blitz-js-auth](https://i.imgur.com/8m8Ewsm.png)](https://github.com/nexus-devs)
+[![cubic-auth](https://i.imgur.com/da8ckiV.png)](https://github.com/nexus-devs/cubic-auth)
 
 ##
 
-<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/blitz-js">blitz-js</a>. Built on <a href="https://github.com/nexus-devs/blitz-js-api">blitz-js-api</a> and <a href="https://github.com/nexus-devs/blitz-js-core">blitz-js-core</a>.</p>
+<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/cubic">Cubic</a>. Built on <a href="https://github.com/nexus-devs/cubic-api">cubic-api</a> and <a href="https://github.com/nexus-devs/cubic-core">cubic-core</a>.</p>
 
 <br>
 <br>
 
 ## Usage
 ```js
-const Blitz = require('blitz-js')
-const Auth = require('blitz-js-auth')
-const blitz = new Blitz()
+const Cubic = require('cubic')
+const Auth = require('cubic-auth')
+const cubic = new Cubic()
 
-blitz.use(new Auth(options))
+cubic.use(new Auth(options))
 ```
 | Option        | Default       | Description   |
 |:------------- |:------------- |:------------- |
@@ -23,8 +23,8 @@ blitz.use(new Auth(options))
 | certPublic | none | String of public RSA key used to verify JWT signature. (Set automatically in dev mode) |
 | certPass | none | Optional secret to decrypt the provided RSA keys |
 | maxLogsPerUser | `50` | Number of access logs for each user |
-| api | `<object>` | Configure internal blitz-js-api node. See [override options](#override-config) below. |
-| core | `<object>` | Configure internal blitz-js-core node. |
+| api | `<object>` | Configure internal cubic-api node. See [override options](#override-config) below. |
+| core | `<object>` | Configure internal cubic-core node. |
 
 <br>
 
@@ -73,11 +73,11 @@ The **access_token** is a *short-lived* (1h by default) **JSON Webtoken (JWT)**
 containing all important user data (name, permissions, etc). It is highly
 recommended to look at how they work at [jwt.io](https://jwt.io/).
 
-Blitz-js-auth uses the `RSA256` signature algorithm to generate a signature from
+cubic-auth uses the `RSA256` signature algorithm to generate a signature from
 the plaintext payload with an RSA private key.
 This signature ensures that the data provided in the payload hasn't been modified
 or forged by an attacker. By signing the token with RSA keys, we can
-later use the public key on blitz-js-api nodes to verify the signature - without
+later use the public key on cubic-api nodes to verify the signature - without
 exposing our private key in case of a security breach.
 
 
@@ -130,14 +130,14 @@ token.
 >```
 
 Used to save new users to the database. Passwords are hashed with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) at 8
-salt rounds. 
+salt rounds.
 Please make sure you're using HTTPS, otherwise someone could intercept the plaintext password.
 
 <br>
 
 ## Getting the access tokens to the target API
 Now that we have the access token, the question still remains how we get it on
-the API node and how we can read the data from blitz-js-core endpoints.
+the API node and how we can read the data from cubic-core endpoints.
 
 ### On the client
 For **http** requests, just put the access token in the auth header.<br>
@@ -157,7 +157,7 @@ Just put this as the options object when connecting:
   query: 'bearer=<access_token>'
 }
 ```
-Note that these things are taken care of automatically with the [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
+Note that these things are taken care of automatically with the [cubic-client](https://github.com/nexus-devs/cubic-client)
 package. The examples merely serve for clarification, but you shouldn't actually
 have to use them manually.
 
@@ -172,7 +172,7 @@ permissions.
 
 If the verification succeeds or no token is provided, the payload
 (or default user) is attached to `req.user`. This is the same `req` object
-that we later have access to on a blitz-js-core endpoint. With the verification
+that we later have access to on a cubic-core endpoint. With the verification
 performed beforehand, we can be certain that whatever data we get in `req.user`
 will be valid.
 
@@ -184,22 +184,22 @@ be returned.
 
 
 ## Override config
-Since the blitz-js-auth server is completely based on a regular blitz-js setup,
-we can configure the blitz-js-api and blitz-js-core options individually.
+Since the cubic-auth server is completely based on a regular cubic setup,
+we can configure the cubic-api and cubic-core options individually.
 Below are the overrides used by default.
 
-#### blitz-js-api
+#### cubic-api
 | Api Option        | Override       | Description   |
 |:------------- |:------------- |:------------- |
 | port   | `3030`   | Port to listen on for requests. |
 | cacheDb| `3`  | Redis database used to store cache data. |
 | group     | `'auth'` | Group which sub-node is attached to. |
 
-#### blitz-js-core
+#### cubic-core
 | Core Option        | Override       | Description   |
 |:------------- |:------------- |:------------- |
 | mongoUrl | `'mongodb://localhost/'`   | Base URL for mongodb connection. |
-| mongoDb  | `'blitz-js-auth'`  | Mongodb database to use in endpoints by default |
+| mongoDb  | `'cubic-auth'`  | Mongodb database to use in endpoints by default |
 | apiUrl   | `'http://localhost:3030'` | API to serve requests on. |
 | authUrl  | `'http://localhost:3030'` | Auth server to authenticate on. (same as API) |
 | group       | `'auth'` | Group which sub-node is attached to. |

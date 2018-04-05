@@ -8,7 +8,7 @@ module.exports = {
     cacheDb: 3,
 
     /**
-     * Blitz information
+     * cubic information
      */
     group: 'auth'
   },
@@ -18,7 +18,7 @@ module.exports = {
      * Databases
      */
     mongoUrl: 'mongodb://localhost/',
-    mongoDb: 'blitz-js-auth',
+    mongoDb: 'cubic-auth',
 
     /**
      * Target Node URLs
@@ -32,7 +32,7 @@ module.exports = {
     endpointPath: __dirname + '/../endpoints/',
 
     /**
-     * Blitz information
+     * cubic information
      */
     group: 'auth'
   },

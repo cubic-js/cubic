@@ -1,4 +1,4 @@
-const Endpoint = require(blitz.config.auth.core.endpointParent)
+const Endpoint = require(cubic.config.auth.core.endpointParent)
 const auth = require('../lib/auth.js')
 
 /**

@@ -5,16 +5,16 @@ const mongodb = require('mongodb').MongoClient
  */
 class Purge {
   async purgeInactiveUsers () {
-    if (blitz.config.local.environment === 'production' && blitz.config.auth.purgeMaxLimit > 0) {
-      let db = await mongodb.connect(blitz.config.auth.core.mongoUrl)
+    if (cubic.config.local.environment === 'production' && cubic.config.auth.purgeMaxLimit > 0) {
+      let db = await mongodb.connect(cubic.config.auth.core.mongoUrl)
       setInterval(() => {
-        let limit = new Date() - blitz.config.auth.purgeMaxLimit
-        db.db(blitz.config.auth.core.mongoDb).collection('users').remove({
+        let limit = new Date() - cubic.config.auth.purgeMaxLimit
+        db.db(cubic.config.auth.core.mongoDb).collection('users').remove({
           'last_ip.0.accessed': {
             $lt: limit
           }
         })
-      }, blitz.config[blitz.id].purgeInterval)
+      }, cubic.config[cubic.id].purgeInterval)
     }
   }
 }
