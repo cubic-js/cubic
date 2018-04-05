@@ -1,7 +1,7 @@
 /**
  * Dependencies
  */
-const chalk = require("chalk")
+const chalk = require('chalk')
 const version = require('./package.json').version
 const pkg = require(`${process.cwd()}/package.json`)
 
@@ -11,7 +11,7 @@ const pkg = require(`${process.cwd()}/package.json`)
 class Intro {
 
   constructor() {
-    this.border = chalk.grey("---------------------------------------------------------------")
+    this.border = chalk.grey('---------------------------------------------------------------')
   }
 
   /**
@@ -19,12 +19,12 @@ class Intro {
    */
   roll() {
     console.log('\x1B[2J\x1B[0f\u001b[0;0H')
-    console.log(" ")
+    console.log(' ')
     console.log(chalk.grey(`:: ${pkg.name} v.${pkg.version}`))
-    console.log(chalk.grey(":: Launching Blitz.js stack..."))
-    console.log(" ")
-    console.log(chalk.grey("---------------------------------------------------------------"))
-    console.log(" ")
+    console.log(chalk.grey(':: Launching cubic stack...'))
+    console.log(' ')
+    console.log(chalk.grey('---------------------------------------------------------------'))
+    console.log(' ')
     console.log(`
                             ..
                             :Ndo-
@@ -42,18 +42,18 @@ class Intro {
                 \`MMMMMMMMd.            \`.-::.
                  :MMMMMMMMN:
                   \`:hNMMMMMMs
-                     \`:sNMMMMd.      Blitz.js
+                     \`:sNMMMMd.      cubic
                          -odMMN:     ${chalk.green(`v.${version}`)}
                             \`+hNo
                                 \`
                          `)
-    console.log(" ")
-    console.log(" ")
-    console.log(chalk.grey(":: " + new Date()))
-    console.log(":: Environment : " + blitz.config.local.environment)
-    console.log(":: LogLevel    : " + blitz.config.local.logLevel)
-    console.log(chalk.grey("---------------------------------------------------------------"))
-    console.log(" ")
+    console.log(' ')
+    console.log(' ')
+    console.log(chalk.grey(':: ' + new Date()))
+    console.log(':: Environment : ' + cubic.config.local.environment)
+    console.log(':: LogLevel    : ' + cubic.config.local.logLevel)
+    console.log(chalk.grey('---------------------------------------------------------------'))
+    console.log(' ')
   }
 }
 
