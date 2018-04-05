@@ -1,4 +1,4 @@
-const Endpoint = blitz.nodes.core.Endpoint
+const Endpoint = cubic.nodes.core.Endpoint
 
 class Foo extends Endpoint {
   main (req, res) {

@@ -1,18 +1,18 @@
 const assert = require('assert')
-const loader = require('blitz-js-loader')
-const Api = require('blitz-js-api')
+const loader = require('cubic-loader')
+const Api = require('cubic-api')
 const Auth = require(process.cwd())
-const Core = require('blitz-js-core')
-const Client = require('blitz-js-query')
+const Core = require('cubic-core')
+const Client = require('cubic-client')
 
 /**
- * Load up blitz-js api to connect to and auth node to authenticate at.
+ * Load up cubic api to connect to and auth node to authenticate at.
  */
 before(async () => {
   loader({ logLevel: 'silent' })
-  await blitz.use(new Auth())
-  await blitz.use(new Api())
-  await blitz.use(new Core({
+  await cubic.use(new Auth())
+  await cubic.use(new Api())
+  await cubic.use(new Core({
     endpointPath: `${process.cwd()}/test/endpoints`,
     publicPath:`${process.cwd()}/test/assets`
   }))
@@ -20,7 +20,7 @@ before(async () => {
 
 
 /**
- * Test for properly connecting to blitz-js-api node.
+ * Test for properly connecting to cubic-api node.
  */
 describe('Server', function () {
   it('should become ready to connect to', async function () {

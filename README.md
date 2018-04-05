@@ -114,7 +114,7 @@ token.
 <br>
 
 ## /register
-**GET /register**
+**POST /register**
 >Body:
 >```
 >{
