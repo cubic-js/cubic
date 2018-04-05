@@ -5,9 +5,9 @@ class Auth {
   async init() {
     const Register = this.getEndpointFile('register')
     const Authenticate = this.getEndpointFile('authenticate')
-    const mongo = await blitz.nodes.auth.core.client.endpointController.db
-    this.db = mongo.db(blitz.config.auth.core.mongoDb)
-    this.api = blitz.nodes.auth.core.client.api
+    const mongo = await cubic.nodes.auth.core.client.endpointController.db
+    this.db = mongo.db(cubic.config.auth.core.mongoDb)
+    this.api = cubic.nodes.auth.core.client.api
 
     // Res replacer
     this.res = {}
@@ -25,7 +25,7 @@ class Auth {
    * Helper function to quickly get endpoint paths from core node
    */
   getEndpointFile(endpoint) {
-    return blitz.nodes.auth.core.client.endpointController.endpoints
+    return cubic.nodes.auth.core.client.endpointController.endpoints
           .find(e => e.name === endpoint).file
   }
 

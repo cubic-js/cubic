@@ -1,14 +1,14 @@
-[![blitz-js-query](https://i.imgur.com/3vJgroj.png)](https://github.com/nexus-devs)
+[![cubic-client](https://i.imgur.com/EBnxQiy.png)](https://github.com/nexus-devs/cubic-client)
 
 ##
 
-Connection packages to connect to <a href='https://github.com/nexus-devs/blitz-js-api'>blitz.js</a> API nodes. Choose your target platform from the available branches.
+Connection packages to connect to <a href='https://github.com/nexus-devs/cubic-api'>Cubic</a> API nodes. Choose your target platform from the available branches.
 
 <br>
 
 
 ## Installation
-`npm install blitz-js-query`
+`npm install cubic-client`
 
 <br>
 
@@ -16,30 +16,30 @@ Connection packages to connect to <a href='https://github.com/nexus-devs/blitz-j
 
 | Platform           | Install        | Description   |
 |:------------- |:------------- |:------------- |
-| [python](https://github.com/nexus-devs/blitz-js-query/tree/python) | pip | For usage in Python. Might have to enable HTTP explicitly since Socket.io isn't that well maintained on python.
+| [python](https://github.com/nexus-devs/cubic-client/tree/python) | pip | For usage in Python. Might have to enable HTTP explicitly since Socket.io isn't that well maintained on python.
 
 <br>
 
 ## Usage
 ```js
-const Blitz = require('blitz-js-query')
-const blitz = new Blitz()
+const Client = require('cubic-client')
+const client = new Client()
 
-blitz.get('/foo').then(res => console.log(res.body)) // bar
+cubic.get('/foo').then(res => console.log(res.body)) // bar
 ```
 
 <br>
 
 ## Configuration
 ```javascript
-const Blitz = require('blitz-js-query')
-const blitz = new Blitz({key: value})
+const Client = require('cubic-client')
+const client = new Client({key: value})
 ```
 
 | Key           | Default         | Description   |
 |:------------- |:------------- |:------------- |
-| api_url | `'http://localhost:3003/'` | URL of blitz.js API-Node to connect to |
-| auth_url | `'http://localhost:3030/'` | URL of blitz.js Auth-Node to authenticate with |
+| api_url | `'http://localhost:3003/'` | URL of cubic API-Node to connect to |
+| auth_url | `'http://localhost:3030/'` | URL of cubic Auth-Node to authenticate with |
 | namespace | `'/'` | Socket.io namespace to connect to |
 | user_key | `null` | User key obtained via Auth-Node registration |
 | user_secret | `null` | User secret obtained via Auth-Node |
@@ -52,7 +52,7 @@ const blitz = new Blitz({key: value})
 
 ### RESTful methods
 ```js
-blitz.get(url)
+client.get(url)
 ```
 >Sends a GET request to the API-Node
 
@@ -63,7 +63,7 @@ blitz.get(url)
 <br>
 
 ```js
-blitz.post(url, body)
+client.post(url, body)
 ```
 >Sends a POST request to the API-Node
 
@@ -75,7 +75,7 @@ blitz.post(url, body)
 <br>
 
 ```js
-blitz.put(url, body)
+client.put(url, body)
 ```
 >Sends a PUT request to the API-Node
 
@@ -87,7 +87,7 @@ blitz.put(url, body)
 <br>
 
 ```js
-blitz.patch(url, body)
+client.patch(url, body)
 ```
 >Sends a PATCH request to the API-Node
 
@@ -99,7 +99,7 @@ blitz.patch(url, body)
 <br>
 
 ```js
-blitz.delete(url, body)
+client.delete(url, body)
 ```
 >Sends a DELETE request to the API-Node
 
@@ -113,7 +113,7 @@ blitz.delete(url, body)
 ### Pub/Sub
 
 ```js
-blitz.subscribe(endpoint, fn)
+client.subscribe(endpoint, fn)
 ```
 >Subscribe to updates on a specific endpoint.
 
@@ -126,7 +126,7 @@ blitz.subscribe(endpoint, fn)
 
 ### Authentication
 ```js
-blitz.login(user, secret)
+client.login(user, secret)
 ```
 >Re-authorizes as a specific user at runtime. Usually users should be logged in
 through the constructor options.
@@ -139,7 +139,7 @@ through the constructor options.
 <br>
 
 ```js
-blitz.setRefreshToken(token)
+client.setRefreshToken(token)
 ```
 >Manually set the refresh token. This way user credentials needn't be exposed.
 
@@ -150,7 +150,7 @@ blitz.setRefreshToken(token)
 <br>
 
 ```js
-blitz.getRefreshToken()
+client.getRefreshToken()
 ```
 >Retrieve current refresh token. Will await any existing authentication
 process. Useful if the initial login can be done through user/pass but
@@ -159,7 +159,7 @@ the refresh token needs to be stored for subsequent logins.
 <br>
 
 ```js
-blitz.setAccessToken(token)
+client.setAccessToken(token)
 ```
 >Manually set the access token. This will expire on the next refresh.
 
@@ -170,7 +170,7 @@ blitz.setAccessToken(token)
 <br>
 
 ```js
-blitz.getRefreshToken()
+client.getRefreshToken()
 ```
 >Retrieve current access token. Will await any existing authentication process.
 
@@ -179,7 +179,7 @@ blitz.getRefreshToken()
 ### Socket.io
 
 ```js
-blitz.on(ev, fn)
+client.on(ev, fn)
 ```
 >Listens to specific Socket.io event, then runs the given function with the received data
 
@@ -191,7 +191,7 @@ blitz.on(ev, fn)
 <br>
 
 ```js
-blitz.emit(ev, data)
+client.emit(ev, data)
 ```
 >Emits event via Socket.io client to server
 
@@ -204,4 +204,4 @@ blitz.emit(ev, data)
 
 
 ## License
-[MIT](https://github.com/nexus-devs/npm-blitz-query/blob/master/LICENSE.md)
+[MIT](https://github.com/nexus-devs/npm-cubic-client/blob/master/LICENSE.md)

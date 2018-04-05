@@ -1,6 +1,6 @@
 import Connection from './connection.js'
 
-class Blitz {
+class Client {
 
   /**
    * Merge default options with client options
@@ -183,4 +183,4 @@ class Blitz {
   }
 }
 
-export default Blitz
+export default Client

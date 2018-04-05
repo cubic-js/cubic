@@ -4,7 +4,7 @@ const timeout = (fn, s) => {
 }
 
 /**
- * Handles authorization on blitz auth-node and token handling via HTTP
+ * Handles authorization on cubic auth-node and token handling via HTTP
  */
 class Auth {
   constructor (options) {
@@ -60,7 +60,7 @@ class Auth {
       t = isNaN(t) ? 500 : t
 
       if (err.statusCode !== 503) {
-        console.error('blitz-js-query encountered an error while authenticating:')
+        console.error('cubic-client encountered an error while authenticating:')
         console.error(err)
         console.error(`retrying in ${t}ms \n`)
       }

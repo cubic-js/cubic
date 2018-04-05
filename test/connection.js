@@ -1,17 +1,27 @@
 const assert = require('assert')
+const loader = require('cubic-loader')
+const Api = require('cubic-api')
+const Auth = require('cubic-auth')
+const Core = require('cubic-core')
 const Client = require(process.cwd())
-const server = require('./lib/server.js')
 const auth = require ('./lib/auth.js')
 let clientAuthSocket
 
 
 /**
- * Load up blitz-js api to connect to and auth node to authenticate at.
+ * Load up cubic api to connect to and auth node to authenticate at.
  */
 before(async function() {
-  await server.init()
+  loader({ logLevel: 'silent' })
+  await cubic.use(new Auth())
+  await cubic.use(new Api())
+  await cubic.use(new Core({
+    endpointPath: `${process.cwd()}/test/endpoints`,
+    publicPath:`${process.cwd()}/test/assets`
+  }))
+  await new Promise(resolve => setTimeout(resolve, 100))
   await auth.init()
-  blitz.nodes.api.server.sockets.io.on('connect', socket => {
+  cubic.nodes.api.server.sockets.io.on('connect', socket => {
     if (socket.user.uid === 'test') {
       clientAuthSocket = socket
     }
@@ -20,7 +30,7 @@ before(async function() {
 
 
 /**
- * Test for properly connecting to blitz-js-api node.
+ * Test for properly connecting to cubic-api node.
  */
 describe('Connection', function () {
 
