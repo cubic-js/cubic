@@ -45,6 +45,6 @@
     "type": "git",
     "url": "git+https://github.com/nexus-devs/cubic-core.git"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {}
 }
