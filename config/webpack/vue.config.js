@@ -1,4 +1,4 @@
-const isProd = blitz.config.local.environment !== "development"
+const isProd = cubic.config.local.environment !== "development"
 
 module.exports = (extractSass) => {
   return {

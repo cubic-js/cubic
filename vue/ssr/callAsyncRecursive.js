@@ -10,7 +10,7 @@ const callAsyncRecursive = async (parent, store, router) => {
   if (parent.asyncData) {
     parent.$router = router
     parent.$store = store
-    parent.$blitz = store.$blitz
+    parent.$cubic = store.$cubic
     return parent.asyncData({
       store,
       route: router.currentRoute

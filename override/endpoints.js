@@ -23,7 +23,7 @@ class EndpointController {
     const override = function () {
       this.endpoints = []
       this.getEndpointTree(this.config.endpointPath)
-      this.getViewTree(`${blitz.config.view.sitesPath}`)
+      this.getViewTree(`${cubic.config.view.sitesPath}`)
     }
     return override.bind(controller)
   }
@@ -45,12 +45,12 @@ class EndpointController {
 
       // File -> Set endpoint config
       else {
-        let Endpoint = blitz.nodes.view.core.Endpoint
+        let Endpoint = cubic.nodes.view.core.Endpoint
         let endpoint = new Endpoint().schema
-        let sitesSubDir = blitz.config.view.sitesPath.replace(blitz.config.view.sourcePath, '')
-        endpoint.view = filepath.replace(`${blitz.config.view.sourcePath}`, '')
+        let sitesSubDir = cubic.config.view.sitesPath.replace(cubic.config.view.sourcePath, '')
+        endpoint.view = filepath.replace(`${cubic.config.view.sourcePath}`, '')
         endpoint.route = endpoint.view.replace(sitesSubDir, '').replace('.vue', '').replace('index', '')
-        endpoint.file = blitz.config.view.core.endpointParent
+        endpoint.file = cubic.config.view.core.endpointParent
 
         // Only add to list of endpoints if no explicit endpoint with same
         // route already exists

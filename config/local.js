@@ -6,7 +6,7 @@ module.exports = {
     cacheExp: 10,
 
     /**
-     * Blitz information
+     * cubic information
      */
     group: 'view'
   },
@@ -16,7 +16,7 @@ module.exports = {
      * Databases
      */
     mongoUrl: 'mongodb://localhost/',
-    mongoDb: 'blitz-js-view',
+    mongoDb: 'cubic-ui',
     cacheDb: 2,
 
     /**
@@ -32,7 +32,7 @@ module.exports = {
     authUrl: 'http://localhost:3030',
 
     /**
-     * Blitz information
+     * cubic information
      */
     group: 'view'
   },

@@ -19,7 +19,7 @@ module.exports = merge(baseConfig, {
 
   // This tells the server bundle to use Node-style exports
   output: {
-    path: blitz.config.view.core.publicPath,
+    path: cubic.config.view.core.publicPath,
     libraryTarget: "commonjs2"
   },
 

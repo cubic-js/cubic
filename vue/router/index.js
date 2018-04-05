@@ -1,5 +1,5 @@
 /**
- * Technically we're already routing url's on the blitz.js endpoints, however
+ * Technically we're already routing url's on the cubic endpoints, however
  * the vue-router allows for more advanced frontend techniques like keeping
  * state accross pages or adding transitions
  */

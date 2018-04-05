@@ -78,7 +78,7 @@ router.onReady(() => {
       const parent = matched[0]
       parent.$router = router
       parent.$store = store
-      parent.$blitz = store.$blitz
+      parent.$cubic = store.$cubic
       return asyncData.bind(parent)({ store, route: to })
     }))
 

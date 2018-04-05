@@ -10,9 +10,9 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "blitz-js-api": "^1.0.5",
-    "blitz-js-core": "^1.0.6",
-    "blitz-js-query": "^1.0.4",
+    "cubic-api": "^1.0.0",
+    "cubic-core": "^1.0.0",
+    "cubic-client": "^1.0.0",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.11",
@@ -36,15 +36,15 @@
     "webpack-merge": "^4.1.2",
     "webpack-node-externals": "^1.6.0"
   },
-  "description": "⚡ View Node for the blitz.js framework",
-  "homepage": "https://github.com/nexus-devs/blitz.js-core#readme",
+  "description": "UI node for Cubic.",
+  "homepage": "https://github.com/nexus-devs/cubic-core#readme",
   "license": "MIT",
   "main": "index.js",
-  "name": "blitz-js-view",
+  "name": "cubic-ui",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nexus-devs/blitz.js-core.git"
+    "url": "git+https://github.com/nexus-devs/cubic-core.git"
   },
-  "version": "1.0.8",
+  "version": "1.0.0",
   "devDependencies": {}
 }

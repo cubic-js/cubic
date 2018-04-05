@@ -10,19 +10,19 @@ const path = require("path")
  * Load API node connection which will be used for server-side data-fetching
  * Without this, we'd have to create a new instance on every request
  */
-const Blitz = require('blitz-js-query')
-const api = new Blitz({
-  api_url: blitz.config.view.client.apiUrl,
-  auth_url: blitz.config.view.client.authUrl,
-  user_key: blitz.config.view.core.userKey,
-  user_secret: blitz.config.view.core.userSecret
+const Client = require('cubic-client')
+const api = new Client({
+  api_url: cubic.config.view.client.apiUrl,
+  auth_url: cubic.config.view.client.authUrl,
+  user_key: cubic.config.view.core.userKey,
+  user_secret: cubic.config.view.core.userSecret
 })
 
 /**
  * Render Dependencies
  */
-const sourcePath = blitz.config.view.sourcePath
-const publicPath = blitz.config.view.core.publicPath
+const sourcePath = cubic.config.view.sourcePath
+const publicPath = cubic.config.view.core.publicPath
 const createBundleRenderer = require("vue-server-renderer").createBundleRenderer
 
 /**
@@ -32,7 +32,7 @@ class ViewController {
   /**
    * Render View with data from Endpoint. Returns the html back to the endpoint
    */
-  async render(url, data) {
+  async render(req) {
     const serverBundle = require(path.join(publicPath, "vue-ssr-server-bundle.json"))
     const clientManifest = require(path.join(publicPath, "vue-ssr-client-manifest.json"))
     const template = await readFile(path.join(__dirname, "../vue/index.template.html"), "utf-8")
@@ -42,11 +42,7 @@ class ViewController {
       runInNewContext: false
     })
     const render = util.promisify(renderer.renderToString)
-    const context = {
-      url,
-      data,
-      api
-    }
+    const context = { req, api }
     return await render(context)
   }
 }

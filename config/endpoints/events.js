@@ -3,14 +3,14 @@
  */
 
 module.exports = (sockets) => {
-  const cache = blitz.nodes.view.api.server.cache
+  const cache = cubic.nodes.view.api.server.cache
 
   /**
    * Default namespace
    */
   sockets.io.on("connect", socket => {
     socket.on("disconnect", () => {
-      blitz.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
+      cubic.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
     })
     socket.emit("ready")
   })
@@ -26,7 +26,7 @@ module.exports = (sockets) => {
     })
 
     socket.on("disconnect", () => {
-      blitz.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
+      cubic.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
     })
 
     socket.emit("ready")

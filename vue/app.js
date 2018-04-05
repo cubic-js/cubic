@@ -7,7 +7,7 @@
 import Vue from 'vue'
 import VueTouch from 'vue-touch-hotfix'
 import App from 'src/app.vue'
-import Blitz from 'blitz-js-query'
+import Client from 'cubic-client'
 import { createRouter } from "./router"
 import { createStore } from "./store"
 import { sync } from "vuex-router-sync"
@@ -17,18 +17,18 @@ import { sync } from "vuex-router-sync"
 export function createApp(context) {
   // We're on the server -> Get pre-connected api connection from node
   if (context) {
-    Vue.prototype.$blitz = context.api
+    Vue.prototype.$cubic = context.api
   }
 
   // We're on the client -> load API connection
   else {
-    Vue.prototype.$blitz = new Blitz({
+    Vue.prototype.$cubic = new Client({
       api_url: $apiUrl,
       auth_url: $authUrl
     })
   }
   const router = createRouter()
-  const store = createStore(Vue.prototype.$blitz)
+  const store = createStore(Vue.prototype.$cubic)
 
   // sync the router with the vuex store.
   // this registers `store.state.route`

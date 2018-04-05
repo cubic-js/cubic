@@ -8,17 +8,17 @@ const path = require("path")
 class WebpackServer {
   constructor() {
     this.config = {
-      client: require(blitz.config.view.webpack.clientConfig),
-      server: require(blitz.config.view.webpack.serverConfig)
+      client: require(cubic.config.view.webpack.clientConfig),
+      server: require(cubic.config.view.webpack.serverConfig)
     }
     this.init()
   }
 
   /**
-   * Entrypoint for hook on blitz-js-core
+   * Entrypoint for hook on cubic-core
    */
   async init() {
-    if (!blitz.config.view.webpack.skipBuild) {
+    if (!cubic.config.view.webpack.skipBuild) {
       await this.registerEndpoints()
       await this.initBuild()
     }
@@ -31,7 +31,7 @@ class WebpackServer {
   async registerEndpoints() {
     const routes = await this.getViewConstants()
     let routeOutput = `/**
-                    * Auto-generated routes from blitz.js view node. We can't
+                    * Auto-generated routes from cubic view node. We can't
                     * get them at runtime, so we need to save them like a config
                     * file pre-build.
                     */
@@ -49,8 +49,8 @@ class WebpackServer {
    * Generate plaintext constants which will be saved in the router file
    */
   async getViewConstants() {
-    const srcDir = blitz.config.view.sourcePath.replace(/\\/g, '/')
-    const endpoints = blitz.nodes.view.core.client.endpointController.endpoints
+    const srcDir = cubic.config.view.sourcePath.replace(/\\/g, '/')
+    const endpoints = cubic.nodes.view.core.client.endpointController.endpoints
     let routes = []
 
     endpoints.forEach(endpoint => {
@@ -72,8 +72,8 @@ class WebpackServer {
    * replacement requires a webpack instance on the same process.
    */
   async initBuild() {
-    blitz.log.monitor('Started Webpack build process. This may take a while...', true, '')
-    if (blitz.config.local.environment === "production") {
+    cubic.log.monitor('Started Webpack build process. This may take a while...', true, '')
+    if (cubic.config.local.environment === "production") {
       await this.initWebpackProd()
     } else {
       await this.initWebpackDev()
@@ -90,7 +90,7 @@ class WebpackServer {
     if (compiled.errors) {
       throw compiled.errors
     } else {
-      blitz.log.monitor("Webpack build successful", true, `${new Date - timer}ms`)
+      cubic.log.monitor("Webpack build successful", true, `${new Date - timer}ms`)
     }
   }
 
@@ -132,10 +132,10 @@ class WebpackServer {
  }
 
  addMiddleware(middleware) {
-   const server = blitz.nodes.view.api.server
+   const server = cubic.nodes.view.api.server
    server.http.app._router.stack.pop()
    server.http.app.use(middleware)
-   server.applyRoutes(blitz.config.view.api)
+   server.applyRoutes(cubic.config.view.api)
  }
 }
 

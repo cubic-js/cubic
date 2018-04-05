@@ -1,4 +1,4 @@
-const isProd = blitz.config.local.environment !== "development"
+const isProd = cubic.config.local.environment !== "development"
 const webpack = require("webpack")
 const merge = require("webpack-merge")
 const baseConfig = require("./base.config.js")

@@ -23,7 +23,7 @@ class Endpoint {
    * management. Component data must be handled directly through vue.
    */
   async main(req, res) {
-    return res.send(this.render())
+    return res.send(this.render(req))
   }
 
   /**
@@ -34,7 +34,7 @@ class Endpoint {
     const update = { endpoint, data, id }
 
     this.api.emit('publish', update)
-    blitz.log.verbose('Core      | Sending data to publish for ' + endpoint)
+    cubic.log.verbose('Core      | Sending data to publish for ' + endpoint)
     return new Promise(resolve => this.api.on(id, resolve))
   }
 
@@ -47,16 +47,16 @@ class Endpoint {
     const data = { key, value, exp, scope, id }
 
     this.api.emit('cache', data)
-    blitz.log.verbose('Core      | Sending data to cache for ' + key)
+    cubic.log.verbose('Core      | Sending data to cache for ' + key)
     return new Promise(resolve => this.api.on(id, resolve))
   }
 
   /**
    * Render page with Vue.js
    */
-  async render(data) {
-    const html = await view.render(this.url, data)
-    this.cache(html, blitz.config.view.api.cacheExp)
+  async render(req) {
+    const html = await view.render(req)
+    this.cache(html, cubic.config.view.api.cacheExp)
     return html
   }
 }

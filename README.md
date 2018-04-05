@@ -1,5 +1,5 @@
-[![blitz.js](https://i.imgur.com/94FGvVT.png)](https://github.com/nexus-devs)
+[![cubic-ui](https://i.imgur.com/y38cUhF.png)](https://github.com/nexus-devs/cubic-ui)
 
 ##  
 
-View Rendering Node for blitz.js
+UI Rendering Node for Cubic
