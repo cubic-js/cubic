@@ -9,13 +9,12 @@ import root from 'src/app.vue'
 export default context => {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp(context)
-    const { url } = context
 
     // Init vue-meta
     const meta = app.$meta()
 
     // Set router's location
-    router.push(url)
+    router.push(context.req.url)
 
     // Wait until router has resolved possible async hooks
     router.onReady(async () => {
