@@ -7,7 +7,7 @@ describe('Requests', function () {
 
   // GET check
   it('should respond with "bar" on GET /foo', async function () {
-    const res = await blitz.nodes.api.server.http.request.send({
+    const res = await cubic.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/foo',
       query: {},
@@ -20,7 +20,7 @@ describe('Requests', function () {
   // POST check on same URL
   it('should respond with "foo" on POST /foo', async function () {
     const payload = 'foo'
-    const res = await blitz.nodes.api.server.http.request.send({
+    const res = await cubic.nodes.api.server.http.request.send({
       method: 'POST',
       url: '/foo',
       body: payload,
@@ -33,7 +33,7 @@ describe('Requests', function () {
 
   // URL placeholder check
   it('should respond with "bar" on GET /foo/bar/stuff', async function () {
-    const res = await blitz.nodes.api.server.http.request.send({
+    const res = await cubic.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/foo/bar/stuff',
       query: {},
@@ -45,7 +45,7 @@ describe('Requests', function () {
 
   // Raw file check
   it('should send buffer of guy fieri on GET /guy-fieri.jpg', async function () {
-    const res = await blitz.nodes.api.server.http.request.send({
+    const res = await cubic.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/guy-fieri.jpg',
       query: {},
@@ -64,7 +64,7 @@ describe('Exceptions', function () {
 
   // File doesn't exist
   it('should respond with 404 when requesting non-existant file', async function () {
-    const res = await blitz.nodes.api.server.http.request.send({
+    const res = await cubic.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/spam.js',
       query: {},
@@ -76,7 +76,7 @@ describe('Exceptions', function () {
 
   // Unauthorized
   it('should respond with 403 when lacking access scope to endpoint', async function () {
-    const res = await blitz.nodes.api.server.http.request.send({
+    const res = await cubic.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/auth',
       query: {},
@@ -88,7 +88,7 @@ describe('Exceptions', function () {
 
   // Rate limits
   it('should respond with 429 when rate limits are enforced', async function () {
-    const req = () => blitz.nodes.api.server.http.request.send({
+    const req = () => cubic.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/ratelimit',
       query: {},
@@ -106,7 +106,7 @@ describe('Exceptions', function () {
 
   // Required query params
   it('should respond with 400 when required query param is missing', async function () {
-    const res = await blitz.nodes.api.server.http.request.send({
+    const res = await cubic.nodes.api.server.http.request.send({
       method: 'GET',
       url: '/query',
       query: {},

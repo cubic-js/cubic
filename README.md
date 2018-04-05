@@ -1,20 +1,20 @@
 
-[![blitz.js API](https://i.imgur.com/iZZkPod.png)](https://github.com/nexus-devs)
+[![cubic API](https://i.imgur.com/iZZkPod.png)](https://github.com/nexus-devs/cubic-core)
 
 ##
 
-<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/blitz-js'>blitz-js</a> endpoint components.</p>
+<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/cubic'>cubic</a> endpoint components.</p>
 
 <br>
 <br>
 
 ## Usage
 ```js
-const Blitz = require('blitz-js')
-const Core = require('blitz-js-core')
-const blitz = new Blitz()
+const cubic = require('cubic')
+const Core = require('cubic-core')
+const cubic = new cubic()
 
-blitz.use(new Core(options))
+cubic.use(new Core(options))
 ```
 This will create a core node that connects to the API node on `localhost:3003`
 and listen to any incoming requests. We'll being using this for our application
@@ -39,7 +39,7 @@ second, we respond with a '503, All nodes currently busy'.
 <br>
 
 ## Endpoint components
-To respond to requests, blitz-js-core looks for endpoint components in the
+To respond to requests, cubic-core looks for endpoint components in the
 **/api** folder in the current working directory. These components are
 automatically routed based on folder and file names.
 
@@ -51,7 +51,7 @@ Endpoint components usually extend the default endpoint class which contains
 information on rate limiting, caching and more:
 
 ```js
-const Endpoint = blitz.nodes.core.Endpoint
+const Endpoint = cubic.nodes.core.Endpoint
 
 class Foo extends Endpoint {
   /**
@@ -91,14 +91,14 @@ within the given timeframe. The response is looked up on the api node directly,
 | Param        | Default       | Description   |
 |:------------- |:------------- |:------------- |
 | data | none | Value to store in the cache. |
-| exp | default value in blitz-js-api | (optional) Duration for which the cached value should persist. |
+| exp | default value in cubic-api | (optional) Duration for which the cached value should persist. |
 | url | `this.url` | (optional) URL to store the cached value on.
 
 #### Publish
 ```js
 this.publish(data, url)
 ```
-Publishes data in [blitz-js's Pub/Sub model](https://i.imgur.com/y5EfDkC.png).
+Publishes data in [cubic's Pub/Sub model](https://i.imgur.com/y5EfDkC.png).
 This is important for real-time data, as every subscribed client will receive
 the published changes immediately.
 
@@ -109,7 +109,7 @@ the published changes immediately.
 | data | none | Data to publish to subscribed clients. |
 | url | `this.url` | (optional) URL to publish the data on. Useful when a POST endpoint changes the data of another GET endpoint. |
 
-Have a look at [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
+Have a look at [cubic-client](https://github.com/nexus-devs/cubic-client)
 for instructions on how to subscribe to endpoints.
 
 #### Endpoint Schema
@@ -130,7 +130,7 @@ specified in [options](#options).
 ```js
 this.api
 ```
-The [blitz-js-query](https://github.com/nexus-devs/blitz-js-query) instance used
+The [cubic-client](https://github.com/nexus-devs/cubic-client) instance used
 to connect to our target API. Can be useful if we need to make requests on
 endpoints hosted by other core nodes. Under the hood, it's also used for
 `this.publish` and `this.cache`.
@@ -141,7 +141,7 @@ endpoints hosted by other core nodes. Under the hood, it's also used for
 
 #### Constructor
 ```js
-blitz.use(new Core(options))
+cubic.use(new Core(options))
 ```
 
 | Option        | Default       | Description   |
@@ -152,10 +152,10 @@ blitz.use(new Core(options))
 | publicPath   | `process.cwd()/assets`   | Folder containing publically accessible files. |
 | apiUrl | `'http://localhost:3003'` | API node to connect to |
 | authUrl | `'http://localhost:3030'` | Auth node to authenticate at |
-| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [blitz-js-auth](https://github.com/nexus-devs/blitz-js-auth) for reference) |
+| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](https://github.com/nexus-devs/cubic-auth) for reference) |
 | userSecret | none | User secret to authenticate with. Handled the same way as above. |
 | mongoUrl | `'mongodb://localhost'` | Mongodb connection string. |
-| mongoDb | `'blitz-js-core'` | Database to select by default. |
+| mongoDb | `'cubic-core'` | Database to select by default. |
 | redisUrl | `'redis://localhost'`` | Redis connection string. |
 
 <br>

@@ -12,7 +12,7 @@ class Core {
 
   init() {
     const id = this.config.provided.group ? this.config.provided.group + '.core' : 'core'
-    const config = _.get(blitz.config, id)
+    const config = _.get(cubic.config, id)
     config.prefix = config.prefix || `${config.group ? config.group + ' ' : ''}core`.padEnd(10)
 
     this.Endpoint = require(config.endpointParent)

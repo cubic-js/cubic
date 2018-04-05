@@ -1,4 +1,4 @@
-const BlitzQuery = require('blitz-js-query')
+const cubicQuery = require('cubic-client')
 const EndpointController = require('./endpoints.js')
 const CircularJSON = require('circular-json') // required for passing req object
 
@@ -7,12 +7,12 @@ const CircularJSON = require('circular-json') // required for passing req object
  */
 class Client {
   /**
-   * Connect to blitz.js API node
+   * Connect to cubic API node
    */
   constructor (config) {
     this.config = config
 
-    // blitz-js-query options
+    // cubic-client options
     let options = {
 
       // Connection Settings
@@ -28,7 +28,7 @@ class Client {
     }
 
     // Connect to api-node
-    this.api = new BlitzQuery(options)
+    this.api = new cubicQuery(options)
 
     // Load Endpoint Controller
     this.endpointController = new EndpointController(config)
@@ -45,11 +45,11 @@ class Client {
     // Listen on Reconnect
     let name = this.config.master ? this.config.master + ' core' : 'core'
     this.api.on('connect', () => {
-      blitz.log.verbose(`${this.config.prefix} | connected to target API`)
+      cubic.log.verbose(`${this.config.prefix} | connected to target API`)
     })
 
     this.api.on('disconnect', () => {
-      blitz.log.verbose(`${this.config.prefix} | disconnected from target API`)
+      cubic.log.verbose(`${this.config.prefix} | disconnected from target API`)
     })
   }
 
@@ -69,7 +69,7 @@ class Client {
       // Check if file available
       try {
         await this.endpointController.getEndpoint(req.url, req.method)
-        blitz.log.silly(`${this.config.prefix} | Check successful`)
+        cubic.log.silly(`${this.config.prefix} | Check successful`)
         this.api.emit(req.id, {
           available: true
         })
@@ -77,7 +77,7 @@ class Client {
 
       // Not available -> let other nodes respond
       catch (err) {
-        blitz.log.silly(`${this.config.prefix} | Checked file not available`)
+        cubic.log.silly(`${this.config.prefix} | Checked file not available`)
         this.api.emit(req.id, {
           available: false
         })
@@ -90,11 +90,11 @@ class Client {
    */
   listenForRequests () {
     this.api.on('req', async req => {
-      blitz.log.silly(`${this.config.prefix} | Request received`)
+      cubic.log.silly(`${this.config.prefix} | Request received`)
       req = CircularJSON.parse(req)
 
       let res = await this.endpointController.getResponse(req, this.api)
-      blitz.log.silly(`${this.config.prefix} | Request resolved`)
+      cubic.log.silly(`${this.config.prefix} | Request resolved`)
       this.api.emit(req.id, res)
     })
   }

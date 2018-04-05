@@ -1,4 +1,4 @@
-const Endpoint = blitz.nodes.core.Endpoint
+const Endpoint = cubic.nodes.core.Endpoint
 
 class Placeholder extends Endpoint {
   constructor(api, db, url) {

@@ -156,7 +156,7 @@ class EndpointController {
 
     // Assume dynamic endpoint if file not available
     catch (err) {
-      const dev = blitz.config.local.environment === 'development'
+      const dev = cubic.config.local.environment === 'development'
 
       // Regenerate endpoints in dev mode so we needn't restart the full stack
       // for changes
@@ -167,7 +167,7 @@ class EndpointController {
 
       // Remove node's require cache while in dev mode so we needn't restart
       // to see endpoint changes. Disabled for default endpoint because of
-      // blitz-js-view's endpoint handling.
+      // cubic-ui's endpoint handling.
       dev && path !== this.config.endpointParent ? decache(path) : null
 
       return require(path)

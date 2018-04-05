@@ -8,10 +8,10 @@ describe('Endpoints', async function() {
 
   // Prepare endpoint
   before(async () => {
-    api = blitz.nodes.core.client.api
-    mongo = await blitz.nodes.core.client.endpointController.db
-    db = mongo.db(blitz.config.core.mongoDb)
-    endpoint = new blitz.nodes.core.Endpoint(api, db, '/test')
+    api = cubic.nodes.core.client.api
+    mongo = await cubic.nodes.core.client.endpointController.db
+    db = mongo.db(cubic.config.core.mongoDb)
+    endpoint = new cubic.nodes.core.Endpoint(api, db, '/test')
   })
 
   // Redis cache
@@ -22,7 +22,7 @@ describe('Endpoints', async function() {
     res.send = res.json = (data) => data
 
     await endpoint.cache('foo')
-    const cached = await blitz.nodes.api.server.cache.check(req, res)
+    const cached = await cubic.nodes.api.server.cache.check(req, res)
     assert(!cached.error)
   })
 
