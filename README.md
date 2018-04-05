@@ -1,18 +1,18 @@
 
-[![cubic API](https://i.imgur.com/iZZkPod.png)](https://github.com/nexus-devs/cubic-core)
+[![cubic API](https://i.imgur.com/ZPkZH5d.png)](https://github.com/nexus-devs/cubic-core)
 
 ##
 
-<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/cubic'>cubic</a> endpoint components.</p>
+<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/cubic'>Cubic</a> endpoint components.</p>
 
 <br>
 <br>
 
 ## Usage
 ```js
-const cubic = require('cubic')
+const Cubic = require('cubic')
 const Core = require('cubic-core')
-const cubic = new cubic()
+const cubic = new Cubic()
 
 cubic.use(new Core(options))
 ```
