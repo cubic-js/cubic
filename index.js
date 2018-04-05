@@ -6,7 +6,7 @@ const View = require('cubic-ui')
 const defaults = require('cubic-defaults')
 const intro = require('./intro.js')
 
-class cubic {
+class Cubic {
   constructor(options) {
     this.options = options
   }
@@ -18,7 +18,9 @@ class cubic {
     try { cubic }
     catch (err) {
       load(this.options)
-      intro.roll()
+      if (this.options.logLevel !== 'silent') {
+        intro.roll()
+      }
     }
   }
 
@@ -51,4 +53,4 @@ class cubic {
   }
 }
 
-module.exports = cubic
+module.exports = Cubic
