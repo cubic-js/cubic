@@ -18,6 +18,6 @@
     "cubic-core": "^1.0.0",
     "cubic-defaults": "^1.0.0",
     "cubic-loader": "^1.0.2",
-    "cubic-ui": "^1.0.0"
+    "cubic-ui": "^1.0.1"
   }
 }
