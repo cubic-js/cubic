@@ -27,11 +27,11 @@ class RequestController {
         // Generate unique callback for emit & pass to responding node
         req.id = `req-${req.url}-${process.hrtime().join('').toString()}`
         socket.emit('req', CircularJSON.stringify(req))
-        blitz.log.silly(`${this.config.prefix} | Request sent`)
+        cubic.log.silly(`${this.config.prefix} | Request sent`)
 
         // Listen to socket for response.
         socket.once(req.id, data => {
-          blitz.log.silly(`${this.config.prefix} | Request successful - Sending data to client`)
+          cubic.log.silly(`${this.config.prefix} | Request successful - Sending data to client`)
           resolve(data)
         })
       }
@@ -57,7 +57,7 @@ class RequestController {
 
       // Send check to root nsp
       this.client.root.emit('check', request)
-      blitz.log.silly(`${this.config.prefix} | Check broadcasted`)
+      cubic.log.silly(`${this.config.prefix} | Check broadcasted`)
 
       // Listen to all sockets in root nsp for response
       let sio = Object.keys(this.client.root.sockets)
@@ -69,7 +69,7 @@ class RequestController {
 
           // Check successful
           if (res.available) {
-            blitz.log.silly(`${this.config.prefix} | Check acknowledged`)
+            cubic.log.silly(`${this.config.prefix} | Check acknowledged`)
             sockets.push(socket)
           }
 

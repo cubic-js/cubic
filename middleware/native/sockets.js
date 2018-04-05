@@ -25,13 +25,13 @@ class SocketMiddleware {
       // Set req.user from token
       try {
         socket.user = jwt.verify(token, this.config.certPublic)
-        blitz.log.verbose(`${this.config.prefix} | (ws) ${ip} connected as ${socket.user.uid} on ${socket.nsp.name}`)
+        cubic.log.verbose(`${this.config.prefix} | (ws) ${ip} connected as ${socket.user.uid} on ${socket.nsp.name}`)
         return next()
       }
 
       // Invalid Token
       catch (err) {
-        blitz.log.verbose(`${this.config.prefix} | (ws) ${socket.user.uid} rejected (${err}) on ${socket.nsp.name}`)
+        cubic.log.verbose(`${this.config.prefix} | (ws) ${socket.user.uid} rejected (${err}) on ${socket.nsp.name}`)
         return next({
           error: 'Invalid Token',
           reason: err
@@ -41,7 +41,7 @@ class SocketMiddleware {
 
     // No Token provided
     else {
-      blitz.log.verbose(`${this.config.prefix} | (ws) ${socket.user.uid} connected without token on ${socket.nsp.name}`)
+      cubic.log.verbose(`${this.config.prefix} | (ws) ${socket.user.uid} connected without token on ${socket.nsp.name}`)
       return next()
     }
   }
@@ -51,7 +51,7 @@ class SocketMiddleware {
    */
   verifyExpiration(req, res) {
     if (new Date().getTime() / 1000 - req.user.exp > 0) {
-      blitz.log.verbose(`${this.config.prefix} | (ws) ${req.user.uid} rejected (jwt expired)`)
+      cubic.log.verbose(`${this.config.prefix} | (ws) ${req.user.uid} rejected (jwt expired)`)
       return res.send({
         error: 'Invalid Token',
         reason: 'jwt expired'
@@ -68,7 +68,7 @@ class SocketMiddleware {
     }
 
     // No criteria matched
-    blitz.log.verbose(`${this.config.prefix} | (ws) Rejected connection to ${socket.nsp.name}`)
+    cubic.log.verbose(`${this.config.prefix} | (ws) Rejected connection to ${socket.nsp.name}`)
     return next(new Error(`Rejected connection to ${socket.nsp.name}`))
   }
 }

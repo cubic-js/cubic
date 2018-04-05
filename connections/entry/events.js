@@ -5,19 +5,19 @@ const Cache = require('../../middleware/cache.js')
 
 // Subscriptions
 function subscribe(endpoint, socket) {
-  blitz.log.verbose(`Socket.io | ${socket.user.uid} subscribed to ${endpoint}`)
+  cubic.log.verbose(`Socket.io | ${socket.user.uid} subscribed to ${endpoint}`)
   socket.join(endpoint)
   socket.emit('subscribed', endpoint)
 }
 function unsubscribe(endpoint, socket) {
-  blitz.log.verbose(`Socket.io | ${socket.user.uid} unsubscribed from ${endpoint}`)
+  cubic.log.verbose(`Socket.io | ${socket.user.uid} unsubscribed from ${endpoint}`)
   socket.leave(endpoint)
   socket.emit('unsubscribed', endpoint)
 }
 
 // Disconnect message
 function disconnect(socket) {
-  blitz.log.verbose(`Socket.io | ${socket.user.uid} disconnected from ${socket.nsp.name}`)
+  cubic.log.verbose(`Socket.io | ${socket.user.uid} disconnected from ${socket.nsp.name}`)
 }
 
 module.exports = (sockets, config) => {
@@ -54,7 +54,7 @@ module.exports = (sockets, config) => {
 
     // Listen to Updates from core node and publish to subscribers
     socket.on('publish', update => {
-      blitz.log.verbose(`${node} | > publishing data for ${update.endpoint}`)
+      cubic.log.verbose(`${node} | > publishing data for ${update.endpoint}`)
       sockets.io.to(update.endpoint).emit(update.endpoint, update.data)
       sockets.root.to(update.endpoint).emit(update.endpoint, update.data)
       socket.emit(update.id, 'done')

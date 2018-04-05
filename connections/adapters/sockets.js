@@ -48,14 +48,14 @@ class SocketAdapter extends Adapter {
     if (request) {
       let req = {}
       let url = verb === 'GET' ? request : request.url
-      let parsed = URL.parse(`https://blitz.js${url}`, true) // domain is irrelevant
+      let parsed = URL.parse(`https://cubic${url}`, true) // domain is irrelevant
 
       req.body = request.body
       req.url = url === '' ? '/' : decodeURI(url)
       req.user = socket.user
       req.method = verb
       req.query = parsed.query
-      req.params = {} // will get populated on blitz-js-core
+      req.params = {} // will get populated on cubic-core
 
       return req
     } else {

@@ -1,5 +1,5 @@
 const assert = require('assert')
-const Client = require('blitz-js-query')
+const Client = require('cubic-client')
 
 /**
  * Tests for properly responding to usual requests.
@@ -9,9 +9,9 @@ describe('Requests', function () {
 
   before(async function() {
     client = new Client()
-    api = blitz.nodes.core.client.api
-    mongo = await blitz.nodes.core.client.endpointController.db
-    db = mongo.db(blitz.config.core.mongoDb)
+    api = cubic.nodes.core.client.api
+    mongo = await cubic.nodes.core.client.endpointController.db
+    db = mongo.db(cubic.config.core.mongoDb)
     await client.connecting
   })
 
@@ -36,7 +36,7 @@ describe('Requests', function () {
 
   // Pub/Sub
   it('should emit event with "foo" on /test when published.', function(done) {
-    const endpoint = new blitz.nodes.core.Endpoint(api, db, '/test')
+    const endpoint = new cubic.nodes.core.Endpoint(api, db, '/test')
     client.subscribe('/test', foo => {
       assert(foo === 'foo')
       done()

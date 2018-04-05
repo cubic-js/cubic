@@ -1,9 +1,9 @@
 
-[![blitz-js-api](https://i.imgur.com/rtmexse.png)](https://github.com/nexus-devs)
+[![cubic-api](https://i.imgur.com/wWHFif0.png)](https://github.com/nexus-devs/cubic-api)
 
 ##
 
-<p align='center'>Load balancer, cache and more for <a href='https://github.com/nexus-devs/blitz-js'>blitz-js</a>. Built on Express.js
+<p align='center'>Load balancer, cache and more for <a href='https://github.com/nexus-devs/cubic'>Cubic</a>. Built on Express.js
 and Socket.io.</p>
 
 <br>
@@ -12,20 +12,20 @@ and Socket.io.</p>
 
 ## Usage
 ```js
-const Blitz = require('blitz-js')
-const Api = require('blitz-js-api')
-const blitz = new Blitz()
+const Cubic = require('cubic')
+const Api = require('cubic-api')
+const cubic = new Cubic()
 
-blitz.use(new Api(options))
+cubic.use(new Api(options))
 ```
 This will open a web server on `localhost:3003` which serves data from connected
-blitz-js-core nodes. No further setup needed - the [core nodes](https://github.com/nexus-devs/blitz-js-core) are where our application logic goes.
+cubic-core nodes. No further setup needed - the [core nodes](https://github.com/nexus-devs/cubic-core) are where our application logic goes.
 
 <br>
 
 
 ## How does it work?
-At its core, blitz-js-api is a load balancer for connected blitz-js-core nodes.
+At its core, cubic-api is a load balancer for connected cubic-core nodes.
 What makes it special is that it allows the use of custom connection adapters
 that create a common `req` and `res` object from any connection type. (HTTP &
 Socket.io by default)
@@ -41,7 +41,7 @@ will go until we get a response:
 [![model](https://i.imgur.com/JjUKPuk.png)](https://i.imgur.com/JjUKPuk.png)
 
 This is only one half of the way a request goes. To see what happens once the request
-is sent to a connected core node, check out [blitz-js-core](https://github.com/nexus-devs/blitz-js-core).
+is sent to a connected core node, check out [cubic-core](https://github.com/nexus-devs/cubic-core).
 
 <br>
 
@@ -53,7 +53,7 @@ async.
 
 ### Example
 ```js
-blitz.nodes.api.use('/ferret', async (req, res) => {
+cubic.nodes.api.use('/ferret', async (req, res) => {
 
   // Return image of angry ferret if the user isn't tobi.
   if (req.user.uid !== 'tobi') {
@@ -74,14 +74,14 @@ repo if you need further information.
 If necessary, you can still add native connection middleware which runs before
 our own.
 ```js
-blitz.nodes.api.server.http.app.use((req, res, next) => {}) // Native Express Middleware
-blitz.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Socket.io Middleware
+cubic.nodes.api.server.http.app.use((req, res, next) => {}) // Native Express Middleware
+cubic.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Socket.io Middleware
 ```
 
 <br>
 
 ## Making requests as a client
-We heavily recommend using [blitz-js-query](https://github.com/nexus-devs/blitz-js-query)
+We heavily recommend using [cubic-client](https://github.com/nexus-devs/cubic-client)
 since it takes care of authorization, rate limits and potential downtimes automatically.
 This package is also used to connect core nodes to API nodes, so we most likely
 won't be slacking with its maintenance.
@@ -91,7 +91,7 @@ won't be slacking with its maintenance.
 ## Options
 
 ```js
-blitz.use(new Api(options))
+cubic.use(new Api(options))
 ```
 
 | Option        | Default       | Description   |

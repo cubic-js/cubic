@@ -19,7 +19,7 @@ class CacheController {
       scope: scope
     })
     key = encodeURI(key)
-    blitz.log.verbose(`${this.config.prefix} | < caching data for ${key}`)
+    cubic.log.verbose(`${this.config.prefix} | < caching data for ${key}`)
     return promisify(this.client.setex).bind(this.client)(key, exp, value)
   }
 
@@ -74,7 +74,7 @@ class CacheController {
   async get (key) {
     const res = await promisify(this.client.get).bind(this.client)(encodeURI(key))
     if (res) {
-      blitz.log.verbose(`${this.config.prefix} | > returning cached data for ${key}`)
+      cubic.log.verbose(`${this.config.prefix} | > returning cached data for ${key}`)
       return JSON.parse(res)
     } else {
       return

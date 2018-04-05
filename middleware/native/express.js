@@ -22,13 +22,13 @@ class ExpressMiddleware {
       // Set req.user from token
       try {
         req.user = jwt.verify(token, this.config.certPublic)
-        blitz.log.verbose(`${this.config.prefix} | (http) ${ip} connected as ${req.user.uid}`)
+        cubic.log.verbose(`${this.config.prefix} | (http) ${ip} connected as ${req.user.uid}`)
         return next()
       }
 
       // Invalid Token
       catch (err) {
-        blitz.log.verbose(`${this.config.prefix} | (http) ${ip} rejected (${err})`)
+        cubic.log.verbose(`${this.config.prefix} | (http) ${ip} rejected (${err})`)
         return res.status(400).json({
           error: 'Invalid Token',
           reason: err
@@ -38,7 +38,7 @@ class ExpressMiddleware {
 
     // No token provided
     else {
-      blitz.log.verbose(`${this.config.prefix} | (http) ${req.user.uid} connected without token`)
+      cubic.log.verbose(`${this.config.prefix} | (http) ${req.user.uid} connected without token`)
       return next()
     }
   }

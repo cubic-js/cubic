@@ -82,7 +82,7 @@ class Logger {
         // Log time
         let diff = process.hrtime(timestart)
         log += `${prefix}${chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`)}\n`
-        blitz.log.info(log)
+        cubic.log.info(log)
       }
     }
   }

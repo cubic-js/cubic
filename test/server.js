@@ -1,9 +1,9 @@
 const assert = require('assert')
-const loader = require('blitz-js-loader')
+const loader = require('cubic-loader')
 const Api = require(process.cwd())
-const Auth = require('blitz-js-auth')
-const Core = require('blitz-js-core')
-const Client = require('blitz-js-query')
+const Auth = require('cubic-auth')
+const Core = require('cubic-core')
+const Client = require('cubic-client')
 const request = require('request-promise')
 
 // Config
@@ -14,16 +14,16 @@ const mongoUrl = 'mongodb://mongodb'
 const ci = process.env.DRONE_CI
 
 /**
- * Load up blitz-js api to connect to and auth node to authenticate at.
+ * Load up cubic api to connect to and auth node to authenticate at.
  */
 before(async function() {
   loader({ logLevel: 'silent' })
-  await blitz.use(new Auth(ci ? {
+  await cubic.use(new Auth(ci ? {
     api: { redisUrl },
     core: { redisUrl, mongoUrl }
   } : {}))
-  await blitz.use(new Api(ci ? { redisUrl } : {}))
-  await blitz.use(new Core(ci ? {
+  await cubic.use(new Api(ci ? { redisUrl } : {}))
+  await cubic.use(new Core(ci ? {
     endpointPath,
     publicPath,
     redisUrl,
@@ -33,7 +33,7 @@ before(async function() {
 
 
 /**
- * Test for properly connecting to blitz-js-api node.
+ * Test for properly connecting to cubic-api node.
  */
 describe('Server', function () {
   it('should open HTTP server on localhost:3003', async function () {
@@ -52,6 +52,6 @@ describe('Server', function () {
 
   // Core nodes
   it('should have core nodes connect to root namespace', function(done) {
-    blitz.nodes.api.server.sockets.root.on('connect', () => done())
+    cubic.nodes.api.server.sockets.root.on('connect', () => done())
   })
 })
