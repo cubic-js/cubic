@@ -1,21 +1,21 @@
-const load = require('blitz-js-loader')
-const Auth = require('blitz-js-auth')
-const Api = require('blitz-js-api')
-const Core = require('blitz-js-core')
-const View = require('blitz-js-view')
-const defaults = require('blitz-js-defaults')
+const load = require('cubic-loader')
+const Auth = require('cubic-auth')
+const Api = require('cubic-api')
+const Core = require('cubic-core')
+const View = require('cubic-ui')
+const defaults = require('cubic-defaults')
 const intro = require('./intro.js')
 
-class Blitz {
+class cubic {
   constructor(options) {
     this.options = options
   }
 
   /**
-   * Ensure blitz-js-loader is loaded
+   * Ensure cubic-loader is loaded
    */
   init() {
-    try { blitz }
+    try { cubic }
     catch (err) {
       load(this.options)
       intro.roll()
@@ -23,32 +23,32 @@ class Blitz {
   }
 
   /**
-   * Load blitz-js with default nodes
+   * Load cubic with default nodes
    */
   bootstrap () {
     this.init()
     defaults.verify()
-    blitz.use(new Api())
-    blitz.use(new Core())
-    blitz.use(new Auth())
-    blitz.use(new View())
+    cubic.use(new Api())
+    cubic.use(new Core())
+    cubic.use(new Auth())
+    cubic.use(new View())
   }
 
   /**
-   * Imitate blitz.hook to hook functions before a node is loaded
+   * Imitate cubic.hook to hook functions before a node is loaded
    */
   hook(node, fn) {
     this.init()
-    blitz.hook(node, fn)
+    cubic.hook(node, fn)
   }
 
   /**
-   * Imitate blitz.use to load new nodes
+   * Imitate cubic.use to load new nodes
    */
   use(node) {
     this.init()
-    blitz.use(node)
+    cubic.use(node)
   }
 }
 
-module.exports = Blitz
+module.exports = cubic

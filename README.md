@@ -1,25 +1,25 @@
-[![blitz.js](https://i.imgur.com/lotIdMo.png)](https://github.com/nexus-devs)
+[![cubic](https://i.imgur.com/VbaKTrc.png)](https://github.com/nexus-devs)
 
 ##  
 
-[![npm](https://img.shields.io/npm/v/blitz-js.svg)](https://npmjs.org/blitz-js)
+[![npm](https://img.shields.io/npm/v/cubic.svg)](https://npmjs.org/cubic)
 [![Node version](http://img.shields.io/badge/node-+8.10.LTS-brightgreen.svg)](https://nodejs.org/en/)
-[![bitHound](https://img.shields.io/bithound/dependencies/github/nexus-devs/blitz-js.svg)](https://www.bithound.io/github/nexus-devs/blitz-js/master/dependencies/npm)
+[![bitHound](https://img.shields.io/bithound/dependencies/github/nexus-devs/cubic.svg)](https://www.bithound.io/github/nexus-devs/cubic/master/dependencies/npm)
 
 
 <br>
 
-Blitz-js is a modular full-stack framework for real-time applications that puts
+Cubic is a modular full-stack framework for real-time applications that puts
 the developer first. Be it frontend development in ES7+,
 hot-module-replacement for your view, or component-based API endpoints to keep
-your backend tidy - blitz-js gives you all of that out of the box with
+your backend tidy - Cubic gives you all of that out of the box with
 **no tedious setups**. It just works.
 
 <br>
 
 ## Features
-Blitz-js comes with everything needed to create a full-size
-web application for modern standards:
+Cubic comes with everything needed to create a full-size web application for
+modern standards:
 - Vue.js as UI rendering engine
 - Webpack for optimal dev & prod bundling
 - Full OAuth2 integration
@@ -29,7 +29,7 @@ web application for modern standards:
 - Decoupled API servers from CPU intensive endpoints for efficient scaling with
   docker
 
-We keep blitz-js fairly opinionated, because it allows us to
+We keep Cubic fairly opinionated, because it allows us to
 focus on one solution and make its usage as convenient and effective as possible.
 However, the fully modular nature of the framework allows to easily modify
 existing nodes, so you'll never be locked in with what *we* think is best.
@@ -46,18 +46,18 @@ in the title. If not, you'll have a blast!
 Select your project folder and run the following:
 ```sh
 npm init
-npm install blitz-js
+npm install cubic
 ```
 
 ### Entrypoint
 Next we'll create **index.js** as our entrypoint to the server
 ```js
 // index.js
-const Blitz = require('blitz-js')
-const blitz = new Blitz()
+const Cubic = require('cubic')
+const cubic = new Cubic()
 
 // Load auth, view and api nodes needed for a basic setup
-blitz.bootstrap()
+cubic.bootstrap()
 ```
 
 ### Ready to go
@@ -65,7 +65,7 @@ Now all we need to do is run
 ```sh
 node index.js
 ```
-And blitz-js will automatically create some default API endpoints and views
+And Cubic will automatically create some default API endpoints and views
 that you can learn the basics from. <br>
 Check out `localhost:3000` to have a look at the view server.
 
@@ -78,9 +78,9 @@ to each objective at all times.
 <br>
 
 ## Getting ready for production
-For advanced usage that you'll need in production, have a look at [blitz-js-loader](https://github.com/nexus-devs/blitz-js-loader). It lets you
+For advanced usage that you'll need in production, have a look at [cubic-loader](https://github.com/nexus-devs/cubic-loader). It lets you
 load every single node individually, pass custom configs and create your own
-group of blitz-js nodes.
+group of Cubic nodes.
 
 We cannot stress enough how important this is for production, especially if
 you aim to containerize your application, since every node can be
