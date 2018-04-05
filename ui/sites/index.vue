@@ -10,7 +10,7 @@
         <br>
         <br>
         I hope this still gives you enough of a basis to start from. There's
-        also some rather detailed introductions on every other blitz-js node
+        also some rather detailed introductions on every other cubic node
         that are worth checking out.
       </p>
     </div>
@@ -29,7 +29,7 @@ export default {
   },
 
   async asyncData() {
-    this.$store.commit('setName', await this.$blitz.get('/user'))
+    this.$store.commit('setName', await this.$cubic.get('/user'))
   },
 
   storeModule: {

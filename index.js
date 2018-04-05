@@ -5,7 +5,7 @@ const fileExists = promisify(fs.lstat)
 const copyFile = promisify(ncp)
 
 /**
- * Handle default files for blitz-js bootstrap process
+ * Handle default files for the cubic bootstrap process
  */
 class Defaults {
   async verify() {

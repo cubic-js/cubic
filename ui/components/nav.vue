@@ -1,7 +1,7 @@
 <template>
   <nav>
     <div class="logo">
-      Blitz-js
+      cubic
     </div>
     <div class="links">
       <a href="#">API</a>

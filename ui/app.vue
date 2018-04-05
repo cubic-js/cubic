@@ -15,7 +15,7 @@ export default {
     navbar
   },
   head: {
-    title: 'Blitz-js',
+    title: 'Cubic',
     link: [
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Titillium+Web' }
     ]

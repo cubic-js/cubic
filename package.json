@@ -1,7 +1,7 @@
 {
-  "name": "blitz-js-defaults",
+  "name": "cubic-defaults",
   "version": "1.0.0",
-  "description": "Default project setup for blitz-js bootstrap.",
+  "description": "Default project setup for cubic bootstrap.",
   "main": "index.js",
   "dependencies": {
     "ncp": "^2.0.0",
