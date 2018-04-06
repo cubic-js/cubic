@@ -1,8 +1,12 @@
 [![cubic-auth](https://i.imgur.com/da8ckiV.png)](https://github.com/nexus-devs/cubic-auth)
 
+<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/cubic">Cubic</a>. Built on <a href="https://github.com/nexus-devs/cubic-api">cubic-api</a> and <a href="https://github.com/nexus-devs/cubic-core">cubic-core</a>.</p>
+
 ##
 
-<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/cubic">Cubic</a>. Built on <a href="https://github.com/nexus-devs/cubic-api">cubic-api</a> and <a href="https://github.com/nexus-devs/cubic-core">cubic-core</a>.</p>
+[![npm](https://img.shields.io/npm/v/cubic-auth.svg)](https://npmjs.org/cubic-auth)
+[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic-auth/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic-auth)
+[![dependencies](https://david-dm.org/cubic-js/cubic-auth.svg)](https://david-dm.org/cubic-js/cubic-auth)
 
 <br>
 <br>
