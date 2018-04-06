@@ -1,0 +1,17 @@
+pipeline:
+  build:
+    image: node
+    commands:
+      - npm install
+  test:
+    image: node
+    commands:
+      - npm test
+    environment:
+      - DRONE_CI=true
+
+services:
+  mongodb:
+    image: mongo
+  redis:
+    image: redis
