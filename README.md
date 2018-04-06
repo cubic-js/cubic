@@ -1,18 +1,14 @@
 
 [![cubic-api](https://i.imgur.com/wWHFif0.png)](https://github.com/nexus-devs/cubic-api)
 
+<p align='center'>Load balancer, cache and more for <a href='https://github.com/nexus-devs/cubic'>Cubic</a>. Built on Express.js and Socket.io.</p>
+
 ##
 
-<p align='center'>
 [![npm](https://img.shields.io/npm/v/cubic-api.svg)](https://npmjs.org/cubic-api)
-[![build](https://ci.nexus-stats.com/api/badges/nexus-devs/cubic-api/status.svg)](https://ci.nexus-stats.com/nexus-devs/cubic-api)
-[![bitHound](https://img.shields.io/bithound/dependencies/github/cubic-js/cubic-api.svg)](https://www.bithound.io/github/cubic-js/cubic-api/master/dependencies/npm)
-</p>
+[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic-api/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic-api)
+[![dependencies](https://david-dm.org/cubic-js/cubic-api.svg)](https://david-dm.org/cubic-js/cubic-api)
 
-
-<br>
-
-<p align='center'>Load balancer, cache and more for <a href='https://github.com/nexus-devs/cubic'>Cubic</a>. Built on Express.js and Socket.io.</p>
 
 <br>
 <br>
