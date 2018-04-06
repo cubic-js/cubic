@@ -43,7 +43,7 @@ module.exports = {
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
-    path: cubic.config.view.core.publicPath,
+    path: cubic.config.ui.core.publicPath,
     filename: isProd ? "[name].bundle.[chunkhash].js" : "[name].bundle.js"
   },
 
@@ -72,7 +72,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [
-          path.resolve(cubic.config.view.sourcePath),
+          path.resolve(cubic.config.ui.sourcePath),
           path.resolve(__dirname, '../../vue')
         ]
       }
@@ -84,8 +84,8 @@ module.exports = {
     // Resolve dependencies differently when in debug due to source code folder
     // being different from current working directory
     alias: Object.assign({
-      src: cubic.config.view.sourcePath,
-      public: cubic.config.view.core.publicPath,
+      src: cubic.config.ui.sourcePath,
+      public: cubic.config.ui.core.publicPath,
     }, isDebug ? {
       // HMR will trigger a second vue instance without this
       vue: __dirname + "/../../node_modules/vue"
@@ -100,8 +100,8 @@ module.exports = {
     extractSass,
     new TimeFixPlugin(),
     new webpack.DefinePlugin({
-      '$apiUrl': JSON.stringify(cubic.config.view.client.apiUrl),
-      '$authUrl': JSON.stringify(cubic.config.view.client.authUrl),
+      '$apiUrl': JSON.stringify(cubic.config.ui.client.apiUrl),
+      '$authUrl': JSON.stringify(cubic.config.ui.client.authUrl),
     })
   ])
 }

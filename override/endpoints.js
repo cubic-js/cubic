@@ -23,7 +23,7 @@ class EndpointController {
     const override = function () {
       this.endpoints = []
       this.getEndpointTree(this.config.endpointPath)
-      this.getViewTree(`${cubic.config.view.sitesPath}`)
+      this.getViewTree(`${cubic.config.ui.sitesPath}`)
     }
     return override.bind(controller)
   }
@@ -45,12 +45,12 @@ class EndpointController {
 
       // File -> Set endpoint config
       else {
-        let Endpoint = cubic.nodes.view.core.Endpoint
+        let Endpoint = cubic.nodes.ui.core.Endpoint
         let endpoint = new Endpoint().schema
-        let sitesSubDir = cubic.config.view.sitesPath.replace(cubic.config.view.sourcePath, '')
-        endpoint.view = filepath.replace(`${cubic.config.view.sourcePath}`, '')
+        let sitesSubDir = cubic.config.ui.sitesPath.replace(cubic.config.ui.sourcePath, '')
+        endpoint.view = filepath.replace(`${cubic.config.ui.sourcePath}`, '')
         endpoint.route = endpoint.view.replace(sitesSubDir, '').replace('.vue', '').replace('index', '')
-        endpoint.file = cubic.config.view.core.endpointParent
+        endpoint.file = cubic.config.ui.core.endpointParent
 
         // Only add to list of endpoints if no explicit endpoint with same
         // route already exists

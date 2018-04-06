@@ -19,7 +19,7 @@ module.exports = merge(baseConfig, {
 
   // This tells the server bundle to use Node-style exports
   output: {
-    path: cubic.config.view.core.publicPath,
+    path: cubic.config.ui.core.publicPath,
     libraryTarget: "commonjs2"
   },
 

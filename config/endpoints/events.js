@@ -3,7 +3,7 @@
  */
 
 module.exports = (sockets) => {
-  const cache = cubic.nodes.view.api.server.cache
+  const cache = cubic.nodes.ui.api.server.cache
 
   /**
    * Default namespace

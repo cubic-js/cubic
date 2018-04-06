@@ -8,8 +8,8 @@ const path = require("path")
 class WebpackServer {
   constructor() {
     this.config = {
-      client: require(cubic.config.view.webpack.clientConfig),
-      server: require(cubic.config.view.webpack.serverConfig)
+      client: require(cubic.config.ui.webpack.clientConfig),
+      server: require(cubic.config.ui.webpack.serverConfig)
     }
     this.init()
   }
@@ -18,7 +18,7 @@ class WebpackServer {
    * Entrypoint for hook on cubic-core
    */
   async init() {
-    if (!cubic.config.view.webpack.skipBuild) {
+    if (!cubic.config.ui.webpack.skipBuild) {
       await this.registerEndpoints()
       await this.initBuild()
     }
@@ -49,8 +49,8 @@ class WebpackServer {
    * Generate plaintext constants which will be saved in the router file
    */
   async getViewConstants() {
-    const srcDir = cubic.config.view.sourcePath.replace(/\\/g, '/')
-    const endpoints = cubic.nodes.view.core.client.endpointController.endpoints
+    const srcDir = cubic.config.ui.sourcePath.replace(/\\/g, '/')
+    const endpoints = cubic.nodes.ui.core.client.endpointController.endpoints
     let routes = []
 
     endpoints.forEach(endpoint => {
@@ -132,10 +132,10 @@ class WebpackServer {
  }
 
  addMiddleware(middleware) {
-   const server = cubic.nodes.view.api.server
+   const server = cubic.nodes.ui.api.server
    server.http.app._router.stack.pop()
    server.http.app.use(middleware)
-   server.applyRoutes(cubic.config.view.api)
+   server.applyRoutes(cubic.config.ui.api)
  }
 }
 

@@ -56,7 +56,7 @@ class Endpoint {
    */
   async render(req) {
     const html = await view.render(req)
-    this.cache(html, cubic.config.view.api.cacheExp)
+    this.cache(html, cubic.config.ui.api.cacheExp)
     return html
   }
 }

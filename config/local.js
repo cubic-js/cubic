@@ -8,7 +8,7 @@ module.exports = {
     /**
      * cubic information
      */
-    group: 'view'
+    group: 'ui'
   },
 
   core: {
@@ -34,7 +34,7 @@ module.exports = {
     /**
      * cubic information
      */
-    group: 'view'
+    group: 'ui'
   },
 
   /**

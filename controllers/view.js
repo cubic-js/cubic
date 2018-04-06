@@ -12,17 +12,17 @@ const path = require("path")
  */
 const Client = require('cubic-client')
 const api = new Client({
-  api_url: cubic.config.view.client.apiUrl,
-  auth_url: cubic.config.view.client.authUrl,
-  user_key: cubic.config.view.core.userKey,
-  user_secret: cubic.config.view.core.userSecret
+  api_url: cubic.config.ui.client.apiUrl,
+  auth_url: cubic.config.ui.client.authUrl,
+  user_key: cubic.config.ui.core.userKey,
+  user_secret: cubic.config.ui.core.userSecret
 })
 
 /**
  * Render Dependencies
  */
-const sourcePath = cubic.config.view.sourcePath
-const publicPath = cubic.config.view.core.publicPath
+const sourcePath = cubic.config.ui.sourcePath
+const publicPath = cubic.config.ui.core.publicPath
 const createBundleRenderer = require("vue-server-renderer").createBundleRenderer
 
 /**
