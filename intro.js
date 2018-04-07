@@ -21,31 +21,31 @@ class Intro {
     console.log('\x1B[2J\x1B[0f\u001b[0;0H')
     console.log(' ')
     console.log(chalk.grey(`:: ${pkg.name} v.${pkg.version}`))
-    console.log(chalk.grey(':: Launching cubic stack...'))
+    console.log(chalk.grey(':: Launching Cubic stack...'))
     console.log(' ')
     console.log(chalk.grey('---------------------------------------------------------------'))
     console.log(' ')
     console.log(`
-                            ..
-                            :Ndo-
-                             .dMMms:
-                               sMMMMNh:.
-                                /NMMMMMMdo.
-                                 .mMMMMMMMMd.
-                 /:-..            \`yMMMMMMMM/
-                \`MMMMMMNmdys+-      /MMMMMMM/
-                \`MMNNMMMMMms:        -mMMMMM/
-                \`MMMh  .:\`            \`yMMMM/
-                \`MMMMm.            \`:. .sMMM/
-                \`MMMMMN.        -odMMMMMMNMM/
-                \`MMMMMMMs      .:oyhdNMMMMMM/
-                \`MMMMMMMMd.            \`.-::.
-                 :MMMMMMMMN:
-                  \`:hNMMMMMMs
-                     \`:sNMMMMd.      cubic
-                         -odMMN:     ${chalk.green(`v.${version}`)}
-                            \`+hNo
-                                \`
+                            .M.
+                        .MMMMMMMMM.
+                     .MMMMMMMMMMMMMMM.
+                 .MMMMMMMMMM\`  \`MMMMMMMMM.
+              .MMMMMMMMM\`         \`MMMMMMMMM.
+            MMMMMMMMM\`               \`MMMMMMMMM
+            MMMMM\`                       \`MMMMM
+            MMMMM          .M.            MMMMM
+            MMMMM       .MMMMMMM          MMMMM
+            MMMMM      MMMMMMMMMM         MMMMM
+            MMMMM      MMMMMMM            MMMMM
+            MMMMM      MMMMMM             MMMMM
+            MMMMM        MMMM             MMMMM
+            MMMMM          MM             MMMMM
+            MMMMMM.                     .MMMMMM
+            \`MMMMMMMMM.             .MMMMMMMMMM
+               \`MMMMMMMMM:.       MMMMMMMMMM\`
+                  \`MMMMMMMMMM     MMMMMM\`
+                      \`MMMMMM
+                         \`MMM     cubic ${chalk.green(`v${version}`)}
                          `)
     console.log(' ')
     console.log(' ')
