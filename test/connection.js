@@ -7,18 +7,30 @@ const Client = require(process.cwd())
 const auth = require ('./lib/auth.js')
 let clientAuthSocket
 
+// Config
+const endpointPath = `${process.cwd()}/test/endpoints`
+const publicPath = `${process.cwd()}/test/assets`
+const redisUrl = 'redis://redis'
+const mongoUrl = 'mongodb://mongodb'
+const ci = process.env.DRONE_CI
+
 
 /**
  * Load up cubic api to connect to and auth node to authenticate at.
  */
 before(async function() {
   loader({ logLevel: 'silent' })
-  await cubic.use(new Auth())
-  await cubic.use(new Api())
-  await cubic.use(new Core({
-    endpointPath: `${process.cwd()}/test/endpoints`,
-    publicPath:`${process.cwd()}/test/assets`
-  }))
+  await cubic.use(new Auth(ci ? {
+    api: { redisUrl },
+    core: { redisUrl, mongoUrl }
+  } : {}))
+  await cubic.use(new Api(ci ? { redisUrl } : {}))
+  await cubic.use(new Core(ci ? {
+    endpointPath,
+    publicPath,
+    redisUrl,
+    mongoUrl
+  } : { endpointPath, publicPath }))
   await new Promise(resolve => setTimeout(resolve, 100))
   await auth.init()
   cubic.nodes.api.server.sockets.io.on('connect', socket => {
