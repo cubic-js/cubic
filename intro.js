@@ -45,7 +45,7 @@ class Intro {
                \`MMMMMMMMM:.       MMMMMMMMMM\`
                   \`MMMMMMMMMM     MMMMMM\`
                       \`MMMMMM
-                         \`MMM     cubic ${chalk.green(`v${version}`)}
+                         \`MMM     Cubic ${chalk.green(`v${version}`)}
                          `)
     console.log(' ')
     console.log(' ')
