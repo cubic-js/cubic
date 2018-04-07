@@ -6,8 +6,8 @@ const View = require('cubic-ui')
 const defaults = require('cubic-defaults')
 const intro = require('./intro.js')
 
-class cubic {
-  constructor(options) {
+class Cubic {
+  constructor(options = {}) {
     this.options = options
   }
 
