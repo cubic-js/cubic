@@ -1,9 +1,13 @@
 
 [![cubic API](https://i.imgur.com/ZPkZH5d.png)](https://github.com/nexus-devs/cubic-core)
 
+<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/cubic'>Cubic</a> endpoint components.</p>
+
 ##
 
-<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/cubic'>Cubic</a> endpoint components.</p>
+[![npm](https://img.shields.io/npm/v/cubic-core.svg)](https://npmjs.org/cubic-core)
+[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic-core/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic-core)
+[![dependencies](https://david-dm.org/cubic-js/cubic-core.svg)](https://david-dm.org/cubic-js/cubic-core)
 
 <br>
 <br>
