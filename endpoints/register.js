@@ -43,7 +43,7 @@ class Authentication extends Endpoint {
     if (!user_id.trim() || !user_secret.trim()) {
       this.res.status(400).send({
         error: 'Registration failed.',
-        reason: 'User key or secret is empty.'
+        reason: 'User id or secret is empty.'
       })
       return
     }
@@ -52,7 +52,7 @@ class Authentication extends Endpoint {
     if (userExists) {
       this.res.status(409).send({
         error: 'Registration failed.',
-        reason: 'User key is already taken.'
+        reason: 'User id is already taken.'
       })
       return
     }

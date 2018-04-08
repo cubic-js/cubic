@@ -17,14 +17,15 @@ class UserKey extends Endpoint {
   async main(req, res) {
     const user_id = req.body.user_id
     const user_secret = req.body.user_secret
-    this.getUserKey(user_id, user_secret, res)
+    this.getUserKey(user_id, user_secret, req, res)
   }
 
   /**
    * Find the user key (Assumes the user is verified). The user_key isn't really
    * that sensitive, but not public either, so we'd rather keep it safe.
    */
-  async getUserKey(user_id, user_secret, res) {
+  async getUserKey(user_id, user_secret, req, res) {
+    const ip = req.user.uid
     const user = await this.db.collection('users').findOne({ user_id })
 
     try {
