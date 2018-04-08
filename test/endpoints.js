@@ -2,6 +2,7 @@ const assert = require('assert')
 const Client = require('cubic-client')
 const MongoClient = require('mongodb').MongoClient
 const bcrypt = require('bcryptjs')
+const ci = process.env.DRONE_CI
 
 /**
  * Tests for properly responding to usual requests.
@@ -10,7 +11,8 @@ describe('Requests', function () {
   let client, db, user_key, access_token, refresh_token
 
   before(async () => {
-    const mongo = await MongoClient.connect('mongodb://localhost:27017')
+    const mongoUrl = ci ? 'mongodb://mongodb' : 'mongodb://localhost:27017'
+    const mongo = await MongoClient.connect(mongoUrl)
     client = new Client({ api_url: 'http://localhost:3030' })
     db = mongo.db('cubic-auth')
   })
