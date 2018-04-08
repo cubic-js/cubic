@@ -45,7 +45,7 @@ Since the access token is signed by the trusted authority, the API believes what
 token tells about the user and sees if they have the required permission to access the desired
 API endpoint.
 
-[![model](https://i.imgur.com/WKjqjoT.png)](https://i.imgur.com/WKjqjoT.png)
+[![model](https://i.imgur.com/HMT9HJk.png)](https://i.imgur.com/HMT9HJk.png)
 You usually don't have to bother with these concepts when building your application,
 but it might help your understanding of the framework in general. If you wanna
 know even more details, here's a quick rundown of the main endpoints that are
