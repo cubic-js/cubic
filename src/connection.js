@@ -131,7 +131,7 @@ class Connection {
       }
 
       // Unhandled error
-      throw new Error(JSON.stringify(res.body))
+      throw res
     }
 
     // No Error
