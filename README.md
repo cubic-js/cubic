@@ -102,11 +102,11 @@ within the given timeframe. The response is looked up on the api node directly,
 ```js
 this.publish(data, url)
 ```
-Publishes data in [cubic's Pub/Sub model](https://i.imgur.com/y5EfDkC.png).
+Publishes data in [cubic's Pub/Sub model](https://i.imgur.com/sE3oLh5.png).
 This is important for real-time data, as every subscribed client will receive
 the published changes immediately.
 
-[![pub/sub model](https://i.imgur.com/y5EfDkC.png)](https://i.imgur.com/y5EfDkC.png)
+[![pub/sub model](https://i.imgur.com/sE3oLh5.png)](https://i.imgur.com/sE3oLh5.png)
 
 | Param        | Default       | Description   |
 |:------------- |:------------- |:------------- |
