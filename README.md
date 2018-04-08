@@ -42,7 +42,7 @@ connection types, with no need to adjust them individually.
 For further understanding, here's a simple model showing the way a request
 will go until we get a response:
 
-[![model](https://i.imgur.com/JjUKPuk.png)](https://i.imgur.com/JjUKPuk.png)
+[![model](https://i.imgur.com/H4sBsUL.png)](https://i.imgur.com/H4sBsUL.png)
 
 This is only one half of the way a request goes. To see what happens once the request
 is sent to a connected core node, check out [cubic-core](https://github.com/nexus-devs/cubic-core).
