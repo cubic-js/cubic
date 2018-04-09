@@ -1,4 +1,4 @@
-const Endpoint = cubic.nodes.view.core.Endpoint
+const Endpoint = cubic.nodes.ui.core.Endpoint
 
 /**
  * This is a regular cubic-core endpoint to respond to a request on the view
