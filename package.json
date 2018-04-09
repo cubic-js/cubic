@@ -8,7 +8,8 @@
     "url": "https://github.com/nexus-devs/cubic"
   },
   "scripts": {
-    "start": "node ./index.js"
+    "start": "node ./index.js",
+    "test": "mocha --exit -s 30000 --timeout 30000"
   },
   "author": "",
   "license": "MIT",
@@ -19,5 +20,10 @@
     "cubic-defaults": "^1.0.1",
     "cubic-loader": "^1.0.2",
     "cubic-ui": "^1.0.2"
+  },
+  "devDependencies": {
+    "cubic-client": "^1.0.1",
+    "mocha": "^5.0.5",
+    "rimraf": "^2.6.2"
   }
 }
