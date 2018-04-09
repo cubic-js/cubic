@@ -27,13 +27,13 @@ class Cubic {
   /**
    * Load cubic with default nodes
    */
-  bootstrap () {
+  async bootstrap () {
     this.init()
-    defaults.verify()
-    cubic.use(new Api())
-    cubic.use(new Core())
-    cubic.use(new Auth())
-    cubic.use(new View())
+    await defaults.verify()
+    await cubic.use(new Auth())
+    await cubic.use(new Api())
+    await cubic.use(new Core())
+    await cubic.use(new View())
   }
 
   /**
