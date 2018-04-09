@@ -7,7 +7,7 @@ const defaults = require('cubic-defaults')
 const intro = require('./intro.js')
 
 class Cubic {
-  constructor(options) {
+  constructor(options = {}) {
     this.options = options
   }
 
