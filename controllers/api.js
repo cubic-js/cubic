@@ -66,6 +66,8 @@ class Client {
    */
   listenForChecks () {
     this.api.on('check', async req => {
+      req.url = decodeURI(req.url)
+
       // Check if file available
       try {
         await this.endpointController.getEndpoint(req.url, req.method)
@@ -92,6 +94,7 @@ class Client {
     this.api.on('req', async req => {
       cubic.log.silly(`${this.config.prefix} | Request received`)
       req = CircularJSON.parse(req)
+      req.url = decodeURI(req.url)
 
       let res = await this.endpointController.getResponse(req, this.api)
       cubic.log.silly(`${this.config.prefix} | Request resolved`)
