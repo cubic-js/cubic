@@ -116,6 +116,14 @@ class EndpointController {
   getEndpointTree(filepath) {
     let stats = fs.lstatSync(filepath)
     let endpoint = {}
+    let regexclude = this.config.endpointPathExclude
+    console.log(regexclude)
+    console.log(filepath)
+
+    // Skip if excluded from subpaths
+    if (filepath.match(regexclude)) {
+      return
+    }
 
     // Folder
     if (stats.isDirectory()) {

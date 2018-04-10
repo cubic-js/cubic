@@ -151,6 +151,7 @@ cubic.use(new Core(options))
 | Option        | Default       | Description   |
 |:------------- |:------------- |:------------- |
 | endpointPath | `process.cwd()/api` | Folder to read API endpoints from. |
+| endpointPathExclude | `/a^/` | Sub-path to exclude from endpoints. Default regex matches nothing. |
 | endpointParent | internal | Parent class that API endpoints will extend. |
 | baseUrl | none | Path to prepend to each route found in endpoints folder. |
 | publicPath   | `process.cwd()/assets`   | Folder containing publically accessible files. |
