@@ -46,9 +46,11 @@ describe('/index.js', function() {
   })
 
   // Remove default files
-  after(async function() {
-    await removeFile(`${process.cwd()}/api`)
-    await removeFile(`${process.cwd()}/assets`)
-    await removeFile(`${process.cwd()}/ui`)
-  })
+  if (!ci) {
+    after(async function() {
+      await removeFile(`${process.cwd()}/api`)
+      await removeFile(`${process.cwd()}/assets`)
+      await removeFile(`${process.cwd()}/ui`)
+    })
+  }
 })
