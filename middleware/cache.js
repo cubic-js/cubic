@@ -53,7 +53,7 @@ class CacheController {
 
     // File extension in URL? Send raw file as base64 buffer.
     if (url[url.length - 1].split('?')[0].split('.')[1]) {
-      let bufferData = new Buffer(cached.data, 'base64')
+      let bufferData = Buffer.from(cached.data, 'base64')
       res.header('content-type', mime.getType(req.url))
       return res.end(bufferData)
     }
@@ -69,15 +69,13 @@ class CacheController {
   }
 
   /**
-   * Get Data from cache. If not present, have it calculated
+   * Get Data from cache.
    */
   async get (key) {
     const res = await promisify(this.client.get).bind(this.client)(encodeURI(key))
     if (res) {
       cubic.log.verbose(`${this.config.prefix} | > returning cached data for ${key}`)
       return JSON.parse(res)
-    } else {
-      return
     }
   }
 }

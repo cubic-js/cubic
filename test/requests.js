@@ -5,9 +5,9 @@ const Client = require('cubic-client')
  * Tests for properly responding to usual requests.
  */
 describe('Requests', function () {
-  let client, api, mongo, db, endpoint
+  let client, api, mongo, db
 
-  before(async function() {
+  before(async function () {
     client = new Client()
     api = cubic.nodes.core.client.api
     mongo = await cubic.nodes.core.client.endpointController.db
@@ -35,7 +35,7 @@ describe('Requests', function () {
   })
 
   // Pub/Sub
-  it('should emit event with "foo" on /test when published.', function(done) {
+  it('should emit event with "foo" on /test when published.', function (done) {
     const endpoint = new cubic.nodes.core.Endpoint(api, db, '/test')
     client.subscribe('/test', foo => {
       assert(foo === 'foo')

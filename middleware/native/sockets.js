@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 class SocketMiddleware {
-  constructor(config) {
+  constructor (config) {
     this.config = config
   }
 
@@ -9,7 +9,7 @@ class SocketMiddleware {
    * Verify JWT and add to req.user. This function runs on the initial handshake
    * rather than on a per-request basis.
    */
-  verifySocket(socket, next) {
+  verifySocket (socket, next) {
     const ip = socket.handshake.headers['x-forwarded-for'] ||
       socket.handshake.address.address ||
       socket.request.connection.remoteAddress
@@ -49,7 +49,7 @@ class SocketMiddleware {
   /**
    * Check for JWT expiration on each request additionally.
    */
-  verifyExpiration(req, res) {
+  verifyExpiration (req, res) {
     if (new Date().getTime() / 1000 - req.user.exp > 0) {
       cubic.log.verbose(`${this.config.prefix} | (ws) ${req.user.uid} rejected (jwt expired)`)
       return res.send({
@@ -62,7 +62,7 @@ class SocketMiddleware {
   /**
    * Authorizes sockets attempting connections to higher namespaces
    */
-  authorizeRoot(socket, next) {
+  authorizeRoot (socket, next) {
     if (socket.nsp.name === '/root' && socket.user.scp.includes('root')) {
       return next()
     }

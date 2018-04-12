@@ -4,19 +4,19 @@
 const Cache = require('../../middleware/cache.js')
 
 // Subscriptions
-function subscribe(endpoint, socket) {
+function subscribe (endpoint, socket) {
   cubic.log.verbose(`Socket.io | ${socket.user.uid} subscribed to ${endpoint}`)
   socket.join(endpoint)
   socket.emit('subscribed', endpoint)
 }
-function unsubscribe(endpoint, socket) {
+function unsubscribe (endpoint, socket) {
   cubic.log.verbose(`Socket.io | ${socket.user.uid} unsubscribed from ${endpoint}`)
   socket.leave(endpoint)
   socket.emit('unsubscribed', endpoint)
 }
 
 // Disconnect message
-function disconnect(socket) {
+function disconnect (socket) {
   cubic.log.verbose(`Socket.io | ${socket.user.uid} disconnected from ${socket.nsp.name}`)
 }
 

@@ -10,7 +10,7 @@ class API {
     }
   }
 
-  init() {
+  init () {
     const id = this.config.provided.group ? this.config.provided.group + '.api' : 'api'
     const config = _.get(cubic.config, id)
     config.prefix = config.prefix || `${config.group ? config.group + ' ' : ''}api`.padEnd(10)
@@ -21,7 +21,7 @@ class API {
   /**
    * Convenience methods that can be called from other nodes more easily
    */
-  use(route, fn, verb) {
+  use (route, fn, verb) {
     return this.server.use(route, fn, verb)
   }
 }

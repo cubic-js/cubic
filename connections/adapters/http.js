@@ -17,11 +17,11 @@ class HttpAdapter extends Adapter {
     // Start HTTP server.
     this.app.set('port', config.port)
     this.app.use((req, res, next) => {
-      res.header("X-powered-by", "cubic")
+      res.header('X-powered-by', 'cubic')
       next()
     })
     this.app.use(bodyParser.urlencoded({ extended: true }))
-            .use(bodyParser.json())
+      .use(bodyParser.json())
 
     const middleware = new Middleware(config)
     this.app.use(middleware.decode)

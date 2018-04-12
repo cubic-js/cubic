@@ -16,7 +16,7 @@ const ci = process.env.DRONE_CI
 /**
  * Load up cubic api to connect to and auth node to authenticate at.
  */
-before(async function() {
+before(async function () {
   loader({ logLevel: 'silent' })
   await cubic.use(new Auth(ci ? {
     api: { redisUrl },
@@ -30,7 +30,6 @@ before(async function() {
     mongoUrl
   } : { endpointPath, publicPath }))
 })
-
 
 /**
  * Test for properly connecting to cubic-api node.
@@ -51,7 +50,7 @@ describe('Server', function () {
   })
 
   // Core nodes
-  it('should have core nodes connect to root namespace', function(done) {
+  it('should have core nodes connect to root namespace', function (done) {
     cubic.nodes.api.server.sockets.root.on('connect', () => done())
   })
 })

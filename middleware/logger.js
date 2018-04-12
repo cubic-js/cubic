@@ -4,7 +4,7 @@ const chalk = require('chalk')
  * Logger Middleware
  */
 class Logger {
-  constructor(config) {
+  constructor (config) {
     this.config = config
   }
 
