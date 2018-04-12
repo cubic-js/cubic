@@ -4,7 +4,6 @@ const rmrf = require('rimraf')
 const { promisify } = require('util')
 const fileExists = promisify(fs.lstat)
 const removeFile = promisify(rmrf)
-const load = require('cubic-loader')
 const defaults = require('cubic-defaults')
 const Auth = require('cubic-auth')
 const Api = require('cubic-api')
@@ -18,7 +17,7 @@ const ci = process.env.DRONE_CI
  * Bootstrap process. Essentially same method, just differnet configs for
  * databases in drone-ci
  */
-before(async function() {
+before(async function () {
   const Cubic = require(process.cwd())
   const cubic = new Cubic({ logLevel: 'silent' })
   cubic.init()
@@ -38,8 +37,8 @@ before(async function() {
 /**
  * Test for endpoint parent class functionality
  */
-describe('/index.js', function() {
-  it('should load cubic with default files on bootstrap()', async function() {
+describe('/index.js', function () {
+  it('should load cubic with default files on bootstrap()', async function () {
     // Confirm files
     assert(await fileExists(`${process.cwd()}/api`))
     assert(await fileExists(`${process.cwd()}/assets`))
@@ -52,7 +51,7 @@ describe('/index.js', function() {
   })
 
   // Remove default files
-  after(async function() {
+  after(async function () {
     await removeFile(`${process.cwd()}/api`)
     await removeFile(`${process.cwd()}/assets`)
     await removeFile(`${process.cwd()}/ui`)

@@ -9,15 +9,14 @@ const pkg = require(`${process.cwd()}/package.json`)
  * Main Logger class. Used for interface fluff & Sentry.io
  */
 class Intro {
-
-  constructor() {
+  constructor () {
     this.border = chalk.grey('---------------------------------------------------------------')
   }
 
   /**
    * Big Useless intro
    */
-  roll() {
+  roll () {
     console.log('\x1B[2J\x1B[0f\u001b[0;0H')
     console.log(' ')
     console.log(chalk.grey(`:: ${pkg.name} v.${pkg.version}`))
@@ -57,4 +56,4 @@ class Intro {
   }
 }
 
-module.exports = new Intro
+module.exports = new Intro()
