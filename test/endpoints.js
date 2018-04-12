@@ -7,7 +7,7 @@ const ci = process.env.DRONE_CI
 /**
  * Tests for properly responding to usual requests.
  */
-describe('Requests', function () {
+describe('Endpoints', function () {
   let client, db, user_key, refresh_token
 
   before(async () => {
@@ -19,12 +19,12 @@ describe('Requests', function () {
 
   // Register user
   it('should register user on POST /register', async function () {
-    await db.collection('users').remove({ user_id: 'test' })
+    await db.collection('users').remove({ user_id: 'cubic-auth-test' })
     const res = await client.post('/register', {
-      user_id: 'test',
+      user_id: 'cubic-auth-test',
       user_secret: 'test'
     })
-    const user = await db.collection('users').findOne({ user_id: 'test' })
+    const user = await db.collection('users').findOne({ user_id: 'cubic-auth-test' })
     const valid = await bcrypt.compare('test', user.user_secret)
     assert(valid)
     user_key = res.user_key
@@ -32,10 +32,10 @@ describe('Requests', function () {
 
   it('should return the user\'s user_key on POST /userkey', async function () {
     const res = await client.post('/userkey', {
-      user_id: 'test',
+      user_id: 'cubic-auth-test',
       user_secret: 'test'
     })
-    const user = await db.collection('users').findOne({ user_id: 'test' })
+    const user = await db.collection('users').findOne({ user_id: 'cubic-auth-test' })
     assert(user_key === res.user_key && user_key === user.user_key)
   })
 
