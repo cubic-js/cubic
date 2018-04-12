@@ -1,11 +1,11 @@
-const cubicQuery = require('cubic-client')
+const Client = require('cubic-client')
 const EndpointController = require('./endpoints.js')
 const CircularJSON = require('circular-json') // required for passing req object
 
 /**
  * Connects to local API Node & handles basic cycles
  */
-class Client {
+class Api {
   /**
    * Connect to cubic API node
    */
@@ -28,7 +28,7 @@ class Client {
     }
 
     // Connect to api-node
-    this.api = new cubicQuery(options)
+    this.api = new Client(options)
 
     // Load Endpoint Controller
     this.endpointController = new EndpointController(config)
@@ -43,7 +43,6 @@ class Client {
     this.listen()
 
     // Listen on Reconnect
-    let name = this.config.master ? this.config.master + ' core' : 'core'
     this.api.on('connect', () => {
       cubic.log.verbose(`${this.config.prefix} | connected to target API`)
     })
@@ -103,4 +102,4 @@ class Client {
   }
 }
 
-module.exports = Client
+module.exports = Api

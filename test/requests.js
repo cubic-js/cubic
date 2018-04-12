@@ -4,7 +4,6 @@ const assert = require('assert')
  * Tests for properly responding to usual requests.
  */
 describe('Requests', function () {
-
   // GET check
   it('should respond with "bar" on GET /foo', async function () {
     const res = await cubic.nodes.api.server.http.request.send({
@@ -56,12 +55,10 @@ describe('Requests', function () {
   })
 })
 
-
 /**
  * Tests for properly handling unsual requests.
  */
 describe('Exceptions', function () {
-
   // File doesn't exist
   it('should respond with 404 when requesting non-existant file', async function () {
     const res = await cubic.nodes.api.server.http.request.send({

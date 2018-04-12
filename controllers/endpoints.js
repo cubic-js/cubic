@@ -5,7 +5,6 @@ const fs = require('fs')
 const path = require('path')
 const { promisify } = require('util')
 const decache = require('decache')
-const _ = require('lodash')
 const mongodb = require('mongodb').MongoClient
 const Stack = require('async-middleware-stack')
 const Response = require('../lib/response.js')
@@ -21,7 +20,7 @@ class EndpointController {
   /**
    * Initialize Connections used by individual endpoints
    */
-  constructor(config) {
+  constructor (config) {
     this.config = config
     this.db = mongodb.connect(this.config.mongoUrl)
     this.stack = new Stack(config)
@@ -34,7 +33,7 @@ class EndpointController {
    * Add middleware functions to be executed before request is passed to
    * endpoint.
    */
-  applyMiddleware() {
+  applyMiddleware () {
     this.stack.use(this.limiter.check.bind(this.limiter))
     this.stack.use(url.parse.bind(url))
     this.stack.use(query.verify)
@@ -44,18 +43,18 @@ class EndpointController {
   /**
    * Calls endpoint with given param Array
    */
-  async getResponse(req, api) {
+  async getResponse (req, api) {
     try {
       return await this.sendRaw(req, api)
     } catch (err) {
-      return await this.callEndpoint(req, api)
+      return this.callEndpoint(req, api)
     }
   }
 
   /**
    * Send raw file if available
    */
-  async sendRaw(req, api) {
+  async sendRaw (req, api) {
     let readFile = promisify(fs.readFile)
     let filepath = this.config.publicPath + req.url
     let raw = await readFile(filepath)
@@ -76,7 +75,7 @@ class EndpointController {
   /**
    * Calls endpoint with given param Array
    */
-  async callEndpoint(req, api) {
+  async callEndpoint (req, api) {
     return new Promise(async resolve => {
       const res = new Response(resolve, api)
       const endpoint = this.findByUrl(req.url, req.method)
@@ -95,7 +94,7 @@ class EndpointController {
   /**
    * Generates flat endpoint schema from endpoint tree
    */
-  generateEndpointSchema() {
+  generateEndpointSchema () {
     this.endpoints = []
     this.getEndpointTree(this.config.endpointPath)
 
@@ -113,9 +112,8 @@ class EndpointController {
   /**
    * Generates endpoint tree
    */
-  getEndpointTree(filepath) {
+  getEndpointTree (filepath) {
     let stats = fs.lstatSync(filepath)
-    let endpoint = {}
     let regexclude = this.config.endpointPathExclude
 
     // Skip if excluded from subpaths
@@ -147,16 +145,16 @@ class EndpointController {
   /**
    * Get Endpoint from given URL
    */
-  async getEndpoint(url, method) {
+  async getEndpoint (url, method) {
     // Try to get raw file in public folder
     try {
       if (url.includes('../')) {
-        throw 'Attempt to navigate outside of public folder not permitted.'
+        throw new Error('Attempt to navigate outside of public folder not permitted.')
       }
       let check = promisify(fs.stat)
       const stat = await check(this.config.publicPath + url)
       if (stat.isDirectory()) {
-        throw 'Can\'t send a full directory. Make sure to specify a file instead.'
+        throw new Error('Can\'t send a full directory. Make sure to specify a file instead.')
       }
     }
 
@@ -166,7 +164,7 @@ class EndpointController {
 
       // Regenerate endpoints in dev mode so we needn't restart the full stack
       // for changes
-      dev ? this.generateEndpointSchema() : null
+      if (dev) this.generateEndpointSchema()
 
       // Get file path for our endpoint
       let path = this.findByUrl(url, method).file
@@ -174,7 +172,7 @@ class EndpointController {
       // Remove node's require cache while in dev mode so we needn't restart
       // to see endpoint changes. Disabled for default endpoint because of
       // cubic-ui's endpoint handling.
-      dev && path !== this.config.endpointParent ? decache(path) : null
+      if (dev && path !== this.config.endpointParent) decache(path)
 
       return require(path)
     }
@@ -183,7 +181,7 @@ class EndpointController {
   /**
    * Get specific endpoint through url detection
    */
-  findByUrl(url, method) {
+  findByUrl (url, method) {
     url = url || '/' // empty url? => '/'
     let found = false
     let reqUrl = url.split('?')[0].split('/')

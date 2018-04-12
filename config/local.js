@@ -3,10 +3,10 @@ module.exports = {
   /**
    * Core-Node config
    */
-  publicPath:`${process.cwd()}/assets`,
+  publicPath: `${process.cwd()}/assets`,
   endpointPath: `${process.cwd()}/api`,
   endpointPathExclude: /a^/, // exclude nothing by default
-  endpointParent: __dirname + '/../lib/endpoint.js',
+  endpointParent: `${__dirname}/../lib/endpoint.js`,
   baseUrl: '',
 
   /**
@@ -31,5 +31,5 @@ module.exports = {
    */
   mongoUrl: 'mongodb://localhost/',
   mongoDb: 'cubic-core',
-  redisUrl: 'redis://localhost',
+  redisUrl: 'redis://localhost'
 }

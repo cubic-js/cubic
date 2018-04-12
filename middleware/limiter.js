@@ -14,7 +14,7 @@ const RateLimiter = require('rolling-rate-limiter')
  * for a detailed explanation.
  */
 class Limiter {
-  constructor(config) {
+  constructor (config) {
     this.config = config
     this.redis = Redis.createClient(config.redisUrl)
   }
@@ -23,7 +23,6 @@ class Limiter {
    * Check if user has exceeded their rate limits for this endpoint
    */
   async check (req, res, endpoint) {
-
     // User is root -> skip limiting
     if (req.user.scp.includes('write_root') ||
         req.user.scp.includes('ignore_rate_limit') ||
@@ -54,7 +53,6 @@ class Limiter {
    * Rate limit function logic
    */
   limit (err, time, actions, resolve) {
-
     // Return any errors
     if (err) {
       resolve(err)

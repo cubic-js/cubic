@@ -11,7 +11,6 @@ const redisUrl = 'redis://redis'
 const mongoUrl = 'mongodb://mongodb'
 const ci = process.env.DRONE_CI
 
-
 /**
  * Load up cubic api to connect to and auth node to authenticate at.
  */
@@ -30,12 +29,10 @@ before(async () => {
   } : { endpointPath, publicPath }))
 })
 
-
 /**
  * Test for properly connecting to cubic-api node.
  */
 describe('Connection', function () {
-
   // Connect to API node
   it('should emit "ready" when connected to the API node', function (done) {
     cubic.nodes.core.client.api.on('ready', done)

@@ -2,8 +2,7 @@ class Url {
   /**
    * Parse URL to assign placeholder data
    */
-  parse(req, res, endpoint) {
-    let placeholders = endpoint.route.split(':').length - 1
+  parse (req, res, endpoint) {
     this.parseParams(req, endpoint)
     this.parseQuery(req, endpoint)
   }
@@ -12,14 +11,14 @@ class Url {
    * Put placeholders from url into req.params
    * E.g. /users/:id/tasks -> req.params.id holds the data in place of :id
    */
-  parseParams(req, endpoint) {
+  parseParams (req, endpoint) {
     let eurl = endpoint.route.split('/')
     let curl = req.url.split('/')
 
     for (let i = 0; i < eurl.length; i++) {
       let fragment = eurl[i]
       if (fragment.includes(':')) {
-        req.params[fragment.replace(":", "")] = curl[i]
+        req.params[fragment.replace(':', '')] = curl[i]
       }
     }
   }
@@ -28,7 +27,8 @@ class Url {
    * Put query params into req.query
    * E.g. /someroute?test=Kappa123 -> req.query.test = Kappa123
    */
-  parseQuery(req, endpoint) {
+  parseQuery (req, endpoint) {
+    /* eslint no-useless-escape: "off" */
     let regex = /(\?)([^=]+)\=([^&]+)/
     let url = req.url
     let matching = regex.exec(url)
@@ -50,7 +50,7 @@ class Url {
   /**
    * Convert string params from URL to target type
    */
-  parseQueryTypes(req, endpoint) {
+  parseQueryTypes (req, endpoint) {
     endpoint.query.forEach(query => {
       let def = typeof query.default === 'function' ? query.default() : query.default
       let key = query.name
@@ -61,6 +61,7 @@ class Url {
           req.query[key] = parseFloat(req.query[key])
         }
         if (typeof def === 'boolean') {
+          /* eslint eqeqeq: "off" */
           req.query[key] = req.query[key] == 'true' || req.query[key] == '1'
         }
         if (typeof def === 'object') {
@@ -76,4 +77,4 @@ class Url {
   }
 }
 
-module.exports = new Url
+module.exports = new Url()

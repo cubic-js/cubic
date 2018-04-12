@@ -10,7 +10,7 @@ class Core {
     }
   }
 
-  init() {
+  init () {
     const id = this.config.provided.group ? this.config.provided.group + '.core' : 'core'
     const config = _.get(cubic.config, id)
     config.prefix = config.prefix || `${config.group ? config.group + ' ' : ''}core`.padEnd(10)
@@ -22,7 +22,7 @@ class Core {
   /**
    * Convenience methods that can be called from other nodes more easily
    */
-  use(fn) {
+  use (fn) {
     return this.client.endpointController.stack.use(fn)
   }
 }
