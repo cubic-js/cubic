@@ -1,6 +1,6 @@
 [![cubic-ui](https://i.imgur.com/y38cUhF.png)](https://github.com/nexus-devs/cubic-ui)
 
-<p align='center'UI rendering node for <a href='https://github.com/nexus-devs/cubic'>Cubic</a> nodes.</p>
+<p align='center'>UI rendering node and server for <a href='https://github.com/nexus-devs/cubic'>Cubic</a>.</p>
 
 ##  
 
