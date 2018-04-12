@@ -29,8 +29,8 @@ modern standards:
 - Decoupled API servers from CPU intensive endpoints for efficient scaling with
   docker
 
-We keep Cubic fairly opinionated, because it allows us to
-focus on one solution and make its usage as convenient and effective as possible.
+Cubic is kept fairly opinionated, because it allows us to focus on one solution
+and make its usage as convenient and effective as possible.
 However, the fully modular nature of the framework allows to easily modify
 existing nodes, so you'll never be locked in with what *we* think is best.
 
