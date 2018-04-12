@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "cubic-client": "^1.0.1",
-    "cubic-loader": "^1.0.2",
+    "cubic-loader": "^1.0.5",
     "debug": "^3.1.0",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
