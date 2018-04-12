@@ -4,6 +4,7 @@ const rmrf = require('rimraf')
 const { promisify } = require('util')
 const fileExists = promisify(fs.lstat)
 const removeFile = promisify(rmrf)
+const request = require('request-promise')
 const defaults = require('cubic-defaults')
 const Auth = require('cubic-auth')
 const Api = require('cubic-api')
@@ -12,6 +13,21 @@ const Ui = require('cubic-ui')
 const redisUrl = 'redis://redis'
 const mongoUrl = 'mongodb://mongodb'
 const ci = process.env.DRONE_CI
+
+/**
+ * Helper function to resolve as soon as UI server responds with rendered UI
+ */
+async function getIndex () {
+  return new Promise(async resolve => {
+    try {
+      resolve(await request.get('http://localhost:3000'))
+    } catch (err) {
+      setTimeout(async () => {
+        resolve(await getIndex())
+      }, 500)
+    }
+  })
+}
 
 /**
  * Bootstrap process. Essentially same method, just differnet configs for
@@ -48,6 +64,7 @@ describe('/index.js', function () {
     const Client = require('cubic-client')
     const client = new Client()
     assert(await client.get('/foo') === 'bar')
+    await getIndex()
   })
 
   // Remove default files
