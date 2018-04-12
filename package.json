@@ -3,7 +3,7 @@
     "name": "Kaptard"
   },
   "scripts": {
-    "lint": "eslint --ignore-path .gitignore .",
+    "lint": "eslint --ignore-path .gitignore . --ignore-pattern /test/assets",
     "test": "mocha --exit -s 30000 --timeout 30000"
   },
   "dependencies": {
