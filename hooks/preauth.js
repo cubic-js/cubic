@@ -1,7 +1,6 @@
 const mongodb = require('mongodb').MongoClient
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const randtoken = require('rand-token')
 
 class PreAuth {
   /**
@@ -24,7 +23,7 @@ class PreAuth {
    * the chicken-egg problem of letting the auth worker authenticate itself.
    */
   validateWorker () {
-    cubic.nodes.auth.api.use('/authenticate', async(req, res) => {
+    cubic.nodes.auth.api.use('/authenticate', async (req, res) => {
       // Core-node attempts to connect
       if (req.body && req.body.user_key) {
         const client = await mongodb.connect(cubic.config.auth.core.mongoUrl)
@@ -37,9 +36,9 @@ class PreAuth {
         if (user && user.scope.includes('write_auth')) {
           try {
             await bcrypt.compare(req.body.user_secret, user.user_secret)
-          } catch(err) {
+          } catch (err) {
             client.close()
-            throw 'Invalid password.'
+            return
           }
           let key = cubic.config.auth.certPrivate
           let passphrase = cubic.config.auth.certPass
@@ -52,7 +51,6 @@ class PreAuth {
           })
 
           // Cleanup
-          client.close()
           this.removeMiddleware(cubic.nodes.auth.api.server.http.stack.stack, '/authenticate')
           this.removeMiddleware(cubic.nodes.auth.api.server.sockets.stack.stack, '/authenticate')
 
@@ -70,7 +68,7 @@ class PreAuth {
   /**
    * Remove middleware again after auth worker has been verified
    */
-  removeMiddleware(stack, route) {
+  removeMiddleware (stack, route) {
     const index = stack.findIndex(mw => mw.route === route)
     stack.splice(index, 1)
   }

@@ -8,12 +8,12 @@ const bcrypt = require('bcryptjs')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Authentication extends Endpoint {
-  constructor(api, db, url) {
+  constructor (api, db, url) {
     super(api, db, url)
     this.schema.method = 'POST'
   }
 
-  async main(req, res) {
+  async main (req, res) {
     let credentials = req.body
     this.res = res
 
@@ -35,7 +35,7 @@ class Authentication extends Endpoint {
   /**
    * Check supplied user info & send token
    */
-  async matchCredentials(credentials, req) {
+  async matchCredentials (credentials, req) {
     let ip = req.user.uid
     let user = await this.db.collection('users').findOne({
       user_key: credentials.user_key
@@ -70,7 +70,7 @@ class Authentication extends Endpoint {
   /**
    * Generate random Refresh Token & save in user doc
    */
-  async generateRefreshToken(user_key) {
+  async generateRefreshToken (user_key) {
     const refresh_token = user_key + randtoken.generate(64)
 
     // Prevent same token for multiple users

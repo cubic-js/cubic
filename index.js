@@ -2,7 +2,6 @@ const Core = require('cubic-core')
 const API = require('cubic-api')
 const local = require('./config/local.js')
 const preauth = require('./hooks/preauth.js')
-const purge = require('./hooks/purge.js')
 
 /**
  * Loader for auth-node system. For ease of maintenance, the auth-node consists
@@ -18,7 +17,6 @@ class Auth {
   }
 
   async init () {
-
     // API node for distributing requests
     await cubic.use(new API(cubic.config.auth.api))
     if (!cubic.config.auth.api.disable) {

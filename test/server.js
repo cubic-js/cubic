@@ -1,4 +1,3 @@
-const assert = require('assert')
 const loader = require('cubic-loader')
 const Api = require('cubic-api')
 const Auth = require(process.cwd())
@@ -29,7 +28,6 @@ before(async () => {
     mongoUrl
   } : { endpointPath, publicPath }))
 })
-
 
 /**
  * Test for properly connecting to cubic-api node.

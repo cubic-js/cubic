@@ -29,7 +29,7 @@ module.exports = {
     /**
      * Logic-specific
      */
-    endpointPath: __dirname + '/../endpoints/',
+    endpointPath: `${__dirname}/../endpoints/`,
 
     /**
      * cubic information
@@ -49,5 +49,5 @@ module.exports = {
    */
   purgeInterval: 3600000, // Interval to check for inactive users (in ms)
   purgeMaxLimit: 2592000000, // Age at which user is considered inactive (in ms)
-  maxLogsPerUser: 50, // Max number of ip logs for authentication
+  maxLogsPerUser: 50 // Max number of ip logs for authentication
 }

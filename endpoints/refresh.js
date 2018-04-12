@@ -5,12 +5,12 @@ const auth = require('../lib/auth.js')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Refresh extends Endpoint {
-  constructor(api, db, url) {
+  constructor (api, db, url) {
     super(api, db, url)
     this.schema.method = 'POST'
   }
 
-  async main(req, res) {
+  async main (req, res) {
     let credentials = req.body
     this.res = res
 
@@ -32,7 +32,7 @@ class Refresh extends Endpoint {
   /**
    * Validates Refresh token, sends new access token
    */
-  async matchRefreshToken(credentials, req) {
+  async matchRefreshToken (credentials, req) {
     let ip = req.user.uid
     let user = await this.db.collection('users').findOne({
       refresh_token: credentials.refresh_token
