@@ -15,25 +15,31 @@ const mongoUrl = 'mongodb://mongodb'
 const ci = process.env.DRONE_CI
 
 /**
+ * Bootstrap process. Essentially same method, just differnet configs for
+ * databases in drone-ci
+ */
+before(async function() {
+  const Cubic = require(process.cwd())
+  const cubic = new Cubic({ logLevel: 'silent' })
+  cubic.init()
+  await defaults.verify()
+  await cubic.use(new Auth(ci ? {
+    api: { redisUrl },
+    core: { redisUrl, mongoUrl }
+  } : {}))
+  await cubic.use(new Api(ci ? { redisUrl } : {}))
+  await cubic.use(new Core(ci ? { redisUrl, mongoUrl } : {}))
+  await cubic.use(new Ui(ci ? {
+    api: { redisUrl },
+    core: { redisUrl, mongoUrl }
+  } : {}))
+})
+
+/**
  * Test for endpoint parent class functionality
  */
 describe('/index.js', function() {
   it('should load cubic with default files on bootstrap()', async function() {
-    const Cubic = require(process.cwd())
-    const cubic = new Cubic({ logLevel: 'silent' })
-    cubic.init()
-    await defaults.verify()
-    await cubic.use(new Auth(ci ? {
-      api: { redisUrl },
-      core: { redisUrl, mongoUrl }
-    } : {}))
-    await cubic.use(new Api(ci ? { redisUrl } : {}))
-    await cubic.use(new Core(ci ? { redisUrl, mongoUrl } : {}))
-    await cubic.use(new Ui(ci ? {
-      api: { redisUrl },
-      core: { redisUrl, mongoUrl }
-    } : {}))
-
     // Confirm files
     assert(await fileExists(`${process.cwd()}/api`))
     assert(await fileExists(`${process.cwd()}/assets`))

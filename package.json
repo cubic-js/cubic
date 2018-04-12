@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node ./index.js",
-    "test": "mocha --exit -s 60000 --timeout 60000"
+    "test": "mocha --exit -s 60000 --timeout 60000 test/TestIndex.js"
   },
   "author": "",
   "license": "MIT",
