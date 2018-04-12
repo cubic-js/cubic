@@ -1,11 +1,10 @@
 import Connection from './connection.js'
 
 class Client {
-
   /**
    * Merge default options with client options
    */
-  constructor(options) {
+  constructor (options) {
     this.options = Object.assign({
 
       // Resource Config
@@ -33,7 +32,7 @@ class Client {
   /**
    * Connect by getting tokens and setting up clients
    */
-  async connect() {
+  async connect () {
     this.connection = new Connection(this.options)
     this.connecting = this.connection.connect()
     await this.connecting
@@ -42,7 +41,7 @@ class Client {
   /**
    * Helper function to await all existing connections/reconnections
    */
-  async connections() {
+  async connections () {
     await this.connecting
     await this.connection.reconnecting
   }
@@ -70,7 +69,7 @@ class Client {
   /**
    * Event listening for socket.io
    */
-  async on(ev, fn) {
+  async on (ev, fn) {
     await this.connections()
     return this.connection.client.on(ev, fn)
   }
@@ -78,7 +77,7 @@ class Client {
   /**
    * Event listening for socket.io
    */
-  async once(ev, fn) {
+  async once (ev, fn) {
     await this.connections()
     return this.connection.client.once(ev, fn)
   }
@@ -86,25 +85,24 @@ class Client {
   /**
    * Expose Socket client emit
    */
-  async emit(ev, data) {
+  async emit (ev, data) {
     await this.connections()
     this.connection.client.emit(ev, data)
   }
 
-
   /**
    * RESTful methods for manual interaction
    */
-  async query(verb, query) {
+  async query (verb, query) {
     await this.connections()
     return this.connection.request(verb, query)
   }
 
-  get(query) {
+  get (query) {
     return this.query('GET', query)
   }
 
-  post(url, body) {
+  post (url, body) {
     let query = {
       url: url,
       body: body
@@ -112,7 +110,7 @@ class Client {
     return this.query('POST', query)
   }
 
-  put(url, body) {
+  put (url, body) {
     let query = {
       url: url,
       body: body
@@ -120,7 +118,7 @@ class Client {
     return this.query('PUT', query)
   }
 
-  patch(url, body) {
+  patch (url, body) {
     let query = {
       url: url,
       body: body
@@ -128,7 +126,7 @@ class Client {
     return this.query('PATCH', query)
   }
 
-  delete(url, body) {
+  delete (url, body) {
     let query = {
       url: url,
       body: body
@@ -139,7 +137,7 @@ class Client {
   /**
    * Change user at runtime. Automatically reloads connection.
    */
-  async login(user, secret) {
+  async login (user, secret) {
     await this.connections()
     this.connection.auth.options.user_key = user
     this.connection.auth.options.user_secret = secret
@@ -150,7 +148,7 @@ class Client {
    * Manually set refresh token. This way user credentials won't be exposed
    * to this package.
    */
-  async setRefreshToken(token) {
+  async setRefreshToken (token) {
     await this.connections()
     this.connection.auth.refresh_token = token
   }
@@ -160,7 +158,7 @@ class Client {
    * processes. Useful if the initial login can be done through user/pass but
    * the refresh token needs to be stored for subsequent logins.
    */
-  async getRefreshToken() {
+  async getRefreshToken () {
     await this.connections()
     return this.connection.auth.refresh_token
   }
@@ -168,7 +166,7 @@ class Client {
   /**
    * Manually set access token.
    */
-  async setAccessToken(token) {
+  async setAccessToken (token) {
     await this.connections()
     this.connection.auth.access_token = token
     return this.connection.reload()
@@ -177,7 +175,7 @@ class Client {
   /**
    * Retrieve current access token.
    */
-  async getAccessToken() {
+  async getAccessToken () {
     await this.connections()
     return this.connection.auth.access_token
   }

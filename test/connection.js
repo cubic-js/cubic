@@ -4,7 +4,7 @@ const Api = require('cubic-api')
 const Auth = require('cubic-auth')
 const Core = require('cubic-core')
 const Client = require(process.cwd())
-const auth = require ('./lib/auth.js')
+const auth = require('./lib/auth.js')
 let clientAuthSocket
 
 // Config
@@ -14,11 +14,10 @@ const redisUrl = 'redis://redis'
 const mongoUrl = 'mongodb://mongodb'
 const ci = process.env.DRONE_CI
 
-
 /**
  * Load up cubic api to connect to and auth node to authenticate at.
  */
-before(async function() {
+before(async function () {
   loader({ logLevel: 'silent' })
   await cubic.use(new Auth(ci ? {
     api: { redisUrl },
@@ -40,12 +39,10 @@ before(async function() {
   })
 })
 
-
 /**
  * Test for properly connecting to cubic-api node.
  */
 describe('Connection', function () {
-
   it('should connect to API node with default config', async function () {
     global.clientDefault = new Client()
     await clientDefault.connections()
@@ -57,7 +54,7 @@ describe('Connection', function () {
     await clientAuth.connections()
   })
 
-  it('should reconnect to the server when connections are lost', async function() {
+  it('should reconnect to the server when connections are lost', async function () {
     this.timeout(20000)
     let connection = new Promise(resolve => {
       let connect = setInterval(() => {
@@ -71,7 +68,7 @@ describe('Connection', function () {
 
     // Make a request on disconnect. This will both ensure that a connection
     // is re-established as well as requests being queued during downtimes.
-    async function reconnect() {
+    async function reconnect () {
       clientAuthSocket.disconnect()
       const test = new Promise(resolve => {
         clientAuth.once('disconnect', async () => {

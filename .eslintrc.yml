@@ -1,0 +1,13 @@
+extends: "standard"
+globals:
+  cubic: true
+  describe: true
+  it: true
+  before: true
+  after: true
+  clientAuth: true
+  clientDefault: true
+  retryCounter: true
+rules:
+  brace-style: 'off'
+  camelcase: 'off' # OAuth conventions

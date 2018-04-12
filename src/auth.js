@@ -15,7 +15,7 @@ class Auth {
   /**
    * Actual Request Code
    */
-  async req(verb, query) {
+  async req (verb, query) {
     let res = await new Promise(resolve => this.client.emit(verb, query, resolve))
     try {
       res = JSON.parse(res.body)

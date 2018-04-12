@@ -2,7 +2,7 @@
  * Helper functions to control auth node endpoints
  */
 class Auth {
-  async init() {
+  async init () {
     const Register = this.getEndpointFile('register')
     const Authenticate = this.getEndpointFile('authenticate')
     const mongo = await cubic.nodes.auth.core.client.endpointController.db
@@ -24,16 +24,16 @@ class Auth {
   /**
    * Helper function to quickly get endpoint paths from core node
    */
-  getEndpointFile(endpoint) {
+  getEndpointFile (endpoint) {
     return cubic.nodes.auth.core.client.endpointController.endpoints
-          .find(e => e.name === endpoint).file
+      .find(e => e.name === endpoint).file
   }
 
   /**
    * user_key
    */
-  async getUserKey() {
-    const req = { body: { user_id: 'test', user_secret: 'test' }, user: { uid: '::1' }}
+  async getUserKey () {
+    const req = { body: { user_id: 'test', user_secret: 'test' }, user: { uid: '::1' } }
     let user_key = await this.register.newUser(req.body, req)
 
     // No user_key means the user is already registered
@@ -43,7 +43,7 @@ class Auth {
 
     // Not registered means we gotta set the test scope
     else {
-      this.db.collection('users').updateOne({ user_id: 'test' }, { $set: { scope: 'write_test'  } })
+      this.db.collection('users').updateOne({ user_id: 'test' }, { $set: { scope: 'write_test' } })
     }
     return user_key
   }
@@ -51,14 +51,14 @@ class Auth {
   /**
    * refresh_token
    */
-  async getRefreshToken() {
+  async getRefreshToken () {
     return this.authenticate.generateRefreshToken(await this.getUserKey())
   }
 
   /**
    * access_token
    */
-  async getAccessToken() {
+  async getAccessToken () {
     const user_key = await this.getUserKey()
     const credentials = { user_key, user_secret: 'test' }
     const req = { user: { uid: '::1' } }
@@ -67,4 +67,4 @@ class Auth {
   }
 }
 
-module.exports = new Auth
+module.exports = new Auth()

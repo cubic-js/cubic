@@ -6,7 +6,7 @@ const timeout = (fn, s) => {
 }
 
 class Connection {
-  constructor(options) {
+  constructor (options) {
     this.options = options
     this.subscriptions = []
     this.queue = queue
@@ -16,14 +16,14 @@ class Connection {
   /**
    * Get Tokens and build client
    */
-  async connect() {
+  async connect () {
     return this.auth.authorize().then(() => this.setClient())
   }
 
   /**
    * Socket.io client with currently stored tokens
    */
-  setClient() {
+  setClient () {
     let sioConfig = this.auth.access_token ? {
       query: 'bearer=' + this.auth.access_token
     } : {}
@@ -41,7 +41,7 @@ class Connection {
   /**
    * Close existing connection and start new with available tokens
    */
-  async reconnect(refresh) {
+  async reconnect (refresh) {
     this.client.disconnect()
     await this.auth.authorize(refresh)
     this.client.io.opts.query = this.auth.access_token ? 'bearer=' + this.auth.access_token : null
@@ -61,7 +61,7 @@ class Connection {
    * use the refresh token or login directly. Will be `true` by default if
    * refresh token is present.
    */
-  async reload(refresh) {
+  async reload (refresh) {
     if (!await this.reconnecting) {
       this.reconnecting = this.reconnect(refresh)
     }
@@ -71,7 +71,7 @@ class Connection {
   /**
    * Rejoin Socket.IO subscriptions after connection is lost
    */
-  resub() {
+  resub () {
     this.client.on('subscribed', sub => {
       if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
     })
@@ -83,8 +83,7 @@ class Connection {
   /**
    * Send Request with Err Check
    */
-  async request(verb, query) {
-    let delay = this.options.ignore_limiter ? 0 : 20
+  async request (verb, query) {
     let res = await this.req(verb, query)
     return this.errCheck(res, verb, query)
   }
@@ -92,7 +91,7 @@ class Connection {
   /**
    * Actual Request Code
    */
-  async req(verb, query) {
+  async req (verb, query) {
     return new Promise(resolve => this.client.emit(verb, query, resolve))
   }
 
@@ -109,11 +108,9 @@ class Connection {
   /**
    * Handles Error Responses
    */
-  async errCheck(res = {}, verb, query) {
-
+  async errCheck (res = {}, verb, query) {
     // Response not 1xx, 2xx, 3xx?
     if (parseInt(res.statusCode.toString()[0]) > 3) {
-
       // If expired: Get new token w/ refresh token & retry method
       if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
         await this.reload()
@@ -143,7 +140,7 @@ class Connection {
   /**
    * Try to JSON parse the response automatically for convenience
    */
-  parse(res) {
+  parse (res) {
     // Is JSON
     try {
       return JSON.parse(res.body)

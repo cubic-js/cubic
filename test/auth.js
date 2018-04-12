@@ -6,7 +6,6 @@ const auth = require('./lib/auth.js')
  * Tests for properly responding to usual requests.
  */
 describe('Auth', function () {
-
   it('should authenticate as given user on login()', async function () {
     const user_key = await auth.getUserKey()
     const client = new Client()
@@ -15,7 +14,7 @@ describe('Auth', function () {
     assert(res === 'ok')
   })
 
-  it('should refresh access token with refresh token on setRefreshToken()', async function() {
+  it('should refresh access token with refresh token on setRefreshToken()', async function () {
     const client = new Client()
     const refresh_token = await auth.getRefreshToken()
     await client.setRefreshToken(refresh_token)
@@ -24,13 +23,13 @@ describe('Auth', function () {
     assert(client.connection.auth.access_token)
   })
 
-  it('should return refresh token on getRefreshToken()', async function() {
+  it('should return refresh token on getRefreshToken()', async function () {
     const client = new Client()
     await client.setRefreshToken('test')
     assert(await client.getRefreshToken() === 'test')
   })
 
-  it('should set access token on setAccessToken()', async function() {
+  it('should set access token on setAccessToken()', async function () {
     const client = new Client()
     const access_token = await auth.getAccessToken()
     await client.setAccessToken(access_token)
@@ -38,7 +37,7 @@ describe('Auth', function () {
     assert(res === 'ok')
   })
 
-  it('should return access token on getAccessToken()', async function() {
+  it('should return access token on getAccessToken()', async function () {
     const client = new Client()
     const access_token = await auth.getAccessToken()
     await client.setAccessToken(access_token)

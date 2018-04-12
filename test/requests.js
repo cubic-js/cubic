@@ -4,7 +4,6 @@ const assert = require('assert')
  * Tests for properly responding to usual requests.
  */
 describe('Requests', function () {
-
   // RESTful queries
   it('should respond with "ok" on get("/get")', async function () {
     const def = await clientDefault.get('/get')
@@ -33,7 +32,7 @@ describe('Requests', function () {
   })
 
   // Other
-  it('should retry requests when the server is busy', async function() {
+  it('should retry requests when the server is busy', async function () {
     global.retryCounter = 0
     const res = await clientDefault.get('/retry')
     assert(res === 'ok')
