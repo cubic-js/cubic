@@ -43,7 +43,7 @@ class Auth {
    * Get Token via http on /auth
    */
   async getToken () {
-    const auth_request = {
+    const body = {
       user_key: this.options.user_key,
       user_secret: this.options.user_secret
     }
@@ -51,7 +51,7 @@ class Auth {
     try {
       let res = await this.req('POST', {
         url: '/authenticate',
-        body: auth_request
+        body
       })
       this.access_token = res.access_token
       this.refresh_token = res.refresh_token
@@ -75,7 +75,7 @@ class Auth {
     // Ensure only one refresh process is done at a time
     if (!this.refreshing) {
       this.refreshing = true
-      let auth_request = {
+      let body = {
         refresh_token: this.refresh_token
       }
 
@@ -83,7 +83,7 @@ class Auth {
       try {
         let res = await this.req('POST', {
           url: '/refresh',
-          body: auth_request
+          body
         })
         this.access_token = res.access_token
         this.refreshing = false

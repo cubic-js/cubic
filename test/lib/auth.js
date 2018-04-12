@@ -33,17 +33,17 @@ class Auth {
    * user_key
    */
   async getUserKey () {
-    const req = { body: { user_id: 'test', user_secret: 'test' }, user: { uid: '::1' } }
+    const req = { body: { user_id: 'cubic-client-test', user_secret: 'test' }, user: { uid: '::1' } }
     let user_key = await this.register.newUser(req.body, req)
 
     // No user_key means the user is already registered
     if (!user_key) {
-      user_key = (await this.db.collection('users').findOne({ user_id: 'test' })).user_key
+      user_key = (await this.db.collection('users').findOne({ user_id: 'cubic-client-test' })).user_key
     }
 
     // Not registered means we gotta set the test scope
     else {
-      this.db.collection('users').updateOne({ user_id: 'test' }, { $set: { scope: 'write_test' } })
+      this.db.collection('users').updateOne({ user_id: 'cubic-client-test' }, { $set: { scope: 'write_test' } })
     }
     return user_key
   }

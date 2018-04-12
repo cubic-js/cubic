@@ -33,7 +33,7 @@ before(async function () {
   await new Promise(resolve => setTimeout(resolve, 100))
   await auth.init()
   cubic.nodes.api.server.sockets.io.on('connect', socket => {
-    if (socket.user.uid === 'test') {
+    if (socket.user.uid === 'cubic-client-test') {
       clientAuthSocket = socket
     }
   })
@@ -55,7 +55,6 @@ describe('Connection', function () {
   })
 
   it('should reconnect to the server when connections are lost', async function () {
-    this.timeout(20000)
     let connection = new Promise(resolve => {
       let connect = setInterval(() => {
         if (clientAuthSocket) {
