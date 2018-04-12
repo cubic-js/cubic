@@ -1,10 +1,10 @@
 /**
  * Generic Dependencies
  */
-const util = require("util")
-const fs = require("fs")
+const util = require('util')
+const fs = require('fs')
 const readFile = util.promisify(fs.readFile)
-const path = require("path")
+const path = require('path')
 
 /**
  * Load API node connection which will be used for server-side data-fetching
@@ -21,9 +21,8 @@ const api = new Client({
 /**
  * Render Dependencies
  */
-const sourcePath = cubic.config.ui.sourcePath
 const publicPath = cubic.config.ui.core.publicPath
-const createBundleRenderer = require("vue-server-renderer").createBundleRenderer
+const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
 
 /**
  * View Controller rendering data into templates
@@ -32,10 +31,10 @@ class ViewController {
   /**
    * Render View with data from Endpoint. Returns the html back to the endpoint
    */
-  async render(req) {
-    const serverBundle = require(path.join(publicPath, "vue-ssr-server-bundle.json"))
-    const clientManifest = require(path.join(publicPath, "vue-ssr-client-manifest.json"))
-    const template = await readFile(path.join(__dirname, "../vue/index.template.html"), "utf-8")
+  async render (req) {
+    const serverBundle = require(path.join(publicPath, 'vue-ssr-server-bundle.json'))
+    const clientManifest = require(path.join(publicPath, 'vue-ssr-client-manifest.json'))
+    const template = await readFile(path.join(__dirname, '../vue/index.template.html'), 'utf-8')
     const renderer = createBundleRenderer(serverBundle, {
       template,
       clientManifest,
@@ -43,8 +42,8 @@ class ViewController {
     })
     const render = util.promisify(renderer.renderToString)
     const context = { req, api }
-    return await render(context)
+    return render(context)
   }
 }
 
-module.exports = new ViewController
+module.exports = new ViewController()

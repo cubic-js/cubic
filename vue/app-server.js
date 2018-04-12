@@ -28,7 +28,6 @@ export default context => {
       registerStoreModules(root, store)
       routerView.map(component => registerStoreModules(component, store))
 
-
       // Call asyncData hooks on components matched by the route recursively.
       // A asyncData hook dispatches a store action and returns a Promise,
       // which is resolved when the action is complete and store state has been
@@ -47,7 +46,7 @@ export default context => {
       context.state = store.state
 
       // Finally, add meta tags to context for injection in renderer
-      context.meta = { inject: function () { Object.assign(this, meta.inject()) }}
+      context.meta = { inject: function () { Object.assign(this, meta.inject()) } }
 
       resolve(app)
     })

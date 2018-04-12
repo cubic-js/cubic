@@ -1,11 +1,11 @@
-const view = require("../controllers/view.js")
+const view = require('../controllers/view.js')
 
 /**
  * Class describing generic database/calculation methods
  * Any lower-level method extends this class
  */
 class Endpoint {
-  constructor(api, db, url) {
+  constructor (api, db, url) {
     this.schema = {
       scope: '',
       method: 'GET',
@@ -22,14 +22,14 @@ class Endpoint {
    * The data object only affects the initial template, i.e. <head>
    * management. Component data must be handled directly through vue.
    */
-  async main(req, res) {
+  async main (req, res) {
     return res.send(this.render(req))
   }
 
   /**
    * Publish Data for a specific endpoint
    */
-  publish(data, endpoint = this.url) {
+  publish (data, endpoint = this.url) {
     const id = `publish-${this.url}-${process.hrtime().join('').toString()}`
     const update = { endpoint, data, id }
 
@@ -41,7 +41,7 @@ class Endpoint {
   /**
    * Send data to be cached for endpoint on API node
    */
-  cache(value, exp, key = this.url) {
+  cache (value, exp, key = this.url) {
     const id = `cache-${this.url}-${process.hrtime().join('').toString()}`
     const scope = this.schema.scope
     const data = { key, value, exp, scope, id }
@@ -54,7 +54,7 @@ class Endpoint {
   /**
    * Render page with Vue.js
    */
-  async render(req) {
+  async render (req) {
     const html = await view.render(req)
     this.cache(html, cubic.config.ui.api.cacheExp)
     return html

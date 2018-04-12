@@ -1,4 +1,4 @@
-const isProd = cubic.config.local.environment !== "development"
+const isProd = cubic.config.local.environment !== 'development'
 
 module.exports = (extractSass) => {
   return {
@@ -6,7 +6,7 @@ module.exports = (extractSass) => {
     preserveWhitespace: false,
     loaders: isProd ? {
       scss: extractSass.extract({
-        use: "!css-loader!sass-loader?"
+        use: '!css-loader!sass-loader?'
       })
     } : {},
     postLoaders: {

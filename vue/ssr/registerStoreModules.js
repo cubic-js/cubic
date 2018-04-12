@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 /**
  * Helper function to automatically register all existing store modules
  * before we run asyncData functions that may depend on them
@@ -12,7 +10,7 @@ const registerStoreModules = (parent, store, checkPreState) => {
   // Main parent or traversed child has store module -> register
   if (parent.storeModule) {
     const preserveState = checkPreState ? {
-      preserveState: store.state[parent.storeModule.name] ? true : false
+      preserveState: !!store.state[parent.storeModule.name]
     } : {}
     let preregistered = false
 

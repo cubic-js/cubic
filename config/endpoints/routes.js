@@ -2,7 +2,6 @@
  * HTTP Route Configuration
  */
 module.exports = (http) => {
-
   /**
    * Accept all requests and have them handled by middleware/controllers
    */

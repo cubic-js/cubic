@@ -11,10 +11,10 @@ import Meta from 'vue-meta'
 Vue.use(Router)
 Vue.use(Meta, { keyName: 'head' })
 
-export function createRouter() {
+export function createRouter () {
   const config = {
     mode: 'history',
-    scrollBehavior(to, from, savedPosition) {
+    scrollBehavior (to, from, savedPosition) {
       if (savedPosition) {
         return savedPosition
       } else {

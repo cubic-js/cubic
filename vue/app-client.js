@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import { createApp } from './app.js'
-import { callAsyncRecursive } from './ssr/callAsyncRecursive.js'
 import { registerStoreModules } from './ssr/registerStoreModules.js'
 import root from 'src/app.vue'
 import Progress from 'src/components/progress.vue'
@@ -60,7 +59,6 @@ router.onReady(() => {
     })
 
     // Register dyanmic store modules on route change (not direct load!)
-    const storeModules = activated.map(c => c.beforeCreate).filter(_ => _)
     registerStoreModules(root, store)
     activated.map(component => registerStoreModules(component, store, true))
 

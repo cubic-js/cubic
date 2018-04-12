@@ -8,27 +8,26 @@ module.exports = (sockets) => {
   /**
    * Default namespace
    */
-  sockets.io.on("connect", socket => {
-    socket.on("disconnect", () => {
-      cubic.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
+  sockets.io.on('connect', socket => {
+    socket.on('disconnect', () => {
+      cubic.log.verbose('Socket.io | ' + socket.user.uid + ' disconnected from ' + socket.nsp.name)
     })
-    socket.emit("ready")
+    socket.emit('ready')
   })
 
   /**
    * Root namespace
    */
-  sockets.root.on("connect", socket => {
-
+  sockets.root.on('connect', socket => {
     // Listen for Cache updates
-    socket.on("cache", data => {
+    socket.on('cache', data => {
       cache.save(data.key, data.value, data.exp, data.scope)
     })
 
-    socket.on("disconnect", () => {
-      cubic.log.verbose("Socket.io | " + socket.user.uid + " disconnected from " + socket.nsp.name)
+    socket.on('disconnect', () => {
+      cubic.log.verbose('Socket.io | ' + socket.user.uid + ' disconnected from ' + socket.nsp.name)
     })
 
-    socket.emit("ready")
+    socket.emit('ready')
   })
 }

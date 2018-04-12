@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 
 /**
  * Endpoint controller which implicitly uses the default endpoint for all
@@ -34,7 +33,6 @@ class EndpointController {
   overrideEndpointTree (controller) {
     const override = function (filepath) {
       let stats = fs.lstatSync(filepath)
-      let endpoint = {}
 
       // Folder
       if (stats.isDirectory()) {

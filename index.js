@@ -1,11 +1,11 @@
-const Core = require("cubic-core")
-const API = require("cubic-api")
-const local = require("./config/local.js")
+const Core = require('cubic-core')
+const API = require('cubic-api')
+const local = require('./config/local.js')
 const WebpackServer = require('./controllers/webpack.js')
 const endpoints = require('./override/endpoints.js')
 
 class Ui {
-  constructor(options) {
+  constructor (options) {
     this.config = {
       local: local,
       provided: options || {}
@@ -15,7 +15,7 @@ class Ui {
   /**
    * Hook node components for actual logic
    */
-  async init() {
+  async init () {
     await cubic.use(new API(cubic.config.ui.api))
     await cubic.use(new Core(cubic.config.ui.core))
 

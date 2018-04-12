@@ -1,8 +1,8 @@
 module.exports = {
   api: {
     port: 3000,
-    routes: __dirname + '/endpoints/routes.js',
-    events: __dirname + '/endpoints/events.js',
+    routes: `${__dirname}/endpoints/routes.js`,
+    events: `${__dirname}/endpoints/events.js`,
     cacheExp: 10,
 
     /**
@@ -23,7 +23,7 @@ module.exports = {
      * Endpoint config
      */
     endpointPath: `${process.cwd()}/ui/endpoints`,
-    endpointParent: __dirname + '/../override/endpoint.js',
+    endpointParent: `${__dirname}/../override/endpoint.js`,
 
     /**
      * Target Node URLs
@@ -50,8 +50,8 @@ module.exports = {
    */
   webpack: {
     skipBuild: false,
-    clientConfig: __dirname + '/webpack/client.config.js',
-    serverConfig: __dirname + '/webpack/server.config.js'
+    clientConfig: `${__dirname}/webpack/client.config.js`,
+    serverConfig: `${__dirname}/webpack/server.config.js`
   },
   sourcePath: `${process.cwd()}/ui`,
   sitesPath: `${process.cwd()}/ui/sites`
