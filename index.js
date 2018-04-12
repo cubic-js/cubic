@@ -7,16 +7,15 @@ const defaults = require('cubic-defaults')
 const intro = require('./intro.js')
 
 class Cubic {
-  constructor(options = {}) {
+  constructor (options = {}) {
     this.options = options
   }
 
   /**
    * Ensure cubic-loader is loaded
    */
-  init() {
-    try { cubic }
-    catch (err) {
+  init () {
+    try { if (cubic) {} } catch (err) {
       load(this.options)
       if (this.options.logLevel !== 'silent') {
         intro.roll()
@@ -39,7 +38,7 @@ class Cubic {
   /**
    * Imitate cubic.hook to hook functions before a node is loaded
    */
-  hook(node, fn) {
+  hook (node, fn) {
     this.init()
     cubic.hook(node, fn)
   }
@@ -47,10 +46,14 @@ class Cubic {
   /**
    * Imitate cubic.use to load new nodes
    */
-  use(node) {
+  use (node) {
     this.init()
     cubic.use(node)
   }
 }
 
+<<<<<<< HEAD
 module.exports = cubic
+=======
+module.exports = Cubic
+>>>>>>> c710fe4... ci: Add standardjs eslint
