@@ -11,8 +11,6 @@ pipeline:
     image: node
     commands:
       - npm test
-    environment:
-      - DRONE_CI=true
 
 services:
   mongodb:
