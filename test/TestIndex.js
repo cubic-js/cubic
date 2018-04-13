@@ -12,7 +12,7 @@ const Core = require('cubic-core')
 const Ui = require('cubic-ui')
 const redisUrl = 'redis://redis'
 const mongoUrl = 'mongodb://mongodb'
-const ci = process.env.DRONE_CI
+const ci = process.env.DRONE
 
 /**
  * Helper function to resolve as soon as UI server responds with rendered UI
