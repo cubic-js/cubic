@@ -13,6 +13,14 @@ pipeline:
       - npm test
     environment:
       - DRONE_CI=true
+  publish:
+    image: node
+    commands:
+      - printenv
+      - npx semantic-release
+    environment:
+      - GH_TOKEN=${SR_GITHUB_TOKEN}
+      - NPM_TOKEN=${SR_NPM_TOKEN}
 
 services:
   mongodb:

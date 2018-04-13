@@ -1,6 +1,6 @@
 {
   "name": "cubic",
-  "version": "1.0.5",
+  "version": "0.0.0-development",
   "description": "📦 Fully Modular JavaScript App Platform",
   "main": "index.js",
   "repository": {
@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node ./index.js",
     "lint": "eslint --ignore-path .gitignore .",
-    "test": "mocha --exit -s 60000 --timeout 60000 test/TestIndex.js"
+    "test": "mocha --exit -s 60000 --timeout 60000 test/TestIndex.js",
+    "semantic-release": "semantic-release"
   },
   "author": "",
   "license": "MIT",
@@ -33,6 +34,7 @@
     "mocha": "^5.0.5",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "semantic-release": "^15.1.7"
   }
 }
