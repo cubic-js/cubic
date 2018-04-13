@@ -9,7 +9,7 @@ const endpointPath = `${process.cwd()}/test/endpoints`
 const publicPath = `${process.cwd()}/test/assets`
 const redisUrl = 'redis://redis'
 const mongoUrl = 'mongodb://mongodb'
-const ci = process.env.DRONE_CI
+const ci = process.env.DRONE
 
 /**
  * Load up cubic api to connect to and auth node to authenticate at.

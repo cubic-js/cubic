@@ -2,7 +2,7 @@ const assert = require('assert')
 const Client = require('cubic-client')
 const MongoClient = require('mongodb').MongoClient
 const bcrypt = require('bcryptjs')
-const ci = process.env.DRONE_CI
+const ci = process.env.DRONE
 
 /**
  * Tests for properly responding to usual requests.
