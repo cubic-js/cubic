@@ -12,7 +12,7 @@ const sourcePath = `${process.cwd()}/test/ui`
 const sitesPath = `${process.cwd()}/test/ui/sites`
 const redisUrl = 'redis://redis'
 const mongoUrl = 'mongodb://mongodb'
-const ci = process.env.DRONE_CI
+const ci = process.env.DRONE
 
 async function getIndex () {
   return new Promise(async resolve => {
