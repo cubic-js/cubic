@@ -24,8 +24,8 @@ modern standards:
 - Webpack for optimal dev & prod bundling
 - Full OAuth2 integration
 - Pub/Sub model for real-time data
-- Rate limits and caching on a per endpoint-component basis
-- Automatically exposed API endpoints to HTTP and WebSockets
+- Rate limits and caching on a per-endpoint basis
+- Automatically routed API endpoints to HTTP and WebSockets
 - Decoupled API servers from CPU intensive endpoints for efficient scaling with
   docker
 
