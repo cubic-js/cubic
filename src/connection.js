@@ -112,37 +112,28 @@ class Connection {
    * Handles Error Responses
    */
   async errCheck(res = {}, verb, query) {
+
     // Response not 1xx, 2xx, 3xx?
-    if (typeof res.body === 'object' && parseInt(res.statusCode.toString()[0]) > 3) {
+    if (parseInt(res.statusCode.toString()[0]) > 3) {
 
       // If expired: Get new token w/ refresh token & retry method
-      if (res.body.reason.includes('jwt expired')) {
+      if (res.body.reason && res.body.reason.includes('jwt expired')) {
         await this.reload()
-        return this.request(verb, query)
+        return this.retry(verb, query)
       }
 
       // Rate Limited
-      if (res.body.error && res.body.error.includes('Rate limit') && !this.options.ignore_limiter) {
-        // Rejection due to frequency
-        if (res.body.reason.includes('Request intervals too close')) {
-          return this.retry(res, verb, query)
-        }
-
-        // Rejection due to empty token bucket
-        if (res.body.reason.includes('Max requests per interval reached')) {
-          return this.retry(res, verb, query)
-        }
+      if (res.statusCode === 429 && !this.options.ignore_limiter) {
+        return this.retry(res, verb, query)
       }
 
       // Nodes are busy -> retry
-      else if (typeof res.body === 'string' && res.body.includes('Please try again')) {
-        return this.request(verb, query)
+      if (res.statusCode === 503) {
+        return this.retry(verb, query)
       }
 
       // Unhandled error
-      else {
-        return res
-      }
+      throw err
     }
 
     // No Error
