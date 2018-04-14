@@ -1,4 +1,4 @@
-[![Blitz.js API Connection Package](/banner.png)](https://github.com/nexus-devs)
+[![blitz-js-query](https://i.imgur.com/3vJgroj.png)](https://github.com/nexus-devs)
 
 ##
 

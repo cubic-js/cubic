@@ -1,4 +1,4 @@
-const Connection = require('./connection.js')
+import Connection from './connection.js'
 
 class Blitz {
 
@@ -127,4 +127,4 @@ class Blitz {
   }
 }
 
-module.exports = Blitz
+export default Blitz
