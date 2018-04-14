@@ -16,6 +16,8 @@ pipeline:
     commands:
       - npx semantic-release
     secrets: [ gh_token, npm_token ]
+    when:
+      branch: master
 
 services:
   mongodb:
