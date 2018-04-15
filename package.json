@@ -43,7 +43,7 @@
   "name": "cubic-ui",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cubic-js/cubic-core.git"
+    "url": "https://github.com/cubic-js/cubic-ui.git"
   },
   "version": "0.0.0-development",
   "devDependencies": {
