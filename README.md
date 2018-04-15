@@ -2,8 +2,6 @@
 
 ##  
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/cubic-js/cubic.svg)](https://greenkeeper.io/)
-
 [![npm](https://img.shields.io/npm/v/cubic.svg)](https://npmjs.org/cubic)
 [![Node version](http://img.shields.io/badge/node-+8.10.LTS-brightgreen.svg)](https://nodejs.org/en/)
 [![dependencies](https://david-dm.org/cubic-js/cubic.svg)](https://david-dm.org/cubic-js/cubic)
