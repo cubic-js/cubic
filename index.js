@@ -52,8 +52,4 @@ class Cubic {
   }
 }
 
-<<<<<<< HEAD
-module.exports = cubic
-=======
 module.exports = Cubic
->>>>>>> c710fe4... ci: Add standardjs eslint
