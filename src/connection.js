@@ -1,4 +1,5 @@
 import Auth from './auth.js'
+import ServerError from './serverError.js'
 const io = require('socket.io-client')
 const queue = require('async-delay-queue')
 const timeout = (fn, s) => {
@@ -128,7 +129,7 @@ class Connection {
       }
 
       // Unhandled error
-      throw res
+      throw new ServerError(res, query)
     }
 
     // No Error
