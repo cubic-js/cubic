@@ -41,10 +41,8 @@ class Auth {
       user_key = (await this.db.collection('users').findOne({ user_id: 'cubic-client-test' })).user_key
     }
 
-    // Not registered means we gotta set the test scope
-    else {
-      this.db.collection('users').updateOne({ user_id: 'cubic-client-test' }, { $set: { scope: 'write_test' } })
-    }
+    // Ensure write_test scope
+    this.db.collection('users').updateOne({ user_id: 'cubic-client-test' }, { $set: { scope: 'write_test' } })
     return user_key
   }
 

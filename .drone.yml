@@ -15,6 +15,7 @@ pipeline:
   publish:
     image: node
     commands:
+      - git fetch --tags --quiet origin
       - npx semantic-release
     secrets: [ gh_token, npm_token ]
     when:
