@@ -38,15 +38,14 @@
     "webpack-node-externals": "^1.7.2"
   },
   "description": "UI node for Cubic.",
-  "homepage": "https://github.com/nexus-devs/cubic-core#readme",
   "license": "MIT",
   "main": "index.js",
   "name": "cubic-ui",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nexus-devs/cubic-core.git"
+    "url": "https://github.com/cubic-js/cubic-core.git"
   },
-  "version": "1.0.2",
+  "version": "0.0.0-development",
   "devDependencies": {
     "cubic-api": "^1.0.0",
     "cubic-auth": "^1.0.1",
@@ -60,6 +59,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "mocha": "^5.0.5",
     "request": "^2.85.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "semantic-release": "^15.1.7"
   }
 }
