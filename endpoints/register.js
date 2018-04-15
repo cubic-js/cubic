@@ -65,7 +65,7 @@ class Authentication extends Endpoint {
       refresh_token: null,
       last_ip: []
     }
-    this.db.collection('users').insertOne(user)
+    await this.db.collection('users').insertOne(user)
     auth.saveIP.bind(this)(user.user_key, ip, 'register', true)
 
     return user.user_key
