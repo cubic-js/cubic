@@ -58,7 +58,7 @@ exposed on the auth API:
 >Body:
 >```
 >{
->  user_key: <username>,
+>  user_key: <key>,
 >  user_secret: <password>
 >}
 >```
@@ -106,7 +106,7 @@ Used to generate new access tokens from the provided refresh token.
 
 The **refresh_token** is the token used to ask for new access tokens once they
 expired. It's *long-lived* (i.e. doesn't expire unless reset for security
-reasons), and looks like `user_key` + `256bit string` to ensure an unguessable
+reasons), and looks like `user_id` + `256bit string` to ensure an unguessable
 token which is unique to the user.<br>
 
 The reason access tokens are short-lived is to reduce the time an attacker gets
@@ -122,20 +122,43 @@ token.
 >Body:
 >```
 >{
->  user_key: <username>,
+>  user_id: <username>,
 >  user_secret: <password>
 >}
 >```
 > Response:
 >```
 >{
->  user_id: <uid>
+>  user_key: <key>
 >}
 >```
 
 Used to save new users to the database. Passwords are hashed with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) at 8
 salt rounds.
 Please make sure you're using HTTPS, otherwise someone could intercept the plaintext password.
+
+
+<br>
+
+## /userkey
+**POST /userkey**
+>Body:
+>```
+>{
+>  user_id: <username>,
+>  user_secret: <password>
+>}
+>```
+>Response:
+>```
+>{
+>  user_key: <key>
+>}
+>```
+
+Used for getting your corresponding **user_key**. Important when authenticating through the API, after it has been
+discarded from the /register endpoint. The **user_key** is not sensitive, but we still keep it hidden for privacy.
+
 
 <br>
 
@@ -168,7 +191,7 @@ have to use them manually.
 ### On the API node
 On the API node we have a default middleware function that verifies the
 socket.io handshake as well as the authorization header on every http request,
-by verifying the token signautre with the provided RSA public key.
+by verifying the token signature with the provided RSA public key.
 
 Should the verification fail, a 401 error message will be returned.<br>
 Should no token be provided, we'll just pass the default user with no special
