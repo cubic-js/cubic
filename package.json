@@ -1,6 +1,6 @@
 {
   "name": "cubic-auth",
-  "version": "1.0.1",
+  "version": "0.0.0-development",
   "description": "Auth Server for Cubic.",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^5.0.5"
+    "mocha": "^5.0.5",
+    "semantic-release": "^15.1.7"
   }
 }
