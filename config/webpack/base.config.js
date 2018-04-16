@@ -4,10 +4,10 @@ const fs = require('fs')
 const path = require('path')
 
 // Plugins
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const extractSass = new ExtractTextPlugin({
-  filename: '[name].[contenthash].css',
-  allChunks: true,
+const MiniCss = require('mini-css-extract-plugin')
+const miniCss = new MiniCss({
+  filename: 'client-[contenthash].css',
+  chunkFilename: 'client-[name].[contenthash].css',
   disable: !isProd
 })
 
@@ -28,7 +28,7 @@ function TimeFixPlugin () {
 }
 
 // Config
-const vueConfig = require('./vue.config.js')(extractSass)
+const vueConfig = require('./vue.config.js')(MiniCss)
 
 // Dependencies need to be handled differently in debug (see webpack resolve)
 let isDebug = false
@@ -40,11 +40,12 @@ try {
 
 // Actual config
 module.exports = {
+  mode: isProd ? 'production' : 'development',
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
     path: cubic.config.ui.core.publicPath,
-    filename: isProd ? '[name].bundle.[chunkhash].js' : '[name].bundle.js'
+    filename: isProd ? 'client-[name].[chunkhash].js' : 'dev-[name].bundle.js'
   },
 
   // Loaders which determine how file types are interpreted
@@ -56,16 +57,21 @@ module.exports = {
         loader: 'vue-loader',
         options: vueConfig
       },
-      // SCSS compiler with extract-text-webpack-plugin to generate one css file
+      // SCSS compiler with Mini Css to generate one css file
       // from everything required for the current page
       {
         test: /\.s?[a|c]ss$/,
-        use: isProd ? extractSass.extract({
-          use: [{
-            loader: 'sass-loader'
-          }],
-          fallback: 'style-loader'
-        }) : 'sass-loader'
+        use: isProd ? [
+          MiniCss.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              sourceMap: true,
+              importLoader: 2
+            }
+          }, 'sass-loader'
+        ] : 'sass-loader'
       },
       // Transpile ES6/7 into older versions for better browser support
       {
@@ -97,7 +103,7 @@ module.exports = {
     new webpack.EnvironmentPlugin('NODE_ENV')
   ] : [])
     .concat([
-      extractSass,
+      miniCss,
       new TimeFixPlugin(),
       new webpack.DefinePlugin({
         '$apiUrl': JSON.stringify(cubic.config.ui.client.apiUrl),
