@@ -20,6 +20,13 @@ class Ui {
     await cubic.use(new API(cubic.config.ui.api))
     await cubic.use(new Core(cubic.config.ui.core))
 
+    // Attach token from cookie to req
+    await cubic.nodes.ui.api.use(async (req, res) => {
+      const cookies = new Cookies(req, res)
+      const token = cookies.get(cubic.config.ui.client.sessionKey)
+      if (token && !req.headers.authorization) req.headers.authorization = `bearer ${token}`
+    })
+
     // Provide custom endpoint for views
     this.Endpoint = require(cubic.config.ui.core.endpointParent)
 
