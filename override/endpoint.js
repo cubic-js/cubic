@@ -18,9 +18,7 @@ class Endpoint {
   }
 
   /**
-   * Just render the given view if no other data is given
-   * The data object only affects the initial template, i.e. <head>
-   * management. Component data must be handled directly through vue.
+   * Just render the given view if no other instructions are given.
    */
   async main (req, res) {
     return res.send(this.render(req))
