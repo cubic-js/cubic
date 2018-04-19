@@ -22,7 +22,7 @@
     "cubic-ui": "1.1.0"
   },
   "devDependencies": {
-    "cubic-client": "1.0.3",
+    "cubic-client": "1.0.4",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
