@@ -2,32 +2,12 @@ const isProd = cubic.config.local.environment !== 'development'
 const webpack = require('webpack')
 const fs = require('fs')
 const path = require('path')
-
-// Plugins
 const MiniCss = require('mini-css-extract-plugin')
 const miniCss = new MiniCss({
   filename: 'client-[contenthash].css',
   chunkFilename: 'client-[name].[contenthash].css',
   disable: !isProd
 })
-
-// Super hacky fix for multiple builds in dev mode. Seems to be a very wide
-// spread issue, no fix from webpack though, but some awesome people on
-// github fixed it: https://github.com/webpack/watchpack/issues/25#issuecomment-368402851
-function TimeFixPlugin () {
-  this.apply = function (compiler) {
-    var timefix = 11000
-    compiler.plugin('watch-run', (watching, callback) => {
-      watching.startTime += timefix
-      callback()
-    })
-    compiler.plugin('done', (stats) => {
-      stats.startTime -= timefix
-    })
-  }
-}
-
-// Config
 const vueConfig = require('./vue.config.js')(MiniCss)
 
 // Dependencies need to be handled differently in debug (see webpack resolve)
@@ -104,7 +84,6 @@ module.exports = {
   ] : [])
     .concat([
       miniCss,
-      new TimeFixPlugin(),
       new webpack.DefinePlugin({
         '$apiUrl': JSON.stringify(cubic.config.ui.client.apiUrl),
         '$authUrl': JSON.stringify(cubic.config.ui.client.authUrl)
