@@ -1,42 +1,13 @@
 const isProd = cubic.config.local.environment !== 'development'
 const webpack = require('webpack')
-const fs = require('fs')
 const path = require('path')
-
-// Plugins
+const { VueLoaderPlugin } = require('vue-loader')
+const vueConfig = require('./vue.config.js')
 const MiniCss = require('mini-css-extract-plugin')
 const miniCss = new MiniCss({
-  filename: 'client-[contenthash].css',
-  chunkFilename: 'client-[name].[contenthash].css',
-  disable: !isProd
+  filename: '[name].[contenthash].css',
+  chunkFilename: '[name].[contenthash].css'
 })
-
-// Super hacky fix for multiple builds in dev mode. Seems to be a very wide
-// spread issue, no fix from webpack though, but some awesome people on
-// github fixed it: https://github.com/webpack/watchpack/issues/25#issuecomment-368402851
-function TimeFixPlugin () {
-  this.apply = function (compiler) {
-    var timefix = 11000
-    compiler.plugin('watch-run', (watching, callback) => {
-      watching.startTime += timefix
-      callback()
-    })
-    compiler.plugin('done', (stats) => {
-      stats.startTime -= timefix
-    })
-  }
-}
-
-// Config
-const vueConfig = require('./vue.config.js')(MiniCss)
-
-// Dependencies need to be handled differently in debug (see webpack resolve)
-let isDebug = false
-try {
-  fs.statSync(`${__dirname}/../../../../node_modules`)
-} catch (err) {
-  isDebug = true
-}
 
 // Actual config
 module.exports = {
@@ -45,7 +16,7 @@ module.exports = {
   // Output file which will be loaded by Vue (server & client side)
   output: {
     path: cubic.config.ui.core.publicPath,
-    filename: isProd ? 'client-[name].[chunkhash].js' : 'dev-[name].bundle.js'
+    filename: isProd ? '[name]-bundle.[chunkhash].js' : 'dev-[name].bundle.js'
   },
 
   // Loaders which determine how file types are interpreted
@@ -57,21 +28,13 @@ module.exports = {
         loader: 'vue-loader',
         options: vueConfig
       },
-      // SCSS compiler with Mini Css to generate one css file
-      // from everything required for the current page
+      {
+        test: /\.css$/,
+        use: ['vue-style-loader', 'css-loader'].concat(isProd ? [MiniCss.loader] : [])
+      },
       {
         test: /\.s?[a|c]ss$/,
-        use: isProd ? [
-          MiniCss.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              sourceMap: true,
-              importLoader: 2
-            }
-          }, 'sass-loader'
-        ] : 'sass-loader'
+        use: ['vue-style-loader', 'sass-loader'].concat(isProd ? [MiniCss.loader] : [])
       },
       // Transpile ES6/7 into older versions for better browser support
       {
@@ -92,19 +55,16 @@ module.exports = {
     alias: Object.assign({
       src: cubic.config.ui.sourcePath,
       public: cubic.config.ui.core.publicPath
-    }, isDebug ? {
-      // HMR will trigger a second vue instance without this
-      vue: `${__dirname}/../../node_modules/vue`
-    } : {})
+    })
   },
 
   // Plugins for post-bundle operations
   plugins: (isProd ? [
-    new webpack.EnvironmentPlugin('NODE_ENV')
+    new webpack.EnvironmentPlugin('NODE_ENV'),
+    miniCss
   ] : [])
     .concat([
-      miniCss,
-      new TimeFixPlugin(),
+      new VueLoaderPlugin(),
       new webpack.DefinePlugin({
         '$apiUrl': JSON.stringify(cubic.config.ui.client.apiUrl),
         '$authUrl': JSON.stringify(cubic.config.ui.client.authUrl)

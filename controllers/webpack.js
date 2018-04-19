@@ -84,14 +84,16 @@ class WebpackServer {
    * Run webpack locally, assuming production environment.
    */
   async initWebpackProd () {
-    const timer = new Date()
-    const compiled = await promisify(webpack)([this.config.client, this.config.client])
-
-    if (compiled.errors) {
-      throw compiled.errors
-    } else {
-      cubic.log.monitor('Webpack build successful', true, `${new Date() - timer}ms`)
-    }
+    await new Promise((resolve, reject) => {
+      const timer = new Date()
+      webpack([this.config.client, this.config.server], (err, stats) => {
+        if (err || stats.hasErrors()) {
+          return reject(err || stats.toJson().errors)
+        }
+        cubic.log.monitor('Webpack build successful', true, `${new Date() - timer}ms`)
+        resolve()
+      })
+    })
   }
 
   /**
