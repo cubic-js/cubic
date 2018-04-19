@@ -1,9 +1,9 @@
 class ServerError extends Error {
-  constructor ({ statusCode, reason, error }, query) {
-    super(`Cubic-client encountered an error while requesting ${query}: ${statusCode} - ${reason}`)
+  constructor ({ statusCode, body }, query) {
+    super(`Cubic-client encountered an error while requesting ${query}: ${statusCode} - ${body.error} (${body.reason})`)
     this.statusCode = statusCode
-    this.reason = reason
-    this.error = error
+    this.reason = body.reason
+    this.error = body.error
   }
 }
 
