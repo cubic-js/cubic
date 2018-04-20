@@ -34,8 +34,15 @@ async function getIndex () {
  * Load up cubic api to connect to and auth node to authenticate at.
  */
 before(async () => {
-  loader({ logLevel: 'silent' })
   await defaults.verify()
+
+  // Bundle webpack
+  if (prod) {
+    await webpack()
+  }
+
+  // Load Cubic
+  loader({ logLevel: 'silent' })
   await cubic.use(new Auth(ci ? {
     api: { redisUrl },
     core: { redisUrl, mongoUrl }
@@ -60,12 +67,6 @@ describe('Server', function () {
     const client = new Client()
     assert(await client.get('/foo') === 'bar')
   })
-
-  if (prod) {
-    it('should bundle UI with webpack', async function () {
-      await webpack()
-    })
-  }
 
   it('should serve UI on localhost:3000', async function () {
     await getIndex()
