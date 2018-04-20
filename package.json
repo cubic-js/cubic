@@ -20,6 +20,7 @@
     "cubic-core": "1.0.2",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.0",
+    "mkdirp": "^0.5.1",
     "node-sass": "^4.8.3",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
     "sass-loader": "^7.0.1",
