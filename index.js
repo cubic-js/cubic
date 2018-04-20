@@ -27,15 +27,12 @@ class Ui {
       if (token && !req.headers.authorization) req.headers.authorization = `bearer ${token}`
     })
 
-    // Provide custom endpoint for views
-    this.Endpoint = require(cubic.config.ui.core.endpointParent)
-
     // Build webpack bundles
     if (!cubic.config.ui.core.disable) {
       const controller = cubic.nodes.ui.core.client.endpointController
       endpoints.override(controller)
       endpoints.rebuild(controller)
-      this.webpackServer = new WebpackServer()
+      cubic.nodes.ui.core.webpackServer = new WebpackServer()
     }
   }
 }

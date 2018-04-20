@@ -1,7 +1,9 @@
 const isProd = cubic.config.local.environment !== 'development'
+const path = require('path')
 const merge = require('webpack-merge')
 const baseConfig = require('./base.config.js')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const MiniCss = require('mini-css-extract-plugin')
 const MinifyCssPlugin = require('optimize-css-assets-webpack-plugin')
 const MinifyJsPlugin = require('uglifyjs-webpack-plugin')
 
@@ -18,15 +20,41 @@ module.exports = merge(baseConfig, {
     client: `${__dirname}/../../vue/app-client.js`
   },
 
+  module: {
+    rules: [
+      {
+        test: /(\.s?[a|c]ss|\.css)$/,
+        use: (isProd ? [MiniCss.loader] : ['vue-style-loader']).concat(['css-loader', 'sass-loader'])
+      },
+      // Transpile ES6/7 into older versions for better browser support
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [
+          path.resolve(cubic.config.ui.sourcePath),
+          path.resolve(__dirname, '../../vue')
+        ]
+      }
+    ]
+  },
+
   plugins: [
     // This plugins generates `vue-ssr-client-manifest.json` in the
     // output directory.
+    new MiniCss({
+      filename: isProd ? '[name].[contenthash].css' : '[name].css',
+      chunkFilename: isProd ? '[id].[contenthash].css' : '[id].css'
+    }),
     new VueSSRClientPlugin()
-  ].concat(isProd ? [
-    new MinifyCssPlugin(),
-    new MinifyJsPlugin({
-      cache: true,
-      parallel: true
-    })
-  ] : [])
+  ],
+
+  optimization: {
+    minimizer: [
+      new MinifyCssPlugin(),
+      new MinifyJsPlugin({
+        cache: true,
+        parallel: true
+      })
+    ]
+  }
 })

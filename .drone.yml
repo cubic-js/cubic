@@ -7,10 +7,14 @@ pipeline:
     image: node
     commands:
       - npm run lint
-  test:
+  test - development:
     image: node
     commands:
       - npm test
+  test - production:
+    image: node
+    commands:
+      - npm test --production
   publish:
     image: node
     commands:

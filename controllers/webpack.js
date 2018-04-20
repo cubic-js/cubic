@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const fs = require('fs')
 const promisify = require('util').promisify
 const writeFile = promisify(fs.writeFile)
+const mkdirp = require('mkdirp')
 const path = require('path')
 
 class WebpackServer {
@@ -103,6 +104,7 @@ class WebpackServer {
     const publicPath = this.config.client.output.path
     const readFile = (mfs, file) => mfs.readFileSync(path.join(publicPath, file), 'utf-8')
     const copyFile = (mfs, file) => promisify(fs.writeFile)(path.join(publicPath, file), readFile(mfs, file))
+    mkdirp(publicPath)
 
     // Modify client config to work with hot middleware
     this.addHmrPlugins()

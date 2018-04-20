@@ -18,8 +18,17 @@ module.exports = merge(baseConfig, {
 
   // This tells the server bundle to use Node-style exports
   output: {
-    path: cubic.config.ui.core.publicPath,
     libraryTarget: 'commonjs2'
+  },
+
+  // Exclude css from server bundles
+  module: {
+    rules: [
+      {
+        test: /(\.s?[a|c]ss|\.css)$/,
+        use: 'css-loader/locals'
+      }
+    ]
   },
 
   // Ignore node_modules, making the build much faster
