@@ -21,6 +21,16 @@ module.exports = merge(baseConfig, {
     libraryTarget: 'commonjs2'
   },
 
+  // Exclude css from server bundles
+  module: {
+    rules: [
+      {
+        test: /(\.s?[a|c]ss|\.css)$/,
+        use: 'css-loader/locals'
+      }
+    ]
+  },
+
   // Ignore node_modules, making the build much faster
   externals: nodeExternals(),
 
