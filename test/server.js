@@ -33,7 +33,7 @@ async function getIndex () {
  * Load up cubic api to connect to and auth node to authenticate at.
  */
 before(async () => {
-  loader({ logLevel: 'silent' })
+  loader({ logLevel: 'verbose' })
   await cubic.use(new Auth(ci ? {
     api: { redisUrl },
     core: { redisUrl, mongoUrl }
