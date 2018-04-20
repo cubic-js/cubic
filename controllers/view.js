@@ -25,6 +25,30 @@ const publicPath = cubic.config.ui.core.publicPath
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
 
 /**
+ * Helper function to wait until webpack bundle has generated files
+ */
+const { promisify } = require('util')
+const fileExists = promisify(fs.lstat)
+
+// one-time check, so we wouldn't read from disk on every request
+let bundlesReady = false
+
+async function awaitBundles () {
+  return new Promise(async resolve => {
+    try {
+      await fileExists(`${cubic.config.ui.core.publicPath}/vue-ssr-client-manifest.json`)
+      await fileExists(`${cubic.config.ui.core.publicPath}/vue-ssr-server-bundle.json`)
+      bundlesReady = true
+      resolve()
+    } catch (err) {
+      setTimeout(async () => {
+        resolve(await awaitBundles())
+      }, 500)
+    }
+  })
+}
+
+/**
  * View Controller rendering data into templates
  */
 class ViewController {
@@ -32,6 +56,7 @@ class ViewController {
    * Render View with data from Endpoint. Returns the html back to the endpoint
    */
   async render (req) {
+    if (!bundlesReady) await awaitBundles()
     const serverBundle = require(path.join(publicPath, 'vue-ssr-server-bundle.json'))
     const clientManifest = require(path.join(publicPath, 'vue-ssr-client-manifest.json'))
     const template = await readFile(path.join(__dirname, '../vue/index.template.html'), 'utf-8')

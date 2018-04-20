@@ -61,6 +61,7 @@
     "mocha": "^5.1.1",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
+    "rimraf": "^2.6.2",
     "semantic-release": "^15.1.7"
   }
 }

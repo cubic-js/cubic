@@ -2,14 +2,8 @@ const isProd = cubic.config.local.environment !== 'development'
 const webpack = require('webpack')
 const path = require('path')
 const { VueLoaderPlugin } = require('vue-loader')
-const vueConfig = require('./vue.config.js')
 const MiniCss = require('mini-css-extract-plugin')
-const miniCss = new MiniCss({
-  filename: '[name].[contenthash].css',
-  chunkFilename: '[name].[contenthash].css'
-})
 
-// Actual config
 module.exports = {
   mode: isProd ? 'production' : 'development',
 
@@ -25,16 +19,15 @@ module.exports = {
       // This is our main loader for vue files
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueConfig
-      },
-      {
-        test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader'].concat(isProd ? [MiniCss.loader] : [])
+        loader: 'vue-loader'
       },
       {
         test: /\.s?[a|c]ss$/,
-        use: ['vue-style-loader', 'sass-loader'].concat(isProd ? [MiniCss.loader] : [])
+        use: (isProd ? [MiniCss.loader] : ['vue-style-loader']).concat(['css-loader', 'sass-loader'])
+      },
+      {
+        test: /\.css$/,
+        use: (isProd ? [MiniCss.loader] : ['vue-style-loader']).concat(['css-loader'])
       },
       // Transpile ES6/7 into older versions for better browser support
       {
@@ -61,7 +54,10 @@ module.exports = {
   // Plugins for post-bundle operations
   plugins: (isProd ? [
     new webpack.EnvironmentPlugin('NODE_ENV'),
-    miniCss
+    new MiniCss({
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[name].[contenthash].css'
+    })
   ] : [])
     .concat([
       new VueLoaderPlugin(),

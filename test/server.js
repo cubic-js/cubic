@@ -4,6 +4,9 @@ const Auth = require('cubic-auth')
 const Core = require('cubic-core')
 const Ui = require(process.cwd())
 const request = require('request-promise')
+const { promisify } = require('util')
+const rmrf = require('rimraf')
+const removeFile = promisify(rmrf)
 
 // Config
 const endpointPath = `${process.cwd()}/test/endpoints`
@@ -68,5 +71,9 @@ before(async () => {
 describe('Server', function () {
   it('should become ready to connect to', async function () {
     await getIndex()
+  })
+
+  after(async function () {
+    await removeFile(`${process.cwd()}/test/assets`)
   })
 })
