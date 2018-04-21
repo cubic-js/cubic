@@ -19,6 +19,7 @@ pipeline:
     secrets: [ gh_token, npm_token ]
     when:
       branch: master
+      event: [push, tag, deployment]
 
 services:
   mongodb:
