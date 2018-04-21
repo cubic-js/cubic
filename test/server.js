@@ -18,12 +18,12 @@ const ci = process.env.DRONE
  */
 before(async function () {
   loader({ logLevel: 'silent' })
-  await cubic.use(new Auth(ci ? {
+  cubic.use(new Auth(ci ? {
     api: { redisUrl },
     core: { redisUrl, mongoUrl }
   } : {}))
-  await cubic.use(new Api(ci ? { redisUrl } : {}))
-  await cubic.use(new Core(ci ? {
+  cubic.use(new Api(ci ? { redisUrl } : {}))
+  cubic.use(new Core(ci ? {
     endpointPath,
     publicPath,
     redisUrl,
