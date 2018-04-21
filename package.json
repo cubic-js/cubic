@@ -18,21 +18,22 @@
     "cubic-auth": "1.0.2",
     "cubic-core": "1.0.2",
     "cubic-defaults": "1.0.1",
-    "cubic-loader": "1.0.6",
-    "cubic-ui": "1.1.0"
+    "cubic-loader": "1.1.1",
+    "cubic-ui": "1.2.2"
   },
   "devDependencies": {
-    "cubic-client": "1.0.3",
+    "cubic-client": "1.0.4",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^5.1.0",
+    "mocha": "^5.1.1",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.2",
-    "semantic-release": "^15.1.7"
+    "semantic-release": "^15.1.7",
+    "webpack": "^4.6.0"
   }
 }
