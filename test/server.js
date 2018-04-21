@@ -14,16 +14,31 @@ const mongoUrl = 'mongodb://mongodb'
 const ci = process.env.DRONE
 
 /**
+ * Helper function get http response as soon as server loaded
+ */
+async function get (url) {
+  return new Promise(async resolve => {
+    try {
+      resolve(await request.get(`http://localhost:3003${url}`))
+    } catch (err) {
+      setTimeout(async () => {
+        resolve(await get(url))
+      }, 500)
+    }
+  })
+}
+
+/**
  * Load up cubic api to connect to and auth node to authenticate at.
  */
 before(async function () {
   loader({ logLevel: 'silent' })
-  cubic.use(new Auth(ci ? {
+  await cubic.use(new Auth(ci ? {
     api: { redisUrl },
     core: { redisUrl, mongoUrl }
   } : {}))
-  cubic.use(new Api(ci ? { redisUrl } : {}))
-  cubic.use(new Core(ci ? {
+  await cubic.use(new Api(ci ? { redisUrl } : {}))
+  await cubic.use(new Core(ci ? {
     endpointPath,
     publicPath,
     redisUrl,
@@ -35,22 +50,13 @@ before(async function () {
  * Test for properly connecting to cubic-api node.
  */
 describe('Server', function () {
-  it('should open HTTP server on localhost:3003', async function () {
-    try {
-      await request.get('http://localhost:3003')
-    } catch (err) {
-      assert(!/(ECONNREFUSED|ETIMEDOUT)/.test(err.message))
-    }
-  })
-
-  // Socket.io
-  it('should open Socket.io server on localhost:3003', async function () {
+  it('should respond with "bar" on GET /foo (ws)', async function () {
     const client = new Client()
     await client.connecting
+    assert(await client.get('/foo'))
   })
 
-  // Core nodes
-  it('should have core nodes connect to root namespace', function (done) {
-    cubic.nodes.api.server.sockets.root.on('connect', () => done())
+  it('should respond with "bar" on GET /foo (http)', async function () {
+    assert(await get('/foo'))
   })
 })
