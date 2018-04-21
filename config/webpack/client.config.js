@@ -41,11 +41,11 @@ module.exports = merge(baseConfig, {
   plugins: [
     // This plugins generates `vue-ssr-client-manifest.json` in the
     // output directory.
+    new VueSSRClientPlugin(),
     new MiniCss({
       filename: isProd ? '[name].[contenthash].css' : '[name].css',
       chunkFilename: isProd ? '[id].[contenthash].css' : '[id].css'
-    }),
-    new VueSSRClientPlugin()
+    })
   ],
 
   optimization: {
