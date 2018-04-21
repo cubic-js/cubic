@@ -14,15 +14,15 @@
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cubic-api": "1.0.0",
+    "cubic-api": "1.0.10",
     "cubic-core": "1.0.2",
     "jsonwebtoken": "^8.2.1",
     "mongodb": "^3.0.7",
     "rand-token": "^0.4.0"
   },
   "devDependencies": {
-    "cubic-client": "1.0.2",
-    "cubic-loader": "1.0.5",
+    "cubic-client": "1.0.4",
+    "cubic-loader": "1.1.1",
     "debug": "^3.1.0",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
@@ -30,7 +30,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^5.1.0",
+    "mocha": "^5.1.1",
     "semantic-release": "^15.1.7"
   }
 }
