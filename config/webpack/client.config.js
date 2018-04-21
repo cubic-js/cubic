@@ -4,8 +4,6 @@ const merge = require('webpack-merge')
 const baseConfig = require('./base.config.js')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const MiniCss = require('mini-css-extract-plugin')
-const MinifyCssPlugin = require('optimize-css-assets-webpack-plugin')
-const MinifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 /**
  * Config is merged with base config which contains common configuration
@@ -24,7 +22,12 @@ module.exports = merge(baseConfig, {
     rules: [
       {
         test: /(\.s?[a|c]ss|\.css)$/,
-        use: (isProd ? [MiniCss.loader] : ['vue-style-loader']).concat(['css-loader', 'sass-loader'])
+        use: (isProd ? [MiniCss.loader] : ['vue-style-loader']).concat([{
+          loader: 'css-loader',
+          options: {
+            minimize: isProd
+          }
+        }, 'sass-loader'])
       },
       // Transpile ES6/7 into older versions for better browser support
       {
@@ -46,15 +49,5 @@ module.exports = merge(baseConfig, {
       filename: isProd ? '[name].[contenthash].css' : '[name].css',
       chunkFilename: isProd ? '[id].[contenthash].css' : '[id].css'
     })
-  ],
-
-  optimization: {
-    minimizer: [
-      new MinifyCssPlugin(),
-      new MinifyJsPlugin({
-        cache: true,
-        parallel: true
-      })
-    ]
-  }
+  ]
 })
