@@ -16,7 +16,7 @@
   "dependencies": {
     "cubic-api": "1.0.0",
     "cubic-auth": "1.0.2",
-    "cubic-core": "1.0.2",
+    "cubic-core": "1.0.3",
     "cubic-defaults": "1.0.1",
     "cubic-loader": "1.1.1",
     "cubic-ui": "1.2.3"
