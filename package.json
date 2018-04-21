@@ -24,8 +24,8 @@
     "rolling-rate-limiter": "^0.1.10"
   },
   "devDependencies": {
-    "cubic-api": "1.0.0",
-    "cubic-auth": "1.0.2",
+    "cubic-api": "1.0.10",
+    "cubic-auth": "1.0.3",
     "cubic-loader": "1.1.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
