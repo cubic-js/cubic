@@ -19,7 +19,7 @@
     "cubic-core": "1.0.2",
     "cubic-defaults": "1.0.1",
     "cubic-loader": "1.1.1",
-    "cubic-ui": "1.2.2"
+    "cubic-ui": "1.2.3"
   },
   "devDependencies": {
     "cubic-client": "1.0.4",
