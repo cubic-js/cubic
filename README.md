@@ -47,6 +47,7 @@ Select your project folder and run the following:
 ```sh
 npm init
 npm install cubic
+npm install cubic-loader cubic-api cubic-core cubic-auth cubic-ui cubic-defaults
 ```
 
 ### Entrypoint

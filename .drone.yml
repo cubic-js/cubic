@@ -3,6 +3,7 @@ pipeline:
     image: node
     commands:
       - npm install
+      - npm install cubic-api cubic-auth cubic-core cubic-defaults cubic-loader cubic-ui
   lint:
     image: node
     commands:
