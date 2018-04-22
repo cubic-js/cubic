@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint --ignore-path .gitignore .",
-    "test": "mocha --exit -s 60000 --timeout 60000 test/TestIndex.js"
+    "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/index.js"
   },
   "author": "Kaptard",
   "license": "MIT",
