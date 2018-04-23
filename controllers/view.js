@@ -36,8 +36,9 @@ let bundlesReady = false
 async function awaitBundles () {
   return new Promise(async resolve => {
     try {
-      await fileExists(`${cubic.config.ui.core.publicPath}/vue-ssr-client-manifest.json`)
-      await fileExists(`${cubic.config.ui.core.publicPath}/vue-ssr-server-bundle.json`)
+      const path = require(cubic.configu.ui.webpack.clientConfig).output.path
+      await fileExists(`${path}/vue-ssr-client-manifest.json`)
+      await fileExists(`${path}/vue-ssr-server-bundle.json`)
       bundlesReady = true
       resolve()
     } catch (err) {

@@ -109,7 +109,12 @@ class WebpackServer {
     // Modify client config to work with hot middleware
     this.addHmrPlugins()
     const compiler = webpack([this.config.client, this.config.server])
-    const devMiddleware = require('webpack-dev-middleware')(compiler, { logLevel: 'warn' })
+    const devMiddleware = require('webpack-dev-middleware')(compiler, {
+      logLevel: 'warn',
+      stats: 'errors-only',
+      noInfo: true,
+      watchOptions: { aggregateTimeout: 0 }
+    })
     const hotMiddleware = require('webpack-hot-middleware')(compiler, { heartbeat: 100 })
     this.addMiddleware(devMiddleware)
     this.addMiddleware(hotMiddleware)
