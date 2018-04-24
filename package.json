@@ -4,7 +4,7 @@
   },
   "scripts": {
     "lint": "eslint --ignore-path .gitignore . --ignore-pattern /test/assets",
-    "test": "mocha --exit -s 60000 --timeout 60000"
+    "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/server.js"
   },
   "dependencies": {
     "autoprefixer": "^8.3.0",
@@ -17,7 +17,7 @@
     "cookies": "^0.7.1",
     "css-loader": "^0.28.11",
     "cubic-api": "1.0.10",
-    "cubic-core": "1.0.2",
+    "cubic-core": "1.0.3",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.0",
     "mkdirp": "^0.5.1",
@@ -49,7 +49,7 @@
   },
   "version": "0.0.0-development",
   "devDependencies": {
-    "cubic-auth": "1.0.2",
+    "cubic-auth": "1.0.3",
     "cubic-defaults": "^1.0.1",
     "cubic-loader": "1.1.1",
     "eslint": "^4.19.1",
@@ -58,7 +58,6 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
-    "keyboardjs": "^2.4.1",
     "mocha": "^5.1.1",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",

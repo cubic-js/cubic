@@ -21,7 +21,7 @@ const api = new Client({
 /**
  * Render Dependencies
  */
-const publicPath = cubic.config.ui.core.publicPath
+const publicPath = require(cubic.config.ui.webpack.clientConfig).output.path
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
 
 /**
@@ -36,8 +36,8 @@ let bundlesReady = false
 async function awaitBundles () {
   return new Promise(async resolve => {
     try {
-      await fileExists(`${cubic.config.ui.core.publicPath}/vue-ssr-client-manifest.json`)
-      await fileExists(`${cubic.config.ui.core.publicPath}/vue-ssr-server-bundle.json`)
+      await fileExists(`${publicPath}/vue-ssr-client-manifest.json`)
+      await fileExists(`${publicPath}/vue-ssr-server-bundle.json`)
       bundlesReady = true
       resolve()
     } catch (err) {
