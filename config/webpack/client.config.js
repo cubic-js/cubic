@@ -32,7 +32,7 @@ module.exports = merge(baseConfig, {
       // Transpile ES6/7 into older versions for better browser support
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loader: 'babel-loader?cacheDirectory',
         include: [
           path.resolve(cubic.config.ui.sourcePath),
           path.resolve(__dirname, '../../vue')
