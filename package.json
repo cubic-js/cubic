@@ -19,10 +19,16 @@
     "cubic-core": "^1.0.3",
     "cubic-defaults": "^1.0.2",
     "cubic-loader": "^1.1.1",
-    "cubic-ui": "^1.4.0"
+    "cubic-ui": "^1.4.1"
   },
   "devDependencies": {
+    "cubic-api": "1.0.10",
+    "cubic-auth": "1.1.0",
     "cubic-client": "1.0.4",
+    "cubic-core": "1.0.3",
+    "cubic-defaults": "1.0.3",
+    "cubic-loader": "1.1.1",
+    "cubic-ui": "1.4.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
