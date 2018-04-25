@@ -51,8 +51,8 @@ module.exports = {
    */
   webpack: {
     skipBuild: false,
-    clientConfig: `${process.cwd()}/config/webpack/client.config.js`,
-    serverConfig: `${process.cwd()}/config/webpack/server.config.js`
+    clientConfig: `${__dirname}/webpack/client.config.js`,
+    serverConfig: `${__dirname}/webpack/server.config.js`
   },
   sourcePath: `${process.cwd()}/ui`,
   sitesPath: `${process.cwd()}/ui/sites`
