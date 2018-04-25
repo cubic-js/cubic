@@ -1,7 +1,7 @@
 {
   "name": "cubic",
   "version": "1.0.5",
-  "description": "📦 Fully Modular JavaScript App Platform",
+  "description": "📦 Fully Modular JavaScript App Platform.",
   "main": "index.js",
   "repository": {
     "type": "git",
