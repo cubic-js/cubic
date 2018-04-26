@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { createApp } from './app.js'
 import { registerStoreModules } from './ssr/registerStoreModules.js'
 import root from 'src/app.vue'
-import Progress from 'src/components/progress.vue'
+const Progress = require('src/components/progress.vue')
 
 // Register global progress bar
 const progress = Vue.prototype.$progress = new Vue(Progress).$mount()
