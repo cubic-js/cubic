@@ -1,6 +1,6 @@
 {
   "name": "cubic-defaults",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Default project setup for cubic bootstrap.",
   "main": "index.js",
   "dependencies": {
