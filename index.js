@@ -17,6 +17,7 @@ class Defaults {
   }
 
   async copy() {
+    await copyFile(`${__dirname}/config`, `${process.cwd()}/config`)
     await copyFile(`${__dirname}/ui`, `${process.cwd()}/ui`)
     await copyFile(`${__dirname}/api`, `${process.cwd()}/api`)
     await copyFile(`${__dirname}/assets`, `${process.cwd()}/assets`)
