@@ -2,25 +2,32 @@ const fs = require('fs')
 const ncp = require('ncp').ncp
 const promisify = require('util').promisify
 const fileExists = promisify(fs.lstat)
-const copyFile = promisify(ncp)
+const copy = promisify(ncp)
 
 /**
  * Handle default files for the cubic bootstrap process
  */
 class Defaults {
-  async verify() {
-    try {
-      await fileExists(`${process.cwd()}/ui`)
-    } catch (err) {
-      await this.copy()
+  async verify () {
+    for (let path of [
+      `${process.cwd()}/ui`,
+      `${process.cwd()}/config`,
+      `${process.cwd()}/api`,
+      `${process.cwd()}/assets`
+    ]) {
+      if (!await this.exists(path)) {
+        await copy (path.replace(process.cwd(), __dirname), path)
+      }
     }
   }
 
-  async copy() {
-    await copyFile(`${__dirname}/config`, `${process.cwd()}/config`)
-    await copyFile(`${__dirname}/ui`, `${process.cwd()}/ui`)
-    await copyFile(`${__dirname}/api`, `${process.cwd()}/api`)
-    await copyFile(`${__dirname}/assets`, `${process.cwd()}/assets`)
+  async exists (path) {
+    try {
+      await fileExists(path)
+      return true
+    } catch (err) {
+      return false
+    }
   }
 }
 
