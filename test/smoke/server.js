@@ -1,4 +1,3 @@
-const assert = require('assert')
 const loader = require('cubic-loader')
 const Api = require('cubic-api')
 const Auth = require('cubic-auth')
@@ -65,7 +64,7 @@ before(async () => {
 describe('Server', function () {
   it('should become ready to connect to', async function () {
     const client = new Client()
-    assert(await client.get('/foo') === 'bar')
+    await client.connections()
   })
 
   it('should serve UI on localhost:3000', async function () {
