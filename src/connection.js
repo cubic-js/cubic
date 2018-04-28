@@ -18,25 +18,33 @@ class Connection {
    * Get Tokens and build client
    */
   async connect () {
-    return this.auth.authorize().then(() => this.setClient())
+    await this.auth.authorize()
+    await this.setClient()
   }
 
   /**
    * Socket.io client with currently stored tokens
    */
-  setClient () {
+  async setClient () {
     let sioConfig = this.auth.access_token ? {
       query: 'bearer=' + this.auth.access_token
     } : {}
 
     // Connect to parent namespace
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
-    this.client.on('disconnect', () => {
+    this.client.on('disconnect', async () => {
       this.reload()
     })
-
-    // Resubscribe after disconnect
-    this.resub()
+    this.client.on('subscribed', sub => {
+      if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
+    })
+    this.client.on('connect', () => {
+      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
+    })
+    return new Promise((resolve, reject) => {
+      this.client.once('connect', resolve)
+      this.client.once('error', reject)
+    })
   }
 
   /**
@@ -67,18 +75,6 @@ class Connection {
       this.reconnecting = this.reconnect(refresh)
     }
     return this.reconnecting
-  }
-
-  /**
-   * Rejoin Socket.IO subscriptions after connection is lost
-   */
-  resub () {
-    this.client.on('subscribed', sub => {
-      if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
-    })
-    this.client.on('connect', () => {
-      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
-    })
   }
 
   /**
