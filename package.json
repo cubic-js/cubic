@@ -16,6 +16,7 @@
     "babel-preset-env": "^1.6.1",
     "cookies": "^0.7.1",
     "css-loader": "^0.28.11",
+    "cubic-client": "^1.0.4",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.0",
     "mkdirp": "^0.5.1",
@@ -54,7 +55,6 @@
   "devDependencies": {
     "cubic-api": "1.0.10",
     "cubic-auth": "1.1.0",
-    "cubic-client": "1.0.5",
     "cubic-core": "1.0.4",
     "cubic-defaults": "^1.0.7",
     "cubic-loader": "1.1.1",
