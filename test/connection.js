@@ -33,12 +33,6 @@ before(async () => {
  * Test for properly connecting to cubic-api node.
  */
 describe('Connection', function () {
-  // Connect to API node
-  it('should emit "ready" when connected to the API node', function (done) {
-    cubic.nodes.core.client.api.on('ready', done)
-  })
-
-  // Respond to check
   it('should respond to endpoint check', async function () {
     const check = await cubic.nodes.api.server.http.request.check({
       id: '0',
