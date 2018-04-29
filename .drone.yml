@@ -2,7 +2,7 @@ pipeline:
   build:
     image: node
     commands:
-      - npm update --dev
+      - npm install
   lint:
     image: node
     commands:
