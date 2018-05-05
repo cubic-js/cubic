@@ -51,7 +51,7 @@
     "type": "git",
     "url": "https://github.com/cubic-js/cubic-ui.git"
   },
-  "version": "0.0.0",
+  "version": "1.4.3",
   "devDependencies": {
     "cubic-api": "1.0.10",
     "cubic-auth": "1.1.0",
