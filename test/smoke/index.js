@@ -85,6 +85,7 @@ describe('bootstrap', function () {
   after(async function () {
     await removeFile(`${process.cwd()}/api`)
     await removeFile(`${process.cwd()}/assets`)
+    await removeFile(`${process.cwd()}/config`)
     await removeFile(`${process.cwd()}/ui`)
   })
 })

@@ -2,7 +2,7 @@ const load = require('cubic-loader')
 const Auth = require('cubic-auth')
 const Api = require('cubic-api')
 const Core = require('cubic-core')
-const View = require('cubic-ui')
+const View = require('../cubic-ui')
 const defaults = require('cubic-defaults')
 const intro = require('./intro.js')
 
