@@ -7,8 +7,8 @@
     "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/server.js"
   },
   "dependencies": {
-    "autoprefixer": "^8.3.0",
-    "babel-core": "^6.26.0",
+    "autoprefixer": "^8.4.1",
+    "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -16,6 +16,7 @@
     "babel-preset-env": "^1.6.1",
     "cookies": "^0.7.1",
     "css-loader": "^0.28.11",
+    "cubic-client": "^1.0.5",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.0",
     "mkdirp": "^0.5.1",
@@ -23,7 +24,7 @@
     "null-loader": "^0.1.1",
     "sass-loader": "^7.0.1",
     "vue": "^2.5.16",
-    "vue-loader": "^15.0.1",
+    "vue-loader": "^15.0.7",
     "vue-meta": "^1.5.0",
     "vue-router": "^3.0.1",
     "vue-server-renderer": "^2.5.16",
@@ -32,8 +33,8 @@
     "vue-touch-hotfix": "^2.0.0-beta.4",
     "vuex": "^3.0.1",
     "vuex-router-sync": "^5.0.0",
-    "webpack": "^4.6.0",
-    "webpack-dev-middleware": "^3.1.2",
+    "webpack": "^4.7.0",
+    "webpack-dev-middleware": "^3.1.3",
     "webpack-hot-middleware": "^2.22.1",
     "webpack-merge": "^4.1.2",
     "webpack-node-externals": "^1.7.2"
@@ -54,8 +55,7 @@
   "devDependencies": {
     "cubic-api": "1.0.10",
     "cubic-auth": "1.1.0",
-    "cubic-client": "1.0.4",
-    "cubic-core": "1.0.3",
+    "cubic-core": "1.0.4",
     "cubic-defaults": "^1.0.7",
     "cubic-loader": "1.1.1",
     "eslint": "^4.19.1",
@@ -68,6 +68,6 @@
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.2",
-    "semantic-release": "^15.1.7"
+    "semantic-release": "^15.2.0"
   }
 }

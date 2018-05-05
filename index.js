@@ -21,11 +21,13 @@ class Ui {
     await cubic.use(new Core(cubic.config.ui.core))
 
     // Attach token from cookie to req
-    await cubic.nodes.ui.api.use(async (req, res) => {
-      const cookies = new Cookies(req, res)
-      const token = cookies.get(cubic.config.ui.client.sessionKey)
-      if (token && !req.headers.authorization) req.headers.authorization = `bearer ${token}`
-    })
+    if (!cubic.config.ui.api.disable) {
+      await cubic.nodes.ui.api.use(async (req, res) => {
+        const cookies = new Cookies(req, res)
+        const token = cookies.get(cubic.config.ui.client.sessionKey)
+        if (token && !req.headers.authorization) req.headers.authorization = `bearer ${token}`
+      })
+    }
 
     // Build webpack bundles
     if (!cubic.config.ui.core.disable) {
