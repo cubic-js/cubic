@@ -24,7 +24,7 @@
     "null-loader": "^0.1.1",
     "sass-loader": "^7.0.1",
     "vue": "^2.5.16",
-    "vue-loader": "^15.0.7",
+    "vue-loader": "^15.0.9",
     "vue-meta": "^1.5.0",
     "vue-router": "^3.0.1",
     "vue-server-renderer": "^2.5.16",
