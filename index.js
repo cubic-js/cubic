@@ -1,5 +1,5 @@
 const Core = require('cubic-core')
-const API = require('../cubic-api')
+const API = require('cubic-api')
 const local = require('./config/local.js')
 const WebpackServer = require('./controllers/webpack.js')
 const endpoints = require('./override/endpoints.js')
