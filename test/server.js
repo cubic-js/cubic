@@ -4,7 +4,7 @@ const Api = require(process.cwd())
 const Auth = require('cubic-auth')
 const Core = require('cubic-core')
 const Client = require('cubic-client')
-const request = require('request-promise')
+const get = require('./lib/get.js')
 
 // Config
 const endpointPath = `${process.cwd()}/test/endpoints`
@@ -12,21 +12,6 @@ const publicPath = `${process.cwd()}/test/assets`
 const redisUrl = 'redis://redis'
 const mongoUrl = 'mongodb://mongodb'
 const ci = process.env.DRONE
-
-/**
- * Helper function get http response as soon as server loaded
- */
-async function get (url) {
-  return new Promise(async resolve => {
-    try {
-      resolve(await request.get(`http://localhost:3003${url}`))
-    } catch (err) {
-      setTimeout(async () => {
-        resolve(await get(url))
-      }, 500)
-    }
-  })
-}
 
 /**
  * Load up cubic api to connect to and auth node to authenticate at.

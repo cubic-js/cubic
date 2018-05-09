@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore .",
-    "test": "mocha --exit -s 30000 --timeout 30000 test/server.js test/requests.js"
+    "test": "mocha --exit -s 30000 --timeout 30000 test/server.js test/requests.js test/middleware.js"
   },
   "repository": {
     "type": "git",
