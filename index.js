@@ -22,11 +22,16 @@ class Ui {
 
     // Attach token from cookie to req
     if (!cubic.config.ui.api.disable) {
-      await cubic.nodes.ui.api.use(async (req, res) => {
+      cubic.nodes.ui.api.server.http.app.use((req, res, next) => {
         const cookies = new Cookies(req, res)
         const token = cookies.get(cubic.config.ui.client.sessionKey)
         if (token && !req.headers.authorization) req.headers.authorization = `bearer ${token}`
+        next()
       })
+
+      // Move cookie middleware to the beginning of the stack
+      const middlewareStack = cubic.nodes.ui.api.server.http.app._router.stack
+      middlewareStack.unshift(middlewareStack.pop())
     }
 
     // Build webpack bundles
