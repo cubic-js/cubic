@@ -45,7 +45,7 @@ class EndpointController {
    */
   async getResponse (req, api) {
     try {
-      return await this.sendRaw(req, api)
+      return await this.sendRaw(req) // Await so any error gets caught here
     } catch (err) {
       return this.callEndpoint(req, api)
     }
@@ -54,17 +54,11 @@ class EndpointController {
   /**
    * Send raw file if available
    */
-  async sendRaw (req, api) {
+  async sendRaw (req) {
     let readFile = promisify(fs.readFile)
     let filepath = this.config.publicPath + req.url
     let raw = await readFile(filepath)
 
-    api.emit('cache', {
-      scope: '',
-      key: req.url,
-      value: raw,
-      exp: 60 // 1 minute
-    })
     return {
       statusCode: 200,
       body: raw,
