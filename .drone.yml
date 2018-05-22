@@ -4,18 +4,30 @@ pipeline:
     commands:
       - npm install
       - npm run build
+    when:
+      branch:
+        exclude: [ master ]
   lint:
     image: node
     commands:
       - npm run lint
+    when:
+      branch:
+        exclude: [ master ]
   test - development:
     image: node
     commands:
       - npm test
+    when:
+      branch:
+        exclude: [ master ]
   test - production:
     image: node
     commands:
       - npm test --production
+    when:
+      branch:
+        exclude: [ master ]
   publish:
     image: node
     commands:
