@@ -41,5 +41,11 @@ pipeline:
 services:
   mongodb:
     image: mongo
+    when:
+      branch:
+        exclude: [ master ]
   redis:
     image: redis
+    when:
+      branch:
+        exclude: [ master ]
