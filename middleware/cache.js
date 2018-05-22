@@ -1,5 +1,4 @@
 const redis = require('redis')
-const mime = require('mime')
 const { promisify } = require('util')
 
 class CacheController {
@@ -27,20 +26,25 @@ class CacheController {
    * Middleware function. Respond if data present, Next if not
    */
   async check (req, res) {
-    let cached = await this.get(req.url)
+    let url = req.url.split('/')
 
-    if (cached) {
-      // Authorized
-      if (!cached.scope || req.user.scp.includes(cached.scope)) {
-        return this.respond(cached, req, res)
-      }
+    // Ignore raw file requests. They should get cached on a CDN.
+    if (!url[url.length - 1].split('?')[0].split('.')[1]) {
+      let cached = await this.get(req.url)
 
-      // Unauthorized, reject
-      else {
-        return res.status(401).json({
-          error: 'Unauthorized for cached data.',
-          reason: `Expected scope: ${cached.scope}. Got ${req.user.scp}.`
-        })
+      if (cached) {
+        // Authorized
+        if (!cached.scope || req.user.scp.includes(cached.scope)) {
+          return this.respond(cached, req, res)
+        }
+
+        // Unauthorized, reject
+        else {
+          return res.status(401).json({
+            error: 'Unauthorized for cached data.',
+            reason: `Expected scope: ${cached.scope}. Got ${req.user.scp}.`
+          })
+        }
       }
     }
   }
@@ -49,22 +53,10 @@ class CacheController {
    * Cached data available, respond to request
    */
   respond (cached, req, res) {
-    let url = req.url.split('/')
-
-    // File extension in URL? Send raw file as base64 buffer.
-    if (url[url.length - 1].split('?')[0].split('.')[1]) {
-      let bufferData = Buffer.from(cached.data, 'base64')
-      res.header('content-type', mime.getType(req.url))
-      return res.end(bufferData)
-    }
-
-    // Primitive data type / objects
-    else {
-      if (cached.type === 'json') {
-        return res.json(cached.data)
-      } else {
-        return res.send(cached.data)
-      }
+    if (cached.type === 'json') {
+      return res.json(cached.data)
+    } else {
+      return res.send(cached.data)
     }
   }
 

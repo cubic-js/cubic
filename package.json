@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore .",
-    "test": "mocha --exit -s 30000 --timeout 30000 test/server.js test/requests.js"
+    "test": "mocha --exit -s 30000 --timeout 30000 test/server.js test/requests.js test/middleware.js"
   },
   "repository": {
     "type": "git",
@@ -15,30 +15,31 @@
   "license": "MIT",
   "dependencies": {
     "async-middleware-stack": "^1.0.1",
-    "body-parser": "^1.18.2",
-    "chalk": "^2.4.0",
-    "circular-json": "^0.5.3",
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "circular-json": "^0.5.4",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.1",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.10",
     "mime": "^2.3.1",
     "redis": "^2.8.0",
     "socket.io": "^2.1.0"
   },
   "devDependencies": {
-    "cubic-auth": "1.0.2",
-    "cubic-client": "1.0.4",
-    "cubic-core": "1.0.2",
+    "cubic-api": "^1.0.10",
+    "cubic-auth": "1.1.0",
+    "cubic-client": "1.0.5",
+    "cubic-core": "1.0.3",
     "cubic-loader": "1.1.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1",
+    "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.1.1",
-    "request": "^2.85.0",
+    "request": "^2.86.0",
     "request-promise": "^4.2.2",
-    "semantic-release": "^15.1.7"
+    "semantic-release": "^15.4.1"
   }
 }
