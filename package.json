@@ -31,7 +31,7 @@
     "cubic-client": "1.0.5",
     "cubic-core": "1.0.4",
     "cubic-loader": "1.1.1",
-    "eslint": "^4.19.1",
+    "eslint": "^5.0.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-node": "^6.0.1",
