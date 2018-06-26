@@ -4,9 +4,7 @@ pipeline:
     commands:
       - npm install
       - npm run build
-    when:
-      branch:
-        exclude: [ master ]
+      
   lint:
     image: node
     commands:
