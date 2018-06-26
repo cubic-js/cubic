@@ -16,12 +16,14 @@
   "dependencies": {
     "async-middleware-stack": "^1.0.1",
     "circular-json": "^0.5.4",
-    "cubic-client": "1.0.5",
     "decache": "^4.4.0",
     "lodash": "^4.17.10",
     "mongodb": "^3.0.8",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.11"
+  },
+  "peerDependencies": {
+    "cubic-client": "^1.0.5"
   },
   "devDependencies": {
     "cubic-api": "1.0.11",
