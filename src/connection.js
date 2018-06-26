@@ -41,6 +41,10 @@ class Connection {
     this.client.on('connect', () => {
       this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
     })
+    setTimeout(() => {
+      if (!this.client.connected) this.setClient()
+    }, 500)
+
     return new Promise((resolve, reject) => {
       this.client.once('connect', resolve)
       this.client.once('error', reject)
