@@ -32,16 +32,20 @@ class Connection {
 
     // Connect to parent namespace
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
-    this.client.on('disconnect', async () => {
+    this.client.on('connect', () => {
+      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
+    })
+    await timeout(() => {
+      if (!this.client.connected) this.setClient()
+    }, 1000)
+
+    // Event listeners
+    this.client.once('disconnect', async () => {
       this.reload()
     })
     this.client.on('subscribed', sub => {
       if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
     })
-    this.client.on('connect', () => {
-      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
-    })
-    await timeout(() => this.client.connected ? null : this.setClient(), 1000)
   }
 
   /**
@@ -53,12 +57,15 @@ class Connection {
     this.client.io.opts.query = this.auth.access_token ? 'bearer=' + this.auth.access_token : null
     this.client.connect()
     this.client.once('connect', () => {
-      this.reconnecting = Promise.resolve()
+      this.client.once('disconnect', async () => {
+        this.reload()
+      })
     })
 
     // Retry if server unreachable
-    await timeout(() => this.client.connected ? null : this.reload(), 1000)
-    await this.reconnecting
+    await timeout(async () => {
+      if (!this.client.connected) this.reload()
+    }, 1000)
   }
 
   /**
@@ -68,10 +75,8 @@ class Connection {
    * refresh token is present.
    */
   async reload (refresh) {
-    if (!await this.reconnecting) {
-      this.reconnecting = this.reconnect(refresh)
-    }
-    return this.reconnecting
+    await this.reconnecting
+    this.reconnecting = this.reconnect(refresh)
   }
 
   /**

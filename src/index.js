@@ -169,7 +169,7 @@ class Client {
   async setAccessToken (token) {
     await this.connections()
     this.connection.auth.access_token = token
-    return this.connection.reload()
+    await this.connection.reload()
   }
 
   /**

@@ -33,7 +33,6 @@ describe('Auth', function () {
     const client = new Client()
     const access_token = await auth.getAccessToken()
     await client.setAccessToken(access_token)
-    await client.connections()
     const res = await client.get('/auth')
     assert(res === 'ok')
   })
