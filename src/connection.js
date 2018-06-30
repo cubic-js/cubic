@@ -108,32 +108,29 @@ class Connection {
    * Handles Error Responses
    */
   async errCheck (res = {}, verb, query) {
-    // Response not 1xx, 2xx, 3xx?
+    // If expired: Get new token w/ refresh token & retry method
+    if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
+      await this.reload()
+      return this.retry(res, verb, query)
+    }
+
+    // Rate Limited
+    if (res.statusCode === 429) {
+      return this.retry(res, verb, query)
+    }
+
+    // Nodes are busy -> retry
+    if (res.statusCode === 503) {
+      return this.retry(res, verb, query)
+    }
+
+    // Unhandled error
     if (parseInt(res.statusCode.toString()[0]) > 3) {
-      // If expired: Get new token w/ refresh token & retry method
-      if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
-        await this.reload()
-        return this.retry(res, verb, query)
-      }
-
-      // Rate Limited
-      if (res.statusCode === 429 && !this.options.ignore_limiter) {
-        return this.retry(res, verb, query)
-      }
-
-      // Nodes are busy -> retry
-      if (res.statusCode === 503) {
-        return this.retry(res, verb, query)
-      }
-
-      // Unhandled error
       throw new ServerError(res, query)
     }
 
     // No Error
-    else {
-      return this.parse(res)
-    }
+    return this.parse(res)
   }
 
   /**
