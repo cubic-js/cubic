@@ -101,6 +101,7 @@ class SocketAdapter extends Adapter {
       res.statusCode = code
       return res
     }
+    res.sendFile = res.send
     res.json = (data) => {
       data = JSON.stringify(data)
       return res.send(data)
