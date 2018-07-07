@@ -76,7 +76,7 @@ class Logger {
           io = chalk.red(io)
         }
         if (body) {
-          log += `${prefix}${io}${res.statusCode}: ${body.replace(/\r?\n|\r/g, ' ').slice(0, 100)}${body.length > 100 ? '...' : ''}\n`
+          log += `${prefix}${io}${res.statusCode}: ${typeof body === 'string' ? body.replace(/\r?\n|\r/g, ' ').slice(0, 100) : body}${body.length > 100 ? '...' : ''}\n`
         }
 
         // Log time
