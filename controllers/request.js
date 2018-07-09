@@ -92,7 +92,7 @@ class RequestController {
   }
 
   /**
-   * Contact each connected socket and check if they have the file  we're 
+   * Contact each connected socket and check if they have the file  we're
    * looking for.
    */
   async checkAll (resolve, request, notFound) {
