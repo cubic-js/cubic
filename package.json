@@ -26,7 +26,7 @@
     "cubic-client": "^1.0.5"
   },
   "devDependencies": {
-    "cubic-api": "1.1.1",
+    "cubic-api": "1.1.2",
     "cubic-auth": "1.1.0",
     "cubic-client": "1.0.8",
     "cubic-core": "^1.0.4",
