@@ -25,7 +25,10 @@ class Ui {
       cubic.nodes.ui.api.server.http.app.use((req, res, next) => {
         const cookies = new Cookies(req, res)
         const token = cookies.get(cubic.config.ui.client.sessionKey)
-        if (token && !req.headers.authorization) req.headers.authorization = `bearer ${token}`
+        if (token && !req.headers.authorization) {
+          req.access_token = token
+          req.headers.authorization = `bearer ${token}`
+        }
         next()
       })
 

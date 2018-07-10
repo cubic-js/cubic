@@ -10,13 +10,7 @@ const path = require('path')
  * Load API node connection which will be used for server-side data-fetching
  * Without this, we'd have to create a new instance on every request
  */
-const Client = require('cubic-client')
-const api = new Client({
-  api_url: cubic.config.ui.client.apiUrl,
-  auth_url: cubic.config.ui.client.authUrl,
-  user_key: cubic.config.ui.core.userKey,
-  user_secret: cubic.config.ui.core.userSecret
-})
+
 
 /**
  * Render Dependencies
@@ -66,6 +60,14 @@ class ViewController {
       runInNewContext: false
     })
     const render = util.promisify(renderer.renderToString)
+
+    const Client = require('cubic-client')
+    const api = new Client({
+      api_url: cubic.config.ui.client.apiUrl,
+      auth_url: cubic.config.ui.client.authUrl
+    })
+    if (req.access_token) await api.setAccessToken(req.access_token)
+
     const context = { req, api }
     return render(context)
   }
