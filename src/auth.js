@@ -17,7 +17,6 @@ class Auth {
    */
   async req (verb, query) {
     let res = await new Promise(resolve => this.client.emit(verb, query, resolve))
-
     try {
       res.body = JSON.parse(res.body)
     } catch (err) {
@@ -86,11 +85,11 @@ class Auth {
           url: '/refresh',
           body
         })
-        this.access_token = res.access_token
+        this.access_token = res.body.access_token
         this.refreshing = false
       } catch (err) {
         this.refreshing = false
-        let t = err.reason ? parseInt(err.reason.replace(/[^0-9]+/g, '')) : 5000
+        let t = err.body.reason ? parseInt(err.body.reason.replace(/[^0-9]+/g, '')) : 5000
         await timeout(() => this.refreshToken(), t)
       }
     }
