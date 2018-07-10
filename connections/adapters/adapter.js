@@ -37,9 +37,13 @@ class Adapter {
     // Example: /some/resource/to/image.png?param=0.5
     //                                 ^ detected  ^ not detected
     if (url[url.length - 1].split('?')[0].split('.')[1] && response.statusCode <= 400) {
-      let data = Buffer.from(response.body || '', 'base64')
-      res.header('content-type', mime.getType(req.url))
-      res.end(data)
+      try {
+        let data = Buffer.from(response.body || '', 'base64')
+        res.header('content-type', mime.getType(req.url))
+        res.end(data)
+      } catch (err) {
+        res.status(response.statusCode)[response.method](response.body)
+      }
     } else {
       res.status(response.statusCode)[response.method](response.body)
     }
