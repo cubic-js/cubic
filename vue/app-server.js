@@ -6,7 +6,7 @@ import root from 'src/app.vue'
 /**
  * Generate App with pre-fetched data in store state
  */
-export default context => {
+export default function (context) {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp(context)
 
