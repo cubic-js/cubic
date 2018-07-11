@@ -35,7 +35,7 @@ export default context => {
 
       // router-view doesn't contain root template, so we call it additionally
       await callAsyncRecursive(root, store, router)
-      await Promise.all(routerView.map(component => callAsyncRecursive(component, store, router)))
+      await Promise.all(routerView.map(component => callAsyncRecursive(component, store, router, router.currentRoute)))
 
       // After all asyncData hooks are resolved, our store is now
       // filled with the state needed to render the app.
