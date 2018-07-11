@@ -5,13 +5,16 @@
 const registerStoreModules = (parent, store, checkPreState) => {
   // Traverse components if available
   if (parent.components) {
-    Object.keys(parent.components).forEach(c => registerStoreModules(parent.components[c], store))
+    Object.keys(parent.components).forEach(c => registerStoreModules(parent.components[c], store, checkPreState))
   }
   // Main parent or traversed child has store module -> register
   if (parent.storeModule) {
-    const preserveState = checkPreState ? {
-      preserveState: !!store.state[parent.storeModule.name]
-    } : {}
+    let preserveState = {}
+    if (!parent.storeModule.reregister && checkPreState) {
+      preserveState = {
+        preserveState: !!store.state[parent.storeModule.name]
+      }
+    }
     let preregistered = false
 
     // Figure out if module was already registered client-side. (SSR won't add
