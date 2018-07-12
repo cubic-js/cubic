@@ -1,13 +1,11 @@
-let progressStarted = false
-
 /**
  * Helper function for recursive asyncData calling of matched components
  */
-const callAsyncRecursive = async (parent, store, router, route, progress) => {
+const callAsyncRecursive = async (parent, store, router, route, progress, progressStarted = false) => {
   // Traverse components if available
   if (parent.components) {
     await Promise.all(Object.keys(parent.components).map(c => {
-      return callAsyncRecursive(parent.components[c], store, router, route, progress)
+      return callAsyncRecursive(parent.components[c], store, router, route, progress, progressStarted)
     }))
   }
   // Main parent or traversed child has asyncData -> call
