@@ -14,6 +14,7 @@ const callAsyncRecursive = async (parent, store, router, route, progress) => {
   if (parent.asyncData) {
     if (!progressStarted && progress) {
       progress.start()
+      progressStarted = true
     }
     parent.$router = router
     parent.$store = store

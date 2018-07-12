@@ -34,18 +34,13 @@ router.onReady(() => {
   // async components are resolved.
   router.beforeResolve(async (to, from, next) => {
     const matched = router.getMatchedComponents(to)
-    const prevMatched = router.getMatchedComponents(from)
-    let diffed = false
-    const activated = matched.filter((c, i) => {
-      return diffed || (diffed = (prevMatched[i] !== c))
-    })
 
     // Register dyanmic store modules on route change (not direct load!)
     registerStoreModules(root, store)
-    activated.map(component => registerStoreModules(component, store, true))
+    matched.map(component => registerStoreModules(component, store, true))
 
     // Call asyncData
-    await Promise.all(activated.map(c => callAsyncRecursive(c, store, router, to, progress)))
+    await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress)))
 
     // End loading bar
     progress.finish()
