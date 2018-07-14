@@ -1,6 +1,6 @@
 {
   "name": "cubic-client",
-  "version": "1.0.2",
+  "version": "0.0.0-development",
   "description": "Cubic API client.",
   "main": "./lib/index.js",
   "repository": {
