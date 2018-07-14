@@ -12,13 +12,15 @@ async function bundle () {
   const mongoUrl = 'mongodb://mongodb'
   const ci = process.env.DRONE
   await cubic.use(new Ui(ci ? {
-    api: { redisUrl },
+    api: { redisUrl, disable: true },
     core: { redisUrl, mongoUrl },
     webpack: { skipBuild: true }
-  } : { webpack: { skipBuild: true } }))
+  } : {
+    api: { disable: true },
+    webpack: { skipBuild: true }
+  }))
 
   // Generate routes config file
-  await cubic.nodes.ui.core.client.api.connections()
   await cubic.nodes.ui.core.webpackServer.registerEndpoints()
   const client = require(cubic.config.ui.webpack.clientConfig)
   const server = require(cubic.config.ui.webpack.serverConfig)
@@ -34,7 +36,6 @@ async function bundle () {
   })
 
   // Reset cubic global
-  cubic.nodes.ui.api.server.http.server.close()
   delete global.cubic
 }
 

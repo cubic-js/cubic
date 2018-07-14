@@ -46,9 +46,10 @@ in the title. If not, you'll have a blast!
 Select your project folder and run the following:
 ```sh
 npm init
-npm install cubic
-npm install cubic-loader cubic-api cubic-core cubic-auth cubic-ui cubic-defaults
+npm install cubic cubic-loader cubic-api cubic-core cubic-auth cubic-ui cubic-client cubic-defaults
 ```
+We're aware that this looks like a lot of stuff, but trust us, it's gonna make
+it much easier to update individual modules for features/bugfixes in the future.
 
 ### Entrypoint
 Next we'll create **index.js** as our entrypoint to the server

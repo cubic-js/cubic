@@ -2,7 +2,7 @@ const load = require('cubic-loader')
 const Auth = require('cubic-auth')
 const Api = require('cubic-api')
 const Core = require('cubic-core')
-const View = require('cubic-ui')
+const Ui = require('cubic-ui')
 const defaults = require('cubic-defaults')
 const intro = require('./intro.js')
 
@@ -29,10 +29,10 @@ class Cubic {
   async bootstrap () {
     this.init()
     await defaults.verify()
-    await cubic.use(new Auth())
-    await cubic.use(new Api())
-    await cubic.use(new Core())
-    await cubic.use(new View())
+    cubic.use(new Auth())
+    cubic.use(new Api())
+    cubic.use(new Core())
+    cubic.use(new Ui())
   }
 
   /**

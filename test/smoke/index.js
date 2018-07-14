@@ -45,16 +45,16 @@ before(async function () {
   }
 
   const cubic = new Cubic({ logLevel: 'silent' })
-  await cubic.use(new Auth(ci ? {
+  cubic.use(new Auth(ci ? {
     api: { redisUrl },
     core: { redisUrl, mongoUrl }
   } : {}))
-  await cubic.use(new Api(ci ? { redisUrl } : {}))
-  await cubic.use(new Core(ci ? {
+  cubic.use(new Api(ci ? { redisUrl } : {}))
+  cubic.use(new Core(ci ? {
     redisUrl,
     mongoUrl
   } : {}))
-  await cubic.use(new Ui(ci ? {
+  cubic.use(new Ui(ci ? {
     api: { redisUrl },
     core: { redisUrl, mongoUrl },
     webpack: { skipBuild: prod }
@@ -85,6 +85,7 @@ describe('bootstrap', function () {
   after(async function () {
     await removeFile(`${process.cwd()}/api`)
     await removeFile(`${process.cwd()}/assets`)
+    await removeFile(`${process.cwd()}/config`)
     await removeFile(`${process.cwd()}/ui`)
   })
 })
