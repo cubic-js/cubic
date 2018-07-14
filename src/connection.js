@@ -27,21 +27,24 @@ class Connection {
    */
   async setClient () {
     let sioConfig = this.auth.access_token ? {
-      query: 'bearer=' + this.auth.access_token
-    } : {}
+      query: 'bearer=' + this.auth.access_token,
+      reconnection: false
+    } : {
+      reconnection: false
+    }
 
     // Connect to parent namespace
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
-    this.client.on('connect', () => {
-      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
-    })
-    await timeout(() => {
-      if (!this.client.connected) this.setClient()
-    }, 1000)
 
     // Event listeners
-    this.client.once('disconnect', async () => {
-      this.reload()
+    this.client.on('connect_error', err => {
+      throw err
+    })
+    this.client.on('error', console.error)
+    this.client.on('disconnect', () => this.reload())
+    this.client.on('connect', () => {
+      this.reconnecting = false
+      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
     })
     this.client.on('subscribed', sub => {
       if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
@@ -52,19 +55,19 @@ class Connection {
    * Close existing connection and start new with available tokens
    */
   async reconnect (refresh) {
+    this.reconnecting = true
     this.client.disconnect()
     await this.auth.authorize(refresh)
     this.client.io.opts.query = this.auth.access_token ? 'bearer=' + this.auth.access_token : null
     this.client.connect()
-    this.client.once('connect', () => {
-      this.client.once('disconnect', async () => {
-        this.reload()
-      })
-    })
 
-    // Retry if server unreachable
+    // Retry if server unreachable. Usual reconnect takes less than 100ms, so 1s
+    // should be more than plenty.
     await timeout(async () => {
-      if (!this.client.connected) this.reload()
+      if (!this.client.connected) {
+        this.reconnecting = false
+        this.reload()
+      }
     }, 1000)
   }
 
@@ -75,8 +78,9 @@ class Connection {
    * refresh token is present.
    */
   async reload (refresh) {
-    await this.reconnecting
-    this.reconnecting = this.reconnect(refresh)
+    if (!this.reconnecting) {
+      await this.reconnect(refresh)
+    }
   }
 
   /**

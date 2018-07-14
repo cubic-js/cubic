@@ -39,18 +39,10 @@ class Client {
   }
 
   /**
-   * Helper function to await all existing connections/reconnections
-   */
-  async connections () {
-    await this.connecting
-    await this.connection.reconnecting
-  }
-
-  /**
    * Subscribe to certain endpoints
    */
   async subscribe (endpoint, fn) {
-    await this.connections()
+    await this.connecting
     this.emit('subscribe', endpoint)
 
     // Function passed? Listen to subscribed endpoint directly.
@@ -61,7 +53,7 @@ class Client {
    * Unsubscribe from endpoints again
    */
   async unsubscribe (endpoint) {
-    await this.connections()
+    await this.connecting
     this.emit('unsubscribe', endpoint)
     this.connection.client.off(endpoint)
   }
@@ -70,7 +62,7 @@ class Client {
    * Event listening for socket.io
    */
   async on (ev, fn) {
-    await this.connections()
+    await this.connecting
     return this.connection.client.on(ev, fn)
   }
 
@@ -78,7 +70,7 @@ class Client {
    * Event listening for socket.io
    */
   async once (ev, fn) {
-    await this.connections()
+    await this.connecting
     return this.connection.client.once(ev, fn)
   }
 
@@ -86,7 +78,7 @@ class Client {
    * Expose Socket client emit
    */
   async emit (ev, data) {
-    await this.connections()
+    await this.connecting
     this.connection.client.emit(ev, data)
   }
 
@@ -94,7 +86,7 @@ class Client {
    * RESTful methods for manual interaction
    */
   async query (verb, query) {
-    await this.connections()
+    await this.connecting
     return this.connection.request(verb, query)
   }
 
@@ -138,7 +130,7 @@ class Client {
    * Change user at runtime. Automatically reloads connection.
    */
   async login (user, secret) {
-    await this.connections()
+    await this.connecting
     this.connection.auth.options.user_key = user
     this.connection.auth.options.user_secret = secret
     return this.connection.reload(false)
@@ -149,7 +141,6 @@ class Client {
    * to this package.
    */
   async setRefreshToken (token) {
-    await this.connections()
     this.connection.auth.refresh_token = token
   }
 
@@ -159,7 +150,6 @@ class Client {
    * the refresh token needs to be stored for subsequent logins.
    */
   async getRefreshToken () {
-    await this.connections()
     return this.connection.auth.refresh_token
   }
 
@@ -167,7 +157,6 @@ class Client {
    * Manually set access token.
    */
   async setAccessToken (token) {
-    await this.connections()
     this.connection.auth.access_token = token
     await this.connection.reload()
   }
@@ -176,7 +165,6 @@ class Client {
    * Retrieve current access token.
    */
   async getAccessToken () {
-    await this.connections()
     return this.connection.auth.access_token
   }
 }

@@ -19,7 +19,6 @@ describe('Auth', function () {
     const refresh_token = await auth.getRefreshToken()
     await client.setRefreshToken(refresh_token)
     await client.connection.reload()
-    await client.connections()
     assert(client.connection.auth.access_token)
   })
 

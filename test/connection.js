@@ -45,13 +45,13 @@ before(async function () {
 describe('Connection', function () {
   it('should connect to API node with default config', async function () {
     global.clientDefault = new Client()
-    await clientDefault.connections()
+    await clientDefault.connecting
   })
 
   it('should connect to API node with registered user', async function () {
     const user_key = await auth.getUserKey()
     global.clientAuth = new Client({ user_key, user_secret: 'test' })
-    await clientAuth.connections()
+    await clientAuth.connecting
   })
 
   it('should reconnect to the server when connections are lost', async function () {
@@ -82,7 +82,7 @@ describe('Connection', function () {
     // Run reconnect test multiple times. We've not made the best experiences
     // with socket.io's reconnect reliability in the past, especially when
     // there were many reconnects within a short period of time.
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 20; i++) {
       await reconnect()
     }
   })
