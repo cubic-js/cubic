@@ -1,6 +1,6 @@
 {
   "name": "cubic",
-  "version": "1.0.5",
+  "version": "0.0.0-development",
   "description": "📦 Fully Modular JavaScript App Platform.",
   "main": "index.js",
   "repository": {
@@ -40,7 +40,7 @@
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.2",
-    "semantic-release": "^15.2.0",
+    "semantic-release": "^15.7.1",
     "webpack": "^4.7.0"
   }
 }
