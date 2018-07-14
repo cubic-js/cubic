@@ -37,10 +37,8 @@ class Connection {
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
 
     // Event listeners
-    this.client.on('connect_error', err => {
-      throw err
-    })
     this.client.on('error', console.error)
+    this.client.on('connect_error', () => this.reload())
     this.client.on('disconnect', () => this.reload())
     this.client.on('connect', () => {
       this.reconnecting = false
