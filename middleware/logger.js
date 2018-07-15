@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const _ = require('lodash')
 
 /**
  * Logger Middleware
@@ -15,6 +16,7 @@ class Logger {
    * @param {function} next - Next middleware function
    */
   log (req, res) {
+    req = _.cloneDeep(req)
     this.setPrefix(req)
     this.setUser(req)
     this.addTimer(req, res)
