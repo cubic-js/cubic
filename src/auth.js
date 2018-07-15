@@ -17,11 +17,6 @@ class Auth {
    */
   async req (verb, query) {
     let res = await new Promise(resolve => this.client.emit(verb, query, resolve))
-    try {
-      res.body = JSON.parse(res.body)
-    } catch (err) {
-      throw res
-    }
 
     if (res.body.error) {
       throw res

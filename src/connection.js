@@ -137,21 +137,7 @@ class Connection {
     }
 
     // No Error
-    return this.parse(res)
-  }
-
-  /**
-   * Try to JSON parse the response automatically for convenience
-   */
-  parse (res) {
-    // Is JSON
-    try {
-      return JSON.parse(res.body)
-    }
-    // Not JSON, keep original value
-    catch (e) {
-      return res.body
-    }
+    return res.body
   }
 }
 
