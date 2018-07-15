@@ -23,6 +23,7 @@
     "lodash": "^4.17.10",
     "mime": "^2.3.1",
     "redis": "^2.8.0",
+    "rolling-rate-limiter": "^0.1.11",
     "socket.io": "^2.1.0"
   },
   "peerDependencies": {
