@@ -101,7 +101,7 @@ class RequestController {
 
     for (let sid of sio) {
       let socket = this.client.root.sockets[sid]
-      // console.log(socket) // detect weird 3rd socket
+
       socket.once(request.id, res => {
         responses++
 
