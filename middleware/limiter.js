@@ -1,11 +1,4 @@
-/**
- * Redis Client for rate limiting
- */
 const Redis = require('redis')
-
-/**
- * Rolling Rate Limiting
- */
 const RateLimiter = require('rolling-rate-limiter')
 
 /**

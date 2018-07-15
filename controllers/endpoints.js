@@ -44,9 +44,20 @@ class EndpointController {
    * Calls endpoint with given param Array
    */
   async getResponse (req, api) {
-    try {
-      return await this.sendRaw(req) // Await so any error gets caught here
-    } catch (err) {
+    const url = req.url.split('/')
+
+    // Clarification: the first condition here checks if the last URL fragment
+    // contains a dot BEFORE the RESTful query (starting with ?). This means
+    // that the resource is a raw file, so we should send it as such.
+    // Example: /some/resource/to/image.png?param=0.5
+    //                                 ^ detected  ^ not detected
+    if (url[url.length - 1].split('?')[0].split('.')[1]) {
+      try {
+        return await this.sendRaw(req) // Await so any error gets caught here
+      } catch (err) {
+        return this.callEndpoint(req, api)
+      }
+    } else {
       return this.callEndpoint(req, api)
     }
   }
@@ -57,11 +68,10 @@ class EndpointController {
   async sendRaw (req) {
     let readFile = promisify(fs.readFile)
     let filepath = this.config.publicPath + req.url
-    let raw = await readFile(filepath)
 
     return {
       statusCode: 200,
-      body: raw,
+      body: await readFile(filepath),
       method: 'send'
     }
   }
