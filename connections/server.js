@@ -3,6 +3,7 @@
  */
 const HTTP = require('./adapters/http.js')
 const Sockets = require('./adapters/sockets.js')
+const Limiter = require('../middleware/limiter.js')
 const Cache = require('../middleware/cache.js')
 const Logger = require('../middleware/logger.js')
 
@@ -15,6 +16,7 @@ class Server {
    */
   constructor (config) {
     this.config = config
+    this.limiter = new Limiter(config)
     this.cache = new Cache(config)
     this.logger = new Logger(config)
     this.http = new HTTP(config)
@@ -34,6 +36,7 @@ class Server {
    * Applies Middleware to adapters
    */
   applyMiddleware () {
+    this.use(this.limiter.check.bind(this.limiter))
     this.use(this.logger.log.bind(this.logger))
     this.use(this.cache.check.bind(this.cache))
   }

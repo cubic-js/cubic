@@ -3,7 +3,7 @@ pipeline:
     image: node
     commands:
       - npm install
-      
+
   lint:
     image: node
     commands:
@@ -11,6 +11,7 @@ pipeline:
     when:
       branch:
         exclude: [ master ]
+
   test - development:
     image: node
     commands:
@@ -18,6 +19,7 @@ pipeline:
     when:
       branch:
         exclude: [ master ]
+
   test - production:
     image: node
     commands:
@@ -25,6 +27,7 @@ pipeline:
     when:
       branch:
         exclude: [ master ]
+
   publish:
     image: node
     commands:

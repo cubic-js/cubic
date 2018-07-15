@@ -23,6 +23,7 @@
     "lodash": "^4.17.10",
     "mime": "^2.3.1",
     "redis": "^2.8.0",
+    "rolling-rate-limiter": "^0.1.11",
     "socket.io": "^2.1.0"
   },
   "peerDependencies": {
@@ -31,7 +32,7 @@
   "devDependencies": {
     "cubic-api": "^1.0.10",
     "cubic-auth": "1.1.0",
-    "cubic-client": "1.0.9",
+    "cubic-client": "1.0.11",
     "cubic-core": "1.0.4",
     "cubic-loader": "1.1.1",
     "eslint": "^5.0.0",
