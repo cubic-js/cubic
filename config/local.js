@@ -18,6 +18,14 @@ module.exports = {
   redisUrl: 'redis://localhost',
 
   /**
+   * Rate limit settings. 10 requests per second => deny
+   */
+  limit: {
+    interval: 5000,
+    maxInInterval: 50
+  },
+
+  /**
    * Cache settings
    */
   cacheDb: 1,
