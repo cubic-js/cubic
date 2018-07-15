@@ -102,10 +102,7 @@ class SocketAdapter extends Adapter {
       return res
     }
     res.sendFile = res.send
-    res.json = (data) => {
-      data = JSON.stringify(data)
-      return res.send(data)
-    }
+    res.json = res.send
     res.redirect = (status, data) => {
       status = typeof status === 'number' ? status : 302
       data = typeof status === 'number' ? data : status
