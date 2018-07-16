@@ -1,9 +1,6 @@
 /**
  * Event Configuration for Socket.io Server
  */
-const Cache = require('../../middleware/cache.js')
-
-// Subscriptions
 function subscribe (endpoint, socket) {
   cubic.log.verbose(`Socket.io | ${socket.user.uid} subscribed to ${endpoint}`)
   socket.join(endpoint)
@@ -20,8 +17,7 @@ function disconnect (socket) {
   cubic.log.verbose(`Socket.io | ${socket.user.uid} disconnected from ${socket.nsp.name}`)
 }
 
-module.exports = (sockets, config) => {
-  const cache = new Cache(config)
+module.exports = (sockets, config, cache) => {
   const node = `${config.group ? config.group + ' ' : ''}api`.padEnd(10)
 
   /**

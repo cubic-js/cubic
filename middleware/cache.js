@@ -1,11 +1,10 @@
-const redis = require('redis')
 const { promisify } = require('util')
 
 class CacheController {
-  constructor (config) {
+  constructor (config, redis) {
     this.config = config
-    this.client = redis.createClient(this.config.redisUrl)
-    this.client.select(this.config.cacheDb)
+    this.redis = redis
+    this.redis.select(this.config.cacheDb)
   }
 
   /**
@@ -19,7 +18,7 @@ class CacheController {
     })
     key = encodeURI(key)
     cubic.log.verbose(`${this.config.prefix} | < caching data for ${key}`)
-    return promisify(this.client.setex).bind(this.client)(key, exp, value)
+    return promisify(this.redis.setex).bind(this.redis)(key, exp, value)
   }
 
   /**
@@ -64,7 +63,7 @@ class CacheController {
    * Get Data from cache.
    */
   async get (key) {
-    const res = await promisify(this.client.get).bind(this.client)(encodeURI(key))
+    const res = await promisify(this.redis.get).bind(this.redis)(encodeURI(key))
     if (res) {
       cubic.log.verbose(`${this.config.prefix} | > returning cached data for ${key}`)
       return JSON.parse(res)
