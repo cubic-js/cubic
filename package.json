@@ -29,7 +29,7 @@
     "cubic-core": "1.1.2",
     "cubic-defaults": "^1.0.7",
     "cubic-loader": "1.1.1",
-    "cubic-ui": "1.4.7",
+    "cubic-ui": "1.4.8",
     "eslint": "^5.1.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.13.0",
