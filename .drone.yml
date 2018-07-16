@@ -3,7 +3,10 @@ pipeline:
     image: node
     commands:
       - npm install
-      
+    when:
+      branch:
+        exclude: [ master ]
+
   lint:
     image: node
     commands:
