@@ -25,7 +25,7 @@ class Connection {
   /**
    * Socket.io client with currently stored tokens
    */
-  async setClient () {
+  async setClient (skipListeners) {
     let sioConfig = this.auth.access_token ? {
       query: 'bearer=' + this.auth.access_token,
       reconnection: false
@@ -37,16 +37,22 @@ class Connection {
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
 
     // Event listeners
-    this.client.on('error', console.error)
-    this.client.on('connect_error', () => this.reload())
-    this.client.on('disconnect', () => this.reload())
-    this.client.on('connect', () => {
-      this.reconnecting = false
-      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
-    })
-    this.client.on('subscribed', sub => {
-      if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
-    })
+    if (!skipListeners) {
+      this.client.on('error', console.error)
+      this.client.on('connect_error', () => this.reload())
+      this.client.on('disconnect', () => this.reload())
+      this.client.on('connect', () => {
+        this.reconnecting = false
+        this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
+      })
+      this.client.on('subscribed', sub => {
+        if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
+      })
+    }
+
+    await timeout(() => {
+      if (!this.client.connected) this.setClient(true)
+    }, 1000)
   }
 
   /**
