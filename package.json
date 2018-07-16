@@ -4,8 +4,7 @@
   },
   "scripts": {
     "lint": "eslint --ignore-path .gitignore . --ignore-pattern /test/assets",
-    "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/server.js",
-    "semantic-release": "semantic-release"
+    "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/server.js"
   },
   "dependencies": {
     "autoprefixer": "^8.6.5",
