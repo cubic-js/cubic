@@ -1,4 +1,3 @@
-const Redis = require('redis')
 const RateLimiter = require('rolling-rate-limiter')
 
 /**
@@ -8,9 +7,9 @@ const RateLimiter = require('rolling-rate-limiter')
  * endpoints.
  */
 class Limiter {
-  constructor (config) {
+  constructor (config, redis) {
     this.config = config
-    this.redis = Redis.createClient(config.redisUrl)
+    this.redis = redis
   }
 
   /**

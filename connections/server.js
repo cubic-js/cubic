@@ -6,6 +6,7 @@ const Sockets = require('./adapters/sockets.js')
 const Limiter = require('../middleware/limiter.js')
 const Cache = require('../middleware/cache.js')
 const Logger = require('../middleware/logger.js')
+const Redis = require('redis')
 
 /**
  * Procedurally builds up http/sockets server
@@ -15,9 +16,10 @@ class Server {
    * Loads up HTTP/Sockets server and modifies it
    */
   constructor (config) {
+    const redis = Redis.createClient(config.redisUrl)
     this.config = config
-    this.limiter = new Limiter(config)
-    this.cache = new Cache(config)
+    this.limiter = new Limiter(config, redis)
+    this.cache = new Cache(config, redis)
     this.logger = new Logger(config)
     this.http = new HTTP(config)
     this.sockets = new Sockets(config, this.http.server)
@@ -48,7 +50,7 @@ class Server {
    */
   applyRoutes (config) {
     require(config.routes)(this.http)
-    require(config.events)(this.sockets, config)
+    require(config.events)(this.sockets, config, this.cache)
   }
 
   /**
