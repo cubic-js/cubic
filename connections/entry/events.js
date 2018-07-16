@@ -53,17 +53,17 @@ module.exports = (sockets, config) => {
     socket.on('unsubscribe', endpoint => unsubscribe(endpoint, socket))
 
     // Listen to Updates from core node and publish to subscribers
-    socket.on('publish', update => {
+    socket.on('publish', (update, ack) => {
       cubic.log.verbose(`${node} | > publishing data for ${update.endpoint}`)
       sockets.io.to(update.endpoint).emit(update.endpoint, update.data)
       sockets.root.to(update.endpoint).emit(update.endpoint, update.data)
-      socket.emit(update.id, 'done')
+      ack(true)
     })
 
     // Listen for Cache updates
-    socket.on('cache', async data => {
+    socket.on('cache', async (data, ack) => {
       await cache.save(data.key, data.value, data.exp, data.scope)
-      socket.emit(data.id, 'done')
+      ack(true)
     })
 
     // Connection listeners
