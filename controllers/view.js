@@ -7,12 +7,6 @@ const readFile = util.promisify(fs.readFile)
 const path = require('path')
 
 /**
- * Load API node connection which will be used for server-side data-fetching
- * Without this, we'd have to create a new instance on every request
- */
-
-
-/**
  * Render Dependencies
  */
 const publicPath = require(cubic.config.ui.webpack.clientConfig).output.path
@@ -61,8 +55,7 @@ class ViewController {
     })
     const render = util.promisify(renderer.renderToString)
 
-    const context = { req }
-    return render(context)
+    return render({req})
   }
 }
 
