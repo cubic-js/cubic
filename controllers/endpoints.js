@@ -4,7 +4,6 @@
 const fs = require('fs')
 const path = require('path')
 const { promisify } = require('util')
-const decache = require('decache')
 const mongodb = require('mongodb').MongoClient
 const Stack = require('async-middleware-stack')
 const Response = require('../lib/response.js')
@@ -166,17 +165,31 @@ class EndpointController {
     catch (err) {
       const dev = cubic.config.local.environment === 'development'
 
-      // Regenerate endpoints in dev mode so we needn't restart the full stack
-      // for changes
-      if (dev) this.generateEndpointSchema()
-
       // Get file path for our endpoint
       let path = this.findByUrl(url, method).file
 
       // Remove node's require cache while in dev mode so we needn't restart
       // to see endpoint changes. Disabled for default endpoint because of
       // cubic-ui's endpoint handling.
-      if (dev && path !== this.config.endpointParent) decache(path)
+      if (dev && path !== this.config.endpointParent) {
+        this.endpoints = []
+        const resolved = require.resolve(path)
+
+        // Delete from module parent
+        if (require.cache[resolved] && require.cache[resolved].parent) {
+          let i = require.cache[resolved].parent.children.length
+
+          while (i--) {
+            if (require.cache[resolved].parent.children[i].id === resolved) {
+              require.cache[resolved].parent.children.splice(i, 1)
+            }
+          }
+        }
+
+        // Delete module from cache
+        delete require.cache[require.resolve(path)]
+        this.generateEndpointSchema()
+      }
 
       return require(path)
     }
