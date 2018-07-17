@@ -10,6 +10,8 @@ export default function (context) {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp(context)
 
+    if (context.req.access_token) app.$cubic.setAccessToken(context.req.access_token)
+
     // Init vue-meta
     const meta = app.$meta()
 

@@ -61,14 +61,7 @@ class ViewController {
     })
     const render = util.promisify(renderer.renderToString)
 
-    const Client = require('cubic-client')
-    const api = new Client({
-      api_url: cubic.config.ui.client.apiUrl,
-      auth_url: cubic.config.ui.client.authUrl
-    })
-    if (req.access_token) await api.setAccessToken(req.access_token)
-
-    const context = { req, api }
+    const context = { req }
     return render(context)
   }
 }
