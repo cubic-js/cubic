@@ -18,6 +18,12 @@ if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__)
 }
 
+// set access token of client-side api, delete after against possible exploitation
+if (store.state.$access_token) {
+  app.$cubic.setAccessToken(store.state.$access_token)
+  delete store.state.$access_token
+}
+
 // Wait until router has resolved possible async hooks
 router.onReady(() => {
   const routerView = router.getMatchedComponents()
