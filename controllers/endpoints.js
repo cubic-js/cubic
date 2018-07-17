@@ -172,8 +172,8 @@ class EndpointController {
       // to see endpoint changes. Disabled for default endpoint because of
       // cubic-ui's endpoint handling.
       if (dev && path !== this.config.endpointParent) {
-        this.endpoints = []
         const resolved = require.resolve(path)
+        this.endpoints = []
 
         // Delete from module parent
         if (require.cache[resolved] && require.cache[resolved].parent) {
@@ -190,7 +190,6 @@ class EndpointController {
         delete require.cache[require.resolve(path)]
         this.generateEndpointSchema()
       }
-
       return require(path)
     }
   }

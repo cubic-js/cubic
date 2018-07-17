@@ -1,4 +1,5 @@
 const assert = require('assert')
+const request = require('request-promise')
 const loader = require('cubic-loader')
 const Api = require('cubic-api')
 const Auth = require('cubic-auth')
@@ -29,15 +30,30 @@ before(async () => {
   } : { endpointPath, publicPath }))
 })
 
+async function isUp () {
+  return new Promise(async resolve => {
+    try {
+      resolve(await request.get('http://localhost:3003/foo'))
+    } catch (err) {
+      setTimeout(async () => {
+        resolve(await isUp())
+      }, 500)
+    }
+  })
+}
+
 /**
  * Test for properly connecting to cubic-api node.
  */
 describe('Connection', function () {
   it('should respond to endpoint check', async function () {
     const check = await cubic.nodes.api.server.http.request.check({
-      id: '0',
       url: '/foo'
     })
     assert(!check.available.error || !check.available.error.statusCode !== 503)
+  })
+
+  it('should be ready to take requests', async function () {
+    await isUp()
   })
 })
