@@ -20,11 +20,11 @@ class Ui {
     await cubic.use(new API(cubic.config.ui.api))
     await cubic.use(new Core(cubic.config.ui.core))
 
-    // Attach token from cookie to req
+    // Attach access token from cookie to req
     if (!cubic.config.ui.api.disable) {
       cubic.nodes.ui.api.server.http.app.use((req, res, next) => {
         const cookies = new Cookies(req, res)
-        const token = cookies.get(cubic.config.ui.client.sessionKey)
+        const token = cookies.get(cubic.config.ui.client.accessTokenCookie)
         if (token && !req.headers.authorization) {
           req.access_token = token
           req.headers.authorization = `bearer ${token}`
