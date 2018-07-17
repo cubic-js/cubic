@@ -35,6 +35,6 @@
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.1.1",
-    "semantic-release": "^15.4.1"
+    "semantic-release": "^15.7.1"
   }
 }
