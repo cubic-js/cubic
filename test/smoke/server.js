@@ -64,7 +64,7 @@ before(async () => {
 describe('Server', function () {
   it('should become ready to connect to', async function () {
     const client = new Client()
-    await client.connections()
+    await client.connecting
   })
 
   it('should serve UI on localhost:3000', async function () {

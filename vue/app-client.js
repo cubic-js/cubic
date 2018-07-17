@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { createApp } from './app.js'
+import { callAsyncRecursive } from './ssr/callAsyncRecursive.js'
 import { registerStoreModules } from './ssr/registerStoreModules.js'
 import root from 'src/app.vue'
 import Progress from 'src/components/progress.vue'
@@ -7,25 +8,6 @@ import Progress from 'src/components/progress.vue'
 // Register global progress bar
 const progress = Vue.prototype.$progress = new Vue(Progress).$mount()
 document.body.appendChild(progress.$el)
-
-// Global mixin that calls `asyncData` when a route component's params change
-Vue.mixin({
-  async beforeRouteUpdate (to, from, next) {
-    const { asyncData } = this.$options
-
-    if (asyncData) {
-      progress.start()
-      await asyncData({
-        store: this.$store,
-        route: to
-      })
-      progress.finish()
-      next()
-    } else {
-      next()
-    }
-  }
-})
 
 // Create main Vue instance
 const { app, router, store } = createApp()
@@ -52,33 +34,13 @@ router.onReady(() => {
   // async components are resolved.
   router.beforeResolve(async (to, from, next) => {
     const matched = router.getMatchedComponents(to)
-    const prevMatched = router.getMatchedComponents(from)
-    let diffed = false
-    const activated = matched.filter((c, i) => {
-      return diffed || (diffed = (prevMatched[i] !== c))
-    })
 
     // Register dyanmic store modules on route change (not direct load!)
     registerStoreModules(root, store)
-    activated.map(component => registerStoreModules(component, store, true))
-
-    // Start async data fetching
-    const asyncDataHooks = activated.map(c => c.asyncData).filter(_ => _)
-    if (!asyncDataHooks.length) {
-      return next()
-    }
-
-    // Start progress bar
-    progress.start()
+    matched.map(component => registerStoreModules(component, store, true))
 
     // Call asyncData
-    await Promise.all(asyncDataHooks.map(asyncData => {
-      const parent = matched[0]
-      parent.$router = router
-      parent.$store = store
-      parent.$cubic = store.$cubic
-      return asyncData.bind(parent)({ store, route: to })
-    }))
+    await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress)))
 
     // End loading bar
     progress.finish()

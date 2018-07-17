@@ -3,7 +3,10 @@ pipeline:
     image: node
     commands:
       - npm install
-      
+    when:
+      branch:
+        exclude: [ master ]
+
   lint:
     image: node
     commands:
@@ -33,7 +36,7 @@ pipeline:
     secrets: [ gh_token, npm_token ]
     when:
       branch: master
-      event: [push, tag, deployment]
+      event: [ push, tag, deployment ]
 
 services:
   mongodb:
