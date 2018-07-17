@@ -157,6 +157,7 @@ class Client {
    * Manually set access token.
    */
   async setAccessToken (token) {
+    await this.connecting
     this.connection.auth.access_token = token
     await this.connection.reload()
   }
