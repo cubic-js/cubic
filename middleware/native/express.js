@@ -29,10 +29,7 @@ class ExpressMiddleware {
       // Invalid Token
       catch (err) {
         cubic.log.verbose(`${this.config.prefix} | (http) ${ip} rejected (${err})`)
-        return res.status(400).json({
-          error: 'Invalid Token',
-          reason: err
-        })
+        return this.rejectInvalidToken(req, res, next, err)
       }
     }
 
@@ -46,6 +43,14 @@ class ExpressMiddleware {
   decode (req, res, next) {
     req.url = req.url === '' ? '/' : decodeURI(req.url)
     next()
+  }
+
+  // Move to function, so rejection of invalid tokens can be modified from outside
+  rejectInvalidToken (req, res, next, err) {
+    return res.status(400).json({
+      error: 'Invalid Token',
+      reason: err
+    })
   }
 }
 
