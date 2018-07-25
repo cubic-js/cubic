@@ -45,7 +45,10 @@ class ExpressMiddleware {
     next()
   }
 
-  // Move to function, so rejection of invalid tokens can be modified from outside
+  /**
+   * Keep this in its own function, so rejection of invalid tokens can be
+   * modified from outside.
+   */
   rejectInvalidToken (req, res, next, err) {
     return res.status(400).json({
       error: 'Invalid Token',
