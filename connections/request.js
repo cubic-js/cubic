@@ -3,7 +3,7 @@ const CircularJSON = require('circular-json') // required for passing req object
 /**
  * Checks request against endpoints given by core node
  */
-class RequestController {
+class Request {
   constructor (config) {
     this.config = config
   }
@@ -136,4 +136,4 @@ class RequestController {
   }
 }
 
-module.exports = RequestController
+module.exports = Request

@@ -105,6 +105,10 @@ cubic.use(new Api(options))
 | cacheDb | `1` | Redis database used to store cache data. |
 | cacheExp | `10` | Time in seconds until cached data expires when no explicit duration is specified. |
 | requestTimeout | `1000` | Time to wait in ms when sending request to core node before assuming timeout. |
+| authCookie | `'cubic-auth-cookie'` | Cookie name to use for access/refresh tokens. |
+| authUrl | `'http://localhost:3030'` | Auth node to connect to when provided access tokens need to be refreshed. |
+| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](https://github.com/nexus-devs/cubic-auth) for reference) |
+| userSecret | none | User secret to authenticate with. Handled the same way as above. |
 | routes | `'/connections/entry/routes.js'` | Entry point for HTTP requests via express. (No need to modify unless you're building something very exotic.) |
 | events | `'/connections/entry/events.js'` | Entry point for WS requests via Socket.io. |
 

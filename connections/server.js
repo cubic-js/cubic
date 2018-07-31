@@ -40,6 +40,7 @@ class Server {
   applyMiddleware () {
     this.use(this.limiter.check.bind(this.limiter))
     this.use(this.cache.check.bind(this.cache))
+
     if (cubic.config.local.logLevel !== 'monitor') {
       this.use(this.logger.log.bind(this.logger))
     }

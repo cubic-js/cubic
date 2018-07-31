@@ -29,5 +29,13 @@ module.exports = {
    * Cache settings
    */
   cacheDb: 1,
-  cacheExp: 10
+  cacheExp: 10,
+
+  /**
+   * Authorization settings.
+   */
+  authCookie: 'cubic-auth-cookie',
+  authUrl: 'http://localhost:3030',
+  userKey: undefined,
+  userSecret: undefined
 }

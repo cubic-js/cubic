@@ -17,7 +17,7 @@ class HttpAdapter extends Adapter {
     // Start HTTP server.
     this.app.set('port', config.port)
     this.app.use((req, res, next) => {
-      res.header('X-powered-by', 'cubic')
+      res.header('X-powered-by', 'Cubic')
       next()
     })
     this.app.use(bodyParser.urlencoded({ extended: true }))
@@ -25,6 +25,7 @@ class HttpAdapter extends Adapter {
 
     const middleware = new Middleware(config)
     this.app.use(middleware.decode)
+    this.app.use(middleware.cookie.bind(middleware))
     this.app.use(middleware.auth.bind(middleware))
     this.server = http.createServer(this.app)
     this.server.listen(config.port)

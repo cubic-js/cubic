@@ -1,4 +1,4 @@
-const Request = require('../../controllers/request.js')
+const Request = require('../request.js')
 const Stack = require('async-middleware-stack')
 const mime = require('mime')
 
