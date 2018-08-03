@@ -30,7 +30,6 @@ class ExpressMiddleware {
     // Set access token from cookie as auth header if none was provided already.
     if (accessToken && !req.headers.authorization) {
       req.headers.authorization = `bearer ${accessToken}`
-      req.access_token = accessToken
     }
 
     // Set refresh token in case of the access token being expired.
@@ -56,6 +55,7 @@ class ExpressMiddleware {
       // Set req.user from token
       try {
         req.user = jwt.verify(token, this.config.certPublic)
+        req.access_token = token
         cubic.log.verbose(`${this.config.prefix} | (http) ${ip} connected as ${req.user.uid}`)
         return next()
       }
