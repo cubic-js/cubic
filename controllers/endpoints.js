@@ -140,7 +140,7 @@ class EndpointController {
       endpoint.name = path.basename(filepath).replace('.js', '')
       endpoint.file = filepath
       let route = endpoint.file.replace(this.config.endpointPath, '').replace('.js', '')
-      endpoint.route = endpoint.url ? endpoint.url : route
+      endpoint.route = endpoint.url ? endpoint.url : this.config.baseUrl + route
       this.endpoints.push(endpoint)
     }
   }
@@ -207,8 +207,7 @@ class EndpointController {
       if (endpoint.method !== method) continue
 
       // Get route from provided URL or from base-url + file route
-      let route = endpoint.url ? endpoint.url.split('/') : false ||
-                  (this.config.baseUrl + endpoint.route).split('/')
+      let route = endpoint.url ? endpoint.url.split('/') : false || endpoint.route.split('/')
 
       // Remove trailing empty el from `/` at end of route, but not if url is
       // '/' (index)
