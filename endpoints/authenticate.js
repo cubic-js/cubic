@@ -27,7 +27,11 @@ class Authentication extends Endpoint {
           cookies.set(cubic.config.ui.api.authCookie, Buffer.from(JSON.stringify(token)).toString('base64'))
         }
 
-        res.send(token)
+        if (credentials.redirect) {
+          res.redirect(credentials.redirect)
+        } else {
+          res.send(token)
+        }
       }
     }
 
