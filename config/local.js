@@ -35,6 +35,7 @@ module.exports = {
    * Authorization settings.
    */
   authCookie: 'cubic-auth-cookie',
+  authCookieExpire: 30, // in days
   authUrl: 'http://localhost:3030',
   userKey: undefined,
   userSecret: undefined
