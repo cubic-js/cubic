@@ -24,8 +24,17 @@ class Authentication extends Endpoint {
       if (token) {
         if (credentials.set_cookie && cubic.config.ui.api.authCookie) {
           const cookies = new Cookies(req, res)
+
+          // checks if session length or longlasting
+          const cookieConfig = {}
+          if (credentials.cookie_longlasting) {
+            const expiresAt = new Date()
+            expiresAt.setDate(expiresAt.getDate() + cubic.config.ui.api.authCookieExpire)
+            cookieConfig['expires'] = expiresAt
+          }
+
           // encode token object to base64
-          cookies.set(cubic.config.ui.api.authCookie, Buffer.from(JSON.stringify(token)).toString('base64'))
+          cookies.set(cubic.config.ui.api.authCookie, Buffer.from(JSON.stringify(token)).toString('base64'), cookieConfig)
         }
 
         if (credentials.redirect) {
