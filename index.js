@@ -1,5 +1,5 @@
-const Core = require('cubic-core')
-const API = require('cubic-api')
+const Core = require('../cubic-core')
+const API = require('../cubic-api')
 const local = require('./config/local.js')
 const preauth = require('./hooks/preauth.js')
 
