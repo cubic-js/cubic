@@ -22,12 +22,12 @@ class Authentication extends Endpoint {
     if (credentials.user_key) {
       let token = await this.matchCredentials(credentials, req)
       if (token) {
-        if (credentials.set_cookie && cubic.config.ui.api.authCookie) {
+        if (credentials.cookie_set && cubic.config.ui.api.authCookie) {
           const cookies = new Cookies(req, res)
 
-          // checks if session length or longlasting
+          // checks if session length or longliving
           const cookieConfig = {}
-          if (credentials.cookie_longlasting) {
+          if (credentials.cookie_longliving) {
             const expiresAt = new Date()
             expiresAt.setDate(expiresAt.getDate() + cubic.config.ui.api.authCookieExpire)
             cookieConfig['expires'] = expiresAt

@@ -62,8 +62,8 @@ exposed on the auth API:
 >  user_secret: <password>,
 >
 >  redirect: <url>,
->  set_cookie: <boolean>,
->  cookie_longlasting: <boolean>
+>  cookie_set: <boolean>,
+>  cookie_longliving: <boolean>
 >}
 >```
 >Response:
@@ -90,8 +90,8 @@ exposing our private key in case of a security breach.
 
 The last three options are for http client auth and optional.
 **redirect** takes an url to redirect to, instead of the standard json response.
-If **set_cookie** has a value, a base64 encoded cookie containing an object with the **access_token**
-and **refresh_token** is set, which expires at end of session or, if **cookie_longlasting**
+If **cookie_set** has a value, a base64 encoded cookie containing an object with the **access_token**
+and **refresh_token** is set, which expires at end of session or, if **cookie_longliving**
 has a value, at a later date (30d by default).
 
 
