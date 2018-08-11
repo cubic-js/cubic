@@ -17,20 +17,24 @@ class ExpressMiddleware {
    * Get auth cookies from request. They contain an access token and refresh token
    */
   cookie (req, res, next) {
+    const cookies = new Cookies(req, res)
+
+    let cookie = {}
     try {
-      const cookies = new Cookies(req, res)
-      const cookie = Buffer.from(cookies.get(this.config.authCookie), 'base64')
-      const accessToken = cookie.access_token
-      const refreshToken = cookie.refresh_token
+      // decode base64 to object
+      cookie = JSON.parse(Buffer.from(cookies.get(this.config.authCookie), 'base64').toString('ascii'))
+    } catch (err) {} // No cookie set, or not base64 encoded
 
-      // Set access token from cookie as auth header if none was provided already.
-      if (accessToken && !req.headers.authorization) {
-        req.headers.authorization = `bearer ${accessToken}`
-      }
+    const accessToken = cookie.access_token
+    const refreshToken = cookie.refresh_token
 
-      // Set refresh token in case of the access token being expired.
-      if (refreshToken) req.refresh_token = refreshToken
-    } catch (err) {}
+    // Set access token from cookie as auth header if none was provided already.
+    if (accessToken && !req.headers.authorization) {
+      req.headers.authorization = `bearer ${accessToken}`
+    }
+
+    // Set refresh token in case of the access token being expired.
+    if (refreshToken) req.refresh_token = refreshToken
 
     return next()
   }
@@ -52,6 +56,7 @@ class ExpressMiddleware {
       // Set req.user from token
       try {
         req.user = jwt.verify(token, this.config.certPublic)
+        req.access_token = token
         cubic.log.verbose(`${this.config.prefix} | (http) ${ip} connected as ${req.user.uid}`)
         return next()
       }
