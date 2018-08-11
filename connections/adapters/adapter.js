@@ -1,4 +1,4 @@
-const Request = require('../../controllers/request.js')
+const Request = require('../request.js')
 const Stack = require('async-middleware-stack')
 const mime = require('mime')
 
@@ -29,6 +29,7 @@ class Adapter {
    */
   async pass (req, res) {
     let response = await this.request.getResponse(req)
+    res.header(response.headers)
     let url = req.url.split('/')
 
     // Clarification: the first condition here checks if the last URL fragment
