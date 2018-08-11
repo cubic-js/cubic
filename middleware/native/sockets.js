@@ -33,8 +33,11 @@ class SocketMiddleware {
       catch (err) {
         cubic.log.verbose(`${this.config.prefix} | (ws) ${socket.user.uid} rejected (${err}) on ${socket.nsp.name}`)
         return next({
-          error: 'Invalid Token.',
-          reason: err
+          statusCode: 401,
+          body: {
+            error: 'Invalid Token.',
+            reason: err
+          }
         })
       }
     }
@@ -52,7 +55,7 @@ class SocketMiddleware {
   verifyExpiration (req, res) {
     if (new Date().getTime() / 1000 - req.user.exp > 0) {
       cubic.log.verbose(`${this.config.prefix} | (ws) ${req.user.uid} rejected (jwt expired)`)
-      return res.send({
+      return res.status(401).send({
         error: 'Invalid Token.',
         reason: 'jwt expired'
       })

@@ -71,7 +71,7 @@ class ExpressMiddleware {
             req.headers.authorization = `bearer ${access_token}`
             this.auth(req, res, next)
           } else {
-            return res.status(400).json({
+            return res.status(401).json({
               error: 'Invalid Token.',
               reason: 'Refresh token could not be attributed to any user.'
             })
@@ -80,7 +80,7 @@ class ExpressMiddleware {
 
         // No refresh token or already refreshed
         else {
-          return res.status(400).json({
+          return res.status(401).json({
             error: 'Invalid Token.',
             reason: err
           })
