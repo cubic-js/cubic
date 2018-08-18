@@ -70,7 +70,7 @@
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.2",
     "semantic-release": "^15.8.0",
-    "vue-affix": "^0.2.4",
+    "vue-affix": "^0.3.0",
     "vue-analytics": "^5.12.2",
     "vue-observe-visibility": "^0.4.1",
     "vue-tween-number": "^0.2.0"
