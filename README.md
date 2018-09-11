@@ -209,4 +209,4 @@ client.emit(ev, data)
 
 
 ## License
-[MIT](https://github.com/nexus-devs/npm-cubic-client/blob/master/LICENSE.md)
+[MIT](/LICENSE.md)
