@@ -27,11 +27,8 @@ class Connection {
    */
   async setClient (skipListeners) {
     let sioConfig = this.auth.access_token ? {
-      query: 'bearer=' + this.auth.access_token,
-      reconnection: false
-    } : {
-      reconnection: false
-    }
+      query: 'bearer=' + this.auth.access_token
+    } : {}
 
     // Connect to parent namespace
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
