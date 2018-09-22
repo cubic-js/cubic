@@ -12,6 +12,10 @@ class Connection {
     this.subscriptions = []
     this.queue = queue
     this.auth = new Auth(options)
+
+    setInterval(() => {
+      if (this.client && !this.client.connected) this.reload()
+    }, 10000)
   }
 
   /**
