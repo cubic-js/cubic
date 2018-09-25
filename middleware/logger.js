@@ -54,8 +54,8 @@ class Logger {
    */
   addTimer (req, res) {
     let timestart = process.hrtime()
-    let _json = res.json
-    let _send = res.send
+    let _json = res.json.bind(res)
+    let _send = res.send.bind(res)
     let _this = this
     let prefix = this.prefix
     let log = ''
@@ -63,9 +63,9 @@ class Logger {
     res.send = res.json = function (body) {
       // Response Logic
       if (typeof body === 'object') {
-        _json.call(this, body)
+        _json(body)
       } else {
-        _send.call(this, body)
+        _send(body)
 
         // Log request
         log += `${_this.prefix}< ${_this.user.uid}: ${req.method} ${req.url}\n`
@@ -86,6 +86,9 @@ class Logger {
         log += `${prefix}${chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`)}\n`
         cubic.log.info(log)
       }
+
+      // Disable json/send so we won't get "cant set after sent" errors
+      res.send = res.json = () => {}
     }
   }
 }
