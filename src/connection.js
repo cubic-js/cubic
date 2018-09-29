@@ -2,6 +2,9 @@ import Auth from './auth.js'
 import ServerError from './serverError.js'
 const io = require('socket.io-client')
 const queue = require('async-delay-queue')
+const timeout = (fn, s) => {
+  return new Promise(resolve => setTimeout(() => resolve(fn()), s))
+}
 
 class Connection {
   constructor (options) {
@@ -22,7 +25,7 @@ class Connection {
   /**
    * Socket.io client with currently stored tokens
    */
-  async setClient () {
+  async setClient (skipListeners) {
     let sioConfig = this.auth.access_token ? {
       query: 'bearer=' + this.auth.access_token,
       reconnection: true
@@ -32,16 +35,24 @@ class Connection {
 
     // Connect to parent namespace
     this.client = io.connect(this.options.api_url + this.options.namespace, sioConfig)
-    this.client.on('error', () => this.reload())
-    this.client.on('connect_error', () => this.reload())
-    this.client.on('disconnect', () => this.reload())
-    this.client.on('connect', () => {
-      this.reconnecting = false
-      this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
-    })
-    this.client.on('subscribed', sub => {
-      if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
-    })
+
+    // Event listeners
+    if (!skipListeners) {
+      this.client.on('error', () => this.reload())
+      this.client.on('connect_error', () => this.reload())
+      this.client.on('disconnect', () => this.reload())
+      this.client.on('connect', () => {
+        this.reconnecting = false
+        this.subscriptions.forEach(sub => this.client.emit('subscribe', sub))
+      })
+      this.client.on('subscribed', sub => {
+        if (!this.subscriptions.includes(sub)) this.subscriptions.push(sub)
+      })
+    }
+
+    await timeout(() => {
+      if (!this.client.connected) this.setClient(true)
+    }, 10000)
   }
 
   /**
