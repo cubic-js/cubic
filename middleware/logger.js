@@ -27,10 +27,10 @@ class Logger {
    * @param {object} req - HTTP request object
    */
   setPrefix (req) {
-    if (req.channel === 'Sockets') {
-      this.prefix = chalk.grey(`${this.config.prefix} | (ws) `)
-    } else {
+    if (req.httpVersion) {
       this.prefix = chalk.grey(`${this.config.prefix} | (http) `)
+    } else {
+      this.prefix = chalk.grey(`${this.config.prefix} | (ws) `)
     }
   }
 
