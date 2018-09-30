@@ -64,24 +64,20 @@ class Api {
    * Listen to incoming file checks
    */
   listenForChecks () {
-    this.api.on('check', async req => {
+    this.api.on('check', async (req, res) => {
       req.url = decodeURI(req.url)
 
       // Check if file available
       try {
         await this.endpointController.getEndpoint(req.url, req.method)
         cubic.log.silly(`${this.config.prefix} | Check successful`)
-        this.api.emit(req.id, {
-          available: true
-        })
+        res({ available: true })
       }
 
       // Not available -> let other nodes respond
       catch (err) {
         cubic.log.silly(`${this.config.prefix} | Checked file not available`)
-        this.api.emit(req.id, {
-          available: false
-        })
+        res({ available: false })
       }
     })
   }
@@ -90,14 +86,14 @@ class Api {
    * Listen to incoming requests
    */
   listenForRequests () {
-    this.api.on('req', async req => {
+    this.api.on('req', async (req, res) => {
       cubic.log.silly(`${this.config.prefix} | Request received`)
       req = CircularJSON.parse(req)
       req.url = decodeURI(req.url)
 
-      let res = await this.endpointController.getResponse(req, this.api)
+      const response = await this.endpointController.getResponse(req, this.api)
       cubic.log.silly(`${this.config.prefix} | Request resolved`)
-      this.api.emit(req.id, res)
+      res(response)
     })
   }
 }
