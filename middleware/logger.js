@@ -27,10 +27,10 @@ class Logger {
    * @param {object} req - HTTP request object
    */
   setPrefix (req) {
-    if (req.channel === 'Sockets') {
-      this.prefix = chalk.grey(`${this.config.prefix} | (ws) `)
-    } else {
+    if (req.httpVersion) {
       this.prefix = chalk.grey(`${this.config.prefix} | (http) `)
+    } else {
+      this.prefix = chalk.grey(`${this.config.prefix} | (ws) `)
     }
   }
 
@@ -66,26 +66,27 @@ class Logger {
         _json(body)
       } else {
         _send(body)
-
-        // Log request
-        log += `${_this.prefix}< ${_this.user.uid}: ${req.method} ${req.url}\n`
-
-        // Log response
-        let io = '> '
-        if (res.statusCode.toString()[0] < 4) {
-          io = chalk.green(io)
-        } else {
-          io = chalk.red(io)
-        }
-        if (body) {
-          log += `${prefix}${io}${res.statusCode}: ${typeof body === 'string' ? body.replace(/\r?\n|\r/g, ' ').slice(0, 100) : body}${body.length > 100 ? '...' : ''}\n`
-        }
-
-        // Log time
-        let diff = process.hrtime(timestart)
-        log += `${prefix}${chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`)}\n`
-        cubic.log.info(log)
       }
+
+      // Log request
+      log += `${_this.prefix}< ${_this.user.uid}: ${req.method} ${req.url}\n`
+
+      // Log response
+      let io = '> '
+      if (res.statusCode.toString()[0] < 4) {
+        io = chalk.green(io)
+      } else {
+        io = chalk.red(io)
+      }
+      if (body) {
+        const out = typeof body === 'object' ? JSON.stringify(body) : body
+        log += `${prefix}${io}${res.statusCode}: ${out.replace(/\r?\n|\r/g, ' ').slice(0, 100)}${out.length > 100 ? '...' : ''}\n`
+      }
+
+      // Log time
+      let diff = process.hrtime(timestart)
+      log += `${prefix}${chalk.grey(`> ${(diff[0] * 1e9 + diff[1]) / 1e6} ms`)}\n`
+      cubic.log.info(log)
 
       // Disable json/send so we won't get "cant set after sent" errors
       res.send = res.json = () => {}
