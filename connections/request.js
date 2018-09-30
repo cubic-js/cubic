@@ -22,15 +22,11 @@ class Request {
 
       if (socket) {
         // Generate unique callback for emit & pass to responding node
-        req.id = `req-${req.url}-${process.hrtime().join('').toString()}`
-        socket.emit('req', CircularJSON.stringify(req))
-        cubic.log.silly(`${this.config.prefix} | Request sent`)
-
-        // Listen to socket for response.
-        socket.once(req.id, data => {
+        socket.emit('req', CircularJSON.stringify(req), data => {
           cubic.log.silly(`${this.config.prefix} | Request successful - Sending data to client`)
           resolve(data)
         })
+        cubic.log.silly(`${this.config.prefix} | Request sent`)
       }
 
       // No sockets available
@@ -46,15 +42,10 @@ class Request {
   check (req) {
     return new Promise(resolve => {
       let request = {
-        id: `check-${req.url}-${process.hrtime().join('').toString()}`,
         url: req.url,
         method: req.method
       }
       let notFound = false
-
-      // Send check to root nsp
-      this.client.root.emit('check', request)
-      cubic.log.silly(`${this.config.prefix} | Check broadcasted`)
 
       // Listen to all sockets in root nsp for response
       this.checkAll(resolve, request, notFound)
@@ -102,7 +93,7 @@ class Request {
     for (let sid of sio) {
       let socket = this.client.root.sockets[sid]
 
-      socket.once(request.id, res => {
+      socket.emit('check', request, res => {
         responses++
 
         // Check successful -> get response from this node.
@@ -132,6 +123,7 @@ class Request {
           })
         }
       })
+      cubic.log.silly(`${this.config.prefix} | Check broadcasted`)
     }
   }
 }
