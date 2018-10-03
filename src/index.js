@@ -1,20 +1,10 @@
 import Connection from './connection.js'
 
 class Client {
-  /**
-   * Merge default options with client options
-   */
   constructor (options) {
     this.options = Object.assign({
-
-      // Resource Config
-      api_url: 'http://localhost:3003/',
-      auth_url: 'http://localhost:3030/',
-
-      // Connection Config
-      namespace: '/',
-
-      // Authorization Config
+      api_url: 'ws://localhost:3003/ws',
+      auth_url: 'ws://localhost:3030/ws',
       user_key: null,
       user_secret: null,
       ignore_limiter: false
@@ -33,7 +23,7 @@ class Client {
    * Connect by getting tokens and setting up clients
    */
   async connect () {
-    this.connection = new Connection(this.options)
+    this.connection = new Connection(this.options.api_url, this.options)
     this.connecting = this.connection.connect()
     await this.connecting
   }
