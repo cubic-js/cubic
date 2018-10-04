@@ -43,7 +43,7 @@ class Client {
         }
 
         // Resolve requests
-        else if (data.id) {
+        else if (data.action === 'RES' && data.id) {
           const pending = this.requests.find(r => r.id === data.id)
           if (pending) pending.resolve(data)
         }
