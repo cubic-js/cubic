@@ -3,6 +3,7 @@ const auth = require('../lib/auth.js')
 const crypto = require('crypto')
 const randtoken = require('rand-token').generator({ source: crypto.randomBytes })
 const bcrypt = require('bcryptjs')
+const Cookies = require('cookies')
 
 /**
  * Contains multi-purpose functions for child-methods and provides default values
@@ -20,7 +21,28 @@ class Authentication extends Endpoint {
     // Credentials sent
     if (credentials.user_key) {
       let token = await this.matchCredentials(credentials, req)
-      if (token) res.send(token)
+      if (token) {
+        if (credentials.cookie_set && cubic.config.ui.api.authCookie) {
+          const cookies = new Cookies(req, res)
+
+          // checks if session length or longliving
+          const cookieConfig = {}
+          if (credentials.cookie_longliving) {
+            const expiresAt = new Date()
+            expiresAt.setDate(expiresAt.getDate() + cubic.config.ui.api.authCookieExpire)
+            cookieConfig['expires'] = expiresAt
+          }
+
+          // encode token object to base64
+          cookies.set(cubic.config.ui.api.authCookie, Buffer.from(JSON.stringify(token)).toString('base64'), cookieConfig)
+        }
+
+        if (credentials.redirect) {
+          res.redirect(credentials.redirect)
+        } else {
+          res.send(token)
+        }
+      }
     }
 
     // No Allowed content
