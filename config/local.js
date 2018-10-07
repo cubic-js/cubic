@@ -4,13 +4,11 @@ module.exports = {
    * Current Node Information
    */
   port: 3003,
-  routes: `${__dirname}/../connections/entry/routes.js`,
-  events: `${__dirname}/../connections/entry/events.js`,
 
   /**
    * Core Node Config
    */
-  requestTimeout: 1000,
+  publicPath: `${process.cwd()}/assets`,
 
   /**
    * Databases
@@ -29,14 +27,14 @@ module.exports = {
    * Cache settings
    */
   cacheDb: 1,
-  cacheExp: 10,
+  cacheExp: 60,
 
   /**
    * Authorization settings.
    */
   authCookie: 'cubic-auth-cookie',
   authCookieExpire: 30, // in days
-  authUrl: 'http://localhost:3030',
+  authUrl: 'ws://localhost:3030/ws',
   userKey: undefined,
   userSecret: undefined
 }

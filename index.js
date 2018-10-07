@@ -1,5 +1,5 @@
 const local = require('./config/local.js')
-const Server = require('./connections/server.js')
+const Server = require('./server/server.js')
 const _ = require('lodash')
 
 class API {

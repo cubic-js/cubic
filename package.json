@@ -14,18 +14,20 @@
   "author": "Kaptard",
   "license": "MIT",
   "dependencies": {
-    "async-middleware-stack": "^1.0.1",
+    "@polka/send-type": "^0.5.0",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
-    "circular-json": "^0.5.7",
     "cookies": "^0.7.2",
-    "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "mime": "^2.3.1",
+    "polka": "^0.5.1",
+    "primus": "^7.2.3",
+    "primus-redis-rooms": "^0.3.2",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.11",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "ws": "^6.1.0"
   },
   "peerDependencies": {
     "cubic-client": "^1.0.5"

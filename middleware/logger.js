@@ -11,9 +11,6 @@ class Logger {
 
   /**
    * Console logs complete output
-   * @param {object} req - HTTP request object
-   * @param {object} res - HTTP response object
-   * @param {function} next - Next middleware function
    */
   log (req, res) {
     req = _.cloneDeep(req)
@@ -24,19 +21,13 @@ class Logger {
 
   /**
    * Identify if request sent by Socket.io or Express
-   * @param {object} req - HTTP request object
    */
   setPrefix (req) {
-    if (req.httpVersion) {
-      this.prefix = chalk.grey(`${this.config.prefix} | (http) `)
-    } else {
-      this.prefix = chalk.grey(`${this.config.prefix} | (ws) `)
-    }
+    this.prefix = chalk.grey(`${this.config.prefix} | (${req.adapter}) `)
   }
 
   /**
    * Color-code user authentication
-   * @param {object} req - HTTP request object
    */
   setUser (req) {
     this.user = {}
@@ -50,7 +41,6 @@ class Logger {
 
   /**
    * Add Timer to original res.send
-   * @param {object} res - HTTP response object
    */
   addTimer (req, res) {
     let timestart = process.hrtime()
@@ -60,12 +50,12 @@ class Logger {
     let prefix = this.prefix
     let log = ''
 
-    res.send = res.json = function (body) {
+    res.send = res.json = function (body, headers) {
       // Response Logic
       if (typeof body === 'object') {
-        _json(body)
+        _json(body, headers)
       } else {
-        _send(body)
+        _send(body, headers)
       }
 
       // Log request
@@ -79,7 +69,9 @@ class Logger {
         io = chalk.red(io)
       }
       if (body) {
-        const out = typeof body === 'object' ? JSON.stringify(body) : body
+        const out = typeof body === 'object'
+          ? JSON.stringify(body)
+          : typeof body === 'string' ? body : body.toString()
         log += `${prefix}${io}${res.statusCode}: ${out.replace(/\r?\n|\r/g, ' ').slice(0, 100)}${out.length > 100 ? '...' : ''}\n`
       }
 
