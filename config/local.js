@@ -23,8 +23,8 @@ module.exports = {
     /**
      * Target Node URLs
      */
-    apiUrl: 'http://localhost:3030',
-    authUrl: 'http://localhost:3030',
+    apiUrl: 'ws://localhost:3030/ws',
+    authUrl: 'ws://localhost:3030/ws',
 
     /**
      * Logic-specific

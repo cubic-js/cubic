@@ -19,7 +19,7 @@ class Auth {
   async init () {
     // Core Node which processes incoming requests
     cubic.hook('auth.core', preauth.verifyUserIndices)
-    await cubic.use(new Core(cubic.config.auth.core))
+    cubic.use(new Core(cubic.config.auth.core))
 
     // API node for distributing requests
     await cubic.use(new API(cubic.config.auth.api))
