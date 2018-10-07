@@ -5,10 +5,10 @@ import nodeResolve from 'rollup-plugin-node-resolve'
 import cleanup from 'rollup-plugin-cleanup'
 
 export default {
-  input: './src/index.js',
+  input: './src/browser/index.js',
   output: {
     format: 'cjs',
-    file: './lib/index.js'
+    file: './browser.js'
   },
   plugins: [
     babel(babelrc()),

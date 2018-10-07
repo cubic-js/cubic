@@ -1,6 +1,6 @@
-import Auth from './auth.js'
-import ServerError from './serverError.js'
-import Client from './client.js'
+const Auth = require('./auth.js')
+const ServerError = require('./serverError.js')
+const Client = require('./client.js')
 
 class Connection extends Client {
   constructor (url, options) {
@@ -13,6 +13,7 @@ class Connection extends Client {
    * Get Tokens and build client
    */
   async connect () {
+    await this.auth.authorize()
     await this.setClient()
   }
 
@@ -24,6 +25,13 @@ class Connection extends Client {
     if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
       await this.connect()
       return this.retry(res, verb, query)
+    }
+
+    // Request timed out in queue stack -> push it back to the end
+    if (!res.statusCode) {
+      if (res.includes('timed out')) {
+        return this.retry(res, verb, query)
+      }
     }
 
     // Rate Limited
@@ -51,4 +59,4 @@ class Connection extends Client {
   }
 }
 
-export default Connection
+module.exports = Connection

@@ -2,7 +2,7 @@
   "name": "cubic-client",
   "version": "0.0.0-development",
   "description": "Cubic API client.",
-  "main": "./lib/index.js",
+  "main": "./src/node/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/cubic-js/cubic-client"

@@ -31,45 +31,26 @@ class Client {
   /**
    * Subscribe to certain endpoints
    */
-  async subscribe (endpoint, fn) {
+  async subscribe (room, fn) {
     await this.connecting
-    this.emit('subscribe', endpoint)
-
-    // Function passed? Listen to subscribed endpoint directly.
-    return fn ? this.on(endpoint, fn) : null
+    this.connection.client.send(JSON.stringify({
+      action: 'SUBSCRIBE',
+      room
+    }))
+    this.connection.subscriptions.push({ room, fn })
   }
 
   /**
    * Unsubscribe from endpoints again
    */
-  async unsubscribe (endpoint) {
+  async unsubscribe (room) {
     await this.connecting
-    this.emit('unsubscribe', endpoint)
-    this.connection.client.off(endpoint)
-  }
-
-  /**
-   * Event listening for socket.io
-   */
-  async on (ev, fn) {
-    await this.connecting
-    return this.connection.client.on(ev, fn)
-  }
-
-  /**
-   * Event listening for socket.io
-   */
-  async once (ev, fn) {
-    await this.connecting
-    return this.connection.client.once(ev, fn)
-  }
-
-  /**
-   * Expose Socket client emit
-   */
-  async emit (ev, data) {
-    await this.connecting
-    this.connection.client.emit(ev, data)
+    this.connection.client.send(JSON.stringify({
+      action: 'UNSUBSCRIBE',
+      room
+    }))
+    const i = this.connection.subscriptions.findIndex(s => s.room === room)
+    this.connection.subscriptions.splice(i, 1)
   }
 
   /**

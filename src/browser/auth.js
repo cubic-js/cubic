@@ -2,14 +2,6 @@ import Client from './client.js'
 
 class Auth extends Client {
   /**
-   * Get Tokens and build client
-   */
-  async connect () {
-    await this.setClient()
-    await this.authorize()
-  }
-
-  /**
    * Get tokens for API authentication if credentials are provided
    */
   async authorize (refresh = this.refresh_token) {
@@ -60,7 +52,7 @@ class Auth extends Client {
    */
   async errCheck (res, verb, query) {
     if (res.statusCode >= 400) {
-      if (res.statusCode !== 503) {
+      if (res.statusCode !== 503 && res.statusCode !== 404) {
         console.error('cubic-client encountered an error while authenticating:')
         console.error(res.body)
         console.error(`retrying... \n`)

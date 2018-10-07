@@ -1,4 +1,3 @@
-const WS = require('ws')
 const queue = require('async-delay-queue')
 
 class Client {
@@ -22,20 +21,19 @@ class Client {
    * WS client with currently stored tokens
    */
   setClient () {
-    return new Promise(resolve => {
-      const options = this.auth && this.auth.access_token ? {
-        headers: {
-          authorization: `bearer ${this.auth.access_token}`
-        }
-      } : {}
-      this.client = new WS(this.url, options)
-      this.client.on('open', resolve) // fire subscriptions
-      this.client.on('close', e => this.reconnect())
-      this.client.on('error', e => e.code !== 'ECONNREFUSED' || this.reconnect())
+    const WS = WebSocket
+    this.connecting = new Promise(resolve => {
+      const url = this.auth && this.auth.acess_token
+        ? `${this.url}?bearer=${this.auth.access_token}`
+        : this.url
+      this.client = new WS(url)
+      this.client.onopen = resolve
+      this.client.onclose = e => this.reconnect()
+      this.client.onerror = e => e.code !== 'ECONNREFUSED' || this.reconnect()
 
       // Message handling. Mostly internal stuff with primus.
-      this.client.on('message', data => {
-        data = JSON.parse(data)
+      this.client.onmessage = data => {
+        data = JSON.parse(data.data)
 
         // Heartbeat
         if (typeof data === 'string' && data.startsWith('primus::ping::')) {
@@ -47,16 +45,31 @@ class Client {
           const pending = this.requests.find(r => r.id === data.id)
           if (pending) pending.resolve(data)
         }
-      })
+
+        // Subscriptions
+        else if (data.action === 'PUBLISH') {
+          const sub = this.subscriptions.find(s => s.room === data.room)
+          sub.fn(data.data)
+        }
+      }
     })
+    return this.connecting
   }
 
   /**
    * Reconnect if connection is lost or the server goes down.
    */
-  reconnect () {
+  async reconnect () {
     this.client.removeAllListeners()
-    this.connect()
+    await this.connect()
+
+    // Re-subscribe to rooms
+    for (const sub of this.subscriptions) {
+      this.client.send(JSON.stringify({
+        action: 'SUBSCRIBE',
+        room: sub.room
+      }))
+    }
   }
 
   /**
@@ -71,6 +84,7 @@ class Client {
    * Actual Request Logic
    */
   async req (verb, query) {
+    await this.connecting
     return new Promise(resolve => {
       const id = this.requestIds++
       const payload = { action: verb, id }
