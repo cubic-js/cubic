@@ -1,5 +1,4 @@
 const HTTP = require('./adapters/http.js')
-const Sockets = require('./adapters/sockets.js')
 const Ws = require('./adapters/ws.js')
 const Limiter = require('../middleware/limiter.js')
 const Cache = require('../middleware/cache.js')
@@ -14,7 +13,6 @@ class Server {
     this.cache = new Cache(config, redis)
     this.logger = new Logger(config)
     this.http = new HTTP(config)
-    this.sockets = new Sockets(config, this.http.server, this.cache)
     this.ws = new Ws(config, this.http.server, this.cache)
   }
 
@@ -25,7 +23,6 @@ class Server {
 
   setRequestClient () {
     this.http.request.client = this.ws
-    this.sockets.request.client = this.ws
     this.ws.request.client = this.ws
   }
 
@@ -43,7 +40,6 @@ class Server {
    */
   use (route, fn, verb) {
     this.http.use(route, fn, verb)
-    this.sockets.use(route, fn, verb)
     this.ws.use(route, fn, verb)
   }
 }
