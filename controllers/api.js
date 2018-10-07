@@ -1,26 +1,17 @@
 const Client = require('cubic-client')
 const EndpointController = require('./endpoints.js')
-const CircularJSON = require('circular-json') // required for passing req object
 
 /**
- * Connects to local API Node & handles basic cycles
+ * Connects to Cubic API Node
  */
 class Api {
-  /**
-   * Connect to cubic API node
-   */
   constructor (config) {
     this.config = config
-
-    // cubic-client options
-    let options = {
+    const options = {
 
       // Connection Settings
       api_url: config.apiUrl,
       auth_url: config.authUrl,
-      use_socket: true,
-      namespace: '/root',
-      ignore_limiter: true,
 
       // Authentication Settings
       user_key: config.userKey,
@@ -32,69 +23,54 @@ class Api {
 
     // Load Endpoint Controller
     this.endpointController = new EndpointController(config)
+    this.sendEndpointSchema()
     this.init()
+  }
+
+  /**
+   * Send endpoint schema to API node, so it'll know which requests we can serve
+   */
+  async sendEndpointSchema () {
+    await this.api.connecting
+    this.api.connection.client.send(JSON.stringify({
+      action: 'SCHEMA',
+      endpoints: this.endpointController.endpoints,
+      maxPending: this.config.maxPending
+    }))
   }
 
   /**
    * Initialization method called by EndpointHandler after passing methods
    */
-  init () {
-    // Listen to incoming requests & send config
+  async init () {
+    await this.api.connecting
     this.listen()
-
-    // Listen on Reconnect
-    this.api.on('connect', () => {
-      cubic.log.verbose(`${this.config.prefix} | connected to target API`)
-    })
-
-    this.api.on('disconnect', () => {
-      cubic.log.verbose(`${this.config.prefix} | disconnected from target API`)
-    })
+    this.api.connection.client.on('open', () => this.log('connected to target API'))
+    this.api.connection.client.on('close', () => this.log('disconnected from target API'))
   }
 
   /**
    * Listen to incoming requests to be processed
    */
   listen () {
-    this.listenForChecks()
-    this.listenForRequests()
-  }
+    this.api.connection.client.on('message', async data => {
+      data = JSON.parse(data)
+      const { action } = data
 
-  /**
-   * Listen to incoming file checks
-   */
-  listenForChecks () {
-    this.api.on('check', async (req, res) => {
-      req.url = decodeURI(req.url)
-
-      // Check if file available
-      try {
-        await this.endpointController.getEndpoint(req.url, req.method)
-        cubic.log.silly(`${this.config.prefix} | Check successful`)
-        res({ available: true })
-      }
-
-      // Not available -> let other nodes respond
-      catch (err) {
-        cubic.log.silly(`${this.config.prefix} | Checked file not available`)
-        res({ available: false })
+      if (action === 'REQ') {
+        const { req, endpoint, id } = data
+        const res = await this.endpointController.getResponse(req, this.api, endpoint)
+        this.api.connection.client.send(JSON.stringify({
+          action: 'RES',
+          res,
+          id
+        }))
       }
     })
   }
 
-  /**
-   * Listen to incoming requests
-   */
-  listenForRequests () {
-    this.api.on('req', async (req, res) => {
-      cubic.log.silly(`${this.config.prefix} | Request received`)
-      req = CircularJSON.parse(req)
-      req.url = decodeURI(req.url)
-
-      const response = await this.endpointController.getResponse(req, this.api)
-      cubic.log.silly(`${this.config.prefix} | Request resolved`)
-      res(response)
-    })
+  log (msg) {
+    cubic.log.verbose(`${this.config.prefix} | ${msg}`)
   }
 }
 
