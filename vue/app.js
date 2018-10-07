@@ -7,7 +7,7 @@
 import Vue from 'vue'
 import VueTouch from 'vue-touch-hotfix'
 import App from 'src/app.vue'
-import Client from 'cubic-client'
+import Client from 'cubic-client/browser'
 import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'

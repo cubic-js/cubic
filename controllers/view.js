@@ -1,15 +1,11 @@
-/**
- * Generic Dependencies
- */
 const util = require('util')
 const fs = require('fs')
 const readFile = util.promisify(fs.readFile)
 const path = require('path')
-
-/**
- * Load API node connection which will be used for server-side data-fetching
- * Without this, we'd have to create a new instance on every request
- */
+const publicPath = require(cubic.config.ui.webpack.clientConfig).output.path
+const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
+const { promisify } = require('util')
+const fileExists = promisify(fs.lstat)
 const Client = require('cubic-client')
 const api = new Client({
   api_url: cubic.config.ui.client.apiUrl,
@@ -17,18 +13,6 @@ const api = new Client({
   user_key: cubic.config.ui.core.userKey,
   user_secret: cubic.config.ui.core.userSecret
 })
-
-/**
- * Render Dependencies
- */
-const publicPath = require(cubic.config.ui.webpack.clientConfig).output.path
-const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
-
-/**
- * Helper function to wait until webpack bundle has generated files
- */
-const { promisify } = require('util')
-const fileExists = promisify(fs.lstat)
 
 // one-time check, so we wouldn't read from disk on every request
 let bundlesReady = false
@@ -48,12 +32,9 @@ async function awaitBundles () {
   })
 }
 
-/**
- * View Controller rendering data into templates
- */
 class ViewController {
   /**
-   * Render View with data from Endpoint. Returns the html back to the endpoint
+   * Renders HTML with `req` from endpoint's render() function.
    */
   async render (req) {
     if (!bundlesReady) await awaitBundles()
@@ -67,7 +48,8 @@ class ViewController {
     })
     const render = util.promisify(renderer.renderToString)
     const context = { req, api }
-    return render(context)
+    const html = await render(context)
+    return html
   }
 }
 

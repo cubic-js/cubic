@@ -28,17 +28,15 @@ class Ui {
         if (token && !req.headers.authorization) req.headers.authorization = `bearer ${token}`
         next()
       })
-
-      // Move cookie middleware to the beginning of the stack
-      const middlewareStack = cubic.nodes.ui.api.server.http.app._router.stack
-      middlewareStack.unshift(middlewareStack.pop())
     }
 
-    // Build webpack bundles
+    // Implicitly load sites as endpoints, start webpack bundler if required.
     if (!cubic.config.ui.core.disable) {
-      const controller = cubic.nodes.ui.core.client.endpointController
+      const client = cubic.nodes.ui.core.client
+      const controller = client.endpointController
       endpoints.override(controller)
       endpoints.rebuild(controller)
+      client.sendEndpointSchema()
       cubic.nodes.ui.core.webpackServer = new WebpackServer()
     }
   }
