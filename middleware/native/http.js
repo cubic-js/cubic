@@ -13,9 +13,11 @@ class ExpressMiddleware {
     })
   }
 
-  /**
-   * Get auth cookies from request. They contain an access token and refresh token
-   */
+  decode (req, res, next) {
+    req.url = req.url === '' ? '/' : decodeURI(req.url)
+    next()
+  }
+
   cookie (req, res, next) {
     const cookies = new Cookies(req, res)
 
@@ -39,10 +41,7 @@ class ExpressMiddleware {
     return next()
   }
 
-  /**
-   * Verify JWT signature/expiration date and add user to `req` object.
-   */
-  async auth (req, res, next) {
+  async authorize (req, res, next) {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     req.user = {
       uid: ip,
@@ -98,11 +97,6 @@ class ExpressMiddleware {
       cubic.log.verbose(`${this.config.prefix} | (http) ${req.user.uid} connected without token`)
       return next()
     }
-  }
-
-  decode (req, res, next) {
-    req.url = req.url === '' ? '/' : decodeURI(req.url)
-    next()
   }
 }
 

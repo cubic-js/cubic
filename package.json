@@ -14,18 +14,20 @@
   "author": "Kaptard",
   "license": "MIT",
   "dependencies": {
+    "@polka/send-type": "^0.5.0",
     "async-middleware-stack": "^1.0.1",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
-    "circular-json": "^0.5.7",
     "cookies": "^0.7.2",
-    "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "mime": "^2.3.1",
+    "polka": "^0.5.1",
+    "primus": "^7.2.3",
+    "primus-redis-rooms": "^0.3.2",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.11",
-    "socket.io": "^2.1.1"
+    "ws": "^6.1.0"
   },
   "peerDependencies": {
     "cubic-client": "^1.0.5"
@@ -46,5 +48,18 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "semantic-release": "^15.9.16"
+  },
+  "release": {
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "docs", "scope":"README", "release": "patch"},
+        {"type": "breaking", "release": "major"},
+        {"type": "major", "release": "major"}
+      ],
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+      }
+    }
   }
 }
