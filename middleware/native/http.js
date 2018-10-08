@@ -1,16 +1,18 @@
 const jwt = require('jsonwebtoken')
-const Client = require('cubic-client')
+// const Client = require('cubic-client')
 const Cookies = require('cookies')
 
 class ExpressMiddleware {
   constructor (config) {
     this.config = config
+    /**
     this.authClient = new Client({
       api_url: this.config.authUrl,
       auth_url: this.config.authUrl,
       user_key: this.config.userKey,
       user_secret: this.config.userSecret
     })
+    **/
   }
 
   decode (req, res, next) {
@@ -66,6 +68,7 @@ class ExpressMiddleware {
 
         /* eslint camelcase: 'off' */
         // Refresh access token if refresh token is provided
+        /**
         if (err.name === 'TokenExpiredError' && req.refresh_token) {
           const { access_token } = await this.authClient.post('/refresh', {
             refresh_token: req.refresh_token
@@ -84,11 +87,12 @@ class ExpressMiddleware {
 
         // No refresh token or already refreshed
         else {
-          return res.status(401).json({
-            error: 'Invalid Token.',
-            reason: err
-          })
-        }
+        **/
+        return res.status(401).json({
+          error: 'Invalid Token.',
+          reason: err
+        })
+        // }
       }
     }
 
