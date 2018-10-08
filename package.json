@@ -42,5 +42,18 @@
     "rollup-plugin-commonjs": "^9.1.8",
     "rollup-plugin-node-resolve": "^3.4.0",
     "semantic-release": "^15.9.16"
+  },
+  "release": {
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "docs", "scope":"README", "release": "patch"},
+        {"type": "breaking", "release": "major"},
+        {"type": "major", "release": "major"}
+      ],
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+      }
+    }
   }
 }
