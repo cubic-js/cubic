@@ -73,5 +73,18 @@
     "vue-affix": "^0.3.1",
     "vue-analytics": "^5.14.0",
     "vue-observe-visibility": "^0.4.1"
+  },
+  "release": {
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "docs", "scope":"README", "release": "patch"},
+        {"type": "breaking", "release": "major"},
+        {"type": "major", "release": "major"}
+      ],
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+      }
+    }
   }
 }
