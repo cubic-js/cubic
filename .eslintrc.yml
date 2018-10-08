@@ -5,6 +5,7 @@ globals:
   it: true
   before: true
   after: true
+  WebSocket: true
   clientAuth: true
   clientDefault: true
   retryCounter: true
