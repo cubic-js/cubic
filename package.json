@@ -16,41 +16,55 @@
   "license": "MIT",
   "dependencies": {
     "async-middleware-stack": "^1.0.1",
-    "lodash": "^4.17.10",
-    "mongodb": "^3.1.1",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.1.6",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.11"
   },
   "peerDependencies": {
-    "cubic-client": "^1.0.5"
+    "cubic-client": "^2.0.0"
   },
   "devDependencies": {
-    "cubic-api": "^1.2.3",
+    "cubic-api": "^2.0.0",
     "cubic-auth": "^1.1.1",
-    "cubic-client": "^1.1.2",
-    "cubic-core": "^1.1.4",
-    "cubic-loader": "^1.2.0",
-    "eslint": "^5.3.0",
+    "cubic-client": "^2.0.0",
+    "cubic-core": "^2.0.0",
+    "cubic-loader": "^1.2.1",
+    "eslint": "^5.6.1",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "mocha": "^5.2.0",
-    "request": "^2.87.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "semantic-release": "^15.9.5"
+    "semantic-release": "^15.9.17"
   },
   "release": {
     "analyzeCommits": {
       "preset": "angular",
       "releaseRules": [
-        {"type": "docs", "scope":"README", "release": "patch"},
-        {"type": "breaking", "release": "major"},
-        {"type": "major", "release": "major"}
+        {
+          "type": "docs",
+          "scope": "README",
+          "release": "patch"
+        },
+        {
+          "type": "breaking",
+          "release": "major"
+        },
+        {
+          "type": "major",
+          "release": "major"
+        }
       ],
       "parserOpts": {
-        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+        "noteKeywords": [
+          "BREAKING CHANGE",
+          "BREAKING CHANGES",
+          "BREAKING"
+        ]
       }
     }
   }
