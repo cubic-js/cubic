@@ -104,7 +104,7 @@ class Client {
     await this.connecting
     this.connection.auth.options.user_key = user
     this.connection.auth.options.user_secret = secret
-    return this.connection.reload(false)
+    return this.connection.reconnect()
   }
 
   /**
@@ -130,7 +130,7 @@ class Client {
   async setAccessToken (token) {
     await this.connecting
     this.connection.auth.access_token = token
-    await this.connection.reload()
+    await this.connection.reconnect()
   }
 
   /**

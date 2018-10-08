@@ -754,7 +754,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: _library ? 'pure' : 'global',
+  mode: 'pure',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -2788,7 +2788,7 @@ var Client$1 = function () {
               case 2:
                 this.connection.auth.options.user_key = user;
                 this.connection.auth.options.user_secret = secret;
-                return _context5.abrupt('return', this.connection.reload(false));
+                return _context5.abrupt('return', this.connection.reconnect());
               case 5:
               case 'end':
                 return _context5.stop();
@@ -2856,7 +2856,7 @@ var Client$1 = function () {
               case 2:
                 this.connection.auth.access_token = token;
                 _context8.next = 5;
-                return this.connection.reload();
+                return this.connection.reconnect();
               case 5:
               case 'end':
                 return _context8.stop();
