@@ -42,5 +42,18 @@
     "rimraf": "^2.6.2",
     "semantic-release": "^15.7.1",
     "webpack": "^4.16.0"
+  },
+  "release": {
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "docs", "scope":"README", "release": "patch"},
+        {"type": "breaking", "release": "major"},
+        {"type": "major", "release": "major"}
+      ],
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+      }
+    }
   }
 }
