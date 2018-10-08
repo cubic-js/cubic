@@ -30,13 +30,13 @@
     "ws": "^6.1.0"
   },
   "peerDependencies": {
-    "cubic-client": "^2.0.0"
+    "cubic-client": "^2.0.1"
   },
   "devDependencies": {
-    "cubic-api": "^2.0.0",
-    "cubic-auth": "^1.1.1",
-    "cubic-client": "^2.0.0",
-    "cubic-core": "^2.0.0",
+    "cubic-api": "^2.0.1",
+    "cubic-auth": "^2.0.0",
+    "cubic-client": "^2.0.1",
+    "cubic-core": "^2.0.1",
     "cubic-loader": "^1.2.1",
     "eslint": "^5.6.1",
     "eslint-config-standard": "^12.0.0",
