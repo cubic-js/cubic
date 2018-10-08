@@ -10,7 +10,12 @@ export default function (context) {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp(context)
 
-    if (context.req.access_token) app.$cubic.setAccessToken(context.req.access_token)
+    // TODO: Make this work. Right now there's no way it would as it overlaps
+    // with other requests. My suggestion is to fall back to HTTP requests
+    // for asyncData hooks on the server. Otherwise we'd have to create
+    // a new cubic-client instance on every request (terrible memory footprint)
+    //
+    // if (context.req.access_token) app.$cubic.setAccessToken(context.req.access_token)
 
     // Init vue-meta
     const meta = app.$meta()
