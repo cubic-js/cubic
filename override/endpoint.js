@@ -21,28 +21,39 @@ class Endpoint {
    * Just render the given view if no other instructions are given.
    */
   async main (req, res) {
+    res.res.headers = {
+      'content-type': 'text/html'
+    }
     return res.send(this.render(req))
   }
 
   /**
    * Publish Data for a specific endpoint
    */
-  async publish (data, endpoint = this.url) {
-    const update = { endpoint, data }
-
+  publish (data, endpoint = this.url) {
     cubic.log.verbose('Core      | Sending data to publish for ' + endpoint)
-    return new Promise(resolve => this.api.connection.client.emit('publish', update, resolve))
+    this.api.connection.client.send(JSON.stringify({
+      action: 'PUBLISH',
+      endpoint,
+      data
+    }))
   }
 
   /**
    * Send data to be cached for endpoint on API node
    */
-  async cache (value, exp, key = this.url) {
+  cache (value, exp, headers, key = this.url) {
     const scope = this.schema.scope
-    const data = { key, value, exp, scope }
 
     cubic.log.verbose('Core      | Sending data to cache for ' + key)
-    return new Promise(resolve => this.api.connection.client.emit('cache', data, resolve))
+    this.api.connection.client.send(JSON.stringify({
+      action: 'CACHE',
+      key,
+      headers,
+      value,
+      exp,
+      scope
+    }))
   }
 
   /**
@@ -50,7 +61,7 @@ class Endpoint {
    */
   async render (req) {
     const html = await view.render(req)
-    this.cache(html, cubic.config.ui.api.cacheExp)
+    this.cache(html, cubic.config.ui.api.cacheExp, { 'content-type': 'text/html' })
     return html
   }
 }

@@ -4,6 +4,8 @@ const promisify = require('util').promisify
 const writeFile = promisify(fs.writeFile)
 const mkdirp = require('mkdirp')
 const path = require('path')
+const DevMiddleware = require('webpack-dev-middleware')
+const HotMiddleware = require('webpack-hot-middleware')
 
 class WebpackServer {
   constructor () {
@@ -109,13 +111,14 @@ class WebpackServer {
     // Modify client config to work with hot middleware
     this.addHmrPlugins()
     const compiler = webpack([this.config.client, this.config.server])
-    const devMiddleware = require('webpack-dev-middleware')(compiler, {
+    const devMiddleware = DevMiddleware(compiler, {
       logLevel: 'warn',
       stats: 'errors-only',
       noInfo: true,
+      publicPath: `${publicPath}/bundles`,
       watchOptions: { aggregateTimeout: 0 }
     })
-    const hotMiddleware = require('webpack-hot-middleware')(compiler, { heartbeat: 100 })
+    const hotMiddleware = HotMiddleware(compiler, { heartbeat: 100 })
     this.addMiddleware(devMiddleware)
     this.addMiddleware(hotMiddleware)
 
@@ -142,9 +145,7 @@ class WebpackServer {
 
   addMiddleware (middleware) {
     const server = cubic.nodes.ui.api.server
-    server.http.app._router.stack.pop()
-    server.http.app.use(middleware)
-    server.applyRoutes(cubic.config.ui.api)
+    server.http.app.wares.unshift(middleware)
   }
 }
 

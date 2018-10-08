@@ -1,7 +1,6 @@
 module.exports = {
   api: {
     port: 3000,
-    routes: `${__dirname}/endpoints/routes.js`,
     events: `${__dirname}/endpoints/events.js`,
     cacheExp: 10,
 
@@ -28,8 +27,8 @@ module.exports = {
     /**
      * Target Node URLs
      */
-    apiUrl: 'http://localhost:3000',
-    authUrl: 'http://localhost:3030',
+    apiUrl: 'ws://localhost:3000/ws',
+    authUrl: 'ws://localhost:3030/ws',
 
     /**
      * cubic information
@@ -41,9 +40,9 @@ module.exports = {
    * Web client config
    */
   client: {
-    apiUrl: 'http://localhost:3003',
-    authUrl: 'http://localhost:3030',
-    accessTokenCookie: 'cubic-ui-cookie-access-token'
+    apiUrl: 'ws://localhost:3003/ws',
+    authUrl: 'ws://localhost:3030/ws',
+    sessionKey: 'cubic-ui-session'
   },
 
   /**
@@ -54,6 +53,7 @@ module.exports = {
     clientConfig: `${process.cwd()}/config/webpack/client.config.js`,
     serverConfig: `${process.cwd()}/config/webpack/server.config.js`
   },
+
   sourcePath: `${process.cwd()}/ui`,
   sitesPath: `${process.cwd()}/ui/sites`
 }

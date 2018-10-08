@@ -20,8 +20,9 @@ module.exports = (sockets) => {
    */
   sockets.root.on('connect', socket => {
     // Listen for Cache updates
-    socket.on('cache', data => {
-      cache.save(data.key, data.value, data.exp, data.scope)
+    socket.on('cache', async (data, ack) => {
+      await cache.save(data.key, data.headers, data.value, data.exp, data.scope)
+      ack(true)
     })
 
     socket.on('disconnect', () => {
