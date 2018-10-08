@@ -37,5 +37,18 @@
     "eslint-plugin-standard": "^4.0.0",
     "mocha": "^5.2.0",
     "semantic-release": "^15.9.5"
+  },
+  "release": {
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "docs", "scope":"README", "release": "patch"},
+        {"type": "breaking", "release": "major"},
+        {"type": "major", "release": "major"}
+      ],
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+      }
+    }
   }
 }
