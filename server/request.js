@@ -2,6 +2,7 @@ const path = require('path')
 const Url = require('url')
 const { promisify } = require('util')
 const fs = require('fs')
+let starting = true // Don't send 404 when no nodes are connected at start.
 
 class Request {
   constructor (config) {
@@ -24,6 +25,8 @@ class Request {
       }
     }
     else if (node) {
+      if (starting) starting = false // No longer send startup warning with 503
+
       return new Promise(resolve => {
         const id = `${req.url}-${this.requestIds++}`
         function respond (data) {
@@ -52,7 +55,7 @@ class Request {
     }
 
     // Still here? That means we couldn't find anything.
-    const starting = this.client.nodes.find(n => !n.endpoints.length)
+    starting = starting || this.client.nodes.find(n => !n.endpoints.length)
     return {
       statusCode: starting ? 503 : 404,
       method: 'send',
