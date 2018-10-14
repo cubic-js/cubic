@@ -16,7 +16,7 @@ class Defaults {
       `${process.cwd()}/assets`
     ]) {
       if (!await this.exists(path)) {
-        await copy (path.replace(process.cwd(), __dirname), path)
+        await copy(path.replace(process.cwd(), __dirname), path)
       }
     }
   }

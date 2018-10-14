@@ -44,8 +44,13 @@ class Client {
 
         // Resolve requests
         else if (data.action === 'RES' && data.id) {
-          const pending = this.requests.find(r => r.id === data.id)
-          if (pending) pending.resolve(data)
+          const i = this.requests.findIndex(r => r.id === data.id)
+          const pending = this.requests[i]
+
+          if (pending) {
+            pending.resolve(data)
+            this.requests.splice(i, 1)
+          }
         }
 
         // Subscriptions
@@ -61,9 +66,17 @@ class Client {
   /**
    * Reconnect if connection is lost or the server goes down.
    */
-  reconnect () {
+  async reconnect () {
     this.client.removeAllListeners()
-    this.connect()
+    await this.connect()
+
+    // Resume requests that were not completed before the disconnect
+    for (let i = 0; this.requests.length; i++) {
+      const request = this.requests[0] // always take the first because we'll remove these at the end
+      const req = this.req(request.verb, request.query)
+      request.resolve(req)
+      this.requests.shift()
+    }
 
     // Re-subscribe to rooms
     for (const sub of this.subscriptions) {
@@ -97,7 +110,7 @@ class Client {
         payload.url = query.url
         payload.body = query.body
       }
-      this.requests.push({ id, resolve })
+      this.requests.push({ id, resolve, verb, query })
 
       try {
         this.client.send(JSON.stringify(payload))

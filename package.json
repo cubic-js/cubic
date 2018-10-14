@@ -9,11 +9,19 @@
   },
   "scripts": {
     "lint": "eslint --ignore-path .gitignore .",
-    "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/index.js",
+    "test": "mocha --exit -s 30000 --timeout 30000 test/server.js test/client.js test/auth.js test/requests.js test/middleware.js test/exceptions.js",
     "release": "lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo"
   },
   "author": "Kaptard",
   "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "chalk": "^2.4.1",
+    "keypair": "^1.0.1",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.1.8",
+    "rand-token": "^0.4.0"
+  },
   "devDependencies": {
     "eslint": "^5.6.1",
     "eslint-config-standard": "^12.0.0",
@@ -28,34 +36,35 @@
     "rimraf": "^2.6.2",
     "semantic-release": "^15.9.17",
     "semantic-release-monorepo": "^6.1.1",
+    "username": "^4.0.0",
     "webpack": "^4.20.2"
   },
   "release": {
-      "monorepo": {
-        "analyzeCommits": {
-          "preset": "angular",
-          "releaseRules": [
-            {
-              "type": "docs",
-              "scope": "README",
-              "release": "patch"
-            },
-            {
-              "type": "breaking",
-              "release": "major"
-            },
-            {
-              "type": "major",
-              "release": "major"
-            }
-          ],
-          "parserOpts": {
-            "noteKeywords": [
-              "BREAKING CHANGE",
-              "BREAKING CHANGES",
-              "BREAKING"
-            ]
+    "monorepo": {
+      "analyzeCommits": {
+        "preset": "angular",
+        "releaseRules": [
+          {
+            "type": "docs",
+            "scope": "README",
+            "release": "patch"
+          },
+          {
+            "type": "breaking",
+            "release": "major"
+          },
+          {
+            "type": "major",
+            "release": "major"
           }
+        ],
+        "parserOpts": {
+          "noteKeywords": [
+            "BREAKING CHANGE",
+            "BREAKING CHANGES",
+            "BREAKING"
+          ]
+        }
       }
     }
   }

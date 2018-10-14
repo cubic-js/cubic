@@ -52,7 +52,7 @@ class Auth extends Client {
    */
   async errCheck (res, verb, query) {
     if (res.statusCode >= 400) {
-      if (res.statusCode !== 503 && res.statusCode !== 404) {
+      if (res.statusCode !== 503 && res.statusCode !== 404 && res.statusCode !== 429) {
         console.error('cubic-client encountered an error while authenticating:')
         console.error(res.body)
         console.error(`retrying... \n`)

@@ -112,6 +112,7 @@ class Client {
    * to this package.
    */
   async setRefreshToken (token) {
+    await this.connecting
     this.connection.auth.refresh_token = token
   }
 

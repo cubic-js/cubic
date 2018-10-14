@@ -3,8 +3,9 @@ pipeline:
     image: node
     commands:
       - npm install
-      - npm install cubic-api cubic-auth cubic-core cubic-defaults cubic-loader cubic-ui
-      
+      - npx lerna bootstrap
+      - bash link.sh
+
   lint:
     image: node
     commands:
@@ -12,6 +13,7 @@ pipeline:
     when:
       branch:
         exclude: [ master ]
+
   test - development:
     image: node
     commands:
@@ -19,6 +21,7 @@ pipeline:
     when:
       branch:
         exclude: [ master ]
+
   test - production:
     image: node
     commands:
@@ -26,6 +29,7 @@ pipeline:
     when:
       branch:
         exclude: [ master ]
+
   publish:
     image: node
     commands:
@@ -35,6 +39,7 @@ pipeline:
     when:
       branch: master
       event: [push, tag, deployment]
+
 
 services:
   mongodb:

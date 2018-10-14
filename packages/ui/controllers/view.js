@@ -13,6 +13,13 @@ const api = new Client({
   user_key: cubic.config.ui.core.userKey,
   user_secret: cubic.config.ui.core.userSecret
 })
+api.connecting.then(() => {
+  api.connection.client.send(JSON.stringify({
+    action: 'SCHEMA',
+    endpoints: [{}],
+    maxPending: 0
+  }))
+})
 
 // one-time check, so we wouldn't read from disk on every request
 let bundlesReady = false
