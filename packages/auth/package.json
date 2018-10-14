@@ -1,0 +1,68 @@
+{
+  "name": "cubic-auth",
+  "version": "0.0.0-development",
+  "description": "Auth Server for Cubic.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore .",
+    "test": "mocha --exit -s 30000 --timeout 30000 test/server.js test/endpoints.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexus-devs/cubic-auth"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookies": "^0.7.2",
+    "jsonwebtoken": "^8.3.0",
+    "mongodb": "^3.1.6",
+    "rand-token": "^0.4.0"
+  },
+  "peerDependencies": {
+    "cubic-api": "^2.0.1",
+    "cubic-core": "^2.0.1"
+  },
+  "devDependencies": {
+    "cubic-api": "^2.0.1",
+    "cubic-client": "^2.0.0",
+    "cubic-core": "^2.0.1",
+    "cubic-loader": "^1.2.1",
+    "debug": "^4.0.1",
+    "eslint": "^5.6.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "mocha": "^5.2.0",
+    "semantic-release": "^15.9.17"
+  },
+  "release": {
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {
+          "type": "docs",
+          "scope": "README",
+          "release": "patch"
+        },
+        {
+          "type": "breaking",
+          "release": "major"
+        },
+        {
+          "type": "major",
+          "release": "major"
+        }
+      ],
+      "parserOpts": {
+        "noteKeywords": [
+          "BREAKING CHANGE",
+          "BREAKING CHANGES",
+          "BREAKING"
+        ]
+      }
+    }
+  }
+}

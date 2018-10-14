@@ -1,0 +1,51 @@
+pipeline:
+  build:
+    image: node
+    commands:
+      - npm install
+    when:
+      branch:
+        exclude: [ master ]
+
+  lint:
+    image: node
+    commands:
+      - npm run lint
+    when:
+      branch:
+        exclude: [ master ]
+  test - development:
+    image: node
+    commands:
+      - npm test
+    when:
+      branch:
+        exclude: [ master ]
+  test - production:
+    image: node
+    commands:
+      - npm test --production
+    when:
+      branch:
+        exclude: [ master ]
+  publish:
+    image: node
+    commands:
+      - git fetch --tags --quiet origin
+      - npx semantic-release
+    secrets: [ gh_token, npm_token ]
+    when:
+      branch: master
+      event: [push, tag, deployment]
+
+services:
+  mongodb:
+    image: mongo
+    when:
+      branch:
+        exclude: [ master ]
+  redis:
+    image: redis
+    when:
+      branch:
+        exclude: [ master ]
