@@ -45,8 +45,9 @@ class Api {
   async init () {
     await this.api.connecting
     this.listen()
-    this.api.connection.client.on('open', () => this.log('connected to target API'))
-    this.api.connection.client.on('close', () => this.log('disconnected from target API'))
+
+    // Re-send endpoint schema when reconnecting
+    this.api.connection.client.on('open', () => this.sendEndpointSchema())
   }
 
   /**
