@@ -12,8 +12,7 @@ module.exports = {
     let passphrase = cubic.config.auth.certPass
     let options = {
       expiresIn: cubic.config.auth.exp,
-      algorithm: cubic.config.auth.alg,
-      issuer: cubic.config.auth.iss
+      algorithm: cubic.config.auth.alg
     }
     return jwt.sign(data, passphrase ? { key, passphrase } : key, options)
   },

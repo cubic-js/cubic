@@ -8,6 +8,7 @@ class WsListener {
     this.adapter = adapter
     this.cache = cache
     this.middleware = new Middleware(this.config)
+    this.nodeIds = 1
   }
 
   default (spark) {
@@ -47,7 +48,7 @@ class WsListener {
       // requests.
       else if (action === 'SCHEMA') {
         if (!user.isRoot()) return
-        const target = this.adapter.nodes.find(n => n.uid === user.uid)
+        const target = this.adapter.nodes.find(n => n.spark.cubicId === spark.cubicId)
         target.endpoints = data.endpoints
         target.maxPending = data.maxPending
       }
@@ -55,6 +56,7 @@ class WsListener {
 
     // Make system nodes accessible in request controller.
     if (user.scp.includes('write_root')) {
+      spark.cubicId = this.nodeIds++
       this.adapter.nodes.push({
         uid: user.uid,
         spark,

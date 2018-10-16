@@ -7,6 +7,10 @@ const EndpointController = require('./endpoints.js')
 class Api {
   constructor (config) {
     this.config = config
+
+    // Load Endpoint Controller
+    this.endpointController = new EndpointController(config)
+
     const options = {
 
       // Connection Settings
@@ -15,39 +19,26 @@ class Api {
 
       // Authentication Settings
       user_key: config.userKey,
-      user_secret: config.userSecret
+      user_secret: config.userSecret,
+
+      // Endpoint Schema for API node
+      schema: {
+        endpoints: this.endpointController.endpoints,
+        maxPending: config.maxPending
+      }
     }
 
-    // Connect to api-node
+    // Connect to API node
     this.api = new Client(options)
-
-    // Load Endpoint Controller
-    this.endpointController = new EndpointController(config)
-    this.sendEndpointSchema()
     this.init()
-  }
-
-  /**
-   * Send endpoint schema to API node, so it'll know which requests we can serve
-   */
-  async sendEndpointSchema () {
-    await this.api.connecting
-    this.api.connection.client.send(JSON.stringify({
-      action: 'SCHEMA',
-      endpoints: this.endpointController.endpoints,
-      maxPending: this.config.maxPending
-    }))
   }
 
   /**
    * Initialization method called by EndpointHandler after passing methods
    */
   async init () {
-    await this.api.connecting
+    await this.api.connecting()
     this.listen()
-
-    // Re-send endpoint schema when reconnecting
-    this.api.connection.client.on('open', () => this.sendEndpointSchema())
   }
 
   /**

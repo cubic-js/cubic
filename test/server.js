@@ -63,14 +63,37 @@ describe('Server', function () {
   })
 
   it('should load up API node - GET /foo (http/ws)', async function () {
-    assert(await get('/foo'))
+    assert(await get('/foo') === 'bar')
     const client = new Client()
-    await client.connecting
-    assert(await client.get('/foo'))
+    assert(await client.get('/foo') === 'bar')
   })
 
   it('should load up UI node - GET /', async function () {
     await get('/', 3000)
+  })
+
+  it('should reconnect system nodes when connections are dropped', function (done) {
+    const client = new Client()
+    const nodes = cubic.nodes.api.server.ws.nodes
+    const ln = nodes.length
+    let rc = 0
+
+    for (let i = 0; i < ln; i++) {
+      const node = nodes[0] // Take the first because we'll remove them in the loop
+      node.spark.on('end', async () => {
+        if (++rc !== ln) return // Not all nodes dropped yet
+        if (nodes.length === ln) {
+          await client.connecting()
+          assert(client.get('/foo') === 'bar')
+          done()
+        }
+      })
+      node.spark.end(undefined, { reconnect: true })
+    }
+
+    setTimeout(() => {
+    //  console.log(nodes)
+    }, 2000)
   })
 })
 

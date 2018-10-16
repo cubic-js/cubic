@@ -12,7 +12,7 @@ describe('Requests', function () {
     api = cubic.nodes.core.client.api
     mongo = await cubic.nodes.core.client.endpointController.db
     db = mongo.db(cubic.config.core.mongoDb)
-    await client.connecting
+    await client.connecting()
   })
 
   // GET check

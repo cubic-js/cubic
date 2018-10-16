@@ -13,8 +13,12 @@ class Connection extends Client {
    * Get Tokens and build client
    */
   async connect () {
-    await this.auth.authorize()
-    await this.setClient()
+    this.connecting = new Promise(async resolve => {
+      await this.auth.authorize()
+      await this.setClient()
+      resolve()
+    })
+    return this.connecting
   }
 
   /**

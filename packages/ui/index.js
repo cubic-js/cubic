@@ -25,7 +25,6 @@ class Ui {
       const controller = client.endpointController
       endpoints.override(controller)
       endpoints.rebuild(controller)
-      client.sendEndpointSchema()
       cubic.nodes.ui.core.webpackServer = new WebpackServer()
     }
   }

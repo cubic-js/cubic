@@ -9,29 +9,44 @@ class Client {
     this.queue = queue
     this.requestIds = 1
     this.requests = []
+    this.connected = false
   }
 
   /**
    * Get Tokens and build client
    */
   async connect () {
-    await this.setClient()
+    this.connecting = this.setClient()
+    return this.connecting
   }
 
   /**
    * WS client with currently stored tokens
    */
   setClient () {
-    this.connecting = new Promise(resolve => {
+    return new Promise(resolve => {
       const options = this.auth && this.auth.access_token ? {
         headers: {
           authorization: `bearer ${this.auth.access_token}`
         }
       } : {}
       this.client = new WS(this.url, options)
-      this.client.on('open', resolve) // fire subscriptions
+      this.client.on('open', () => {
+        this.connected = true
+
+        // System nodes should send their endpoint schema to the API
+        if (this.options.schema) {
+          this.client.send(JSON.stringify({
+            ...{
+              action: 'SCHEMA'
+            },
+            ...this.options.schema
+          }))
+        }
+        resolve()
+      })
       this.client.on('close', e => this.reconnect())
-      this.client.on('error', e => e.code !== 'ECONNREFUSED' || this.reconnect())
+      this.client.on('error', e => this.reconnect())
 
       // Message handling. Mostly internal stuff with primus.
       this.client.on('message', data => {
@@ -59,15 +74,23 @@ class Client {
           sub.fn(data.data)
         }
       })
+
+      // There's a chance the connection attempt gets "lost" when the API server
+      // isn't up in time, so just retry if that happens.
+      setTimeout(() => {
+        if (!this.connected) this.connecting = this.reconnect()
+      }, 5000)
     })
-    return this.connecting
   }
 
   /**
    * Reconnect if connection is lost or the server goes down.
    */
   async reconnect () {
+    if (!this.connected) return // Dont' reconnect multiple times at once
+
     this.client.removeAllListeners()
+    this.connected = false
     await this.connect()
 
     // Resume requests that were not completed before the disconnect
