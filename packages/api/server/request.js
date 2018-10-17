@@ -56,6 +56,7 @@ class Request {
 
     // Still here? That means we couldn't find anything.
     starting = starting || this.client.nodes.find(n => !n.endpoints.length)
+
     return {
       statusCode: starting ? 503 : 404,
       method: 'send',

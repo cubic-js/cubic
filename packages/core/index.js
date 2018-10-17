@@ -1,5 +1,6 @@
 const local = require('./config/local.js')
-const Client = require('./controllers/api.js')
+const Client = require('cubic-client')
+const Api = require('./controllers/api.js')
 const _ = require('lodash')
 
 class Core {
@@ -14,9 +15,10 @@ class Core {
     const id = this.config.provided.group ? this.config.provided.group + '.core' : 'core'
     const config = _.get(cubic.config, id)
     config.prefix = config.prefix || `${config.group ? config.group + ' ' : ''}core`.padEnd(10)
-
     this.Endpoint = require(config.endpointParent)
-    this.client = new Client(config)
+    this.client = new Api(config)
+    this.client.api = new Client(this.client.clientOptions)
+    this.client.listen()
   }
 
   /**

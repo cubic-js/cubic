@@ -9,7 +9,7 @@ module.exports = async function get (url, port = 3003) {
       resolve(await request.get(`http://localhost:${port}${url}`))
     } catch (err) {
       setTimeout(async () => {
-        resolve(await get(url))
+        resolve(await get(url, port))
       }, 500)
     }
   })

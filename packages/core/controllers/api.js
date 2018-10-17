@@ -1,4 +1,3 @@
-const Client = require('cubic-client')
 const EndpointController = require('./endpoints.js')
 
 /**
@@ -11,7 +10,7 @@ class Api {
     // Load Endpoint Controller
     this.endpointController = new EndpointController(config)
 
-    const options = {
+    this.clientOptions = {
 
       // Connection Settings
       api_url: config.apiUrl,
@@ -27,24 +26,15 @@ class Api {
         maxPending: config.maxPending
       }
     }
-
-    // Connect to API node
-    this.api = new Client(options)
-    this.init()
-  }
-
-  /**
-   * Initialization method called by EndpointHandler after passing methods
-   */
-  async init () {
-    await this.api.connecting()
-    this.listen()
   }
 
   /**
    * Listen to incoming requests to be processed
    */
-  listen () {
+  async listen () {
+    await this.api.connecting()
+    this.api.connection.client.on('close', () => this.listen())
+    this.api.connection.client.on('error', () => this.listen())
     this.api.connection.client.on('message', async data => {
       data = JSON.parse(data)
       const { action } = data

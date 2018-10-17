@@ -80,20 +80,15 @@ describe('Server', function () {
 
     for (let i = 0; i < ln; i++) {
       const node = nodes[0] // Take the first because we'll remove them in the loop
-      node.spark.on('end', async () => {
-        if (++rc !== ln) return // Not all nodes dropped yet
-        if (nodes.length === ln) {
-          await client.connecting()
-          assert(client.get('/foo') === 'bar')
-          done()
-        }
-      })
       node.spark.end(undefined, { reconnect: true })
     }
-
-    setTimeout(() => {
-    //  console.log(nodes)
-    }, 2000)
+    cubic.nodes.api.server.ws.app.on('connection', async spark => {
+      if (++rc !== ln) return // Not all nodes dropped yet
+      if (rc === ln) {
+        assert(await client.get('/foo') === 'bar')
+        done()
+      }
+    })
   })
 })
 
