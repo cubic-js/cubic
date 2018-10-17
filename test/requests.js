@@ -41,8 +41,6 @@ describe('Requests', function () {
       assert(foo === 'foo')
       done()
     })
-    // For some reason eventEmitter.on() isn't fully synchronous? Just some
-    // weird node or socket.io bug again. Adding a tiny delay solves it.
-    setTimeout(() => endpoint.publish('foo'), 1)
+    endpoint.publish('foo')
   })
 })

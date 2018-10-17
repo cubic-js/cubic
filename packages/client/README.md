@@ -1,11 +1,11 @@
-[![cubic-client](https://i.imgur.com/EBnxQiy.png)](https://github.com/nexus-devs/cubic-client)
+[![cubic-client](https://i.imgur.com/EBnxQiy.png)](/packages/client)
 
-<p align="center">Connection packages to connect to <a href='https://github.com/nexus-devs/cubic-api'>Cubic</a> API nodes. Choose your target platform from the available branches.</p>
+<p align="center">Connection packages to connect to <a href='/packages/api'>Cubic</a> API nodes. Choose your target platform from the available branches.</p>
 
 ##
 
 [![npm](https://img.shields.io/npm/v/cubic-client.svg)](https://npmjs.org/cubic-client)
-[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic-client/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic-client)
+[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic)
 [![dependencies](https://david-dm.org/cubic-js/cubic-client.svg)](https://david-dm.org/cubic-js/cubic-client)
 
 <br>
@@ -14,14 +14,6 @@
 
 ## Installation
 `npm install cubic-client`
-
-<br>
-
-## Other Supported Platforms
-
-| Platform           | Install        | Description   |
-|:------------- |:------------- |:------------- |
-| [python](https://github.com/nexus-devs/cubic-client/tree/python) | pip | For usage in Python. Might have to enable HTTP explicitly since Socket.io isn't that well maintained on python.
 
 <br>
 
@@ -45,10 +37,8 @@ const client = new Client({key: value})
 |:------------- |:------------- |:------------- |
 | api_url | `'http://localhost:3003/'` | URL of cubic API-Node to connect to |
 | auth_url | `'http://localhost:3030/'` | URL of cubic Auth-Node to authenticate with |
-| namespace | `'/'` | Socket.io namespace to connect to |
 | user_key | `null` | User key obtained via Auth-Node registration |
 | user_secret | `null` | User secret obtained via Auth-Node |
-| ignore_limiter | `false` | Whether or not to disable the default rate limit adaptions. Disabling this only makes sense if you connect as a user who won't face rate limits. If you disable it anyway, expect all your requests to get blocked. |
 
 <br>
 <br>
@@ -180,33 +170,6 @@ client.getRefreshToken()
 >Retrieve current access token. Will await any existing authentication process.
 
 <br>
-
-### Socket.io
-
-```js
-client.on(ev, fn)
-```
->Listens to specific Socket.io event, then runs the given function with the received data
-
-| Argument | Description | Default |
-|:------------- |:------------- |:------------- |
-| ev | Event name. | None |
-| fn | Function to execute on event trigger | None |
-
-<br>
-
-```js
-client.emit(ev, data)
-```
->Emits event via Socket.io client to server
-
-| Argument | Description | Default |
-|:------------- |:------------- |:------------- |
-| ev | Event name. | None |
-| data | Data to transmit. Can be any data type. | None |
-
-<br>
-
 
 ## License
 [MIT](/LICENSE.md)

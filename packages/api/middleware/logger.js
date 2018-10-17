@@ -20,7 +20,7 @@ class Logger {
   }
 
   /**
-   * Identify if request sent by Socket.io or Express
+   * Identify if request sent by WebSocket or Express
    */
   setPrefix (req) {
     this.prefix = chalk.grey(`${this.config.prefix} | (${req.adapter}) `)

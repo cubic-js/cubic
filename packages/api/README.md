@@ -1,12 +1,12 @@
 
-[![cubic-api](https://i.imgur.com/wWHFif0.png)](https://github.com/nexus-devs/cubic-api)
+[![cubic-api](https://i.imgur.com/wWHFif0.png)](/packages/api)
 
-<p align='center'>Load balancer, cache and more for <a href='https://github.com/nexus-devs/cubic'>Cubic</a>. Built on Express.js and Socket.io.</p>
+<p align='center'>Load balancer, cache and more for <a href='https://github.com/cubic-js/cubic'>Cubic</a>. Built on Node's http server and WebSockets.</p>
 
 ##
 
 [![npm](https://img.shields.io/npm/v/cubic-api.svg)](https://npmjs.org/cubic-api)
-[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic-api/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic-api)
+[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic)
 [![dependencies](https://david-dm.org/cubic-js/cubic-api.svg)](https://david-dm.org/cubic-js/cubic-api)
 
 
@@ -23,7 +23,7 @@ const cubic = new Cubic()
 cubic.use(new Api(options))
 ```
 This will open a web server on `localhost:3003` which serves data from connected
-cubic-core nodes. No further setup needed - the [core nodes](https://github.com/nexus-devs/cubic-core) are where our application logic goes.
+cubic-core nodes. No further setup needed - the [core nodes](/packages/core) are where our application logic goes.
 
 <br>
 
@@ -32,7 +32,7 @@ cubic-core nodes. No further setup needed - the [core nodes](https://github.com/
 At its core, cubic-api is a load balancer for connected cubic-core nodes.
 What makes it special is that it allows the use of custom connection adapters
 that create a common `req` and `res` object from any connection type. (HTTP &
-Socket.io by default)
+WebSockets by default)
 
 This way our middleware functions and routed endpoints will work for *all*
 connection types, with no need to adjust them individually.
@@ -45,7 +45,7 @@ will go until we get a response:
 [![model](https://i.imgur.com/H4sBsUL.png)](https://i.imgur.com/H4sBsUL.png)
 
 This is only one half of the way a request goes. To see what happens once the request
-is sent to a connected core node, check out [cubic-core](https://github.com/nexus-devs/cubic-core).
+is sent to a connected core node, check out [cubic-core](/packages/core).
 
 <br>
 
@@ -79,13 +79,13 @@ If necessary, you can still add native connection middleware which runs before
 our own.
 ```js
 cubic.nodes.api.server.http.app.use((req, res, next) => {}) // Native Express Middleware
-cubic.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Socket.io Middleware
+cubic.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Primus Middleware
 ```
 
 <br>
 
 ## Making requests as a client
-We heavily recommend using [cubic-client](https://github.com/nexus-devs/cubic-client)
+We heavily recommend using [cubic-client](/packages/client)
 since it takes care of authorization, rate limits and potential downtimes automatically.
 This package is also used to connect core nodes to API nodes, so we most likely
 won't be slacking with its maintenance.
@@ -107,10 +107,8 @@ cubic.use(new Api(options))
 | requestTimeout | `1000` | Time to wait in ms when sending request to core node before assuming timeout. |
 | authCookie | `'cubic-auth-cookie'` | Cookie name to use for access/refresh tokens. |
 | authUrl | `'http://localhost:3030'` | Auth node to connect to when provided access tokens need to be refreshed. |
-| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](https://github.com/nexus-devs/cubic-auth) for reference) |
+| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](/packages/auth) for reference) |
 | userSecret | none | User secret to authenticate with. Handled the same way as above. |
-| routes | `'/connections/entry/routes.js'` | Entry point for HTTP requests via express. (No need to modify unless you're building something very exotic.) |
-| events | `'/connections/entry/events.js'` | Entry point for WS requests via Socket.io. |
 
 <br>
 

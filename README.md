@@ -78,9 +78,10 @@ it shouldn't be too hard. In fact, there's always a full solution available
 to each objective at all times.
 
 <br>
+<!-- TODO: Add instructions for indiviudal node loading here.
 
 ## Getting ready for production
-For advanced usage that you'll need in production, have a look at [cubic-loader](https://github.com/nexus-devs/cubic-loader). It lets you
+For advanced usage that you'll need in production, have a look at [cubic-loader](/packages/cubic-loader). It lets you
 load every single node individually, pass custom configs and create your own
 group of Cubic nodes.
 
@@ -89,6 +90,7 @@ you aim to containerize your application, since every node can be
 split up into a separate process this way.
 
 <br>
+-->
 
 ## License
 [MIT](/LICENSE)

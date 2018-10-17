@@ -1,11 +1,11 @@
-[![cubic-auth](https://i.imgur.com/da8ckiV.png)](https://github.com/nexus-devs/cubic-auth)
+[![cubic-auth](https://i.imgur.com/da8ckiV.png)](/packages/auth)
 
-<p align="center">Simple OAuth2 server used for <a href="https://github.com/nexus-devs/cubic">Cubic</a>. Built on <a href="https://github.com/nexus-devs/cubic-api">cubic-api</a> and <a href="https://github.com/nexus-devs/cubic-core">cubic-core</a>.</p>
+<p align="center">Simple OAuth2 server used for <a href="https://github.com/cubic-js/cubic">Cubic</a>. Built on <a href="/packages/api">cubic-api</a> and <a href="/packages/core">cubic-core</a>.</p>
 
 ##
 
 [![npm](https://img.shields.io/npm/v/cubic-auth.svg)](https://npmjs.org/cubic-auth)
-[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic-auth/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic-auth)
+[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic)
 [![dependencies](https://david-dm.org/cubic-js/cubic-auth.svg)](https://david-dm.org/cubic-js/cubic-auth)
 
 <br>
@@ -187,7 +187,7 @@ With node's 'requests' library, the options object would look something like thi
 }
 ```
 
-For **Socket.io** we have to send the token with the intial handshake.<br>
+For **WebSockets** we have to send the token with the intial handshake.<br>
 Just put this as the options object when connecting:
 ```js
 {
@@ -200,7 +200,7 @@ have to use them manually.
 
 ### On the API node
 On the API node we have a default middleware function that verifies the
-socket.io handshake as well as the authorization header on every http request,
+WebSocket handshake as well as the authorization header on every http request,
 by verifying the token signature with the provided RSA public key.
 
 Should the verification fail, a 401 error message will be returned.<br>

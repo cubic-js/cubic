@@ -1,12 +1,12 @@
 
-[![cubic API](https://i.imgur.com/ZPkZH5d.png)](https://github.com/nexus-devs/cubic-core)
+[![cubic API](https://i.imgur.com/ZPkZH5d.png)](/packages/core)
 
-<p align='center'>Request processing node for <a href='https://github.com/nexus-devs/cubic'>Cubic</a> endpoint components.</p>
+<p align='center'>Request processing node for <a href='https://github.com/cubic-js/cubic'>Cubic</a> endpoint components.</p>
 
 ##
 
 [![npm](https://img.shields.io/npm/v/cubic-core.svg)](https://npmjs.org/cubic-core)
-[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic-core/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic-core)
+[![build](https://ci.nexus-stats.com/api/badges/cubic-js/cubic/status.svg)](https://ci.nexus-stats.com/cubic-js/cubic)
 [![dependencies](https://david-dm.org/cubic-js/cubic-core.svg)](https://david-dm.org/cubic-js/cubic-core)
 
 <br>
@@ -113,7 +113,7 @@ the published changes immediately.
 | data | none | Data to publish to subscribed clients. |
 | url | `this.url` | (optional) URL to publish the data on. Useful when a POST endpoint changes the data of another GET endpoint. |
 
-Have a look at [cubic-client](https://github.com/nexus-devs/cubic-client)
+Have a look at [cubic-client](/packages/client)
 for instructions on how to subscribe to endpoints.
 
 #### Endpoint Schema
@@ -134,7 +134,7 @@ specified in [options](#options).
 ```js
 this.api
 ```
-The [cubic-client](https://github.com/nexus-devs/cubic-client) instance used
+The [cubic-client](/packages/client) instance used
 to connect to our target API. Can be useful if we need to make requests on
 endpoints hosted by other core nodes. Under the hood, it's also used for
 `this.publish` and `this.cache`.
@@ -157,7 +157,7 @@ cubic.use(new Core(options))
 | publicPath   | `process.cwd()/assets`   | Folder containing publically accessible files. |
 | apiUrl | `'http://localhost:3003'` | API node to connect to |
 | authUrl | `'http://localhost:3030'` | Auth node to authenticate at |
-| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](https://github.com/nexus-devs/cubic-auth) for reference) |
+| userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](/packages/auth) for reference) |
 | userSecret | none | User secret to authenticate with. Handled the same way as above. |
 | mongoUrl | `'mongodb://localhost'` | Mongodb connection string. |
 | mongoDb | `'cubic-core'` | Database to select by default. |

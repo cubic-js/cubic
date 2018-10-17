@@ -34,9 +34,8 @@ describe('Client', function () {
       assert(await clientAuth.get('/foo') === 'bar')
     }
 
-    // Run reconnect test multiple times. We've not made the best experiences
-    // with socket.io's reconnect reliability in the past, especially when
-    // there were many reconnects within a short period of time.
+    // Run reconnect test multiple times. Just wanna be super duper sure and not
+    // end up having unreliable connections like with Socket.io
     for (let i = 0; i < 20; i++) {
       await reconnect()
     }
