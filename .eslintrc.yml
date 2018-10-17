@@ -1,4 +1,4 @@
-extends: "standard"
+extends: 'standard'
 globals:
   cubic: true
   describe: true

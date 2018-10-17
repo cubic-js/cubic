@@ -1,7 +1,7 @@
 const Endpoint = cubic.nodes.core.Endpoint
 
 class Foo extends Endpoint {
-  main(req, res) {
+  main (req, res) {
     res.send('bar')
   }
 }

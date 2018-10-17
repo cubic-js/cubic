@@ -1,4 +1,5 @@
 const Endpoint = cubic.nodes.core.Endpoint
+let retryCounter = 0
 
 class Retry extends Endpoint {
   main (req, res) {

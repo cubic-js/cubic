@@ -14,7 +14,7 @@ const Endpoint = cubic.nodes.ui.core.Endpoint
  * This endpoint will redirect from `/redirect` to `/`
  */
 class Redirect extends Endpoint {
-  main(req, res) {
+  main (req, res) {
     res.redirect('/')
   }
 }
