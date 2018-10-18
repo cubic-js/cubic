@@ -1,0 +1,15 @@
+/**
+ * Acceleration Curves
+ */
+@mixin ease($timing) {
+  transition-timing-function: ease;
+  transition-duration: $timing;
+}
+@mixin ease-out($timing) {
+  transition-timing-function: cubic-bezier(0, 1.01, .55, .99);
+  transition-duration: $timing;
+}
+@mixin notransition() {
+  transition-timing-function: none !important;
+  transition-duration: 0s !important;
+}

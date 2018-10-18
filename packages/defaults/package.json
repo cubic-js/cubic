@@ -1,0 +1,16 @@
+{
+  "name": "cubic-defaults",
+  "version": "1.0.7",
+  "description": "Default project setup for cubic bootstrap.",
+  "main": "index.js",
+  "dependencies": {
+    "ncp": "^2.0.0",
+    "username": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cubic-js/cubic"
+  },
+  "author": "Kaptard",
+  "license": "MIT"
+}

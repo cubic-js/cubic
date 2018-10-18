@@ -1,9 +1,13 @@
-extends: "standard"
+extends: 'standard'
 globals:
   cubic: true
   describe: true
   it: true
   before: true
   after: true
+  clientAuth: true
+  clientDefault: true
+  WebSocket: true
 rules:
   brace-style: 'off'
+  camelcase: 'off' # OAuth conventions
