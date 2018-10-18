@@ -8,7 +8,8 @@
   ],
   "plugins": [
     "transform-runtime",
-    "external-helpers"
+    "external-helpers",
+    "transform-object-rest-spread"
   ],
   "runtimeHelpers": true,
   "comments": false,

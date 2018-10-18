@@ -78,7 +78,7 @@ class Client {
       // There's a chance the connection attempt gets "lost" when the API server
       // isn't up in time, so just retry if that happens.
       setTimeout(() => {
-        if (!this.connected) this.connecting = this.reconnect()
+        if (!this.connected) this.reconnect()
       }, 5000)
     })
   }

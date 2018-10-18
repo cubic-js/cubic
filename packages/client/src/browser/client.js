@@ -14,7 +14,8 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    await this.setClient()
+    this.connecting = this.setClient()
+    return this.connecting
   }
 
   /**
@@ -22,14 +23,17 @@ class Client {
    */
   setClient () {
     const WS = WebSocket
-    this.connecting = new Promise(resolve => {
+    return new Promise(resolve => {
       const url = this.auth && this.auth.acess_token
         ? `${this.url}?bearer=${this.auth.access_token}`
         : this.url
       this.client = new WS(url)
-      this.client.onopen = resolve
+      this.client.onopen = () => {
+        this.connected = true
+        resolve()
+      }
       this.client.onclose = e => this.reconnect()
-      this.client.onerror = e => e.code !== 'ECONNREFUSED' || this.reconnect()
+      this.client.onerror = e => this.reconnect()
 
       // Message handling. Mostly internal stuff with primus.
       this.client.onmessage = data => {
@@ -57,14 +61,22 @@ class Client {
           sub.fn(data.data)
         }
       }
+
+      // There's a chance the connection attempt gets "lost" when the API server
+      // isn't up in time, so just retry if that happens.
+      setTimeout(() => {
+        if (!this.connected) this.reconnect()
+      }, 5000)
     })
-    return this.connecting
   }
 
   /**
    * Reconnect if connection is lost or the server goes down.
    */
   async reconnect () {
+    if (!this.connected) return // Dont' reconnect multiple times at once
+
+    this.connected = false
     await this.connect()
 
     // Resume requests that were not completed before the disconnect

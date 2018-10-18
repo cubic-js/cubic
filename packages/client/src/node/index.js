@@ -8,7 +8,6 @@ class Client {
         auth_url: 'ws://localhost:3030/ws',
         user_key: null,
         user_secret: null,
-        ignore_limiter: false,
         schema: null
       },
       ...options
