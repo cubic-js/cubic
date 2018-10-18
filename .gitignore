@@ -5,7 +5,7 @@ node_modules
 /out/
 
 # UI node
-**vue/router/routes.js
+/packages/ui/vue/router/routes.js
 **dev-*.bundle.js
 **vue-ssr*.json
 **config/certs
