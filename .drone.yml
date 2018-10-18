@@ -5,7 +5,6 @@ pipeline:
       - npm install
       - npx lerna bootstrap
       - bash link.sh
-      - ls ./node_modules
 
   lint:
     image: node

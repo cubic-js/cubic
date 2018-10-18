@@ -5,7 +5,6 @@ const rmrf = require('rimraf')
 const { promisify } = require('util')
 const fileExists = promisify(fs.lstat)
 const removeFile = promisify(rmrf)
-const webpack = require('./build/webpack.js')
 const Cubic = require(cwd)
 const defaults = require(`${cwd}/packages/defaults`)
 const Auth = require(`${cwd}/packages/auth`)
@@ -22,13 +21,6 @@ const get = require('./lib/get.js')
 before(async function () {
   await defaults.verify()
   const ci = process.env.DRONE
-  const prod = process.env.NODE_ENV === 'production'
-
-  // Bundle webpack for production before loading nodes
-  if (prod) {
-    await webpack()
-  }
-
   const redisUrl = 'redis://redis'
   const mongoUrl = 'mongodb://mongodb'
   const endpointPath = `${process.cwd()}/test/endpoints`
@@ -47,9 +39,8 @@ before(async function () {
   }))
   await cubic.use(new Ui(ci ? {
     api: { redisUrl },
-    core: { redisUrl, mongoUrl },
-    webpack: { skipBuild: prod }
-  } : { webpack: { skipBuild: prod } }))
+    core: { redisUrl, mongoUrl }
+  } : {}))
 })
 
 /**

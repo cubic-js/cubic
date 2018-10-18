@@ -41,6 +41,9 @@ describe('Requests', function () {
       assert(foo === 'foo')
       done()
     })
-    endpoint.publish('foo')
+    // Give subscribe request enough time to arrive first. Hardcoding it like this
+    // because something is probably terribly wrong if it still didn't subscribe
+    // after a full second.
+    setTimeout(() => endpoint.publish('foo'), 1000)
   })
 })
