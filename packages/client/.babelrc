@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [ "env", {
+      "targets": {
+        "browsers": [">2%", "last 5 versions", "not ie <= 8"]
+      }
+    }]
+  ],
+  "plugins": [
+    "transform-runtime",
+    "external-helpers",
+    "transform-object-rest-spread"
+  ],
+  "runtimeHelpers": true,
+  "comments": false,
+  "exclude": "node_modules/**"
+}

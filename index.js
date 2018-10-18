@@ -1,25 +1,11 @@
-const load = require('cubic-loader')
-const Auth = require('cubic-auth')
-const Api = require('cubic-api')
-const Core = require('cubic-core')
-const Ui = require('cubic-ui')
-const defaults = require('cubic-defaults')
-const intro = require('./intro.js')
+const Loader = require('./lib/loader.js')
+const intro = require('./lib/intro.js')
 
-class Cubic {
-  constructor (options = {}) {
-    this.options = options
-  }
-
-  /**
-   * Ensure cubic-loader is loaded
-   */
-  init () {
-    try { if (cubic) {} } catch (err) {
-      load(this.options)
-      if (this.options.logLevel !== 'silent') {
-        intro.roll()
-      }
+class Cubic extends Loader {
+  constructor (options) {
+    super(options)
+    if (options.logLevel !== 'silent') {
+      intro.roll()
     }
   }
 
@@ -27,28 +13,23 @@ class Cubic {
    * Load cubic with default nodes
    */
   async bootstrap () {
-    this.init()
-    await defaults.verify()
-    cubic.use(new Auth())
-    cubic.use(new Api())
-    cubic.use(new Core())
-    cubic.use(new Ui())
-  }
+    try {
+      const Auth = require('cubic-auth')
+      const Api = require('cubic-api')
+      const Core = require('cubic-core')
+      const Ui = require('cubic-ui')
+      const defaults = require('cubic-defaults')
 
-  /**
-   * Imitate cubic.hook to hook functions before a node is loaded
-   */
-  hook (node, fn) {
-    this.init()
-    cubic.hook(node, fn)
-  }
-
-  /**
-   * Imitate cubic.use to load new nodes
-   */
-  use (node) {
-    this.init()
-    cubic.use(node)
+      this.init()
+      await defaults.verify()
+      cubic.use(new Auth())
+      cubic.use(new Api())
+      cubic.use(new Core())
+      cubic.use(new Ui())
+    } catch (err) {
+      console.error(`Make sure to install all cubic dependencies when using the bootstrap method.`)
+      throw err
+    }
   }
 }
 
