@@ -111,7 +111,7 @@ the published changes immediately.
 | Param        | Default       | Description   |
 |:------------- |:------------- |:------------- |
 | data | none | Data to publish to subscribed clients. |
-| url | `this.url` | (optional) URL to publish the data on. Useful when a POST endpoint changes the data of another GET endpoint. |
+| url | `this.url` | (optional) URL to publish the data on. Useful when a POST endpoint changes the data of another GET endpoint. 
 
 Have a look at [cubic-client](/packages/client)
 for instructions on how to subscribe to endpoints.
