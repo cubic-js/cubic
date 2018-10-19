@@ -38,7 +38,7 @@ const client = new Client({key: value})
 | api_url | `'http://localhost:3003/'` | URL of cubic API-Node to connect to |
 | auth_url | `'http://localhost:3030/'` | URL of cubic Auth-Node to authenticate with |
 | user_key | `null` | User key obtained via Auth-Node registration |
-| user_secret | `null` | User secret obtained via Auth-Node |
+| user_secret | `null` | User secret obtained via Auth-Node 
 
 <br>
 <br>
