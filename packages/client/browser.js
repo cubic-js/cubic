@@ -2549,7 +2549,10 @@ var Connection = function (_Client) {
   function Connection(url, options) {
     _classCallCheck(this, Connection);
     var _this = _possibleConstructorReturn(this, (Connection.__proto__ || _Object$getPrototypeOf(Connection)).call(this, url, options));
-    _this.auth = new Auth(options.auth_url, options);
+    _this.auth = new Auth(options.auth_url, {
+      user_key: options.user_key,
+      user_secret: options.user_secret
+    });
     _this.auth.connect();
     return _this;
   }

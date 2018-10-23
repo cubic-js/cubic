@@ -5,7 +5,10 @@ const Client = require('./client.js')
 class Connection extends Client {
   constructor (url, options) {
     super(url, options)
-    this.auth = new Auth(options.auth_url, options)
+    this.auth = new Auth(options.auth_url, {
+      user_key: options.user_key,
+      user_secret: options.user_secret
+    })
     this.auth.connect()
   }
 
