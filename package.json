@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nexus-devs/cubic"
+    "url": "https://github.com/cubic-js/cubic"
   },
   "scripts": {
     "lint": "eslint --ignore-path .gitignore --ignore-pattern browser.js --ignore-pattern browser.js.map .",
