@@ -33,8 +33,8 @@ class Api {
    */
   async listen () {
     await this.api.connecting()
-    this.api.connection.client.on('close', () => this.listen())
-    this.api.connection.client.on('error', () => this.listen())
+    this.api.connection.client.on('close', () => setTimeout(() => this.listen(), 10))
+    this.api.connection.client.on('error', () => setTimeout(() => this.listen(), 10))
     this.api.connection.client.on('message', async data => {
       data = JSON.parse(data)
       const { action } = data
