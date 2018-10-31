@@ -36,7 +36,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.2",
-    "semantic-release": "^15.9.17",
+    "semantic-release": "^15.10.6",
     "semantic-release-monorepo": "^6.1.1",
     "username": "^4.0.0",
     "webpack": "^4.20.2"
