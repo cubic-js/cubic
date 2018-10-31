@@ -1,6 +1,8 @@
 const mongodb = require('mongodb').MongoClient
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+const randtoken = require('rand-token').generator({ source: crypto.randomBytes })
 
 class PreAuth {
   /**
@@ -42,7 +44,7 @@ class PreAuth {
           }
           let key = cubic.config.auth.certPrivate
           let passphrase = cubic.config.auth.certPass
-          let refresh_token = user.refresh_token
+          let refresh_token = user.refresh_token || await this.generateRefreshToken(user.user_key)
           let access_token = jwt.sign({
             scp: user.scope,
             uid: user.user_id
@@ -65,6 +67,29 @@ class PreAuth {
         client.close()
       }
     }, 'POST')
+  }
+
+  /**
+   * Generate random Refresh Token & save in user doc
+   */
+  async generateRefreshToken (user_key, db) {
+    const refresh_token = user_key + randtoken.generate(64)
+
+    // Prevent same token for multiple users
+    const exists = await db.collection('users').findOne({ refresh_token })
+    if (exists) {
+      return this.generateRefreshToken(user_key, db) // retry
+    }
+
+    // Save Refresh Token in DB
+    db.collection('users').updateOne({
+      user_key
+    }, {
+      $set: { refresh_token }
+    }, {
+      upsert: true
+    })
+    return refresh_token
   }
 
   /**
