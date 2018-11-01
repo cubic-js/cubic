@@ -44,7 +44,7 @@ class PreAuth {
           }
           let key = cubic.config.auth.certPrivate
           let passphrase = cubic.config.auth.certPass
-          let refresh_token = user.refresh_token || await this.generateRefreshToken(user.user_key)
+          let refresh_token = user.refresh_token || await this.generateRefreshToken(user.user_key, db)
           let access_token = jwt.sign({
             scp: user.scope,
             uid: user.user_id
