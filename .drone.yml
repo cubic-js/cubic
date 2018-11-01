@@ -34,7 +34,6 @@ pipeline:
     image: node
     commands:
       - git fetch --tags --quiet origin
-      - npx semantic-release
       - npx lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo
     secrets: [ gh_token, npm_token ]
     when:
