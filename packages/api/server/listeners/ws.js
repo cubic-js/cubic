@@ -70,7 +70,7 @@ class WsListener {
 
       // Remove from system nodes
       if (user.isRoot()) {
-        const i = this.adapter.nodes.find(n => n.uid === user.uid)
+        const i = this.adapter.nodes.findIndex(n => n.uid === user.uid)
         this.adapter.nodes.splice(i, 1)
       }
     })
