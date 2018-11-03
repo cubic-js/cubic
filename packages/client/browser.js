@@ -2618,7 +2618,7 @@ var Connection = function (_Client) {
                   break;
                 }
                 _context3.next = 3;
-                return this.connect();
+                return this.reconnect();
               case 3:
                 return _context3.abrupt('return', this.retry(res, verb, query));
               case 4:

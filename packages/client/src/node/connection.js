@@ -30,7 +30,7 @@ class Connection extends Client {
   async errCheck (res = {}, verb, query) {
     // If expired: Get new token w/ refresh token & retry method
     if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
-      await this.connect()
+      await this.reconnect()
       return this.retry(res, verb, query)
     }
 

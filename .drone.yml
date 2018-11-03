@@ -5,6 +5,9 @@ pipeline:
       - npm install
       - npx lerna bootstrap
       - bash link.sh
+    when:
+      branch:
+        exclude: [ master ]
 
   lint:
     image: node
