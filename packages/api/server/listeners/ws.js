@@ -59,6 +59,7 @@ class WsListener {
       spark.cubicId = this.nodeIds++
       this.adapter.nodes.push({
         uid: user.uid,
+        scp: user.scp,
         spark,
         endpoints: [],
         pending: []

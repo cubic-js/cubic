@@ -26,7 +26,6 @@ class PreAuth {
    */
   validateWorker () {
     cubic.nodes.auth.api.use('/authenticate', async (req, res) => {
-      // Core-node attempts to connect
       if (req.body && req.body.user_key) {
         const client = await mongodb.connect(cubic.config.auth.core.mongoUrl)
         const db = client.db(cubic.config.auth.core.mongoDb)
@@ -34,37 +33,35 @@ class PreAuth {
           user_key: req.body.user_key
         })
 
-        // Check if secret matches
-        if (user && user.scope.includes('write_auth')) {
-          try {
-            await bcrypt.compare(req.body.user_secret, user.user_secret)
-          } catch (err) {
-            client.close()
-            return
-          }
-          let key = cubic.config.auth.certPrivate
-          let passphrase = cubic.config.auth.certPass
-          let refresh_token = user.refresh_token || await this.generateRefreshToken(user.user_key, db)
-          let access_token = jwt.sign({
-            scp: user.scope,
-            uid: user.user_id
-          }, passphrase ? { key, passphrase } : key, {
-            algorithm: cubic.config.auth.alg
-          })
+        try {
+          await bcrypt.compare(req.body.user_secret, user.user_secret)
+        } catch (err) {
+          client.close()
+          return
+        }
+        let key = cubic.config.auth.certPrivate
+        let passphrase = cubic.config.auth.certPass
+        let refresh_token = user.refresh_token || await this.generateRefreshToken(user.user_key, db)
+        let access_token = jwt.sign({
+          scp: user.scope,
+          uid: user.user_id
+        }, passphrase ? { key, passphrase } : key, {
+          algorithm: cubic.config.auth.alg
+        })
 
-          // Cleanup
+        // Remove this middleware when the auth core node authenticated
+        if (user && user.scope.includes('write_auth')) {
           this.removeMiddleware(cubic.nodes.auth.api.server.http.stack.stack, '/authenticate')
           this.removeMiddleware(cubic.nodes.auth.api.server.ws.stack.stack, '/authenticate')
-
-          // Send back tokens
-          res.send({
-            access_token: access_token,
-            refresh_token: refresh_token
-          })
-          client.close()
-          return true
         }
+
+        // Send back tokens
+        res.send({
+          access_token: access_token,
+          refresh_token: refresh_token
+        })
         client.close()
+        return true
       }
     }, 'POST')
   }

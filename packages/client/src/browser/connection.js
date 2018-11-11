@@ -7,7 +7,8 @@ class Connection extends Client {
     super(url, options)
     this.auth = new Auth(options.auth_url, {
       user_key: options.user_key,
-      user_secret: options.user_secret
+      user_secret: options.user_secret,
+      delay: 100
     })
     this.auth.connect()
   }
@@ -28,6 +29,11 @@ class Connection extends Client {
    * Handles Error Responses
    */
   async errCheck (res = {}, verb, query) {
+    // Queued function timed out
+    if (typeof res === 'string' && res.includes('timed out')) {
+      return this.retry(res, verb, query)
+    }
+
     // If expired: Get new token w/ refresh token & retry method
     if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
       await this.reconnect()

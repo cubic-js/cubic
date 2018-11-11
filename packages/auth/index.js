@@ -25,6 +25,19 @@ class Auth {
     await cubic.use(new API(cubic.config.auth.api))
     if (!cubic.config.auth.api.disable) {
       preauth.validateWorker()
+
+      // Re-hook this middleware when the auth core disconnects again
+      const app = cubic.nodes.auth.api.server.ws.app
+      cubic.nodes.auth.api.server.ws.app.on('connection', spark => {
+        if (!spark.request.user.scp.includes('write_auth')) return
+
+        // No more auth nodes remaining
+        spark.on('end', () => {
+          if (!app.adapter.nodes.find(n => n.scp.includes('write_auth'))) {
+            preauth.validateWorker()
+          }
+        })
+      })
     }
   }
 }

@@ -51,6 +51,10 @@ class Auth extends Client {
    * Error handling
    */
   async errCheck (res, verb, query) {
+    if (typeof res === 'string' && res.includes('timed out')) {
+      console.log('timered outered')
+      return this.retry(res, verb, query)
+    }
     if (res.statusCode >= 400) {
       if (res.statusCode !== 503 && res.statusCode !== 404 && res.statusCode !== 429) {
         console.error('cubic-client encountered an error while authenticating:')

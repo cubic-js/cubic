@@ -7,6 +7,7 @@ class Client {
     this.options = options
     this.subscriptions = []
     this.queue = queue
+    this.delay = options.delay || 500
     this.requestIds = 1
     this.requests = []
     this.connected = false
@@ -148,9 +149,9 @@ class Client {
    * Retry failed requests
    */
   async retry (res, verb, query) {
-    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : 500
-    delay = isNaN(delay) ? 500 : delay
-    let reres = await this.queue.delay(() => this.req(verb, query), delay, 30000, 'unshift')
+    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay
+    delay = isNaN(delay) ? this.delay : delay
+    let reres = await this.queue.delay(() => this.req(verb, query), delay, 1000 * 5, 'unshift')
     return this.errCheck(reres, verb, query)
   }
 
@@ -159,6 +160,9 @@ class Client {
    * class for more fine-grained error control.
    */
   async errCheck (res, verb, query) {
+    if (typeof res === 'string' && res.includes('timed out')) {
+      return this.retry(res, verb, query)
+    }
     if (res.body.error) {
       throw res
     } else {
