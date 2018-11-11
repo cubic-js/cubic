@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const localhostExp = new Date().getTime() / 1000 + 60 * 60 * 1
 
 class WsMiddleware {
   constructor (config) {
@@ -7,13 +8,21 @@ class WsMiddleware {
 
   authorize (req, done) {
     const ip = req.forwarded.ip
+    const localhostException = ip.includes('127.0.0.1') && new Date() / 1000 < localhostExp
     const auth = req.headers.authorization || req.query.bearer
     req.user = {
       uid: ip,
       scp: ''
     }
 
-    if (auth) {
+    if (localhostException) {
+      this.log(`${req.user.uid} connected through localhost exception`)
+      req.user.scp = 'write_root'
+      req.user.exp = localhostExp
+      req.user.localhost = true
+      return done()
+    }
+    else if (auth) {
       const token = auth.replace(/bearer /i, '')
 
       try {
