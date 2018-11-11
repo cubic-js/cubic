@@ -17,8 +17,7 @@ class Limiter {
    */
   async check (req, res) {
     // User is root -> skip limiting
-    if (req.user.scp.includes('write_root') ||
-        req.user.scp.includes('ignore_rate_limit')) {
+    if (req.user.scp.includes('write_root')) {
       return
     }
 

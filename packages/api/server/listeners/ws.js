@@ -55,10 +55,11 @@ class WsListener {
     })
 
     // Make system nodes accessible in request controller.
-    if (user.scp.includes('write_root')) {
+    if (user.isRoot()) {
       spark.cubicId = this.nodeIds++
       this.adapter.nodes.push({
         uid: user.uid,
+        scp: user.scp,
         spark,
         endpoints: [],
         pending: []

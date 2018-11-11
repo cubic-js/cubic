@@ -2119,6 +2119,7 @@ var Client = function () {
     this.options = options;
     this.subscriptions = [];
     this.queue = queue$1;
+    this.delay = options.delay || 500;
     this.requestIds = 1;
     this.requests = [];
   }
@@ -2336,12 +2337,12 @@ var Client = function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : 500;
-                delay = isNaN(delay) ? 500 : delay;
+                delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay;
+                delay = isNaN(delay) ? this.delay : delay;
                 _context5.next = 4;
                 return this.queue.delay(function () {
                   return _this3.req(verb, query);
-                }, delay, 30000, 'unshift');
+                }, delay, 1000 * 5, 'unshift');
               case 4:
                 reres = _context5.sent;
                 return _context5.abrupt('return', this.errCheck(reres, verb, query));
@@ -2365,14 +2366,20 @@ var Client = function () {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
+                if (!(typeof res === 'string' && res.includes('timed out'))) {
+                  _context6.next = 2;
+                  break;
+                }
+                return _context6.abrupt('return', this.retry(res, verb, query));
+              case 2:
                 if (!res.body.error) {
-                  _context6.next = 4;
+                  _context6.next = 6;
                   break;
                 }
                 throw res;
-              case 4:
+              case 6:
                 return _context6.abrupt('return', res.body);
-              case 5:
+              case 7:
               case 'end':
                 return _context6.stop();
             }
@@ -2500,8 +2507,15 @@ var Auth = function (_Client) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
+                if (!(typeof res === 'string' && res.includes('timed out'))) {
+                  _context4.next = 3;
+                  break;
+                }
+                console.log('timered outered');
+                return _context4.abrupt('return', this.retry(res, verb, query));
+              case 3:
                 if (!(res.statusCode >= 400)) {
-                  _context4.next = 5;
+                  _context4.next = 8;
                   break;
                 }
                 if (res.statusCode !== 503 && res.statusCode !== 404 && res.statusCode !== 429) {
@@ -2510,9 +2524,9 @@ var Auth = function (_Client) {
                   console.error('retrying... \n');
                 }
                 return _context4.abrupt('return', this.retry(res, verb, query));
-              case 5:
+              case 8:
                 return _context4.abrupt('return', res.body);
-              case 6:
+              case 9:
               case 'end':
                 return _context4.stop();
             }
@@ -2551,7 +2565,8 @@ var Connection = function (_Client) {
     var _this = _possibleConstructorReturn(this, (Connection.__proto__ || _Object$getPrototypeOf(Connection)).call(this, url, options));
     _this.auth = new Auth(options.auth_url, {
       user_key: options.user_key,
-      user_secret: options.user_secret
+      user_secret: options.user_secret,
+      delay: 100
     });
     _this.auth.connect();
     return _this;
@@ -2613,51 +2628,57 @@ var Connection = function (_Client) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                if (!(res.body && res.body.reason && res.body.reason.includes('jwt expired'))) {
-                  _context3.next = 4;
+                if (!(typeof res === 'string' && res.includes('timed out'))) {
+                  _context3.next = 2;
                   break;
                 }
-                _context3.next = 3;
-                return this.reconnect();
-              case 3:
                 return _context3.abrupt('return', this.retry(res, verb, query));
-              case 4:
+              case 2:
+                if (!(res.body && res.body.reason && res.body.reason.includes('jwt expired'))) {
+                  _context3.next = 6;
+                  break;
+                }
+                _context3.next = 5;
+                return this.reconnect();
+              case 5:
+                return _context3.abrupt('return', this.retry(res, verb, query));
+              case 6:
                 if (res.statusCode) {
-                  _context3.next = 7;
+                  _context3.next = 9;
                   break;
                 }
                 if (!res.includes('timed out')) {
-                  _context3.next = 7;
-                  break;
-                }
-                return _context3.abrupt('return', this.retry(res, verb, query));
-              case 7:
-                if (!(res.statusCode === 429)) {
                   _context3.next = 9;
                   break;
                 }
                 return _context3.abrupt('return', this.retry(res, verb, query));
               case 9:
-                if (!(res.statusCode === 503)) {
+                if (!(res.statusCode === 429)) {
                   _context3.next = 11;
                   break;
                 }
                 return _context3.abrupt('return', this.retry(res, verb, query));
               case 11:
-                if (![301, 302, 303, 307, 308].includes(res.statusCode)) {
+                if (!(res.statusCode === 503)) {
                   _context3.next = 13;
                   break;
                 }
-                return _context3.abrupt('return', this.retry(res, verb, res.body));
+                return _context3.abrupt('return', this.retry(res, verb, query));
               case 13:
-                if (!(parseInt(res.statusCode.toString()[0]) > 3)) {
+                if (![301, 302, 303, 307, 308].includes(res.statusCode)) {
                   _context3.next = 15;
                   break;
                 }
-                throw new ServerError(res, query);
+                return _context3.abrupt('return', this.retry(res, verb, res.body));
               case 15:
+                if (!(parseInt(res.statusCode.toString()[0]) > 3)) {
+                  _context3.next = 17;
+                  break;
+                }
+                throw new ServerError(res, query);
+              case 17:
                 return _context3.abrupt('return', res.body);
-              case 16:
+              case 18:
               case 'end':
                 return _context3.stop();
             }

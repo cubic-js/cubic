@@ -23,7 +23,7 @@ class Authentication extends Endpoint {
       let token = await this.matchCredentials(credentials, req)
       if (token) {
         if (credentials.cookie_set && cubic.config.ui.api.authCookie) {
-          const cookies = new Cookies(req, res)
+          const cookies = new Cookies(req, res, { secure: cubic.config.local.environment !== 'development' })
 
           // checks if session length or longliving
           const cookieConfig = {}

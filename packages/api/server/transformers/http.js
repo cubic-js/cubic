@@ -18,13 +18,16 @@ class HttpTransformer {
   }
 
   convertRes (res) {
+    // The 'headers' var isn't actually callable.
+    // It instead contains the current headers and gets set by ../adapters/adapter.js:getResponse()
     res.send = res.json = (data, headers) => {
       send(res, res.statusCode, data, headers)
     }
 
-    res.redirect = location => {
+    res.redirect = (location, headers) => {
       res.writeHead(res.statusCode, {
-        Location: location
+        Location: location,
+        ...headers
       })
       res.end()
     }

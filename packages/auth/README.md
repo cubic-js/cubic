@@ -28,7 +28,7 @@ cubic.use(new Auth(options))
 | certPass | none | Optional secret to decrypt the provided RSA keys |
 | maxLogsPerUser | `50` | Number of access logs for each user |
 | api | `<object>` | Configure internal cubic-api node. See [override options](#override-config) below. |
-| core | `<object>` | Configure internal cubic-core node. 
+| core | `<object>` | Configure internal cubic-core node.
 
 <br>
 
@@ -218,7 +218,6 @@ The scope specified in `req.user.scp` will also be automatically compared to
 be returned.
 
 <br>
-
 
 ## Override config
 Since the cubic-auth server is completely based on a regular cubic setup,
