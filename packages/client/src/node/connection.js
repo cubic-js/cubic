@@ -18,12 +18,7 @@ class Connection extends Client {
    */
   async connect () {
     this.connecting = new Promise(async resolve => {
-      const localhostException = this.options.api_url.match(/(localhost|127\.0\.0\.1)/) &&
-        !this.auth.access_token
-
-      // We don't have to wait for auth tokens when connecting to localhost
-      if (localhostException) this.auth.authorize()
-      else await this.auth.authorize()
+      await this.auth.authorize()
       await this.setClient()
       resolve()
     })

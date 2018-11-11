@@ -219,15 +219,6 @@ be returned.
 
 <br>
 
-## Localhost Exception
-It's important to note that within the first minute of launch, the API node
-will *always* accept connections from localhost as system nodes. This helps
-with boot times significantly, as well as adding more flexibility to otherwise
-complex situations.
-
-<br>
-
-
 ## Override config
 Since the cubic-auth server is completely based on a regular cubic setup,
 we can configure the cubic-api and cubic-core options individually.

@@ -52,7 +52,6 @@ class Auth extends Client {
    */
   async errCheck (res, verb, query) {
     if (typeof res === 'string' && res.includes('timed out')) {
-      console.log('timered outered')
       return this.retry(res, verb, query)
     }
     if (res.statusCode >= 400) {
