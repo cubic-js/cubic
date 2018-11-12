@@ -3,10 +3,10 @@ const Stack = require('async-middleware-stack')
 const mime = require('mime')
 
 class Adapter {
-  constructor (config) {
+  constructor (config, cache) {
     this.config = config
     this.stack = new Stack(config)
-    this.request = new Request(config)
+    this.request = new Request(config, cache)
   }
 
   async runMiddleware (req, res) {

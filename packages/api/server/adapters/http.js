@@ -6,8 +6,8 @@ const Transformer = require('../transformers/http.js')
 const { createServer } = require('http')
 
 class HttpAdapter extends Adapter {
-  constructor (config) {
-    super(config)
+  constructor (config, cache) {
+    super(config, cache)
     const middleware = new Middleware(config)
     this.app = polka()
     this.server = createServer(this.app.handler).listen(config.port)
