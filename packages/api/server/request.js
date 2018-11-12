@@ -26,6 +26,7 @@ class Request {
 
       // Server to Client
       if (channel === 'check') {
+        if (data.group !== this.config.group) return
         const qualified = this.findByUrl(this.client.nodes, data.req)
         if (qualified.length) this.pub.publish(data.id, JSON.stringify({ node: uuid }))
       }
@@ -167,7 +168,7 @@ class Request {
 
     return new Promise(resolve => {
       this.pending.push({ id, type: 'check', resolve })
-      this.pub.publish('check', JSON.stringify({ req, id }))
+      this.pub.publish('check', JSON.stringify({ req, id, group: this.config.group }))
 
       // Assume nobody has the endpoint if checks take more than x seconds
       setTimeout(() => {
