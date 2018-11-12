@@ -92,7 +92,7 @@ class Request {
       method: 'send',
       body: {
         error: 'Not found.',
-        reason: ``
+        reason: `Couldn't find ${req.url} on this node and no other node responded in time.`
       }
     }
   }
