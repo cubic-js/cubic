@@ -9,6 +9,7 @@ module.exports = {
    * Core Node Config
    */
   publicPath: `${process.cwd()}/assets`,
+  checkTimeout: 1000,
 
   /**
    * Databases

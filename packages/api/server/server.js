@@ -12,7 +12,7 @@ class Server {
     this.limiter = new Limiter(config, redis)
     this.cache = new Cache(config, redis)
     this.logger = new Logger(config)
-    this.http = new HTTP(config)
+    this.http = new HTTP(config, this.cache)
     this.ws = new Ws(config, this.http.server, this.cache)
   }
 

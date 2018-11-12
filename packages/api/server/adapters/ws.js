@@ -6,7 +6,7 @@ const Rooms = require('primus-redis-rooms')
 
 class WsAdapter extends Adapter {
   constructor (config, server, cache) {
-    super(config)
+    super(config, cache)
     const middleware = new Middleware(config)
     const listener = new Listener(config, this, cache)
     this.nodes = [] // Cubic nodes to contact in request handler
