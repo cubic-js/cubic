@@ -6,17 +6,6 @@ const publicPath = require(cubic.config.ui.webpack.clientConfig).output.path
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
 const { promisify } = require('util')
 const fileExists = promisify(fs.lstat)
-const Client = require('cubic-client')
-const api = new Client({
-  api_url: cubic.config.ui.client.apiUrl,
-  auth_url: cubic.config.ui.client.authUrl,
-  user_key: cubic.config.ui.core.userKey,
-  user_secret: cubic.config.ui.core.userSecret,
-  schema: {
-    endpoints: [{}],
-    maxPending: 0
-  }
-})
 
 // one-time check, so we wouldn't read from disk on every request
 let bundlesReady = false
@@ -51,9 +40,7 @@ class ViewController {
       runInNewContext: false
     })
     const render = util.promisify(renderer.renderToString)
-    const context = { req, api }
-    const html = await render(context)
-    return html
+    return render({ req })
   }
 }
 

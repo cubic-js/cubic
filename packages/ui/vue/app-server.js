@@ -8,14 +8,10 @@ import root from 'src/app.vue'
  */
 export default function (context) {
   return new Promise((resolve, reject) => {
-    const { app, router, store } = createApp(context)
+    const { app, router, store } = createApp()
 
-    // TODO: Make this work. Right now there's no way it would as it overlaps
-    // with other requests. My suggestion is to fall back to HTTP requests
-    // for asyncData hooks on the server. Otherwise we'd have to create
-    // a new cubic-client instance on every request (terrible memory footprint)
-    //
-    // if (context.req.access_token) app.$cubic.setAccessToken(context.req.access_token)
+    if (context.req.access_token) app.$cubic.setAccessToken(context.req.access_token)
+    if (context.req.refresh_token) app.$cubic.setRefreshToken(context.req.refresh_token)
 
     // Init vue-meta
     const meta = app.$meta()
@@ -54,6 +50,7 @@ export default function (context) {
 
       // Give access token to state so the client can use it
       if (context.req.access_token) context.state.$access_token = context.req.access_token
+      if (context.req.refresh_token) context.state.$refresh_token = context.req.refresh_token
 
       // Finally, add meta tags to context for injection in renderer
       context.meta = { inject: function () { Object.assign(this, meta.inject()) } }
