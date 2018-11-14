@@ -17,8 +17,9 @@ class Endpoint {
   /**
    * Publish Data for a specific endpoint
    */
-  publish (data, endpoint = this.url) {
+  async publish (data, endpoint = this.url) {
     cubic.log.verbose('Core      | Sending data to publish for ' + endpoint)
+    await this.api.connecting()
     this.api.connection.client.send(JSON.stringify({
       action: 'PUBLISH',
       endpoint,
@@ -29,10 +30,11 @@ class Endpoint {
   /**
    * Send data to be cached for endpoint on API node
    */
-  cache (value, exp, headers, key = this.url) {
+  async cache (value, exp, headers, key = this.url) {
     const scope = this.schema.scope
 
     cubic.log.verbose('Core      | Sending data to cache for ' + key)
+    await this.api.connecting()
     this.api.connection.client.send(JSON.stringify({
       action: 'CACHE',
       key,
