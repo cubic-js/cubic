@@ -2184,7 +2184,10 @@ var Client = function () {
               }
         };
         setTimeout(function () {
-          if (!_this.connected) _this.reconnect();
+          if (!_this.connected) {
+            _this.connected = true;
+            _this.reconnect();
+          }
         }, 5000);
       });
     }
@@ -2508,14 +2511,13 @@ var Auth = function (_Client) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 if (!(typeof res === 'string' && res.includes('timed out'))) {
-                  _context4.next = 3;
+                  _context4.next = 2;
                   break;
                 }
-                console.log('timered outered');
                 return _context4.abrupt('return', this.retry(res, verb, query));
-              case 3:
+              case 2:
                 if (!(res.statusCode >= 400)) {
-                  _context4.next = 8;
+                  _context4.next = 7;
                   break;
                 }
                 if (res.statusCode !== 503 && res.statusCode !== 404 && res.statusCode !== 429) {
@@ -2524,9 +2526,9 @@ var Auth = function (_Client) {
                   console.error('retrying... \n');
                 }
                 return _context4.abrupt('return', this.retry(res, verb, query));
-              case 8:
+              case 7:
                 return _context4.abrupt('return', res.body);
-              case 9:
+              case 8:
               case 'end':
                 return _context4.stop();
             }
