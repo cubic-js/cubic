@@ -53,8 +53,11 @@ class Request {
     if (node) {
       return new Promise(resolve => {
         const id = `${req.user.uid}-${req.url}-${this.requestIds++}`
+        this.log(`Found local node for ${req.url}`)
+
         function respond (data) {
           if (data.action === 'RES' && data.id === id) {
+            this.log(`Received local response for ${req.url}`)
             node.spark.removeListener('data', respond)
             resolve(data.res)
           }
@@ -83,7 +86,10 @@ class Request {
     if (!external) {
       const externalNode = await this.getExternalNode(req)
       if (externalNode) {
-        return this.getExternalData(externalNode, req)
+        this.log(`Found external node for ${req.url}`)
+        const data = await this.getExternalData(externalNode, req)
+        this.log(`Received external response for ${req.url}`)
+        return data
       }
     }
 
@@ -191,6 +197,10 @@ class Request {
       this.pending.push({ id, type: 'req', resolve })
       this.pub.publish('req', JSON.stringify({ req, id, node }))
     })
+  }
+
+  log (msg) {
+    cubic.log.silly(`${this.config.prefix} | (${uuid}) ${msg}`)
   }
 }
 
