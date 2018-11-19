@@ -16,7 +16,7 @@ class Auth {
 
     // Endpoints
     this.register = new (require(Register))(this.api, this.db, '/register')
-    this.authenticate = new (require(Authenticate))(this.api, this.db, '/refresh')
+    this.authenticate = new (require(Authenticate))(this.api, this.db, '/authenticate')
     this.register.res = this.res
     this.authenticate.res = this.res
   }
@@ -50,6 +50,10 @@ class Auth {
    * refresh_token
    */
   async getRefreshToken () {
+    const user = await this.db.collection('users').findOne({ user_key: await this.getUserKey() })
+    if (user.refresh_token) {
+      return user.refresh_token
+    }
     return this.authenticate.generateRefreshToken(await this.getUserKey())
   }
 
