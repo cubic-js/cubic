@@ -1,13 +1,13 @@
 pipeline:
   build:
-    image: node
+    image: node:8
     commands:
       - npm install
       - npx lerna bootstrap
       - bash link.sh
 
   lint:
-    image: node
+    image: node:8
     commands:
       - npm run lint
     when:
@@ -15,7 +15,7 @@ pipeline:
         exclude: [ master ]
 
   test - development:
-    image: node
+    image: node:8
     commands:
       - npm test
     when:
@@ -23,7 +23,7 @@ pipeline:
         exclude: [ master ]
 
   test - production:
-    image: node
+    image: node:8
     commands:
       - npm test --production
     when:
@@ -31,7 +31,7 @@ pipeline:
         exclude: [ master ]
 
   publish:
-    image: node
+    image: node:8
     commands:
       - git fetch --tags --quiet origin
       - npx lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo
