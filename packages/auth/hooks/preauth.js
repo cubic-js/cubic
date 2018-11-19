@@ -9,7 +9,7 @@ class PreAuth {
    * Set mongo indices to optimize queries for user_key and refresh tokens
    */
   async verifyUserIndices () {
-    const client = await mongodb.connect(cubic.config.auth.core.mongoUrl)
+    const client = await mongodb.connect(cubic.config.auth.core.mongoUrl, { useNewUrlParser: true })
     const db = client.db(cubic.config.auth.core.mongoDb)
     const mongoVerifySingleIndex = async (db, col, index) => {
       db.collection(col).createIndex(index)
@@ -27,7 +27,7 @@ class PreAuth {
   validateWorker () {
     cubic.nodes.auth.api.use('/authenticate', async (req, res) => {
       if (req.body && req.body.user_key) {
-        const client = await mongodb.connect(cubic.config.auth.core.mongoUrl)
+        const client = await mongodb.connect(cubic.config.auth.core.mongoUrl, { useNewUrlParser: true })
         const db = client.db(cubic.config.auth.core.mongoDb)
         const user = await db.collection('users').findOne({
           user_key: req.body.user_key

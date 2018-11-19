@@ -55,15 +55,15 @@ class Request {
         const id = `${req.user.uid}-${req.url}-${this.requestIds++}`
         this.log(`Found local node for ${req.url}`)
 
-        function respond (data) {
+        function respond (data, _this) {
           if (data.action === 'RES' && data.id === id) {
-            this.log(`Received local response for ${req.url}`)
+            _this.log(`Received local response for ${req.url}`)
             node.spark.removeListener('data', respond)
             resolve(data.res)
           }
         }
         node.spark.write({ action: 'REQ', req, endpoint, id })
-        node.spark.on('data', respond)
+        node.spark.on('data', data => respond(data, this))
       })
     }
 

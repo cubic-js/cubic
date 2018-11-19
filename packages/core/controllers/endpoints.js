@@ -15,7 +15,7 @@ class EndpointController {
   constructor (config) {
     this.config = config
     this.dev = cubic.config.local.environment === 'development'
-    this.db = mongodb.connect(this.config.mongoUrl)
+    this.db = mongodb.connect(this.config.mongoUrl, { useNewUrlParser: true })
     this.stack = new Stack(config)
     this.limiter = new Limiter(config)
     this.generateEndpointSchema()

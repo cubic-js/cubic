@@ -12,7 +12,7 @@ describe('Authentication', function () {
 
   before(async () => {
     const mongoUrl = ci ? 'mongodb://mongodb' : 'mongodb://localhost:27017'
-    const mongo = await MongoClient.connect(mongoUrl)
+    const mongo = await MongoClient.connect(mongoUrl, { useNewUrlParser: true })
     client = new Client({ api_url: 'ws://localhost:3030/ws' })
     db = mongo.db('cubic-auth')
   })
