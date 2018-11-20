@@ -2,15 +2,12 @@ const path = require('path')
 const Url = require('url')
 const { promisify } = require('util')
 const fs = require('fs')
-const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-  const r = Math.random() * 16 | 0
-  const v = c === 'x' ? r : (r & 0x3 | 0x8)
-  return v.toString(16)
-})
+const randtoken = require('rand-token')
 
 class Request {
   constructor (config, cache) {
     this.config = config
+    this.uuid = `${config.group}-${randtoken.uid(16)}`
     this.requestIds = 1
     this.pending = []
     this.pub = cache.redis.duplicate()
@@ -18,7 +15,8 @@ class Request {
     this.sub.subscribe('check')
     this.sub.subscribe('req')
 
-    // Global subscription handler, so we won't add listeners on every request.
+    // Global subscription handler for API-to-API communication, so we won't add
+    // listeners on every request.
     this.sub.on('message', async (channel, message) => {
       const data = JSON.parse(message)
       const i = this.pending.findIndex(r => r.id === channel)
@@ -26,13 +24,23 @@ class Request {
 
       // Server to Client
       if (channel === 'check') {
-        if (data.group !== this.config.group) return
-        const qualified = this.findByUrl(this.client.nodes, data.req)
-        if (qualified.length) this.pub.publish(data.id, JSON.stringify({ node: uuid }))
+        if (data.uuid.split('-')[0] === this.config.group &&
+            data.uuid !== this.uuid &&
+            data.req.adapter === this.protocol) {
+          this.log(`< check - Received ${data.req.method} ${data.req.url}`)
+          const qualified = this.findByUrl(this.adapter.nodes, data.req)
+
+          if (qualified.length) {
+            this.log(`> check - Send ${data.req.method} ${data.req.url}`)
+            this.pub.publish(data.id, JSON.stringify({ node: this.uuid }))
+          }
+        }
       }
       if (channel === 'req') {
-        if (data.node === uuid) {
+        if (data.node === this.uuid && data.req.adapter === this.protocol) {
+          this.log(`< request - Received ${data.req.method} ${data.req.url}`)
           const res = await this.getResponse(data.req, true)
+          this.log(`> request - Send ${data.req.method} ${data.req.url}`)
           this.pub.publish(data.id, JSON.stringify({ data: res }))
         }
       }
@@ -53,17 +61,16 @@ class Request {
     if (node) {
       return new Promise(resolve => {
         const id = `${req.user.uid}-${req.url}-${this.requestIds++}`
-        this.log(`Found local node for ${req.url}`)
+        this.log(`< request - Found local ${req.url}`)
 
-        function respond (data, _this) {
+        function respond (data) {
           if (data.action === 'RES' && data.id === id) {
-            _this.log(`Received local response for ${req.url}`)
             node.spark.removeListener('data', respond)
             resolve(data.res)
           }
         }
         node.spark.write({ action: 'REQ', req, endpoint, id })
-        node.spark.on('data', data => respond(data, this))
+        node.spark.on('data', data => respond(data))
       })
     }
 
@@ -86,9 +93,9 @@ class Request {
     if (!external) {
       const externalNode = await this.getExternalNode(req)
       if (externalNode) {
-        this.log(`Found external node for ${req.url}`)
+        this.log(`< check - Found external ${req.url}`)
         const data = await this.getExternalData(externalNode, req)
-        this.log(`Received external response for ${req.url}`)
+        this.log(`< request - Received ${req.url}`)
         return data
       }
     }
@@ -105,7 +112,7 @@ class Request {
   }
 
   getTargetNode (req) {
-    const nodes = this.client.nodes
+    const nodes = this.adapter.nodes
     const qualified = this.findByUrl(nodes, req)
     let target
 
@@ -174,7 +181,7 @@ class Request {
 
     return new Promise(resolve => {
       this.pending.push({ id, type: 'check', resolve })
-      this.pub.publish('check', JSON.stringify({ req, id, group: this.config.group }))
+      this.pub.publish('check', JSON.stringify({ req, id, uuid: this.uuid }))
 
       // Assume nobody has the endpoint if checks take more than x seconds
       setTimeout(() => {
@@ -200,7 +207,7 @@ class Request {
   }
 
   log (msg) {
-    cubic.log.silly(`${this.config.prefix} | (${uuid}) ${msg}`)
+    cubic.log.silly(`${this.config.prefix} | (${this.uuid}) ${msg}`)
   }
 }
 

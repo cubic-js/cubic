@@ -9,6 +9,7 @@ class WsAdapter extends Adapter {
     super(config, cache)
     const middleware = new Middleware(config)
     const listener = new Listener(config, this, cache)
+    this.request.protocol = 'ws'
     this.nodes = [] // Cubic nodes to contact in request handler
     this.app = new Primus(server, {
       pathname: '/ws',
