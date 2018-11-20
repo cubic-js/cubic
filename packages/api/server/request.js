@@ -9,14 +9,42 @@ class Request {
     this.config = config
     this.uuid = `${config.group}-${randtoken.uid(16)}`
     this.requestIds = 1
+    this.requests = []
     this.pending = []
     this.pub = cache.redis.duplicate()
     this.sub = cache.redis.duplicate()
     this.sub.subscribe('check')
     this.sub.subscribe('req')
+    setTimeout(() => this.listen(), 1) // Adapter is attached after construction
+    this.listenExternal()
+  }
 
-    // Global subscription handler for API-to-API communication, so we won't add
-    // listeners on every request.
+  /**
+   * Listen to connected nodes for data events.
+   */
+  listen () {
+    this.adapter.app.on('connection', spark => {
+      const { user } = spark.request
+
+      if (user.scp.includes('write_root')) {
+        spark.on('data', data => {
+          const i = this.requests.findIndex(r => r.id === data.id)
+          const request = this.requests[i]
+
+          if (data.action === 'RES' && request) {
+            request.resolve(data.res)
+            this.requests.splice(i, 1)
+          }
+        })
+      }
+    })
+  }
+
+  /**
+   * Listen to requests from other API nodes if they can't find it locally.
+   * If we do have the requested resource, we'll take over the request.
+   */
+  listenExternal () {
     this.sub.on('message', async (channel, message) => {
       const data = JSON.parse(message)
       const i = this.pending.findIndex(r => r.id === channel)
@@ -54,6 +82,19 @@ class Request {
     })
   }
 
+  /**
+   * Actual response logic.
+   * When the core node connects, it'll also send us its endpoint schema, which
+   * means we'll know if we have the requested resource available, and then send
+   * the request to that locally connected node.
+   *
+   * If the requested resource is missing from the endpoint schema, we'll ask
+   * other APIs with the same cubic group as ours if they have a core node with
+   * that requested resource available on their core nodes.
+   *
+   * If they don't respond in time either, we'll assume that the requested
+   * resource is not available at all and respond with a 404.
+   */
   async getResponse (req, external) {
     const { node, endpoint } = this.getTargetNode(req)
 
@@ -61,16 +102,9 @@ class Request {
     if (node) {
       return new Promise(resolve => {
         const id = `${req.user.uid}-${req.url}-${this.requestIds++}`
-        this.log(`< request - Found local ${req.url}`)
-
-        function respond (data) {
-          if (data.action === 'RES' && data.id === id) {
-            node.spark.removeListener('data', respond)
-            resolve(data.res)
-          }
-        }
+        this.log(`< request - Found local ${req.method} ${req.url}`)
+        this.requests.push({ id, resolve })
         node.spark.write({ action: 'REQ', req, endpoint, id })
-        node.spark.on('data', data => respond(data))
       })
     }
 
@@ -111,6 +145,9 @@ class Request {
     }
   }
 
+  /**
+   * Returns a locally connected node with the requested target resource.
+   */
   getTargetNode (req) {
     const nodes = this.adapter.nodes
     const qualified = this.findByUrl(nodes, req)
@@ -136,6 +173,9 @@ class Request {
     return target
   }
 
+  /**
+   * Find all nodes matching the request criteria.
+   */
   findByUrl (nodes, req) {
     const { url, method } = req
     const qualified = []
@@ -194,7 +234,7 @@ class Request {
   }
 
   /**
-   * If a node is confirmed to have the target url, send an actual request
+   * If an external node is confirmed to have the target url, send an actual request
    */
   getExternalData (node, req) {
     const id = `${req.user.uid}-${req.url}-${this.requestIds++}`
