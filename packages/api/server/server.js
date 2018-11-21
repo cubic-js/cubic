@@ -22,8 +22,8 @@ class Server {
   }
 
   setRequestClient () {
-    this.http.request.client = this.ws
-    this.ws.request.client = this.ws
+    this.http.request.adapter = this.ws
+    this.ws.request.adapter = this.ws
   }
 
   applyMiddleware () {

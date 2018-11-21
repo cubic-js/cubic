@@ -2,23 +2,49 @@ const path = require('path')
 const Url = require('url')
 const { promisify } = require('util')
 const fs = require('fs')
-const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-  const r = Math.random() * 16 | 0
-  const v = c === 'x' ? r : (r & 0x3 | 0x8)
-  return v.toString(16)
-})
+const randtoken = require('rand-token')
 
 class Request {
   constructor (config, cache) {
     this.config = config
+    this.uuid = `${config.group}-${randtoken.uid(16)}`
     this.requestIds = 1
+    this.requests = []
     this.pending = []
     this.pub = cache.redis.duplicate()
     this.sub = cache.redis.duplicate()
     this.sub.subscribe('check')
     this.sub.subscribe('req')
+    setTimeout(() => this.listen(), 1) // Adapter is attached after construction
+    this.listenExternal()
+  }
 
-    // Global subscription handler, so we won't add listeners on every request.
+  /**
+   * Listen to connected nodes for data events.
+   */
+  listen () {
+    this.adapter.app.on('connection', spark => {
+      const { user } = spark.request
+
+      if (user.scp.includes('write_root')) {
+        spark.on('data', data => {
+          const i = this.requests.findIndex(r => r.id === data.id)
+          const request = this.requests[i]
+
+          if (data.action === 'RES' && request) {
+            request.resolve(data.res)
+            this.requests.splice(i, 1)
+          }
+        })
+      }
+    })
+  }
+
+  /**
+   * Listen to requests from other API nodes if they can't find it locally.
+   * If we do have the requested resource, we'll take over the request.
+   */
+  listenExternal () {
     this.sub.on('message', async (channel, message) => {
       const data = JSON.parse(message)
       const i = this.pending.findIndex(r => r.id === channel)
@@ -26,13 +52,23 @@ class Request {
 
       // Server to Client
       if (channel === 'check') {
-        if (data.group !== this.config.group) return
-        const qualified = this.findByUrl(this.client.nodes, data.req)
-        if (qualified.length) this.pub.publish(data.id, JSON.stringify({ node: uuid }))
+        if (data.uuid.split('-')[0] === this.config.group &&
+            data.uuid !== this.uuid &&
+            data.req.adapter === this.protocol) {
+          this.log(`< check - Received ${data.req.method} ${data.req.url}`)
+          const qualified = this.findByUrl(this.adapter.nodes, data.req)
+
+          if (qualified.length) {
+            this.log(`> check - Send ${data.req.method} ${data.req.url}`)
+            this.pub.publish(data.id, JSON.stringify({ node: this.uuid }))
+          }
+        }
       }
       if (channel === 'req') {
-        if (data.node === uuid) {
+        if (data.node === this.uuid && data.req.adapter === this.protocol) {
+          this.log(`< request - Received ${data.req.method} ${data.req.url}`)
           const res = await this.getResponse(data.req, true)
+          this.log(`> request - Send ${data.req.method} ${data.req.url}`)
           this.pub.publish(data.id, JSON.stringify({ data: res }))
         }
       }
@@ -46,6 +82,19 @@ class Request {
     })
   }
 
+  /**
+   * Actual response logic.
+   * When the core node connects, it'll also send us its endpoint schema, which
+   * means we'll know if we have the requested resource available, and then send
+   * the request to that locally connected node.
+   *
+   * If the requested resource is missing from the endpoint schema, we'll ask
+   * other APIs with the same cubic group as ours if they have a core node with
+   * that requested resource available on their core nodes.
+   *
+   * If they don't respond in time either, we'll assume that the requested
+   * resource is not available at all and respond with a 404.
+   */
   async getResponse (req, external) {
     const { node, endpoint } = this.getTargetNode(req)
 
@@ -53,17 +102,9 @@ class Request {
     if (node) {
       return new Promise(resolve => {
         const id = `${req.user.uid}-${req.url}-${this.requestIds++}`
-        this.log(`Found local node for ${req.url}`)
-
-        function respond (data, _this) {
-          if (data.action === 'RES' && data.id === id) {
-            _this.log(`Received local response for ${req.url}`)
-            node.spark.removeListener('data', respond)
-            resolve(data.res)
-          }
-        }
+        this.log(`< request - Found local ${req.method} ${req.url}`)
+        this.requests.push({ id, resolve })
         node.spark.write({ action: 'REQ', req, endpoint, id })
-        node.spark.on('data', data => respond(data, this))
       })
     }
 
@@ -86,9 +127,9 @@ class Request {
     if (!external) {
       const externalNode = await this.getExternalNode(req)
       if (externalNode) {
-        this.log(`Found external node for ${req.url}`)
+        this.log(`< check - Found external ${req.url}`)
         const data = await this.getExternalData(externalNode, req)
-        this.log(`Received external response for ${req.url}`)
+        this.log(`< request - Received ${req.url}`)
         return data
       }
     }
@@ -104,8 +145,11 @@ class Request {
     }
   }
 
+  /**
+   * Returns a locally connected node with the requested target resource.
+   */
   getTargetNode (req) {
-    const nodes = this.client.nodes
+    const nodes = this.adapter.nodes
     const qualified = this.findByUrl(nodes, req)
     let target
 
@@ -129,6 +173,9 @@ class Request {
     return target
   }
 
+  /**
+   * Find all nodes matching the request criteria.
+   */
   findByUrl (nodes, req) {
     const { url, method } = req
     const qualified = []
@@ -174,7 +221,7 @@ class Request {
 
     return new Promise(resolve => {
       this.pending.push({ id, type: 'check', resolve })
-      this.pub.publish('check', JSON.stringify({ req, id, group: this.config.group }))
+      this.pub.publish('check', JSON.stringify({ req, id, uuid: this.uuid }))
 
       // Assume nobody has the endpoint if checks take more than x seconds
       setTimeout(() => {
@@ -187,7 +234,7 @@ class Request {
   }
 
   /**
-   * If a node is confirmed to have the target url, send an actual request
+   * If an external node is confirmed to have the target url, send an actual request
    */
   getExternalData (node, req) {
     const id = `${req.user.uid}-${req.url}-${this.requestIds++}`
@@ -200,7 +247,7 @@ class Request {
   }
 
   log (msg) {
-    cubic.log.silly(`${this.config.prefix} | (${uuid}) ${msg}`)
+    cubic.log.silly(`${this.config.prefix} | (${this.uuid}) ${msg}`)
   }
 }
 
