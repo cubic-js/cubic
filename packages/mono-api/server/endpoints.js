@@ -3,10 +3,10 @@ const path = require('path')
 const mongodb = require('mongodb').MongoClient
 const Stack = require('async-middleware-stack')
 const Client = require('cubic-client')
-const Limiter = require('../middleware/limiter.js')
-const url = require('../middleware/url.js')
-const query = require('../middleware/query.js')
-const auth = require('../middleware/auth.js')
+const Limiter = require('../middleware/endpoints/limiter.js')
+const url = require('../middleware/endpoints/url.js')
+const query = require('../middleware/endpoints/query.js')
+const auth = require('../middleware/endpoints/auth.js')
 
 /**
  * Interface for handling endpoints

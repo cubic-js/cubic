@@ -11,7 +11,7 @@ module.exports = {
   publicPath: `${process.cwd()}/assets`,
   endpointPath: `${process.cwd()}/api`,
   endpointPathExclude: /a^/, // exclude nothing by default
-  endpointParent: `${__dirname}/../lib/endpoint.js`,
+  endpointParent: `${__dirname}/../server/endpoint.js`,
   baseUrl: '',
 
   /**

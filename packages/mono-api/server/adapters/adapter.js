@@ -5,7 +5,7 @@ class Adapter {
   constructor (config, cache) {
     this.config = config
     this.stack = new Stack(config)
-    this.endpoints = new Endpoints()
+    this.endpoints = new Endpoints(config)
   }
 
   async runMiddleware (req, res) {
