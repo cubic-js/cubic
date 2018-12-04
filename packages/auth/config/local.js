@@ -1,40 +1,15 @@
 module.exports = {
   api: {
     port: 3030,
+    endpointPath: `${__dirname}/../endpoints/`,
+    group: 'auth',
 
     /**
      * Databases
      */
     cacheDb: 3,
-
-    /**
-     * cubic information
-     */
-    group: 'auth'
-  },
-
-  core: {
-    /**
-     * Databases
-     */
     mongoUrl: 'mongodb://localhost/',
-    mongoDb: 'cubic-auth',
-
-    /**
-     * Target Node URLs
-     */
-    apiUrl: 'ws://localhost:3030/ws',
-    authUrl: 'ws://localhost:3030/ws',
-
-    /**
-     * Logic-specific
-     */
-    endpointPath: `${__dirname}/../endpoints/`,
-
-    /**
-     * cubic information
-     */
-    group: 'auth'
+    mongoDb: 'cubic-auth'
   },
 
   /**

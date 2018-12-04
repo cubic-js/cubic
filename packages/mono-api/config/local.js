@@ -11,6 +11,8 @@ module.exports = {
   publicPath: `${process.cwd()}/assets`,
   endpointPath: `${process.cwd()}/api`,
   endpointPathExclude: /a^/, // exclude nothing by default
+  endpointDepth: 0,
+  endpointExtension: /\.js$/,
   endpointParent: `${__dirname}/../server/endpoint.js`,
   baseUrl: '',
 

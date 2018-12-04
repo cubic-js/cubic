@@ -22,7 +22,7 @@ class Cubic extends Loader {
 
       this.init()
       await defaults.verify()
-      cubic.use(new Auth())
+      await cubic.use(new Auth())
       cubic.use(new Api())
       cubic.use(new Core())
       cubic.use(new Ui())

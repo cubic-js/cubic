@@ -1,61 +1,23 @@
 const view = require('../controllers/view.js')
+const Endpoint = require('cubic-mono-api/server/endpoint')
 
 /**
- * Class describing generic database/calculation methods
- * Any lower-level method extends this class
+ * Overrides original endpoint. This one only adds the view key to the schema
+ * and renders it in the main function by default, since that's what all normal
+ * pages do.
  */
-class Endpoint {
+class View extends Endpoint {
   constructor (api, db, url) {
-    this.schema = {
-      scope: '',
-      method: 'GET',
-      query: [],
-      view: '/app.vue'
-    }
-    this.api = api
-    this.db = db
-    this.url = url
+    super(api, db, url)
+    this.schema.view = '/app.vue'
   }
 
   /**
    * Just render the given view if no other instructions are given.
    */
   async main (req, res) {
-    res.res.headers = {
-      'content-type': 'text/html'
-    }
-    return res.send(this.render(req))
-  }
-
-  /**
-   * Publish Data for a specific endpoint
-   */
-  async publish (data, endpoint = this.url) {
-    cubic.log.verbose('Core      | Sending data to publish for ' + endpoint)
-    await this.api.connecting()
-    this.api.connection.client.send(JSON.stringify({
-      action: 'PUBLISH',
-      endpoint,
-      data
-    }))
-  }
-
-  /**
-   * Send data to be cached for endpoint on API node
-   */
-  async cache (value, exp, headers, key = this.url) {
-    const scope = this.schema.scope
-
-    cubic.log.verbose('Core      | Sending data to cache for ' + key)
-    await this.api.connecting()
-    this.api.connection.client.send(JSON.stringify({
-      action: 'CACHE',
-      key,
-      headers,
-      value,
-      exp,
-      scope
-    }))
+    res.setHeader('content-type', 'text/html')
+    return res.send(await this.render(req))
   }
 
   /**
@@ -68,4 +30,4 @@ class Endpoint {
   }
 }
 
-module.exports = Endpoint
+module.exports = View

@@ -1,13 +1,14 @@
-const Core = require('cubic-core')
-const API = require('cubic-api')
+const API = require('cubic-mono-api')
 const local = require('./config/local.js')
-const preauth = require('./hooks/preauth.js')
+const fs = require('fs')
+const promisify = require('util').promisify
+const mkdir = promisify(fs.mkdir)
+const fileExists = promisify(fs.lstat)
+const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
+const generateKeys = require('keypair')
+const certDir = `${process.cwd()}/config/certs`
 
-/**
- * Loader for auth-node system. For ease of maintenance, the auth-node consists
- * of a core-node that is connected to its own api-node as web server, much
- * like a regular cubic project
- */
 class Auth {
   constructor (options) {
     this.config = {
@@ -17,28 +18,35 @@ class Auth {
   }
 
   async init () {
-    // Core Node which processes incoming requests
-    cubic.hook('auth.core', preauth.verifyUserIndices)
-    cubic.use(new Core(cubic.config.auth.core))
-
-    // API node for distributing requests
+    const { prv, pub } = await this.checkRSAKeys()
+    cubic.config.auth.api.certPublic = pub
+    cubic.config.auth.certPrivate = prv
     await cubic.use(new API(cubic.config.auth.api))
-    if (!cubic.config.auth.api.disable) {
-      preauth.validateWorker()
+  }
 
-      // Re-hook this middleware when the auth core disconnects again
-      const app = cubic.nodes.auth.api.server.ws.app
-      cubic.nodes.auth.api.server.ws.app.on('connection', spark => {
-        if (!spark.request.user.scp.includes('write_auth')) return
+  /**
+   * Generate RSA keys for api token signatures.
+   */
+  async checkRSAKeys () {
+    let prv, pub
+    try {
+      await fileExists(`${certDir}/auth.private.pem`)
+      prv = await readFile(`${certDir}/auth.private.pem`, 'utf-8')
+      pub = await readFile(`${certDir}/auth.public.pem`, 'utf-8')
+    } catch (err) {
+      // Ensure /config/certs folder exists
+      try { await mkdir(`${process.cwd()}/config/`) } catch (err) {}
+      try { await mkdir(certDir) } catch (err) {}
 
-        // No more auth nodes remaining
-        spark.on('end', () => {
-          if (!app.adapter.nodes.find(n => n.scp.includes('write_auth'))) {
-            preauth.validateWorker()
-          }
-        })
-      })
+      // Generate keys and save to /config/certs
+      const keys = generateKeys()
+      prv = keys.private
+      pub = keys.public
+      await writeFile(`${certDir}/auth.public.pem`, pub)
+      await writeFile(`${certDir}/auth.private.pem`, prv)
+      await writeFile(`${certDir}/.gitignore`, '*')
     }
+    return { prv, pub }
   }
 }
 

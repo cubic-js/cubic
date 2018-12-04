@@ -9,7 +9,6 @@ class HttpAdapter extends Adapter {
   constructor (config, cache) {
     super(config, cache)
     const middleware = new Middleware(config)
-    this.request.protocol = 'http'
     this.app = polka()
     this.server = createServer(this.app.handler).listen(config.port)
     this.app.use(bodyParser.urlencoded({ extended: true })).use(bodyParser.json())
@@ -21,8 +20,6 @@ class HttpAdapter extends Adapter {
 
   async runMiddleware (req, res) {
     const transformer = new Transformer()
-
-    // simplify req so we can send it to the core node.
     req = transformer.convertReq(req)
     transformer.convertRes(res)
     const done = await this.stack.run(req, res)

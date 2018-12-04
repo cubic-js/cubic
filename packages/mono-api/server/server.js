@@ -15,7 +15,6 @@ class Server {
   }
 
   init () {
-    this.setRequestClient()
     this.applyMiddleware()
   }
 

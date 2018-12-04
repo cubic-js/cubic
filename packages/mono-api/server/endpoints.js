@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const Url = require('url')
 const mongodb = require('mongodb').MongoClient
 const Stack = require('async-middleware-stack')
 const Client = require('cubic-client')
@@ -9,7 +10,7 @@ const query = require('../middleware/endpoints/query.js')
 const auth = require('../middleware/endpoints/auth.js')
 
 /**
- * Interface for handling endpoints
+ * Handles files in /api/ folder so they're automatically routed as API endpoints.
  */
 class EndpointController {
   constructor (config) {
@@ -45,9 +46,15 @@ class EndpointController {
   async getResponse (req, res) {
     return new Promise(async resolve => {
       const endpoint = this.findByUrl(req.url, req.method)
-      const passed = await this.stack.run(req, res, endpoint)
+
+      // Check if we can find the file locally
+      if (!endpoint) {
+        return this.sendNotFound(req, res)
+      }
 
       // Execute target endpoint
+      const passed = await this.stack.run(req, res, endpoint)
+
       if (passed) {
         if (this.dev) this.deleteRequireCache(endpoint.file)
         const db = (await this.db).db(this.config.mongoDb)
@@ -56,6 +63,26 @@ class EndpointController {
         await component.main(req, res)
       }
     })
+  }
+
+  /**
+   * Send local file if endpoint couldn't be matched, otherwise send a 404.
+   */
+  async sendNotFound (req, res) {
+    function notFound () {
+      res.status(404).send({
+        error: 'Not found.',
+        reason: `Couldn't find ${req.url}.`
+      })
+    }
+    if (path.extname(path.basename(Url.parse(req.url).pathname || ''))) {
+      try {
+        return res.sendFile(req.url)
+      } catch (err) {
+        notFound()
+      }
+    }
+    notFound()
   }
 
   /**
@@ -85,7 +112,7 @@ class EndpointController {
 
   generateEndpointSchema () {
     this.endpoints = []
-    this.getEndpointTree(this.config.endpointPath)
+    this.getEndpointTree(path.resolve(this.config.endpointPath))
 
     // Reorder items which must not override previous url's with similar route
     // e.g. /something/:id must not be routed before /something/else
@@ -96,33 +123,61 @@ class EndpointController {
       else pushToStart.push(endpoint)
     })
     this.endpoints = pushToStart.concat(pushToEnd)
+
+    if (this.config.group === 'ui') {
+      console.log(this.endpoints)
+    }
   }
 
-  getEndpointTree (filepath) {
-    let stats = fs.lstatSync(filepath)
-    let regexclude = this.config.endpointPathExclude
+  getEndpointTree (filepath, depth = 0) {
+    const stats = fs.lstatSync(filepath)
+    const regexclude = this.config.endpointPathExclude
 
     // Skip if excluded from subpaths
-    if (filepath.match(regexclude)) {
+    if (depth >= this.config.endpointDepth && filepath.match(regexclude)) {
       return
     }
 
     // Folder
     if (stats.isDirectory()) {
       fs.readdirSync(filepath).map(child => {
-        return this.getEndpointTree(filepath + '/' + child)
+        return this.getEndpointTree(`${filepath}/${child}`, ++depth)
       })
     }
 
     // File -> Set endpoint config
     else {
-      let Endpoint = require(filepath.replace('//', '/'))
-      let endpoint = new Endpoint().schema
+      let Endpoint, endpoint, route, custom
 
-      // Routes
-      endpoint.name = path.basename(filepath).replace('.js', '')
-      endpoint.file = filepath
-      let route = endpoint.file.replace(this.config.endpointPath, '').replace('.js', '')
+      // If the file isn't an endpoint, we'll just use the endpoint parent
+      // instead. This works for special endpoints like the cubic-ui sites, since
+      // they all use the same main function.
+      try {
+        Endpoint = require(filepath)
+        endpoint = new Endpoint().schema
+      } catch (err) {
+        Endpoint = require(this.config.endpointParent)
+        endpoint = new Endpoint().schema
+        custom = true
+      }
+      const ext = this.config.endpointExtension
+      const root = path.resolve(this.config.endpointPath)
+
+      // Sometimes we need to get endpoints from two folders, so this will remove
+      // the given number of levels of folder names before the endpoint, which
+      // means that their URL looks as if they're in the same folder.
+      if (this.config.endpointDepth) {
+        const paths = filepath.replace(root, '').split('/')
+        const depth = this.config.endpointDepth + 1 // +1 because of leading `/`
+        route = '/' + paths.slice(depth, paths.length).join('/')
+      }
+
+      // Prepare endpoint attributes.
+      endpoint.name = path.basename(filepath).replace(ext, '')
+      endpoint.file = custom ? this.config.endpointParent : filepath
+
+      // Generate final route which will be matched against.
+      route = (route || endpoint.file.replace(root, '')).replace(ext, '').replace('index', '')
       endpoint.route = endpoint.url ? endpoint.url : this.config.baseUrl + route
       this.endpoints.push(endpoint)
     }

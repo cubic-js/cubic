@@ -1,4 +1,4 @@
-const Endpoint = require(cubic.config.auth.core.endpointParent)
+const Endpoint = cubic.nodes.auth.api.Endpoint
 const auth = require('../lib/auth.js')
 const bcrypt = require('bcryptjs')
 

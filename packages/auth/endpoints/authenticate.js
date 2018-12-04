@@ -1,4 +1,4 @@
-const Endpoint = require(cubic.config.auth.core.endpointParent)
+const Endpoint = cubic.nodes.auth.api.Endpoint
 const auth = require('../lib/auth.js')
 const crypto = require('crypto')
 const randtoken = require('rand-token').generator({ source: crypto.randomBytes })
@@ -19,6 +19,7 @@ class Authentication extends Endpoint {
     this.res = res
 
     // Credentials sent
+    // TODO: Put cookie check in own function
     if (credentials.user_key) {
       let token = await this.matchCredentials(credentials, req)
       if (token) {

@@ -49,21 +49,20 @@ class WebpackServer {
   }
 
   /**
-   * Generate plaintext constants which will be saved in the router file
+   * Generate plaintext constants which will be saved in the router file.
    */
   async getViewConstants () {
-    const srcDir = cubic.config.ui.sourcePath.replace(/\\/g, '/')
-    const endpoints = cubic.nodes.ui.core.client.endpointController.endpoints
+    const endpoints = cubic.nodes.ui.api.server.http.endpoints.endpoints
     let routes = []
 
-    endpoints.forEach(endpoint => {
+    for (const endpoint of endpoints) {
       let route = {
         path: endpoint.route,
-        component: `() => import(\`${srcDir}/${endpoint.view}\`)`,
+        component: `() => import(\`${endpoint.view || endpoint.file}\`)`,
         props: true
       }
       routes.push(route)
-    })
+    }
 
     return routes
   }
