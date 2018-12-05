@@ -10,8 +10,8 @@ const Client = require('cubic-client')
 const api = new Client({
   api_url: cubic.config.ui.client.apiUrl,
   auth_url: cubic.config.ui.client.authUrl,
-  user_key: cubic.config.ui.core.userKey,
-  user_secret: cubic.config.ui.core.userSecret,
+  user_key: cubic.config.ui.api.userKey,
+  user_secret: cubic.config.ui.api.userSecret,
   schema: {
     endpoints: [{}],
     maxPending: 0

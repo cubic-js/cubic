@@ -1,8 +1,8 @@
 const Endpoint = cubic.nodes.core.Endpoint
 
 class Ratelimit extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
+  constructor (options) {
+    super(options)
     this.schema.query = [
       {
         name: 'required',

@@ -7,11 +7,6 @@ const Endpoint = require('cubic-mono-api/server/endpoint')
  * pages do.
  */
 class View extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
-    this.schema.view = '/app.vue'
-  }
-
   /**
    * Just render the given view if no other instructions are given.
    */

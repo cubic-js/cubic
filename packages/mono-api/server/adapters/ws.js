@@ -5,10 +5,10 @@ const Primus = require('primus')
 const Rooms = require('primus-redis-rooms')
 
 class WsAdapter extends Adapter {
-  constructor (config, server, cache) {
-    super(config, cache)
+  constructor (config, server) {
+    super(config)
     const middleware = new Middleware(config)
-    const listener = new Listener(config, this, cache)
+    const listener = new Listener(config, this)
     this.nodes = [] // Cubic nodes to contact in request handler
     this.app = new Primus(server, {
       pathname: '/ws',

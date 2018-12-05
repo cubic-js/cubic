@@ -9,8 +9,8 @@ const Cookies = require('cookies')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Authentication extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
+  constructor (options) {
+    super(options)
     this.schema.method = 'POST'
   }
 

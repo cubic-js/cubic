@@ -7,8 +7,8 @@ const bcrypt = require('bcryptjs')
  * API after the user_key from /register has been discarded
  */
 class UserKey extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
+  constructor (options) {
+    super(options)
     this.schema.method = 'POST'
   }
 

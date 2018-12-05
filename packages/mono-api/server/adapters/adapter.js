@@ -2,7 +2,7 @@ const Endpoints = require('../endpoints.js')
 const Stack = require('async-middleware-stack')
 
 class Adapter {
-  constructor (config, cache) {
+  constructor (config) {
     this.config = config
     this.stack = new Stack(config)
     this.endpoints = new Endpoints(config)

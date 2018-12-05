@@ -3,10 +3,9 @@ const transformer = new Transformer()
 const Middleware = require('../../middleware/native/ws.js')
 
 class WsListener {
-  constructor (config, adapter, cache) {
+  constructor (config, adapter) {
     this.config = config
     this.adapter = adapter
-    this.cache = cache
     this.middleware = new Middleware(this.config)
     this.nodeIds = 1
   }

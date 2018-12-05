@@ -3,40 +3,30 @@
  * endpoint.
  */
 class Endpoint {
-  constructor (api, db, url) {
+  constructor (options = {}) {
     this.schema = {
       scope: '',
       method: 'GET',
       query: []
     }
-    this.api = api
-    this.db = db
-    this.url = url
+    this.cc = options.cache
+    this.ws = options.ws
+    this.db = options.db
+    this.url = options.url
   }
 
   async publish (data, endpoint = this.url) {
     cubic.log.verbose('Core      | Sending data to publish for ' + endpoint)
-    await this.api.connecting()
-    this.api.connection.client.send(JSON.stringify({
+    this.ws.app.room(endpoint).write({
       action: 'PUBLISH',
-      endpoint,
+      room: endpoint,
       data
-    }))
+    })
   }
 
   async cache (value, exp, headers, key = this.url) {
-    const scope = this.schema.scope
-
     cubic.log.verbose('Core      | Sending data to cache for ' + key)
-    await this.api.connecting()
-    this.api.connection.client.send(JSON.stringify({
-      action: 'CACHE',
-      key,
-      headers,
-      value,
-      exp,
-      scope
-    }))
+    this.cc.save(key, headers, value, exp, this.schema.scope)
   }
 }
 

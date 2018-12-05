@@ -6,12 +6,17 @@ const Redis = require('redis')
 
 class Server {
   constructor (config) {
-    const redis = Redis.createClient(config.redisUrl)
     this.config = config
-    this.cache = new Cache(config, redis)
+    this.cache = new Cache(config, Redis.createClient(config.redisUrl))
     this.logger = new Logger(config)
-    this.http = new HTTP(config, this.cache)
-    this.ws = new Ws(config, this.http.server, this.cache)
+    this.http = new HTTP(config)
+    this.ws = new Ws(config, this.http.server)
+
+    // Make cache and websockets accessible in endpoints
+    this.http.endpoints.cache = this.cache
+    this.http.endpoints.ws = this.ws
+    this.ws.endpoints.cache = this.cache
+    this.ws.endpoints.ws = this.ws
   }
 
   init () {

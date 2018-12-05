@@ -16,7 +16,13 @@ class EndpointController {
   constructor (config) {
     this.config = config
     this.dev = cubic.config.local.environment === 'development'
-    this.db = mongodb.connect(this.config.mongoUrl, { useNewUrlParser: true })
+    this.db = mongodb.connect(this.config.mongoUrl, {
+      useNewUrlParser: true,
+      auto_reconnect: true,
+      keepAlive: 1,
+      connectTimeoutMS: 60000,
+      socketTimeoutMS: 60000
+    })
     this.api = new Client({
       api_url: config.apiUrl,
       auth_url: config.authUrl,
@@ -58,8 +64,9 @@ class EndpointController {
       if (passed) {
         if (this.dev) this.deleteRequireCache(endpoint.file)
         const db = (await this.db).db(this.config.mongoDb)
+        const options = { url: req.url, cache: this.cache, ws: this.ws, db }
         const Endpoint = require(endpoint.file)
-        const component = new Endpoint(this.api, db, req.url)
+        const component = new Endpoint(options)
         await component.main(req, res)
       }
     })
@@ -123,10 +130,6 @@ class EndpointController {
       else pushToStart.push(endpoint)
     })
     this.endpoints = pushToStart.concat(pushToEnd)
-
-    if (this.config.group === 'ui') {
-      console.log(this.endpoints)
-    }
   }
 
   getEndpointTree (filepath, depth = 0) {
