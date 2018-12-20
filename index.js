@@ -16,16 +16,16 @@ class Cubic extends Loader {
     try {
       const Auth = require('cubic-auth')
       const Api = require('cubic-api')
-      const Core = require('cubic-core')
       const Ui = require('cubic-ui')
       const defaults = require('cubic-defaults')
+      const parallel = []
 
       this.init()
       await defaults.verify()
       await cubic.use(new Auth())
-      cubic.use(new Api())
-      cubic.use(new Core())
-      cubic.use(new Ui())
+      parallel.push(cubic.use(new Api()))
+      parallel.push(cubic.use(new Ui()))
+      await Promise.all(parallel)
     } catch (err) {
       console.error(`Make sure to install all cubic dependencies when using the bootstrap method.`)
       throw err

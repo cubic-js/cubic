@@ -18,7 +18,7 @@ module.exports = {
     endpointPathExclude: /^((?!(\/endpoints|\/sites)).)*$/g,
     endpointDepth: 1,
     endpointExtension: /(\.js|\.vue)$/,
-    endpointParent: `${__dirname}/../override/endpoint.js`
+    endpointParent: `${__dirname}/../endpoint.js`
   },
 
   /**

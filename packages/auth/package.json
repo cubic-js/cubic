@@ -12,10 +12,11 @@
     "bcryptjs": "^2.4.3",
     "cookies": "^0.7.3",
     "jsonwebtoken": "^8.3.0",
+    "keypair": "^1.0.1",
     "mongodb": "^3.1.8",
     "rand-token": "^0.4.0"
   },
   "peerDependencies": {
-    "cubic-mono-api": "^2.0.1"
+    "cubic-api": "^2.0.1"
   }
 }

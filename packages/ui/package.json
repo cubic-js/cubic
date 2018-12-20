@@ -39,7 +39,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "peerDependencies": {
-    "cubic-mono-api": "^2.0.1",
+    "cubic-api": "^2.0.1",
     "cubic-client": "^2.0.1"
   },
   "description": "UI node for Cubic.",

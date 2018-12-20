@@ -36,7 +36,7 @@ describe('Client', function () {
 
     // Run reconnect test multiple times. Just wanna be super duper sure and not
     // end up having unreliable connections like with Socket.io
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 3; i++) {
       await reconnect()
     }
   })

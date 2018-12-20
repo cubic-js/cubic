@@ -1,4 +1,4 @@
-const Endpoint = cubic.nodes.core.Endpoint
+const Endpoint = require('cubic-api/endpoint')
 
 class PubSub extends Endpoint {
   async main (req, res) {

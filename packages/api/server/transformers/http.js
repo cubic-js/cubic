@@ -8,6 +8,7 @@ class HttpTransformer {
     const parsed = Url.parse(`https://cubic${url}`, true) // domain is irrelevant
     req.body = request.body
     req.url = url === '' ? '/' : decodeURI(url)
+    req.url = req.url.replace(/\.?\.\//gi, '') // Remove relative paths (../, ./)
     req.user = request.user
     req.method = request.method
     req.query = parsed.query
@@ -25,8 +26,9 @@ class HttpTransformer {
     }
 
     res.redirect = (location, headers) => {
-      res.writeHead(res.statusCode, {
+      res.writeHead(res.statusCode > 300 ? res.statusCode : 302, {
         Location: location,
+        ...res.headers,
         ...headers
       })
       res.end()

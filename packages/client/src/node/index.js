@@ -7,8 +7,7 @@ class Client {
         api_url: 'ws://localhost:3003/ws',
         auth_url: 'ws://localhost:3030/ws',
         user_key: null,
-        user_secret: null,
-        schema: null
+        user_secret: null
       },
       ...options
     }

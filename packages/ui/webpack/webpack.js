@@ -58,10 +58,10 @@ class WebpackServer {
     for (const endpoint of endpoints) {
       let route = {
         path: endpoint.route,
-        component: `() => import(\`${endpoint.view || endpoint.file}\`)`,
+        component: `() => import(\`${endpoint.view}\`)`,
         props: true
       }
-      routes.push(route)
+      if (endpoint.view) routes.push(route)
     }
 
     return routes
@@ -99,8 +99,8 @@ class WebpackServer {
   }
 
   /**
-  * Hook HMR middleware into API node and bundle from there
-  */
+   * Hook HMR middleware into API node and bundle from there
+   */
   async initWebpackDev () {
     const publicPath = this.config.client.output.path
     const readFile = (mfs, file) => mfs.readFileSync(path.join(publicPath, file), 'utf-8')
@@ -114,8 +114,8 @@ class WebpackServer {
       logLevel: 'warn',
       stats: 'errors-only',
       noInfo: true,
-      publicPath: `${publicPath}/bundles`,
-      watchOptions: { aggregateTimeout: 0 }
+      publicPath,
+      watchOptions: { aggregateTimeout: 10 }
     })
     const hotMiddleware = HotMiddleware(compiler, { heartbeat: 100 })
     this.addMiddleware(devMiddleware)

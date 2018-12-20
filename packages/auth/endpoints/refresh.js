@@ -1,4 +1,4 @@
-const Endpoint = cubic.nodes.auth.api.Endpoint
+const Endpoint = require('cubic-api/endpoint')
 const auth = require('../lib/auth.js')
 
 /**

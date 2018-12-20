@@ -1,4 +1,4 @@
-const Endpoint = cubic.nodes.ui.core.Endpoint
+const Endpoint = require('cubic-api/endpoint')
 
 /**
  * This is a regular cubic-core endpoint to respond to a request on the view

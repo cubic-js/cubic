@@ -1,6 +1,6 @@
-const API = require('cubic-mono-api')
+const API = require('cubic-api')
 const local = require('./config/local.js')
-const WebpackServer = require('./controllers/webpack.js')
+const WebpackServer = require('./webpack/webpack.js')
 
 class Ui {
   constructor (options) {

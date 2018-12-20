@@ -1,4 +1,5 @@
 const fs = require('fs')
+const promisify = require('util').promisify
 const path = require('path')
 const Url = require('url')
 const mongodb = require('mongodb').MongoClient
@@ -84,7 +85,9 @@ class EndpointController {
     }
     if (path.extname(path.basename(Url.parse(req.url).pathname || ''))) {
       try {
-        return res.sendFile(req.url)
+        const readFile = promisify(fs.readFile)
+        const filepath = path.join(this.config.publicPath, req.url)
+        return res.send(Buffer.from(await readFile(filepath), 'base64'))
       } catch (err) {
         notFound()
       }

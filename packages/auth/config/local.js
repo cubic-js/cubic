@@ -12,6 +12,8 @@ module.exports = {
     mongoDb: 'cubic-auth'
   },
 
+  skipInitialSetup: false,
+
   /**
    * Token config
    */

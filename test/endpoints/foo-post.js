@@ -1,4 +1,4 @@
-const Endpoint = cubic.nodes.core.Endpoint
+const Endpoint = require('cubic-api/endpoint')
 
 class Foo extends Endpoint {
   constructor (options) {

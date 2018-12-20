@@ -1,4 +1,4 @@
-const Endpoint = cubic.nodes.auth.api.Endpoint
+const Endpoint = require('cubic-api/endpoint')
 const auth = require('../lib/auth.js')
 const crypto = require('crypto')
 const randtoken = require('rand-token').generator({ source: crypto.randomBytes })
