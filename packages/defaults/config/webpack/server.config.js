@@ -1,3 +1,4 @@
+const prod = cubic.config.local.environment === 'production'
 const merge = require('webpack-merge')
 const baseConfig = require('./base.config.js')
 const nodeExternals = require('webpack-node-externals')
@@ -26,7 +27,7 @@ module.exports = merge(baseConfig, {
     rules: [
       {
         test: /(\.s?[a|c]ss|\.css)$/,
-        use: 'null-loader'
+        use: (prod ? [] : ['vue-style-loader']).concat(['css-loader/locals', 'sass-loader'])
       }
     ]
   },

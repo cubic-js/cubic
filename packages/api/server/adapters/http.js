@@ -6,8 +6,8 @@ const Transformer = require('../transformers/http.js')
 const { createServer } = require('http')
 
 class HttpAdapter extends Adapter {
-  constructor (config, cache) {
-    super(config, cache)
+  constructor (config) {
+    super(config)
     const middleware = new Middleware(config)
     this.app = polka()
     this.server = createServer(this.app.handler).listen(config.port)
@@ -20,13 +20,12 @@ class HttpAdapter extends Adapter {
 
   async runMiddleware (req, res) {
     const transformer = new Transformer()
-
-    // simplify req so we can send it to the core node.
     req = transformer.convertReq(req)
     transformer.convertRes(res)
     const done = await this.stack.run(req, res)
+
     if (done) {
-      await this.getResponse(req, res)
+      await this.endpoints.getResponse(req, res)
     }
   }
 }

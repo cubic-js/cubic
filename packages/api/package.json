@@ -18,9 +18,11 @@
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "mime": "^2.3.1",
+    "mongodb": "^3.1.10",
     "polka": "^0.5.1",
     "primus": "^7.2.3",
     "primus-redis-rooms": "^0.3.2",
+    "rand-token": "^0.4.0",
     "redis": "^2.8.0",
     "rolling-rate-limiter": "^0.1.11",
     "ws": "^6.1.0"

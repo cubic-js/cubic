@@ -5,9 +5,9 @@ class Auth {
   async init () {
     const Register = this.getEndpointFile('register')
     const Authenticate = this.getEndpointFile('authenticate')
-    const mongo = await cubic.nodes.auth.core.client.endpointController.db
-    this.db = mongo.db(cubic.config.auth.core.mongoDb)
-    this.api = cubic.nodes.auth.core.client.api
+    const endpoints = cubic.nodes.auth.api.server.ws.endpoints
+    const db = this.db = (await endpoints.db).db(endpoints.config.mongoDb)
+    const options = { db, cache: endpoints.cache, ws: endpoints.ws }
 
     // Res replacer
     this.res = {}
@@ -15,8 +15,8 @@ class Auth {
     this.res.send = () => {}
 
     // Endpoints
-    this.register = new (require(Register))(this.api, this.db, '/register')
-    this.authenticate = new (require(Authenticate))(this.api, this.db, '/refresh')
+    this.register = new (require(Register))({ ...options, ...{ url: '/register' } })
+    this.authenticate = new (require(Authenticate))({ ...options, ...{ url: '/authenticate' } })
     this.register.res = this.res
     this.authenticate.res = this.res
   }
@@ -25,7 +25,7 @@ class Auth {
    * Helper function to quickly get endpoint paths from core node
    */
   getEndpointFile (endpoint) {
-    return cubic.nodes.auth.core.client.endpointController.endpoints
+    return cubic.nodes.auth.api.server.ws.endpoints.endpoints
       .find(e => e.name === endpoint).file
   }
 
@@ -50,6 +50,10 @@ class Auth {
    * refresh_token
    */
   async getRefreshToken () {
+    const user = await this.db.collection('users').findOne({ user_key: await this.getUserKey() })
+    if (user.refresh_token) {
+      return user.refresh_token
+    }
     return this.authenticate.generateRefreshToken(await this.getUserKey())
   }
 

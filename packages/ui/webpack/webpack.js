@@ -49,21 +49,20 @@ class WebpackServer {
   }
 
   /**
-   * Generate plaintext constants which will be saved in the router file
+   * Generate plaintext constants which will be saved in the router file.
    */
   async getViewConstants () {
-    const srcDir = cubic.config.ui.sourcePath.replace(/\\/g, '/')
-    const endpoints = cubic.nodes.ui.core.client.endpointController.endpoints
+    const endpoints = cubic.nodes.ui.api.server.http.endpoints.endpoints
     let routes = []
 
-    endpoints.forEach(endpoint => {
+    for (const endpoint of endpoints) {
       let route = {
         path: endpoint.route,
-        component: `() => import(\`${srcDir}/${endpoint.view}\`)`,
+        component: `() => import(\`${endpoint.view}\`)`,
         props: true
       }
-      routes.push(route)
-    })
+      if (endpoint.view) routes.push(route)
+    }
 
     return routes
   }
@@ -100,8 +99,8 @@ class WebpackServer {
   }
 
   /**
-  * Hook HMR middleware into API node and bundle from there
-  */
+   * Hook HMR middleware into API node and bundle from there
+   */
   async initWebpackDev () {
     const publicPath = this.config.client.output.path
     const readFile = (mfs, file) => mfs.readFileSync(path.join(publicPath, file), 'utf-8')
@@ -115,7 +114,7 @@ class WebpackServer {
       logLevel: 'warn',
       stats: 'errors-only',
       noInfo: true,
-      publicPath: `${publicPath}/bundles`,
+      publicPath,
       watchOptions: { aggregateTimeout: 0 }
     })
     const hotMiddleware = HotMiddleware(compiler, { heartbeat: 100 })

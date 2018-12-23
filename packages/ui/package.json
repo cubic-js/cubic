@@ -47,7 +47,6 @@
   },
   "peerDependencies": {
     "cubic-api": "^2.0.1",
-    "cubic-core": "^2.0.1",
     "cubic-client": "^2.0.1"
   },
   "description": "UI node for Cubic.",

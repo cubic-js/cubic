@@ -1,4 +1,4 @@
-const Endpoint = require(cubic.config.auth.core.endpointParent)
+const Endpoint = require('cubic-api/endpoint')
 const auth = require('../lib/auth.js')
 const crypto = require('crypto')
 const randtoken = require('rand-token').generator({ source: crypto.randomBytes })
@@ -8,8 +8,8 @@ const bcrypt = require('bcryptjs')
  * Contains multi-purpose functions for child-methods and provides default values
  */
 class Authentication extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
+  constructor (options) {
+    super(options)
     this.schema.method = 'POST'
   }
 

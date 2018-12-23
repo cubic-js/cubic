@@ -1,17 +1,18 @@
 const assert = require('assert')
 const Client = require(`${process.cwd()}/packages/client`)
+const Endpoint = require('cubic-api/endpoint')
 
 /**
  * Tests for properly responding to usual requests.
  */
 describe('Requests', function () {
-  let client, api, mongo, db
+  let client, options
 
   before(async function () {
     client = new Client()
-    api = cubic.nodes.core.client.api
-    mongo = await cubic.nodes.core.client.endpointController.db
-    db = mongo.db(cubic.config.core.mongoDb)
+    const endpoints = cubic.nodes.api.server.ws.endpoints
+    const db = this.db = (await endpoints.db).db(endpoints.config.mongoDb)
+    options = { db, cache: endpoints.cache, ws: endpoints.ws }
     await client.connecting()
   })
 
@@ -30,13 +31,13 @@ describe('Requests', function () {
 
   // Raw file check
   it('should send buffer of guy fieri on GET /guy-fieri.jpg', async function () {
-    const res = await client.get('/guy-fieri.jpg')
-    assert(res.type === 'Buffer' || res instanceof Buffer)
+    const guy = await client.get('/guy-fieri.jpg')
+    assert(guy.type === 'Buffer' || guy instanceof Buffer)
   })
 
   // Pub/Sub
   it('should emit event with "foo" on /test when published.', function (done) {
-    const endpoint = new cubic.nodes.core.Endpoint(api, db, '/test')
+    const endpoint = new Endpoint({ ...options, ...{ url: '/test' } })
     client.subscribe('/test', foo => {
       assert(foo === 'foo')
       done()

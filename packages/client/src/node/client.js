@@ -34,16 +34,6 @@ class Client {
       this.client = new WS(this.url, options)
       this.client.on('open', () => {
         this.connected = true
-
-        // System nodes should send their endpoint schema to the API
-        if (this.options.schema) {
-          this.client.send(JSON.stringify({
-            ...{
-              action: 'SCHEMA'
-            },
-            ...this.options.schema
-          }))
-        }
         resolve()
       })
       this.client.on('close', e => this.reconnect())
@@ -83,7 +73,7 @@ class Client {
           this.connected = true // reconnect won't run otherwise
           this.reconnect()
         }
-      }, 2000)
+      }, 500)
     })
   }
 

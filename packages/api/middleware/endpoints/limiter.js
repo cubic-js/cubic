@@ -1,23 +1,25 @@
+const Redis = require('redis')
 const RateLimiter = require('rolling-rate-limiter')
 
 /**
- * Global rate limiter to prevent any 'accidental' 500 requests per second.
- * This applies to *every* request. Keep in mind that there's another rate
- * limiter on the core worker to apply custom rate limits to individual
- * endpoints.
+ * Rolling Rate limiting Implementation
+ * See https://engineering.classdojo.com/blog/2015/02/06/rolling-rate-limiter/
+ * for a detailed explanation.
  */
 class Limiter {
-  constructor (config, redis) {
+  constructor (config) {
     this.config = config
-    this.redis = redis
+    this.redis = Redis.createClient(config.redisUrl)
   }
 
   /**
    * Check if user has exceeded their rate limits for this endpoint
    */
-  async check (req, res) {
+  async check (req, res, endpoint) {
     // User is root -> skip limiting
-    if (req.user.scp.includes('write_root')) {
+    if (req.user.scp.includes('write_root') ||
+        req.user.scp.includes('ignore_rate_limit') ||
+        (endpoint.limit && endpoint.limit.disable)) {
       return
     }
 
@@ -26,18 +28,17 @@ class Limiter {
       const limit = RateLimiter(Object.assign({
         redis: this.redis,
         namespace: 'rate-limiter'
-      }, this.config.limit))
+      }, endpoint.limit || this.config.limit))
 
       // Cached value is `uid + url` e.g. nakroma/v1/foo/bar
-      limit(req.user.uid + '-global', (err, time, actions) => {
+      limit(req.user.uid + endpoint.route, (err, time, actions) => {
         this.limit(err, time, actions, resolve)
       })
     })
 
     // Reject request if limited
     if (limited) {
-      res.status(429).send(limited)
-      return true
+      return res.status(429).send(limited)
     }
   }
 
