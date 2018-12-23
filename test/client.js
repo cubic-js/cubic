@@ -7,7 +7,6 @@ describe('Client', function () {
   before(function () {
     cubic.nodes.api.server.ws.app.on('connection', s => {
       const { user } = s.request
-
       if (user.uid === 'cubic-client-test') {
         spark = s
       }
@@ -36,8 +35,9 @@ describe('Client', function () {
 
     // Run reconnect test multiple times. Just wanna be super duper sure and not
     // end up having unreliable connections like with Socket.io
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 20; i++) {
       await reconnect()
+      await new Promise(resolve => setTimeout(resolve, 500))
     }
   })
 

@@ -115,7 +115,7 @@ class WebpackServer {
       stats: 'errors-only',
       noInfo: true,
       publicPath,
-      watchOptions: { aggregateTimeout: 10 }
+      watchOptions: { aggregateTimeout: 0 }
     })
     const hotMiddleware = HotMiddleware(compiler, { heartbeat: 100 })
     this.addMiddleware(devMiddleware)
