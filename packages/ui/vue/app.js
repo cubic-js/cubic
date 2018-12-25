@@ -7,27 +7,20 @@
 import Vue from 'vue'
 import VueTouch from 'vue-touch-hotfix'
 import App from 'src/app.vue'
-import Client from 'cubic-client/browser'
+import Client from 'cubic-client'
 import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
 
 // export a factory function for creating fresh app, router and store
 // instances
-export function createApp (context) {
-  // We're on the server -> Get pre-connected api connection from node
-  if (context) {
-    Vue.prototype.$cubic = context.api
-  }
+export function createApp () {
+  /* eslint no-undef: "off" */
+  Vue.prototype.$cubic = new Client({
+    api_url: $apiUrl,
+    auth_url: $authUrl
+  })
 
-  // We're on the client -> load API connection
-  else {
-    /* eslint no-undef: "off" */
-    Vue.prototype.$cubic = new Client({
-      api_url: $apiUrl,
-      auth_url: $authUrl
-    })
-  }
   const router = createRouter()
   const store = createStore(Vue.prototype.$cubic)
 

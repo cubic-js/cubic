@@ -1,7 +1,6 @@
-const Core = require('./override/core.js')
 const API = require('cubic-api')
 const local = require('./config/local.js')
-const WebpackServer = require('./controllers/webpack.js')
+const WebpackServer = require('./webpack/webpack.js')
 
 class Ui {
   constructor (options) {
@@ -11,16 +10,9 @@ class Ui {
     }
   }
 
-  /**
-   * Hook node components for actual logic
-   */
   async init () {
     await cubic.use(new API(cubic.config.ui.api))
-    await cubic.use(new Core(cubic.config.ui.core))
-
-    if (!cubic.config.ui.core.disable) {
-      cubic.nodes.ui.core.webpackServer = new WebpackServer()
-    }
+    this.webpackServer = new WebpackServer()
   }
 }
 

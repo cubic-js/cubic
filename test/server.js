@@ -5,11 +5,11 @@ const rmrf = require('rimraf')
 const { promisify } = require('util')
 const fileExists = promisify(fs.lstat)
 const removeFile = promisify(rmrf)
+const moveFile = promisify(fs.rename)
 const Cubic = require(cwd)
 const defaults = require(`${cwd}/packages/defaults`)
 const Auth = require(`${cwd}/packages/auth`)
 const Api = require(`${cwd}/packages/api`)
-const Core = require(`${cwd}/packages/core`)
 const Ui = require(`${cwd}/packages/ui`)
 const Client = require(`${cwd}/packages/client`)
 const get = require('./lib/get.js')
@@ -19,28 +19,18 @@ const get = require('./lib/get.js')
  * databases in drone-ci
  */
 before(async function () {
+  await moveFile(`${process.cwd()}/test/config`, `${process.cwd()}/config`)
   await defaults.verify()
   const ci = process.env.DRONE
   const redisUrl = 'redis://redis'
   const mongoUrl = 'mongodb://mongodb'
   const endpointPath = `${process.cwd()}/test/endpoints`
+  const parallel = []
   const cubic = new Cubic({ logLevel: 'silent' })
-  await cubic.use(new Auth(ci ? {
-    api: { redisUrl },
-    core: { redisUrl, mongoUrl }
-  } : {}))
-  await cubic.use(new Api(ci ? { redisUrl } : {}))
-  await cubic.use(new Core(ci ? {
-    redisUrl,
-    mongoUrl,
-    endpointPath
-  } : {
-    endpointPath
-  }))
-  await cubic.use(new Ui(ci ? {
-    api: { redisUrl },
-    core: { redisUrl, mongoUrl }
-  } : {}))
+  await cubic.use(new Auth(ci ? { api: { redisUrl, mongoUrl } } : {}))
+  parallel.push(cubic.use(new Api(ci ? { redisUrl, mongoUrl, endpointPath } : { endpointPath })))
+  parallel.push(cubic.use(new Ui(ci ? { api: { redisUrl, mongoUrl } } : {})))
+  await Promise.all(parallel)
 })
 
 /**
@@ -62,31 +52,12 @@ describe('Server', function () {
   it('should load up UI node - GET /', async function () {
     await get('/', 3000)
   })
-
-  it('should reconnect system nodes when connections are dropped', function (done) {
-    const client = new Client()
-    const nodes = cubic.nodes.api.server.ws.nodes
-    const ln = nodes.length
-    let rc = 0
-
-    for (let i = 0; i < ln; i++) {
-      const node = nodes[0] // Take the first because we'll remove them in the loop
-      node.spark.end(undefined, { reconnect: true })
-    }
-    cubic.nodes.api.server.ws.app.on('connection', async spark => {
-      if (++rc !== ln) return // Not all nodes dropped yet
-      if (rc === ln) {
-        assert(await client.get('/foo') === 'bar')
-        done()
-      }
-    })
-  })
 })
 
 // Remove default files
 after(async function () {
+  await moveFile(`${process.cwd()}/config`, `${process.cwd()}/test/config`)
+  await removeFile(`${process.cwd()}/ui`)
   await removeFile(`${process.cwd()}/api`)
   await removeFile(`${process.cwd()}/assets`)
-  await removeFile(`${process.cwd()}/config`)
-  await removeFile(`${process.cwd()}/ui`)
 })

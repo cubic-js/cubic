@@ -1,8 +1,8 @@
-const Endpoint = cubic.nodes.core.Endpoint
+const Endpoint = require('cubic-api/endpoint')
 
 class Foo extends Endpoint {
-  constructor (api, db, url) {
-    super(api, db, url)
+  constructor (options) {
+    super(options)
     this.schema.method = 'POST'
     this.schema.url = '/foo'
   }

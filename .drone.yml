@@ -14,13 +14,13 @@ pipeline:
       branch:
         exclude: [ master ]
 
-  test - development:
-    image: node
-    commands:
-      - npm test
-    when:
-      branch:
-        exclude: [ master ]
+  #test - development:
+  #  image: node:8
+  #  commands:
+  #    - npm test
+  #  when:
+  #    branch:
+  #      exclude: [ master ]
 
   test - production:
     image: node

@@ -7,6 +7,7 @@ class WsTransformer {
     const parsed = Url.parse(`https://cubic${url}`, true) // domain is irrelevant
     req.body = request.body
     req.url = url === '' ? '/' : decodeURI(url)
+    req.url = req.url.replace(/\.?\.\//gi, '') // Remove relative paths (../, ./)
     req.user = spark.request.user
     req.method = method
     req.query = parsed.query
@@ -45,6 +46,7 @@ class WsTransformer {
       return res.status(status).send(location)
     }
     res.header = () => res
+    res.setHeader = () => res
 
     return res
   }

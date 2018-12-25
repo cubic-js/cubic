@@ -1,13 +1,17 @@
-const Core = require('cubic-core')
 const API = require('cubic-api')
 const local = require('./config/local.js')
-const preauth = require('./hooks/preauth.js')
+const fs = require('fs')
+const promisify = require('util').promisify
+const mkdir = promisify(fs.mkdir)
+const fileExists = promisify(fs.lstat)
+const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
+const generateKeys = require('keypair')
+const certDir = `${process.cwd()}/config/certs`
+const mongodb = require('mongodb')
+const bcrypt = require('bcryptjs')
+const randtoken = require('rand-token')
 
-/**
- * Loader for auth-node system. For ease of maintenance, the auth-node consists
- * of a core-node that is connected to its own api-node as web server, much
- * like a regular cubic project
- */
 class Auth {
   constructor (options) {
     this.config = {
@@ -17,28 +21,63 @@ class Auth {
   }
 
   async init () {
-    // Core Node which processes incoming requests
-    cubic.hook('auth.core', preauth.verifyUserIndices)
-    cubic.use(new Core(cubic.config.auth.core))
+    if (!this.config.skipInitialSetup) await this.checkRSAKeys()
+    const api = await cubic.use(new API(cubic.config.auth.api))
+    if (!this.config.skipInitialSetup) await this.createSystemUser(api)
+  }
 
-    // API node for distributing requests
-    await cubic.use(new API(cubic.config.auth.api))
-    if (!cubic.config.auth.api.disable) {
-      preauth.validateWorker()
+  /**
+   * Generate RSA keys for api token signatures.
+   */
+  async checkRSAKeys () {
+    let prv, pub
+    try {
+      await fileExists(`${certDir}/auth.private.pem`)
+      prv = await readFile(`${certDir}/auth.private.pem`, 'utf-8')
+      pub = await readFile(`${certDir}/auth.public.pem`, 'utf-8')
+    } catch (err) {
+      // Ensure /config/certs folder exists
+      try { await mkdir(`${process.cwd()}/config/`) } catch (err) {}
+      try { await mkdir(certDir) } catch (err) {}
 
-      // Re-hook this middleware when the auth core disconnects again
-      const app = cubic.nodes.auth.api.server.ws.app
-      cubic.nodes.auth.api.server.ws.app.on('connection', spark => {
-        if (!spark.request.user.scp.includes('write_auth')) return
-
-        // No more auth nodes remaining
-        spark.on('end', () => {
-          if (!app.adapter.nodes.find(n => n.scp.includes('write_auth'))) {
-            preauth.validateWorker()
-          }
-        })
-      })
+      // Generate keys and save to /config/certs
+      const keys = generateKeys()
+      prv = keys.private
+      pub = keys.public
+      await writeFile(`${certDir}/auth.public.pem`, pub)
+      await writeFile(`${certDir}/auth.private.pem`, prv)
+      await writeFile(`${certDir}/.gitignore`, '*')
     }
+    cubic.config.auth.api.certPublic = pub
+    cubic.config.auth.certPrivate = prv
+  }
+
+  /**
+   * Generates API user without rate limits for use within cubic. This is
+   * particularily important for cubic-ui
+   */
+  async createSystemUser (api) {
+    const mongo = await mongodb.connect(cubic.config.auth.api.mongoUrl, { useNewUrlParser: true })
+    const db = mongo.db(cubic.config.auth.api.mongoDb)
+    const key = randtoken.uid(32)
+    const secret = randtoken.uid(32)
+    api.systemUser = {
+      user_id: key,
+      user_secret: secret
+    }
+    await db.collection('users').updateOne({
+      user_key: key
+    }, {
+      $set: {
+        user_id: 'cubic',
+        user_key: key,
+        user_secret: await bcrypt.hash(secret, 8),
+        last_ip: [],
+        scope: 'ignore_rate_limit'
+      }
+    }, {
+      upsert: true
+    })
   }
 }
 

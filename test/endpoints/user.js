@@ -1,4 +1,4 @@
-const Endpoint = cubic.nodes.core.Endpoint
+const Endpoint = require('cubic-api/endpoint')
 const username = require('username')
 
 class User extends Endpoint {

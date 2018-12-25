@@ -21,8 +21,9 @@ done
 
 # Webpack will also look for cubic-ui and its dependencies inside the root
 # node_modules
-echo "cubic-ui -> /node_modules/cubic-client"
+echo "cubic-ui, cubic-api, cubic-client -> /node_modules/cubic-client"
 ln -s "$root/packages/ui" "$root/node_modules/cubic-ui" 2>/dev/null
+ln -s "$root/packages/api" "$root/node_modules/cubic-api" 2>/dev/null
 ln -s "$root/packages/client" "$root/node_modules/cubic-client" 2>/dev/null
 
 for package in `find $root/packages/ui/node_modules -maxdepth 1 -mindepth 1 -type d`; do

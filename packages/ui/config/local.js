@@ -1,15 +1,9 @@
 module.exports = {
   api: {
     port: 3000,
-    cacheExp: 10,
+    cacheExp: 60,
+    group: 'ui',
 
-    /**
-     * cubic information
-     */
-    group: 'ui'
-  },
-
-  core: {
     /**
      * Databases
      */
@@ -20,19 +14,11 @@ module.exports = {
     /**
      * Endpoint config
      */
-    endpointPath: `${process.cwd()}/ui/endpoints`,
-    endpointParent: `${__dirname}/../override/endpoint.js`,
-
-    /**
-     * Target Node URLs
-     */
-    apiUrl: 'ws://localhost:3000/ws',
-    authUrl: 'ws://localhost:3030/ws',
-
-    /**
-     * cubic information
-     */
-    group: 'ui'
+    endpointPath: `${process.cwd()}/ui`,
+    endpointPathExclude: /^((?!(\/endpoints|\/sites)).)*$/g,
+    endpointDepth: 1,
+    endpointExtension: /(\.js|\.vue)$/,
+    endpointParent: `${__dirname}/../endpoint.js`
   },
 
   /**
@@ -53,6 +39,5 @@ module.exports = {
     serverConfig: `${process.cwd()}/config/webpack/server.config.js`
   },
 
-  sourcePath: `${process.cwd()}/ui`,
-  sitesPath: `${process.cwd()}/ui/sites`
+  sourcePath: `${process.cwd()}/ui`
 }

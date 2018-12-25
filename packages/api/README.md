@@ -79,7 +79,7 @@ If necessary, you can still add native connection middleware which runs before
 our own.
 ```js
 cubic.nodes.api.server.http.app.use((req, res, next) => {}) // Native Express Middleware
-cubic.nodes.api.server.sockets.io.use((socket, next) => {}) // Native Primus Middleware
+cubic.nodes.api.server.ws.app.use((socket, next) => {}) // Native Primus Middleware
 ```
 
 <br>
@@ -108,7 +108,7 @@ cubic.use(new Api(options))
 | authCookie | `'cubic-auth-cookie'` | Cookie name to use for access/refresh tokens. |
 | authUrl | `'http://localhost:3030'` | Auth node to connect to when provided access tokens need to be refreshed. |
 | userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](/packages/auth) for reference) |
-| userSecret | none | User secret to authenticate with. Handled the same way as above. 
+| userSecret | none | User secret to authenticate with. Handled the same way as above.
 
 <br>
 

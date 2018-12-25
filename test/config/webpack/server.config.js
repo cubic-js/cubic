@@ -1,3 +1,4 @@
+const prod = cubic.config.local.environment === 'production'
 const merge = require('webpack-merge')
 const baseConfig = require('./base.config.js')
 const nodeExternals = require('webpack-node-externals')
@@ -11,7 +12,7 @@ module.exports = merge(baseConfig, {
   name: 'server',
 
   // Entry point which guides to everything webpack is supposed to bundle
-  entry: `${__dirname}/../../vue/app-server.js`,
+  entry: `${process.cwd()}/node_modules/cubic-ui/vue/app-server.js`,
 
   // Let webpack and vue-loader know we're rendering server-sided
   target: 'node',
@@ -26,7 +27,7 @@ module.exports = merge(baseConfig, {
     rules: [
       {
         test: /(\.s?[a|c]ss|\.css)$/,
-        use: 'null-loader'
+        use: (prod ? [] : ['vue-style-loader']).concat(['css-loader/locals', 'sass-loader'])
       }
     ]
   },
