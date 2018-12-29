@@ -11,8 +11,8 @@ class Ui {
   }
 
   async init () {
-    await cubic.use(new API(cubic.config.ui.api))
-    this.webpackServer = new WebpackServer()
+    const ui = await cubic.use(new API(cubic.config.ui.api))
+    ui.webpackServer = new WebpackServer()
   }
 }
 
