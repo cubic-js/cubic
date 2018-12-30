@@ -58,7 +58,7 @@ class WebpackServer {
     for (const endpoint of endpoints) {
       let route = {
         path: endpoint.route,
-        component: `() => import(\`${endpoint.view}\`)`,
+        component: `() => import(\`${process.cwd()}/${endpoint.view}\`)`,
         props: true
       }
       if (endpoint.view) routes.push(route)
