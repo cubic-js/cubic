@@ -56,12 +56,13 @@ class WebpackServer {
     let routes = []
 
     for (const endpoint of endpoints) {
-      let route = {
-        path: endpoint.route,
-        component: `() => import(\`${path.resolve(process.cwd(), endpoint.view)}\`)`,
-        props: true
+      if (endpoint.view) {
+        routes.push({
+          path: endpoint.route,
+          component: `() => import(\`src${endpoint.view}\`)`,
+          props: true
+        })
       }
-      if (endpoint.view) routes.push(route)
     }
 
     return routes
@@ -76,9 +77,9 @@ class WebpackServer {
   async initBuild () {
     cubic.log.monitor('Started Webpack build process. This may take a while...', true, '')
     if (cubic.config.local.environment === 'production') {
-      await this.initWebpackProd()
+      this.done = await this.initWebpackProd()
     } else {
-      await this.initWebpackDev()
+      this.done = await this.initWebpackDev()
     }
   }
 
