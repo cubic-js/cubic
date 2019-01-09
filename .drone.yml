@@ -5,6 +5,8 @@ pipeline:
       - npm install
       - npx lerna bootstrap
       - bash link.sh
+    when:
+      event: [ push, tag, deployment ]
 
   lint:
     image: node
