@@ -36,15 +36,16 @@ module.exports = {
    * Cache settings
    */
   cacheDb: 1,
-  cacheExp: 60,
+  cacheExp: 60
 
   /**
    * Authorization settings.
-   */
+   * Temporarily disabled. TODO: Fix refresh token generation with 3.x changes
   authCookie: 'cubic-auth-cookie',
   authCookieExpire: 30, // in days
   apiUrl: 'ws://localhost:3003/ws',
   authUrl: 'ws://localhost:3030/ws',
   userKey: undefined,
   userSecret: undefined
+  */
 }

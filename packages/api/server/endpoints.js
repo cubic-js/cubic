@@ -4,7 +4,6 @@ const path = require('path')
 const Url = require('url')
 const mongodb = require('mongodb').MongoClient
 const Stack = require('async-middleware-stack')
-const Client = require('cubic-client')
 const Limiter = require('../middleware/endpoints/limiter.js')
 const url = require('../middleware/endpoints/url.js')
 const query = require('../middleware/endpoints/query.js')
@@ -23,12 +22,6 @@ class EndpointController {
       keepAlive: 1,
       connectTimeoutMS: 60000,
       socketTimeoutMS: 60000
-    })
-    this.api = new Client({
-      api_url: config.apiUrl,
-      auth_url: config.authUrl,
-      user_key: config.userKey,
-      user_secret: config.userSecret
     })
     this.stack = new Stack(config)
     this.limiter = new Limiter(config)
