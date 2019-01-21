@@ -32,22 +32,25 @@ class Auth {
    */
   async checkRSAKeys () {
     let prv, pub
-    try {
-      await fileExists(`${cubic.config.auth.certDir}/auth.private.pem`)
-      prv = await readFile(`${cubic.config.auth.certDir}/auth.private.pem`, 'utf-8')
-      pub = await readFile(`${cubic.config.auth.certDir}/auth.public.pem`, 'utf-8')
-    } catch (err) {
-      // Ensure /config/certs folder exists
-      try { await mkdir(`${process.cwd()}/config/`) } catch (err) {}
-      try { await mkdir(cubic.config.auth.certDir) } catch (err) {}
+    let prvPath = cubic.config.auth.certPrivatePath
+    let pubPath = cubic.config.auth.certPublicPath
+    let tmpPath = prvPath ? prvPath.split('/') : ''
+    if (prvPath) tmpPath.pop()
+    let certDir = tmpPath ? tmpPath.join() : `${process.cwd()}/config/certs`
 
-      // Generate keys and save to /config/certs
+    try {
+      await fileExists(prvPath)
+      prv = await readFile(prvPath, 'utf-8')
+      pub = await readFile(pubPath, 'utf-8')
+    } catch (err) {
       const keys = generateKeys()
       prv = keys.private
       pub = keys.public
-      await writeFile(`${cubic.config.auth.certDir}/auth.public.pem`, pub)
-      await writeFile(`${cubic.config.auth.certDir}/auth.private.pem`, prv)
-      await writeFile(`${cubic.config.auth.certDir}/.gitignore`, '*')
+      console.log(certDir)
+      await mkdir(certDir, { recursive: true })
+      await writeFile(pubPath, pub)
+      await writeFile(prvPath, prv)
+      await writeFile(`${certDir}/.gitignore`, '*')
     }
     cubic.config.auth.api.certPublic = pub
     cubic.config.auth.certPrivate = prv
