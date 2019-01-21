@@ -7,7 +7,6 @@ const fileExists = promisify(fs.lstat)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 const generateKeys = require('keypair')
-const certDir = `${process.cwd()}/config/certs`
 const mongodb = require('mongodb')
 const bcrypt = require('bcryptjs')
 const randtoken = require('rand-token')
@@ -21,7 +20,9 @@ class Auth {
   }
 
   async init () {
-    if (!this.config.skipInitialSetup) await this.checkRSAKeys()
+    if (!this.config.skipInitialSetup && !cubic.config.auth.certPrivate) {
+      await this.checkRSAKeys()
+    }
     const api = await cubic.use(new API(cubic.config.auth.api))
     if (!this.config.skipInitialSetup) await this.createSystemUser(api)
   }
@@ -32,21 +33,21 @@ class Auth {
   async checkRSAKeys () {
     let prv, pub
     try {
-      await fileExists(`${certDir}/auth.private.pem`)
-      prv = await readFile(`${certDir}/auth.private.pem`, 'utf-8')
-      pub = await readFile(`${certDir}/auth.public.pem`, 'utf-8')
+      await fileExists(`${cubic.config.auth.certDir}/auth.private.pem`)
+      prv = await readFile(`${cubic.config.auth.certDir}/auth.private.pem`, 'utf-8')
+      pub = await readFile(`${cubic.config.auth.certDir}/auth.public.pem`, 'utf-8')
     } catch (err) {
       // Ensure /config/certs folder exists
       try { await mkdir(`${process.cwd()}/config/`) } catch (err) {}
-      try { await mkdir(certDir) } catch (err) {}
+      try { await mkdir(cubic.config.auth.certDir) } catch (err) {}
 
       // Generate keys and save to /config/certs
       const keys = generateKeys()
       prv = keys.private
       pub = keys.public
-      await writeFile(`${certDir}/auth.public.pem`, pub)
-      await writeFile(`${certDir}/auth.private.pem`, prv)
-      await writeFile(`${certDir}/.gitignore`, '*')
+      await writeFile(`${cubic.config.auth.certDir}/auth.public.pem`, pub)
+      await writeFile(`${cubic.config.auth.certDir}/auth.private.pem`, prv)
+      await writeFile(`${cubic.config.auth.certDir}/.gitignore`, '*')
     }
     cubic.config.auth.api.certPublic = pub
     cubic.config.auth.certPrivate = prv
