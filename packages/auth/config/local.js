@@ -13,6 +13,7 @@ module.exports = {
   },
 
   skipInitialSetup: false,
+  certDir: `${process.cwd()}/config/certs`,
 
   /**
    * Token config
