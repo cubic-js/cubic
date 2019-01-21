@@ -7,7 +7,6 @@ const fileExists = promisify(fs.lstat)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 const generateKeys = require('keypair')
-const certDir = `${process.cwd()}/config/certs`
 const mongodb = require('mongodb')
 const bcrypt = require('bcryptjs')
 const randtoken = require('rand-token')
@@ -21,7 +20,9 @@ class Auth {
   }
 
   async init () {
-    if (!this.config.skipInitialSetup) await this.checkRSAKeys()
+    if (!this.config.skipInitialSetup && !cubic.config.auth.certPrivate) {
+      await this.checkRSAKeys()
+    }
     const api = await cubic.use(new API(cubic.config.auth.api))
     if (!this.config.skipInitialSetup) await this.createSystemUser(api)
   }
@@ -31,21 +32,24 @@ class Auth {
    */
   async checkRSAKeys () {
     let prv, pub
-    try {
-      await fileExists(`${certDir}/auth.private.pem`)
-      prv = await readFile(`${certDir}/auth.private.pem`, 'utf-8')
-      pub = await readFile(`${certDir}/auth.public.pem`, 'utf-8')
-    } catch (err) {
-      // Ensure /config/certs folder exists
-      try { await mkdir(`${process.cwd()}/config/`) } catch (err) {}
-      try { await mkdir(certDir) } catch (err) {}
+    let prvPath = cubic.config.auth.certPrivatePath
+    let pubPath = cubic.config.auth.certPublicPath
+    let tmpPath = prvPath ? prvPath.split('/') : ''
+    if (prvPath) tmpPath.pop()
+    let certDir = tmpPath ? tmpPath.join() : `${process.cwd()}/config/certs`
 
-      // Generate keys and save to /config/certs
+    try {
+      await fileExists(prvPath)
+      prv = await readFile(prvPath, 'utf-8')
+      pub = await readFile(pubPath, 'utf-8')
+    } catch (err) {
       const keys = generateKeys()
       prv = keys.private
       pub = keys.public
-      await writeFile(`${certDir}/auth.public.pem`, pub)
-      await writeFile(`${certDir}/auth.private.pem`, prv)
+      console.log(certDir)
+      await mkdir(certDir, { recursive: true })
+      await writeFile(pubPath, pub)
+      await writeFile(prvPath, prv)
       await writeFile(`${certDir}/.gitignore`, '*')
     }
     cubic.config.auth.api.certPublic = pub

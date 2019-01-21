@@ -13,6 +13,8 @@ module.exports = {
   },
 
   skipInitialSetup: false,
+  certPublicPath: `${process.cwd()}/config/auth.public.pem`,
+  certPrivatePath: `${process.cwd()}/config/certs/auth.private.pem`,
 
   /**
    * Token config
