@@ -20,11 +20,11 @@ class Auth {
   }
 
   async init () {
-    if (!this.config.skipInitialSetup && !cubic.config.auth.certPrivate) {
+    if (!cubic.config.auth.skipInitialSetup && !cubic.config.auth.certPrivate) {
       await this.checkRSAKeys()
     }
     const api = await cubic.use(new API(cubic.config.auth.api))
-    if (!this.config.skipInitialSetup) await this.createSystemUser(api)
+    if (!cubic.config.auth.skipInitialSetup) await this.createSystemUser(api)
   }
 
   /**
