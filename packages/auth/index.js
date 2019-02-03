@@ -36,7 +36,7 @@ class Auth {
     let pubPath = cubic.config.auth.certPublicPath
     let tmpPath = prvPath ? prvPath.split('/') : ''
     if (prvPath) tmpPath.pop()
-    let certDir = tmpPath ? tmpPath.join() : `${process.cwd()}/config/certs`
+    let certDir = tmpPath ? tmpPath.join('/') : `${process.cwd()}/config/certs`
 
     try {
       await fileExists(prvPath)
@@ -46,7 +46,6 @@ class Auth {
       const keys = generateKeys()
       prv = keys.private
       pub = keys.public
-      console.log(certDir)
       await mkdir(certDir, { recursive: true })
       await writeFile(pubPath, pub)
       await writeFile(prvPath, prv)
