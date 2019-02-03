@@ -13,7 +13,7 @@ module.exports = {
   },
 
   skipInitialSetup: false,
-  certPublicPath: `${process.cwd()}/config/auth.public.pem`,
+  certPublicPath: `${process.cwd()}/config/certs/auth.public.pem`,
   certPrivatePath: `${process.cwd()}/config/certs/auth.private.pem`,
 
   /**
