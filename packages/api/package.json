@@ -28,6 +28,6 @@
     "ws": "^6.1.0"
   },
   "peerDependencies": {
-    "cubic-client": "^2.0.1"
+    "cubic-client": "^3.0.0"
   }
 }

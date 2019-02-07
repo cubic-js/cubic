@@ -39,15 +39,15 @@
     "vue-tween-number": "^0.2.0",
     "vuex": "^3.0.1",
     "vuex-router-sync": "^5.0.0",
-    "webpack": "^4.25.1",
+    "webpack": "^4.29.1",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.24.3",
     "webpack-merge": "^4.1.4",
     "webpack-node-externals": "^1.7.2"
   },
   "peerDependencies": {
-    "cubic-api": "^2.0.1",
-    "cubic-client": "^2.0.1"
+    "cubic-api": "^3.0.0",
+    "cubic-client": "^3.0.0"
   },
   "description": "UI node for Cubic.",
   "license": "MIT",

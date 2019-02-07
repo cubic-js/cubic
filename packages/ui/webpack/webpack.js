@@ -20,8 +20,9 @@ class WebpackServer {
    * Entrypoint for hook on cubic-core
    */
   async init () {
+    await this.registerEndpoints()
+
     if (!cubic.config.ui.webpack.skipBuild) {
-      await this.registerEndpoints()
       await this.initBuild()
     }
   }
