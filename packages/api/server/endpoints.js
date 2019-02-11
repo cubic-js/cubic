@@ -113,11 +113,22 @@ class EndpointController {
     this.generateEndpointSchema()
   }
 
+  /**
+   * Generate a map of all endpoints so they can be routed automatically.
+   */
   generateEndpointSchema () {
     this.endpoints = []
-    this.getEndpointTree(path.resolve(this.config.endpointPath))
 
-    // Reorder items which must not override previous url's with similar route
+    if (typeof this.config.endpointPath === 'string') {
+      const epath = this.config.endpointPath
+      this.getEndpointTree(path.resolve(epath), 0, epath)
+    } else {
+      for (const epath of this.config.endpointPath) {
+        this.getEndpointTree(path.resolve(epath), 0, epath)
+      }
+    }
+
+    // Reorder items which must not override previous url's with similar route.
     // e.g. /something/:id must not be routed before /something/else
     let pushToStart = []
     let pushToEnd = []
@@ -128,7 +139,7 @@ class EndpointController {
     this.endpoints = pushToStart.concat(pushToEnd)
   }
 
-  getEndpointTree (filepath, depth = 0) {
+  getEndpointTree (filepath, depth = 0, root) {
     const stats = fs.lstatSync(filepath)
     const regexclude = this.config.endpointPathExclude
 
@@ -140,7 +151,7 @@ class EndpointController {
     // Folder
     if (stats.isDirectory()) {
       fs.readdirSync(filepath).map(child => {
-        return this.getEndpointTree(`${filepath}/${child}`, ++depth)
+        return this.getEndpointTree(`${filepath}/${child}`, ++depth, root)
       })
     }
 
@@ -160,7 +171,6 @@ class EndpointController {
         custom = true
       }
       const ext = this.config.endpointExtension
-      const root = path.resolve(this.config.endpointPath)
 
       // Sometimes we need to get endpoints from two folders, so this will remove
       // the given number of levels of folder names before the endpoint, which

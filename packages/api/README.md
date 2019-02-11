@@ -109,6 +109,7 @@ cubic.use(new Api(options))
 | authUrl | `'http://localhost:3030'` | Auth node to connect to when provided access tokens need to be refreshed. |
 | userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](/packages/auth) for reference) |
 | userSecret | none | User secret to authenticate with. Handled the same way as above.
+| endpointPath | `${process.cwd()}/endpoints` | Path(s) to get endpoints from. Can be String or Array.
 
 <br>
 
