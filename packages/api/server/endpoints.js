@@ -118,13 +118,13 @@ class EndpointController {
    */
   generateEndpointSchema () {
     this.endpoints = []
+    const epath = this.config.endpointPath
 
-    if (typeof this.config.endpointPath === 'string') {
-      const epath = this.config.endpointPath
-      this.getEndpointTree(path.resolve(epath), 0, epath)
+    if (typeof epath === 'string') {
+      this.getEndpointTree(path.resolve(epath), path.resolve(epath))
     } else {
-      for (const epath of this.config.endpointPath) {
-        this.getEndpointTree(path.resolve(epath), 0, epath)
+      for (const subPath of this.config.endpointPath) {
+        this.getEndpointTree(path.resolve(subPath), path.resolve(subPath))
       }
     }
 
@@ -139,25 +139,25 @@ class EndpointController {
     this.endpoints = pushToStart.concat(pushToEnd)
   }
 
-  getEndpointTree (filepath, depth = 0, root) {
+  getEndpointTree (filepath, root, depth = 0) {
     const stats = fs.lstatSync(filepath)
     const regexclude = this.config.endpointPathExclude
 
     // Skip if excluded from subpaths
-    if (depth >= this.config.endpointDepth && filepath.match(regexclude)) {
+    if (depth && depth >= this.config.endpointDepth && filepath.match(regexclude)) {
       return
     }
 
     // Folder
     if (stats.isDirectory()) {
       fs.readdirSync(filepath).map(child => {
-        return this.getEndpointTree(`${filepath}/${child}`, ++depth, root)
+        return this.getEndpointTree(`${filepath}/${child}`, root, ++depth)
       })
     }
 
     // File -> Set endpoint config
     else {
-      let Endpoint, endpoint, route, custom
+      let Endpoint, endpoint, route
 
       // If the file isn't an endpoint, we'll just use the endpoint parent
       // instead. This works for special endpoints like the cubic-ui sites, since
@@ -166,9 +166,9 @@ class EndpointController {
         Endpoint = require(filepath)
         endpoint = new Endpoint().schema
       } catch (err) {
-        Endpoint = require(this.config.endpointParent)
+        Endpoint = require(path.resolve(this.config.endpointParent))
         endpoint = new Endpoint().schema
-        custom = true
+        endpoint.custom = filepath
       }
       const ext = this.config.endpointExtension
 
@@ -178,15 +178,15 @@ class EndpointController {
       if (this.config.endpointDepth) {
         const paths = filepath.replace(root, '').split('/')
         const depth = this.config.endpointDepth + 1 // +1 because of leading `/`
-        route = '/' + paths.slice(depth, paths.length).join('/')
+        route = path.resolve('/' + paths.slice(depth, paths.length).join('/'))
       }
 
       // Prepare endpoint attributes.
       endpoint.name = path.basename(filepath).replace(ext, '')
-      endpoint.file = custom ? this.config.endpointParent : filepath
+      endpoint.file = endpoint.custom ? this.config.endpointParent : filepath
 
       // Generate final route which will be matched against.
-      route = (route || endpoint.file.replace(root, '')).replace(ext, '').replace('index', '')
+      route = (route || filepath.replace(root, '')).replace(ext, '').replace('index', '')
       endpoint.route = endpoint.url ? endpoint.url : this.config.baseUrl + route
       this.endpoints.push(endpoint)
     }
