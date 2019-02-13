@@ -14,8 +14,8 @@ const user = cubic.nodes.auth ? cubic.nodes.auth.api.systemUser : {}
 let api
 if (!cubic.config.ui.client.disableSsr) {
   api = new Client({
-    api_url: cubic.config.ui.client.apiUrl,
-    auth_url: cubic.config.ui.client.authUrl,
+    api_url: cubic.config.ui.server.apiUrl,
+    auth_url: cubic.config.ui.server.authUrl,
     user_key: user.user_key || cubic.config.ui.client.user_key,
     user_secret: user.user_secret || cubic.config.ui.client.user_secret
   })
