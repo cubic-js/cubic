@@ -39,7 +39,7 @@
     "semantic-release": "^15.9.17",
     "semantic-release-monorepo": "^6.1.1",
     "username": "^4.0.0",
-    "webpack": "^4.20.2"
+    "webpack": "^4.28.4"
   },
   "release": {
     "monorepo": {

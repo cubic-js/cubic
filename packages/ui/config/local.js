@@ -14,9 +14,7 @@ module.exports = {
     /**
      * Endpoint config
      */
-    endpointPath: `${process.cwd()}/ui`,
-    endpointPathExclude: /^((?!(\/endpoints|\/sites)).)*$/g,
-    endpointDepth: 1,
+    endpointPath: [`${process.cwd()}/ui/endpoints`, `${process.cwd()}/ui/sites`],
     endpointExtension: /(\.js|\.vue)$/,
     endpointParent: `${__dirname}/../endpoint.js`
   },

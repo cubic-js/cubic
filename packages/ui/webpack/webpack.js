@@ -57,15 +57,17 @@ class WebpackServer {
     let routes = []
 
     for (const endpoint of endpoints) {
-      if (endpoint.view) {
+      if (endpoint.custom) {
+        for (const root of cubic.config.ui.api.endpointPath) {
+          endpoint.custom = endpoint.custom.replace(root, '')
+        }
         routes.push({
           path: endpoint.route,
-          component: `() => import(\`src${endpoint.view}\`)`,
+          component: `() => import(\`src/sites${endpoint.custom}\`)`,
           props: true
         })
       }
     }
-
     return routes
   }
 
