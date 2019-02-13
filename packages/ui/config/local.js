@@ -29,6 +29,14 @@ module.exports = {
   },
 
   /**
+   * SSR client config
+   */
+  server: {
+    apiUrl: 'ws://localhost:3003/ws',
+    authUrl: 'ws://localhost:3030/ws'
+  },
+
+  /**
    * Webpack config
    */
   webpack: {

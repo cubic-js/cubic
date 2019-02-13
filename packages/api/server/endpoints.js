@@ -162,10 +162,10 @@ class EndpointController {
       // If the file isn't an endpoint, we'll just use the endpoint parent
       // instead. This works for special endpoints like the cubic-ui sites, since
       // they all use the same main function.
-      try {
+      if (filepath.endsWith('.js')) {
         Endpoint = require(filepath)
         endpoint = new Endpoint().schema
-      } catch (err) {
+      } else {
         Endpoint = require(path.resolve(this.config.endpointParent))
         endpoint = new Endpoint().schema
         endpoint.custom = filepath
