@@ -16,8 +16,8 @@ if (!cubic.config.ui.client.disableSsr) {
   api = new Client({
     api_url: cubic.config.ui.server.apiUrl,
     auth_url: cubic.config.ui.server.authUrl,
-    user_key: user.user_key || cubic.config.ui.client.user_key,
-    user_secret: user.user_secret || cubic.config.ui.client.user_secret
+    user_key: user.user_key || cubic.config.ui.server.user_key,
+    user_secret: user.user_secret || cubic.config.ui.server.user_secret
   })
 }
 
