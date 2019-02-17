@@ -37,6 +37,7 @@
     "rimraf": "^2.6.2",
     "semantic-release": "^15.9.17",
     "semantic-release-monorepo": "^6.1.1",
+    "typescript": "^3.3.3",
     "username": "^4.0.0",
     "webpack": "^4.28.4"
   },
