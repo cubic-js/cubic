@@ -14,12 +14,16 @@ import { sync } from 'vuex-router-sync'
 
 // export a factory function for creating fresh app, router and store
 // instances
-export function createApp () {
-  /* eslint no-undef: "off" */
-  Vue.prototype.$cubic = new Client({
-    api_url: $apiUrl,
-    auth_url: $authUrl
-  })
+export function createApp (context) {
+  /* eslint no-undef: "off" */// $apiUrl and $authUrl are defined in webpack conf
+  if (context) {
+    Vue.prototype.$cubic = context.api
+  } else {
+    Vue.prototype.$cubic = new Client({
+      api_url: $apiUrl,
+      auth_url: $authUrl
+    })
+  }
 
   const router = createRouter()
   const store = createStore(Vue.prototype.$cubic)
