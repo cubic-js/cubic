@@ -59,7 +59,7 @@ class WebpackServer {
     for (const endpoint of endpoints) {
       if (endpoint.custom) {
         for (const root of cubic.config.ui.api.endpointPath) {
-          endpoint.custom = endpoint.custom.replace(root, '')
+          endpoint.custom = path.resolve(endpoint.custom).replace(path.resolve(root), '')
         }
         routes.push({
           path: endpoint.route,
