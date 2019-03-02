@@ -7,7 +7,7 @@
 import Vue from 'vue'
 import VueTouch from 'vue-touch-hotfix'
 import App from 'src/app.vue'
-import Client from 'cubic-client'
+import Client from 'cubic-client/browser'
 import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
@@ -16,7 +16,7 @@ import { sync } from 'vuex-router-sync'
 // instances
 export function createApp (context) {
   /* eslint no-undef: "off" */// $apiUrl and $authUrl are defined in webpack conf
-  if (context) {
+  if (context && context.api) {
     Vue.prototype.$cubic = context.api
   } else {
     Vue.prototype.$cubic = new Client({
