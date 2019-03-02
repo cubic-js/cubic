@@ -8,7 +8,7 @@ import root from 'src/app.vue'
  */
 export default function (context) {
   return new Promise((resolve, reject) => {
-    const { app, router, store } = createApp()
+    const { app, router, store } = createApp(context)
 
     // Init vue-meta
     const meta = app.$meta()

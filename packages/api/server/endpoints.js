@@ -2,6 +2,7 @@ const fs = require('fs')
 const promisify = require('util').promisify
 const path = require('path')
 const Url = require('url')
+const mime = require('mime')
 const mongodb = require('mongodb').MongoClient
 const Stack = require('async-middleware-stack')
 const Limiter = require('../middleware/endpoints/limiter.js')
@@ -80,6 +81,7 @@ class EndpointController {
       try {
         const readFile = promisify(fs.readFile)
         const filepath = path.join(this.config.publicPath, req.url)
+        res.setHeader('content-type', mime.getType(req.url))
         return res.send(Buffer.from(await readFile(filepath), 'base64'))
       } catch (err) {
         notFound()

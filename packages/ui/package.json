@@ -1,11 +1,35 @@
 {
+  "_from": "cubic-ui@3.1.5",
+  "_id": "cubic-ui@3.1.5",
+  "_inBundle": false,
+  "_integrity": "sha512-Aq/EmX0S9TyX3/83Ba4HClojT0LB433oaZzs7XuCW8OD2AtbUd6GH6oLiydkgjpcxDgsRD0LvlHCSeiauMC07w==",
+  "_location": "/cubic-ui",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "cubic-ui@3.1.5",
+    "name": "cubic-ui",
+    "escapedName": "cubic-ui",
+    "rawSpec": "3.1.5",
+    "saveSpec": null,
+    "fetchSpec": "3.1.5"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cubic-ui/-/cubic-ui-3.1.5.tgz",
+  "_shasum": "edd3405515935a0c9f4872af39ee7e823af0e880",
+  "_spec": "cubic-ui@3.1.5",
+  "_where": "C:\\Users\\dev\\dev\\nexus\\nexushub",
   "author": {
     "name": "Kaptard"
   },
-  "scripts": {
-    "lint": "eslint --ignore-path .gitignore . --ignore-pattern /test/assets",
-    "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/server.js"
+  "bugs": {
+    "url": "https://github.com/cubic-js/cubic/issues"
   },
+  "bundleDependencies": false,
   "dependencies": {
     "autoprefixer": "^9.3.1",
     "babel-core": "^6.26.3",
@@ -39,17 +63,23 @@
     "webpack-merge": "^4.1.4",
     "webpack-node-externals": "^1.7.2"
   },
+  "deprecated": false,
+  "description": "UI node for Cubic.",
+  "homepage": "https://github.com/cubic-js/cubic#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "name": "cubic-ui",
   "peerDependencies": {
     "cubic-api": "^3.0.0",
     "cubic-client": "^3.0.0"
   },
-  "description": "UI node for Cubic.",
-  "license": "MIT",
-  "main": "index.js",
-  "name": "cubic-ui",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cubic-js/cubic"
+    "url": "git+https://github.com/cubic-js/cubic.git"
   },
-  "version": "0.0.0-development"
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore . --ignore-pattern /test/assets",
+    "test": "mocha --exit -s 60000 --timeout 60000 test/smoke/server.js"
+  },
+  "version": "3.1.5"
 }
