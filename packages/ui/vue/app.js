@@ -15,13 +15,10 @@ import { sync } from 'vuex-router-sync'
 // export a factory function for creating fresh app, router and store
 // instances
 export function createApp (context) {
-  console.log('create app')
   /* eslint no-undef: "off" */// $apiUrl and $authUrl are defined in webpack conf
   if (context && context.api) {
-    console.log('server', context)
     Vue.prototype.$cubic = context.api
   } else {
-    console.log('client', context)
     Vue.prototype.$cubic = new Client({
       api_url: $apiUrl,
       auth_url: $authUrl
