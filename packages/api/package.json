@@ -1,38 +1,14 @@
 {
-  "_args": [
-    [
-      "cubic-api@3.1.1",
-      "C:\\Users\\dev\\dev\\nexus\\nexushub"
-    ]
-  ],
-  "_from": "cubic-api@3.1.1",
-  "_id": "cubic-api@3.1.1",
-  "_inBundle": false,
-  "_integrity": "sha512-vbCrGzJkRzDvZ7ysoKGYuPvYQQSolhqLbGgrR1U4YWBihlUyO6v5W4KXGywP2Uj46CzteITbrAlMFp8ivPN/mA==",
-  "_location": "/cubic-api",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "cubic-api@3.1.1",
-    "name": "cubic-api",
-    "escapedName": "cubic-api",
-    "rawSpec": "3.1.1",
-    "saveSpec": null,
-    "fetchSpec": "3.1.1"
+  "name": "cubic-api",
+  "version": "0.0.0-development",
+  "description": "API node for cubic.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cubic-js/cubic"
   },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/cubic-api/-/cubic-api-3.1.1.tgz",
-  "_spec": "3.1.1",
-  "_where": "C:\\Users\\dev\\dev\\nexus\\nexushub",
-  "author": {
-    "name": "Kaptard"
-  },
-  "bugs": {
-    "url": "https://github.com/cubic-js/cubic/issues"
-  },
+  "author": "Kaptard",
+  "license": "MIT",
   "dependencies": {
     "@polka/send-type": "^0.5.0",
     "async-middleware-stack": "^1.0.1",
@@ -51,17 +27,7 @@
     "rolling-rate-limiter": "^0.1.11",
     "ws": "^6.1.0"
   },
-  "description": "API node for cubic.",
-  "homepage": "https://github.com/cubic-js/cubic#readme",
-  "license": "MIT",
-  "main": "index.js",
-  "name": "cubic-api",
   "peerDependencies": {
     "cubic-client": "^3.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cubic-js/cubic.git"
-  },
-  "version": "3.1.1"
+  }
 }
