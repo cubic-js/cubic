@@ -17,7 +17,10 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    this.connecting = this.setClient()
+    // Do not override existing promises when reconnecting
+    if (!this.connecting) this.connecting = this.setClient()
+    else this.setClient()
+
     return this.connecting
   }
 
@@ -26,6 +29,9 @@ class Client {
    */
   setClient () {
     return new Promise(resolve => {
+      // Resolve the initial promise, even when reconnecting
+      if (!this.resolve) this.resolve = resolve
+
       const options = this.auth && this.auth.access_token ? {
         headers: {
           authorization: `bearer ${this.auth.access_token}`
@@ -34,7 +40,7 @@ class Client {
       this.client = new WS(this.url, options)
       this.client.on('open', () => {
         this.connected = true
-        resolve()
+        this.resolve()
       })
       this.client.on('close', e => this.reconnect())
       this.client.on('error', e => this.reconnect())

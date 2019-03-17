@@ -17,11 +17,15 @@ class Connection extends Client {
    * Get Tokens and build client
    */
   async connect () {
-    this.connecting = new Promise(async resolve => {
+    const authAndConnect = async () => {
       await this.auth.authorize()
       await this.setClient()
-      resolve()
-    })
+    }
+
+    // Do not override existing promises when reconnecting
+    if (!this.connecting) this.connecting = authAndConnect()
+    else authAndConnect()
+
     return this.connecting
   }
 
