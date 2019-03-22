@@ -15,10 +15,17 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    // Do not override existing promises when reconnecting
-    if (!this.connecting) this.connecting = this.setClient()
-    else this.setClient()
+    return this.setConnection(this.setClient())
+  }
 
+  /**
+   * Helper function to deal with the connection state of the client.
+   * this.connecting = initial promise of connection
+   * this.resolve = resolve the promise above
+   * this.connected = does the client still think it's connected
+   */
+  async setConnection (promise) {
+    if (!this.connecting) this.connecting = promise
     return this.connecting
   }
 
@@ -76,7 +83,7 @@ class Client {
           this.connected = true // reconnect won't run otherwise
           this.reconnect()
         }
-      }, 5000)
+      }, 1000)
     })
   }
 
