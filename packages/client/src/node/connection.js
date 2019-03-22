@@ -21,12 +21,7 @@ class Connection extends Client {
       await this.auth.authorize()
       await this.setClient()
     }
-
-    // Do not override existing promises when reconnecting
-    if (!this.connecting) this.connecting = authAndConnect()
-    else authAndConnect()
-
-    return this.connecting
+    return this.setConnection(authAndConnect())
   }
 
   /**

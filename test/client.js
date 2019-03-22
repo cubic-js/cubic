@@ -28,7 +28,7 @@ describe('Client', function () {
 
   // There's a weird bug where the old cubic instance wouldn't close, or at least
   // block a port on the CI servers. I don't have the time to try figure it out
-  // right now, so I'll just skip on production tests
+  // right now, so I'll just skip on dev tests
   if (!prod) {
     it('should reconnect to the server when connections are lost', async function () {
       // Make a request on disconnect. This will both ensure that a connection
