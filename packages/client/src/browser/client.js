@@ -15,7 +15,10 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    this.connecting = this.setClient()
+    // Do not override existing promises when reconnecting
+    if (!this.connecting) this.connecting = this.setClient()
+    else this.setClient()
+
     return this.connecting
   }
 
@@ -25,13 +28,16 @@ class Client {
   setClient () {
     const WS = WebSocket
     return new Promise(resolve => {
-      const url = this.auth && this.auth.acess_token
+      // Resolve the initial promise, even when reconnecting
+      if (!this.resolve) this.resolve = resolve
+
+      const url = this.auth && this.auth.access_token
         ? `${this.url}?bearer=${this.auth.access_token}`
         : this.url
       this.client = new WS(url)
       this.client.onopen = () => {
         this.connected = true
-        resolve()
+        this.resolve()
       }
       this.client.onclose = e => this.reconnect()
       this.client.onerror = e => this.reconnect()

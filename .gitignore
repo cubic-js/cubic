@@ -3,6 +3,7 @@
 node_modules
 .idea/
 /out/
+test/config/certs
 
 # UI node
 /packages/ui/vue/router/routes.js

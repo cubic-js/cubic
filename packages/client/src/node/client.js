@@ -17,7 +17,17 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    this.connecting = this.setClient()
+    return this.setConnection(this.setClient())
+  }
+
+  /**
+   * Helper function to deal with the connection state of the client.
+   * this.connecting = initial promise of connection
+   * this.resolve = resolve the promise above
+   * this.connected = does the client still think it's connected
+   */
+  async setConnection (promise) {
+    if (!this.connecting) this.connecting = promise
     return this.connecting
   }
 
@@ -26,6 +36,9 @@ class Client {
    */
   setClient () {
     return new Promise(resolve => {
+      // Resolve the initial promise, even when reconnecting
+      if (!this.resolve) this.resolve = resolve
+
       const options = this.auth && this.auth.access_token ? {
         headers: {
           authorization: `bearer ${this.auth.access_token}`
@@ -34,7 +47,9 @@ class Client {
       this.client = new WS(this.url, options)
       this.client.on('open', () => {
         this.connected = true
-        resolve()
+        this.resolve()
+        this.resolve = null
+        this.connecting = null
       })
       this.client.on('close', e => this.reconnect())
       this.client.on('error', e => this.reconnect())

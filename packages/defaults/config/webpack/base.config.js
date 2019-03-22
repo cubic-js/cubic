@@ -7,8 +7,8 @@ module.exports = {
 
   // Output file which will be loaded by Vue (server & client side)
   output: {
-    path: `${cubic.config.ui.api.publicPath}/bundles`,
-    publicPath: cubic.config.ui.api.publicPath,
+    path: `${cubic.config.ui.api.publicPath}/bundles/`,
+    publicPath: '/bundles/',
     filename: isProd ? 'bundle.[name].[contenthash].js' : 'dev-[name].bundle.js'
   },
 
