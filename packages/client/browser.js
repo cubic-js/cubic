@@ -28,7 +28,7 @@ var runtime = createCommonjsModule(function (module) {
 !(function(global) {
   var Op = Object.prototype;
   var hasOwn = Op.hasOwnProperty;
-  var undefined;
+  var undefined$1;
   var $Symbol = typeof Symbol === "function" ? Symbol : {};
   var iteratorSymbol = $Symbol.iterator || "@@iterator";
   var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
@@ -220,12 +220,12 @@ var runtime = createCommonjsModule(function (module) {
   }
   function maybeInvokeDelegate(delegate, context) {
     var method = delegate.iterator[context.method];
-    if (method === undefined) {
+    if (method === undefined$1) {
       context.delegate = null;
       if (context.method === "throw") {
         if (delegate.iterator.return) {
           context.method = "return";
-          context.arg = undefined;
+          context.arg = undefined$1;
           maybeInvokeDelegate(delegate, context);
           if (context.method === "throw") {
             return ContinueSentinel;
@@ -256,7 +256,7 @@ var runtime = createCommonjsModule(function (module) {
       context.next = delegate.nextLoc;
       if (context.method !== "return") {
         context.method = "next";
-        context.arg = undefined;
+        context.arg = undefined$1;
       }
     } else {
       return info;
@@ -331,7 +331,7 @@ var runtime = createCommonjsModule(function (module) {
               return next;
             }
           }
-          next.value = undefined;
+          next.value = undefined$1;
           next.done = true;
           return next;
         };
@@ -342,25 +342,25 @@ var runtime = createCommonjsModule(function (module) {
   }
   runtime.values = values;
   function doneResult() {
-    return { value: undefined, done: true };
+    return { value: undefined$1, done: true };
   }
   Context.prototype = {
     constructor: Context,
     reset: function(skipTempReset) {
       this.prev = 0;
       this.next = 0;
-      this.sent = this._sent = undefined;
+      this.sent = this._sent = undefined$1;
       this.done = false;
       this.delegate = null;
       this.method = "next";
-      this.arg = undefined;
+      this.arg = undefined$1;
       this.tryEntries.forEach(resetTryEntry);
       if (!skipTempReset) {
         for (var name in this) {
           if (name.charAt(0) === "t" &&
               hasOwn.call(this, name) &&
               !isNaN(+name.slice(1))) {
-            this[name] = undefined;
+            this[name] = undefined$1;
           }
         }
       }
@@ -385,7 +385,7 @@ var runtime = createCommonjsModule(function (module) {
         context.next = loc;
         if (caught) {
           context.method = "next";
-          context.arg = undefined;
+          context.arg = undefined$1;
         }
         return !! caught;
       }
@@ -492,7 +492,7 @@ var runtime = createCommonjsModule(function (module) {
         nextLoc: nextLoc
       };
       if (this.method === "next") {
-        this.arg = undefined;
+        this.arg = undefined$1;
       }
       return ContinueSentinel;
     }
@@ -902,14 +902,13 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     IteratorPrototype = _objectGpo($anyNative.call(new Base()));
     if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
       _setToStringTag(IteratorPrototype, TAG, true);
-      if (!_library && typeof IteratorPrototype[ITERATOR] != 'function') _hide(IteratorPrototype, ITERATOR, returnThis);
     }
   }
   if (DEF_VALUES && $native && $native.name !== VALUES) {
     VALUES_BUG = true;
     $default = function values() { return $native.call(this); };
   }
-  if ((!_library || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+  if ((FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
     _hide(proto, ITERATOR, $default);
   }
   _iterators[NAME] = $default;
@@ -1463,9 +1462,9 @@ _export(_export.S + _export.F * !USE_NATIVE, PROMISE, {
     return capability.promise;
   }
 });
-_export(_export.S + _export.F * (_library || !USE_NATIVE), PROMISE, {
+_export(_export.S + _export.F * (_library), PROMISE, {
   resolve: function resolve(x) {
-    return _promiseResolve(_library && this === Wrapper ? $Promise : this, x);
+    return _promiseResolve(this === Wrapper ? $Promise : this, x);
   }
 });
 _export(_export.S + _export.F * !(USE_NATIVE && _iterDetect(function (iter) {
@@ -1759,10 +1758,10 @@ var _meta_3 = _meta.fastKey;
 var _meta_4 = _meta.getWeak;
 var _meta_5 = _meta.onFreeze;
 
-var defineProperty$3 = _objectDp.f;
+var defineProperty$2 = _objectDp.f;
 var _wksDefine = function (name) {
   var $Symbol = _core.Symbol || (_core.Symbol = {});
-  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$3($Symbol, name, { value: _wksExt.f(name) });
+  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$2($Symbol, name, { value: _wksExt.f(name) });
 };
 
 var _enumKeys = function (it) {
@@ -2131,7 +2130,7 @@ var Client = function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.connecting = this.setClient();
+                if (!this.connecting) this.connecting = this.setClient();else this.setClient();
                 return _context.abrupt('return', this.connecting);
               case 2:
               case 'end':
@@ -2151,11 +2150,12 @@ var Client = function () {
       var _this = this;
       var WS = WebSocket;
       return new _Promise(function (resolve) {
-        var url = _this.auth && _this.auth.acess_token ? _this.url + '?bearer=' + _this.auth.access_token : _this.url;
+        if (!_this.resolve) _this.resolve = resolve;
+        var url = _this.auth && _this.auth.access_token ? _this.url + '?bearer=' + _this.auth.access_token : _this.url;
         _this.client = new WS(url);
         _this.client.onopen = function () {
           _this.connected = true;
-          resolve();
+          _this.resolve();
         };
         _this.client.onclose = function (e) {
           return _this.reconnect();
@@ -2578,12 +2578,13 @@ var Connection = function (_Client) {
     value: function () {
       var _ref = _asyncToGenerator(regenerator.mark(function _callee2() {
         var _this2 = this;
+        var authAndConnect;
         return regenerator.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                this.connecting = new _Promise(function () {
-                  var _ref2 = _asyncToGenerator(regenerator.mark(function _callee(resolve) {
+                authAndConnect = function () {
+                  var _ref2 = _asyncToGenerator(regenerator.mark(function _callee() {
                     return regenerator.wrap(function _callee$(_context) {
                       while (1) {
                         switch (_context.prev = _context.next) {
@@ -2594,20 +2595,19 @@ var Connection = function (_Client) {
                             _context.next = 4;
                             return _this2.setClient();
                           case 4:
-                            resolve();
-                          case 5:
                           case 'end':
                             return _context.stop();
                         }
                       }
                     }, _callee, _this2);
                   }));
-                  return function (_x) {
+                  return function authAndConnect() {
                     return _ref2.apply(this, arguments);
                   };
-                }());
+                }();
+                if (!this.connecting) this.connecting = authAndConnect();else authAndConnect();
                 return _context2.abrupt('return', this.connecting);
-              case 2:
+              case 3:
               case 'end':
                 return _context2.stop();
             }
