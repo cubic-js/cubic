@@ -8,8 +8,28 @@
   padding: 0 96px;
   margin: auto;
 
+  @media(max-width: $breakpoint-m) {
+    padding: 0 96px;
+  }
   @media(max-width: $breakpoint-s) {
     padding: 0 24px;
+  }
+}
+
+/**
+ * Sections
+ */
+section {
+  padding: 60px 0;
+  border-bottom: 1px solid rgba(62,67,72,.4);
+  width: 100%;
+
+  &:first-of-type {
+    margin-top: 10px;
+  }
+  &:last-of-type {
+    border-bottom: none;
+    margin-bottom: 40px;
   }
 }
 
@@ -19,17 +39,15 @@
 .row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .row-margin {
   @extend .row;
-  margin-left: -5px;
-  margin-right: 5px;
-  margin-bottom: -5px;
+  margin: -10px;
 
   & > * {
-    margin: 5px;
+    margin: 10px;
   }
 }
 
@@ -38,28 +56,18 @@
   flex-direction: row-reverse;
 }
 
-.row-pad {
-  @extend .row;
-  margin: 0 -30px;
-
-  & > * {
-    padding: 15px;
-    margin: 30px;
-  }
-}
-
 /**
  * Columns
  */
 @mixin column($size) {
   flex-grow: $size;
-  flex-basis: #{$size + %};
+  flex-basis: percentage(0.01 * $size);
 }
 // .col-1, .col-2...
-@for $i from 0 through 8 {
+@for $i from 0 through 4 {
   .col-#{$i},
   .col-b-#{$i} {
-    @include column(#{$i});
+    @include column($i);
   }
 }
 
@@ -94,27 +102,23 @@
 */
 @media (max-width: $breakpoint-m) {
   .container {
-    padding: 0 40px;
+    padding: 0 35px;
   }
 
-  .row, .row-margin {
+  .row, .row-margin, .row-pad {
     flex-wrap: wrap;
   }
 
-  .row-pad *[class*="col-b"] {
-    flex-basis: calc(50% - 40px);
+  .row-margin {
+    margin: 0;
   }
 
-  .row-margin *[class*="col-b"] {
-    margin: 5px;
+  .row-margin > *[class*="col-b"] {
+    margin: 10px;
     flex-basis: calc(50% - 50px);
-
-    &:nth-child(odd) {
-      margin-left: 0;
-    }
   }
 
-  .row *[class*="col-b"] {
+  .row-margin > *[class*="col-b"], .row > *[class*="col-b"] {
     &:nth-child(even) {
       margin-right: 0;
     }
@@ -124,23 +128,15 @@
     }
   }
 }
+
 @media (max-width: $breakpoint-s) {
-  .row *[class*="col-b"] {
+  .row > *[class*="col-b"] {
     flex-basis: 100%;
     margin: 0;
   }
 
-  .row-b *[class*="col-b"] {
-    margin: 5px;
-    flex-basis: calc(50% - 50px);
-
-    &:nth-child(odd) {
-      margin-left: 0;
-    }
-  }
-
-  .row-margin *[class*="col-b"] {
-    margin: 5px 0;
+  .row-margin > *[class*="col-b"] {
+    margin: 10px 0;
     flex-basis: 100%;
     padding-right: 0;
     padding-left: 0;
@@ -148,11 +144,6 @@
     &:nth-child(even) {
       margin-right: 0;
     }
-  }
-
-  .row-pad *[class*="col-b"] {
-    margin: 15px 30px;
-    flex-basis: calc(100%);
   }
 }
 @media (max-width: $breakpoint-xs) {
