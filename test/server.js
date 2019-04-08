@@ -15,7 +15,7 @@ const Client = require(`${cwd}/packages/client`)
 const get = require('./lib/get.js')
 
 /**
- * Bootstrap process. Essentially same method, just differnet configs for
+ * Bootstrap process. Essentially same method, just different configs for
  * databases in drone-ci
  */
 before(async function () {

@@ -1,9 +1,6 @@
-const API = require('cubic-api')
-const local = require('./config/local.js')
-const WebpackServer = require('./webpack/webpack.js')
-
 class Ui {
   constructor (options) {
+    const local = require('./config/local.js')
     this.config = {
       local: local,
       provided: options || {}
@@ -11,6 +8,8 @@ class Ui {
   }
 
   async init () {
+    const API = require('cubic-api')
+    const WebpackServer = require('./webpack/webpack.js')
     const ui = await cubic.use(new API(cubic.config.ui.api))
     ui.webpackServer = new WebpackServer()
   }

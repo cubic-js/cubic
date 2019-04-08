@@ -1,11 +1,6 @@
-const webpack = require('webpack')
 const fs = require('fs')
-const promisify = require('util').promisify
-const writeFile = promisify(fs.writeFile)
-const mkdirp = require('mkdirp')
+const { promisify } = require('util')
 const path = require('path')
-const DevMiddleware = require('webpack-dev-middleware')
-const HotMiddleware = require('webpack-hot-middleware')
 
 class WebpackServer {
   constructor () {
@@ -28,11 +23,12 @@ class WebpackServer {
   }
 
   /**
-   * Register routes in vue-router file. It can't be done in runtime, so
+   * Register routes in vue-router file. It can't be done at runtime, so
    * we gotta ensure the file is ready before rendering anything.
    */
   async registerEndpoints () {
     const routes = await this.getViewConstants()
+    const writeFile = promisify(fs.writeFile)
     let routeOutput = `/**
                     * Auto-generated routes from cubic view node. We can't
                     * get them at runtime, so we need to save them like a config
@@ -93,6 +89,7 @@ class WebpackServer {
    * Run webpack locally, assuming production environment.
    */
   async initWebpackProd () {
+    const webpack = require('webpack')
     const timer = new Date()
     const build = webpack([this.config.client, this.config.server])
     const compile = promisify(build.run).bind(build)
@@ -104,6 +101,10 @@ class WebpackServer {
    * Hook HMR middleware into API node and bundle from there
    */
   async initWebpackDev () {
+    const DevMiddleware = require('webpack-dev-middleware')
+    const HotMiddleware = require('webpack-hot-middleware')
+    const mkdirp = require('mkdirp')
+    const webpack = require('webpack')
     const publicPath = this.config.client.output.path
     const readFile = (mfs, file) => mfs.readFileSync(path.join(publicPath, file), 'utf-8')
     const copyFile = (mfs, file) => promisify(fs.writeFile)(path.join(publicPath, file), readFile(mfs, file))
