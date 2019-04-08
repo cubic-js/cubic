@@ -23,6 +23,7 @@
     "mkdirp": "^0.5.1",
     "node-sass": "^4.11.0",
     "null-loader": "^0.1.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.0",
