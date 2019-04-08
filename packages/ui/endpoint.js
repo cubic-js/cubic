@@ -1,18 +1,15 @@
 const Endpoint = require('cubic-api/endpoint')
-const util = require('util')
-const fs = require('fs')
-const readFile = util.promisify(fs.readFile)
-const path = require('path')
-const publicPath = `${cubic.config.ui.api.publicPath}/bundles`
-const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
 const { promisify } = require('util')
+const fs = require('fs')
+const readFile = promisify(fs.readFile)
 const fileExists = promisify(fs.lstat)
-const Client = require('cubic-client')
-const user = cubic.nodes.auth ? cubic.nodes.auth.api.systemUser : {}
+const publicPath = `${cubic.config.ui.api.publicPath}/bundles`
 
 // Server-sided cubic-api client for initial response.
 let api
 if (!cubic.config.ui.client.disableSsr) {
+  const user = cubic.nodes.auth ? cubic.nodes.auth.api.systemUser : {}
+  const Client = require('cubic-client')
   api = new Client({
     api_url: cubic.config.ui.server.apiUrl,
     auth_url: cubic.config.ui.server.authUrl,
@@ -59,6 +56,8 @@ class View extends Endpoint {
    */
   async render (req) {
     if (!bundlesReady) await awaitBundles()
+    const path = require('path')
+    const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
     const serverBundle = require(path.join(publicPath, 'vue-ssr-server-bundle.json'))
     const clientManifest = require(path.join(publicPath, 'vue-ssr-client-manifest.json'))
     const template = await readFile(path.join(__dirname, './vue/index.template.html'), 'utf-8')
@@ -67,7 +66,7 @@ class View extends Endpoint {
       clientManifest,
       runInNewContext: false
     })
-    const render = util.promisify(renderer.renderToString)
+    const render = promisify(renderer.renderToString)
     const context = { req, api }
     const html = await render(context)
     this.cache(html, cubic.config.ui.api.cacheExp, { 'content-type': 'text/html' })
