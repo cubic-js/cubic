@@ -66,7 +66,7 @@ class View extends Endpoint {
       clientManifest,
       runInNewContext: false
     })
-    const render = util.promisify(renderer.renderToString)
+    const render = promisify(renderer.renderToString)
     const context = { req, api }
     const html = await render(context)
     this.cache(html, cubic.config.ui.api.cacheExp, { 'content-type': 'text/html' })

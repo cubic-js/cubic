@@ -140,6 +140,7 @@ class WebpackServer {
   }
 
   addHmrPlugins () {
+    const webpack = require('webpack')
     this.config.client.entry.client = ['webpack-hot-middleware/client', this.config.client.entry.client]
     this.config.client.output.filename = 'dev-[name].bundle.js'
     this.config.client.plugins.push(new webpack.HotModuleReplacementPlugin())
