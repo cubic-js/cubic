@@ -16,7 +16,13 @@ module.exports = {
      */
     endpointPath: [`${process.cwd()}/ui/endpoints`, `${process.cwd()}/ui/sites`],
     endpointExtension: /(\.js|\.vue)$/,
-    endpointParent: `${__dirname}/../endpoint.js`
+    endpointParent: `${__dirname}/../endpoint.js`,
+
+    /**
+     * Cookie/Auth
+     */
+    authCookie: 'cubic-auth-cookie',
+    authCookieExpire: 30, // in days
   },
 
   /**
@@ -25,7 +31,6 @@ module.exports = {
   client: {
     apiUrl: 'ws://localhost:3003/ws',
     authUrl: 'ws://localhost:3030/ws',
-    sessionKey: 'cubic-ui-session'
   },
 
   /**
