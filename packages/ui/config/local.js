@@ -22,7 +22,7 @@ module.exports = {
      * Cookie/Auth
      */
     authCookie: 'cubic-auth-cookie',
-    authCookieExpire: 30, // in days
+    authCookieExpire: 30 // in days
   },
 
   /**
@@ -30,7 +30,7 @@ module.exports = {
    */
   client: {
     apiUrl: 'ws://localhost:3003/ws',
-    authUrl: 'ws://localhost:3030/ws',
+    authUrl: 'ws://localhost:3030/ws'
   },
 
   /**
