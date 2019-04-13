@@ -52,10 +52,11 @@ class Logger {
 
     res.send = res.json = function (body, headers) {
       // Response Logic
+      let returnValue = false
       if (typeof body === 'object') {
-        _json(body, headers)
+        returnValue = _json(body, headers)
       } else {
-        _send(body, headers)
+        returnValue = _send(body, headers)
       }
 
       // Log request
@@ -82,6 +83,8 @@ class Logger {
 
       // Disable json/send so we won't get "cant set after sent" errors
       res.send = res.json = () => {}
+
+      return returnValue
     }
   }
 }

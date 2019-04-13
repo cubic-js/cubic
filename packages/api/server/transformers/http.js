@@ -23,6 +23,7 @@ class HttpTransformer {
     // It instead contains the current headers and gets set by ../adapters/adapter.js:getResponse()
     res.send = res.json = (data, headers) => {
       send(res, res.statusCode, data, headers)
+      return res
     }
 
     res.redirect = (location, headers) => {
@@ -32,6 +33,7 @@ class HttpTransformer {
         ...headers
       })
       res.end()
+      return res
     }
 
     res.status = code => {
