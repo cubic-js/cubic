@@ -2,7 +2,7 @@ const send = require('@polka/send-type')
 const Url = require('url')
 
 class HttpTransformer {
-  convertReq (request, res, next) {
+  convertReq (request) {
     const req = {}
     const url = request.url
     const parsed = Url.parse(`https://cubic${url}`, true) // domain is irrelevant
@@ -11,12 +11,14 @@ class HttpTransformer {
     req.url = req.url.replace(/\.?\.\//gi, '') // Remove relative paths (../, ./)
     req.user = request.user
     req.method = request.method
+    req.headers = request.headers
+    req.access_token = request.access_token
+    req.refresh_token = request.refresh_token
     req.query = parsed.query
     req.params = {} // will get populated on cubic-core
     req.adapter = 'http'
 
-    request = req
-    return next()
+    return req
   }
 
   convertRes (req, res, next) {

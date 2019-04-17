@@ -14,7 +14,6 @@ class HttpAdapter extends Adapter {
     this.server = createServer(this.app.handler).listen(config.port)
 
     // The transform middleware has to run before everything else
-    this.app.use(transformer.convertReq)
     this.app.use(transformer.convertRes)
 
     // Run http middleware directly instead of async stack, because they are not allowed to run on ws requests
@@ -26,6 +25,8 @@ class HttpAdapter extends Adapter {
   }
 
   async runMiddleware (req, res) {
+    const transformer = new Transformer()
+    req = transformer.convertReq(req)
     const done = await this.stack.run(req, res)
 
     if (done) {
