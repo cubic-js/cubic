@@ -2,7 +2,7 @@ const send = require('@polka/send-type')
 const Url = require('url')
 
 class HttpTransformer {
-  convertReq (request) {
+  convertReq (request, res, next) {
     const req = {}
     const url = request.url
     const parsed = Url.parse(`https://cubic${url}`, true) // domain is irrelevant
@@ -15,10 +15,11 @@ class HttpTransformer {
     req.params = {} // will get populated on cubic-core
     req.adapter = 'http'
 
-    return req
+    request = req
+    return next()
   }
 
-  convertRes (res) {
+  convertRes (req, res, next) {
     // The 'headers' var isn't actually callable.
     // It instead contains the current headers and gets set by ../adapters/adapter.js:getResponse()
     res.send = res.json = (data, headers) => {
@@ -40,6 +41,8 @@ class HttpTransformer {
       res.statusCode = code
       return res
     }
+
+    return next()
   }
 }
 
