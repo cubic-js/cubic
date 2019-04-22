@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const Client = require('cubic-client')
 const Cookies = require('cookies')
-const Authentication = require('../../../auth/endpoints/authenticate')
+const Authentication = require('cubic-auth/endpoints/authenticate')
 
 class ExpressMiddleware {
   constructor (config) {
