@@ -16,13 +16,7 @@ module.exports = {
      */
     endpointPath: [`${process.cwd()}/ui/endpoints`, `${process.cwd()}/ui/sites`],
     endpointExtension: /(\.js|\.vue)$/,
-    endpointParent: `${__dirname}/../endpoint.js`,
-
-    /**
-     * Cookie/Auth
-     */
-    authCookie: 'cubic-auth-cookie',
-    authCookieExpire: 30 // in days
+    endpointParent: `${__dirname}/../endpoint.js`
   },
 
   /**
