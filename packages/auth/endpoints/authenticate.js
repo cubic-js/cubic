@@ -107,7 +107,7 @@ class Authentication extends Endpoint {
     if (!cubic.config.api.authCookie) return false
 
     const cookies = new Cookies(req, res, { secure: cubic.config.local.environment !== 'development' })
-    const cookieConfig = {}
+    const cookieConfig = { httpOnly: cubic.config.local.environment !== 'development' }
 
     // set cookie expiration date
     let expiresAt // session length

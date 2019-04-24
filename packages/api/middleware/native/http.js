@@ -66,10 +66,19 @@ class ExpressMiddleware {
         if (err.name === 'TokenExpiredError' && req.refresh_token) {
           let refreshRequest = await this.authClient.post('/refresh', { refresh_token: req.refresh_token })
 
+          // Re-auth user
           if (refreshRequest.access_token) {
             token = refreshRequest.access_token
-            req.headers.authorization = `bearer ${token}`
-            Authentication.setAuthCookie(req, res, { access_token: token, refresh_token: req.refresh_token }, false, true)
+            try {
+              req.user = jwt.verify(token, this.config.certPublic)
+              req.headers.authorization = `bearer ${token}`
+              Authentication.setAuthCookie(req, res, { access_token: token, refresh_token: req.refresh_token }, false, true)
+            } catch (err) {
+              return res.status(401).json({
+                error: 'Invalid Token. Refresh was not possible.',
+                reason: err
+              })
+            }
           } else {
             return res.status(401).json(refreshRequest)
           }
