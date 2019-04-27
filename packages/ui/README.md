@@ -16,7 +16,7 @@
 UI endpoints can be protected in the same way as regular API endpoints, via the `this.schema.scope` option, they also behave the same way (see [cubic-api](/packages/api)).
 
 #### Creating a login system
-Creating a login system is as simple as writing a form which targets the [cubic-auth](/packages/auth) `/authenticate` endpoint with `cookie_set` set.
+Creating a login system is as simple as writing a `POST` form which targets the [cubic-auth](/packages/auth) `/authenticate` endpoint with `cookie_set` set.
 Cubic-auth then sets a cookie which contains the user's access and refresh token. If you want to logout, simply remove the cookie and refresh the page.
 
 #### Dealing with scoped api endpoints
