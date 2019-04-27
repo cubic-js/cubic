@@ -44,11 +44,8 @@ router.onReady(() => {
   // async components are resolved.
   router.beforeResolve(async (to, from, next) => {
     if (to.matched.some(record => !store.state.$user.scp.includes(record.meta.scope) && !store.state.$user.scp.includes('write_root'))) {
-      console.log("scope didnt match")
       next(false)
     } else {
-      console.log("scope did match")
-
       const matched = router.getMatchedComponents(to)
 
       // Register dyanmic store modules on route change (not direct load!)
