@@ -92,6 +92,12 @@ won't be slacking with its maintenance.
 
 <br>
 
+## Scope authentication
+API endpoints can be protected by the `this.schema.scope` option in the endpoint constructor.
+If a client without the required scope tries to connect, it will return `401 Unauthorized` with a fitting error reason.
+
+<br>
+
 ## Options
 
 ```js
@@ -106,6 +112,7 @@ cubic.use(new Api(options))
 | cacheExp | `10` | Time in seconds until cached data expires when no explicit duration is specified. |
 | requestTimeout | `1000` | Time to wait in ms when sending request to core node before assuming timeout. |
 | authCookie | `'cubic-auth-cookie'` | Cookie name to use for access/refresh tokens. |
+| authCookieExpire | `30` | Expire time for `authCookie`, in days. |
 | authUrl | `'http://localhost:3030'` | Auth node to connect to when provided access tokens need to be refreshed. |
 | userKey | none | User key to authenticate with. These are registered and assigned automatically in dev mode. In production, you need to register them yourself. (see [cubic-auth](/packages/auth) for reference) |
 | userSecret | none | User secret to authenticate with. Handled the same way as above.
