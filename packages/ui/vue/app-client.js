@@ -43,19 +43,26 @@ router.onReady(() => {
   // the data that we already have. Using router.beforeResolve() so that all
   // async components are resolved.
   router.beforeResolve(async (to, from, next) => {
-    const matched = router.getMatchedComponents(to)
+    if (to.matched.some(record => !store.state.$user.scp.includes(record.meta.scope) && !store.state.$user.scp.includes('write_root'))) {
+      console.log("scope didnt match")
+      next(false)
+    } else {
+      console.log("scope did match")
 
-    // Register dyanmic store modules on route change (not direct load!)
-    registerStoreModules(root, store)
-    matched.map(component => registerStoreModules(component, store, true))
+      const matched = router.getMatchedComponents(to)
 
-    // Call asyncData
-    let progressStarted
-    await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress, progressStarted)))
+      // Register dyanmic store modules on route change (not direct load!)
+      registerStoreModules(root, store)
+      matched.map(component => registerStoreModules(component, store, true))
 
-    // End loading bar
-    progress.finish()
-    next()
+      // Call asyncData
+      let progressStarted
+      await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress, progressStarted)))
+
+      // End loading bar
+      progress.finish()
+      next()
+    }
   })
   app.$mount('#app')
 })
