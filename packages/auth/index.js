@@ -65,7 +65,7 @@ class Auth {
     const key = randtoken.uid(32)
     const secret = randtoken.uid(32)
     api.systemUser = {
-      user_id: key,
+      user_key: key,
       user_secret: secret
     }
     await db.collection('users').updateOne({
