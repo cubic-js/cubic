@@ -64,7 +64,10 @@ class WebpackServer {
       routes.push({
         path: endpoint.route,
         component,
-        props: true
+        props: true,
+        meta: {
+          scope: endpoint.scope
+        }
       })
     }
     return routes

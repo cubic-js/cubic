@@ -11,6 +11,9 @@ class HttpTransformer {
     req.url = req.url.replace(/\.?\.\//gi, '') // Remove relative paths (../, ./)
     req.user = request.user
     req.method = request.method
+    req.headers = request.headers
+    req.access_token = request.access_token
+    req.refresh_token = request.refresh_token
     req.query = parsed.query
     req.params = {} // will get populated on cubic-core
     req.adapter = 'http'
@@ -18,11 +21,12 @@ class HttpTransformer {
     return req
   }
 
-  convertRes (res) {
+  convertRes (req, res, next) {
     // The 'headers' var isn't actually callable.
     // It instead contains the current headers and gets set by ../adapters/adapter.js:getResponse()
     res.send = res.json = (data, headers) => {
       send(res, res.statusCode, data, headers)
+      return res
     }
 
     res.redirect = (location, headers) => {
@@ -32,12 +36,15 @@ class HttpTransformer {
         ...headers
       })
       res.end()
+      return res
     }
 
     res.status = code => {
       res.statusCode = code
       return res
     }
+
+    return next()
   }
 }
 

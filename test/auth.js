@@ -17,6 +17,11 @@ describe('Authentication', function () {
     db = mongo.db('cubic-auth')
   })
 
+  it('should create default system user', function () {
+    assert(cubic.nodes.auth.api.systemUser.user_key)
+    assert(cubic.nodes.auth.api.systemUser.user_secret)
+  })
+
   // Register user
   it('should register user on POST /register', async function () {
     await db.collection('users').deleteOne({ user_id: 'cubic-auth-test' })

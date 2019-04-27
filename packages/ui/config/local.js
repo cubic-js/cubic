@@ -24,8 +24,7 @@ module.exports = {
    */
   client: {
     apiUrl: 'ws://localhost:3003/ws',
-    authUrl: 'ws://localhost:3030/ws',
-    sessionKey: 'cubic-ui-session'
+    authUrl: 'ws://localhost:3030/ws'
   },
 
   /**

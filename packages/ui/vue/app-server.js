@@ -48,6 +48,7 @@ export default function (context) {
       // Give access token to state so the client can use it
       if (context.req.access_token) context.state.$access_token = context.req.access_token
       if (context.req.refresh_token) context.state.$refresh_token = context.req.refresh_token
+      context.state.$user = context.req.user
 
       // Finally, add meta tags to context for injection in renderer
       context.meta = { inject: function () { Object.assign(this, meta.inject()) } }

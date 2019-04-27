@@ -1,18 +1,17 @@
 const jwt = require('jsonwebtoken')
-// const Client = require('cubic-client')
+const Client = require('cubic-client')
 const Cookies = require('cookies')
+const Authentication = require('cubic-auth/endpoints/authenticate')
 
 class ExpressMiddleware {
   constructor (config) {
     this.config = config
-    /**
     this.authClient = new Client({
       api_url: this.config.authUrl,
       auth_url: this.config.authUrl,
-      user_key: this.config.userKey,
-      user_secret: this.config.userSecret
+      user_key: this.config.user_key,
+      user_secret: this.config.user_secret
     })
-    **/
   }
 
   decode (req, res, next) {
@@ -26,7 +25,7 @@ class ExpressMiddleware {
     let cookie = {}
     try {
       // decode base64 to object
-      cookie = JSON.parse(Buffer.from(cookies.get(this.config.authCookie), 'base64').toString('ascii'))
+      cookie = JSON.parse(Buffer.from(cookies.get(cubic.config.api.authCookie), 'base64').toString('ascii'))
     } catch (err) {} // No cookie set, or not base64 encoded
 
     const accessToken = cookie.access_token
@@ -57,43 +56,46 @@ class ExpressMiddleware {
       // Set req.user from token
       try {
         req.user = jwt.verify(token, this.config.certPublic)
-        req.access_token = token
-        cubic.log.verbose(`${this.config.prefix} | (http) ${ip} connected as ${req.user.uid}`)
-        return next()
       }
 
-      // Invalid Token
+      // Could not verify token
       catch (err) {
         cubic.log.verbose(`${this.config.prefix} | (http) ${ip} rejected (${err})`)
 
-        /* eslint camelcase: 'off' */
-        // Refresh access token if refresh token is provided
-        /**
+        // Check if token needs to be refreshed
         if (err.name === 'TokenExpiredError' && req.refresh_token) {
-          const { access_token } = await this.authClient.post('/refresh', {
-            refresh_token: req.refresh_token
-          })
+          let refreshRequest = await this.authClient.post('/refresh', { refresh_token: req.refresh_token })
 
-          if (access_token) {
-            req.headers.authorization = `bearer ${access_token}`
-            this.auth(req, res, next)
+          // Re-auth user
+          if (refreshRequest.access_token) {
+            token = refreshRequest.access_token
+            try {
+              req.user = jwt.verify(token, this.config.certPublic)
+              req.headers.authorization = `bearer ${token}`
+              Authentication.setAuthCookie(req, res, { access_token: token, refresh_token: req.refresh_token }, false, true)
+            } catch (err) {
+              return res.status(401).json({
+                error: 'Invalid Token. Refresh was not possible.',
+                reason: err
+              })
+            }
           } else {
-            return res.status(401).json({
-              error: 'Invalid Token.',
-              reason: 'Refresh token could not be attributed to any user.'
-            })
+            return res.status(401).json(refreshRequest)
           }
-        }
 
-        // No refresh token or already refreshed
-        else {
-        **/
-        return res.status(401).json({
-          error: 'Invalid Token.',
-          reason: err
-        })
-        // }
+        // Invalid token
+        } else {
+          return res.status(401).json({
+            error: 'Invalid Token.',
+            reason: err
+          })
+        }
       }
+
+      // Set access token if everything is right
+      req.access_token = token
+      cubic.log.verbose(`${this.config.prefix} | (http) ${ip} connected as ${req.user.uid}`)
+      return next()
     }
 
     // No token provided

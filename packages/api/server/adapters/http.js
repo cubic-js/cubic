@@ -9,8 +9,14 @@ class HttpAdapter extends Adapter {
   constructor (config) {
     super(config)
     const middleware = new Middleware(config)
+    const transformer = new Transformer()
     this.app = polka()
     this.server = createServer(this.app.handler).listen(config.port)
+
+    // The transform middleware has to run before everything else
+    this.app.use(transformer.convertRes)
+
+    // Run http middleware directly instead of async stack, because they are not allowed to run on ws requests
     this.app.use(bodyParser.urlencoded({ extended: true })).use(bodyParser.json())
     this.app.use(middleware.decode)
     this.app.use(middleware.cookie.bind(middleware))
@@ -21,7 +27,6 @@ class HttpAdapter extends Adapter {
   async runMiddleware (req, res) {
     const transformer = new Transformer()
     req = transformer.convertReq(req)
-    transformer.convertRes(res)
     const done = await this.stack.run(req, res)
 
     if (done) {

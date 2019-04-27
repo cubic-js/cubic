@@ -23,20 +23,7 @@ class Authentication extends Endpoint {
     if (credentials.user_key) {
       let token = await this.matchCredentials(credentials, req)
       if (token) {
-        if (credentials.cookie_set && cubic.config.ui.api.authCookie) {
-          const cookies = new Cookies(req, res, { secure: cubic.config.local.environment !== 'development' })
-
-          // checks if session length or longliving
-          const cookieConfig = {}
-          if (credentials.cookie_longliving) {
-            const expiresAt = new Date()
-            expiresAt.setDate(expiresAt.getDate() + cubic.config.ui.api.authCookieExpire)
-            cookieConfig['expires'] = expiresAt
-          }
-
-          // encode token object to base64
-          cookies.set(cubic.config.ui.api.authCookie, Buffer.from(JSON.stringify(token)).toString('base64'), cookieConfig)
-        }
+        if (credentials.cookie_set) Authentication.setAuthCookie(req, res, token, credentials.cookie_longliving)
 
         if (credentials.redirect) {
           res.redirect(credentials.redirect)
@@ -111,6 +98,34 @@ class Authentication extends Endpoint {
       upsert: true
     })
     return refresh_token
+  }
+
+  /**
+   * Set auth cookie. Token needs to be an object from access and refresh token
+   */
+  static setAuthCookie (req, res, token, longliving, refresh = false) {
+    if (!cubic.config.api.authCookie) return false
+
+    const cookies = new Cookies(req, res, { secure: cubic.config.local.environment !== 'development' })
+    const cookieConfig = { httpOnly: cubic.config.local.environment !== 'development' }
+
+    // set cookie expiration date
+    let expiresAt // session length
+    if (longliving) {
+      expiresAt = new Date()
+      expiresAt.setDate(expiresAt.getDate() + cubic.config.api.authCookieExpire)
+    } else if (refresh) {
+      const oldCookie = JSON.parse(Buffer.from(cookies.get(cubic.config.api.authCookie), 'base64').toString('ascii'))
+      expiresAt = oldCookie.expires
+    }
+
+    cookieConfig['expires'] = expiresAt
+    token['expires'] = expiresAt
+
+    // encode token object to base64
+    cookies.set(cubic.config.api.authCookie, Buffer.from(JSON.stringify(token)).toString('base64'), cookieConfig)
+
+    return true
   }
 }
 
