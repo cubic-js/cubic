@@ -1,8 +1,9 @@
 const Loader = require('./lib/loader.js')
 const intro = require('./lib/intro.js')
+const config = require('./lib/config/cubic.js')
 
 class Cubic extends Loader {
-  constructor (options) {
+  constructor (options = config) {
     super(options)
     if (options.logLevel !== 'silent') {
       intro.roll()
