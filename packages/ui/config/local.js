@@ -16,7 +16,13 @@ module.exports = {
      */
     endpointPath: [`${process.cwd()}/ui/endpoints`, `${process.cwd()}/ui/sites`],
     endpointExtension: /(\.js|\.vue)$/,
-    endpointParent: `${__dirname}/../endpoint.js`
+    endpointParent: `${__dirname}/../endpoint.js`,
+
+    /**
+     * Error handling
+     * If undefined, standard json is sent, if not it is redirected to the errorUrl page
+     */
+    errorUrl: '/error/generic' //TODO: SET BACK TO UNDEFINED FOR COMMIT
   },
 
   /**
