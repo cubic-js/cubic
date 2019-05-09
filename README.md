@@ -12,8 +12,9 @@
 Cubic is a simple wrapper that integrates node.js frameworks into one platform that's
 easy to scale in docker or kubernetes.
 
-Even though we're already using this framework in production for [NexusHub](https://github.com/nexus-devs/NexusHub),
-this project is still very much in development and lacks documentation in some places.
+This project is still very much in development and lacks documentation in some places, but
+you can already check out how we've built [NexusHub](https://github.com/nexus-devs/NexusHub) with
+the help of Cubic.
 
 <br>
 
