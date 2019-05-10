@@ -14,7 +14,7 @@ class UITransformer {
   // Middleware to convert api res object
   convertResUI (req, res, next) {
     res.send = res.json = (data, headers) => {
-      // If error return new render of error page
+      // If error return new render of error page TODO: Currently not working
       if (res.statusCode >= 400 && cubic.config.ui.api.errorUrl) {
         req.url = cubic.config.ui.api.errorUrl
         req.errorData = data
