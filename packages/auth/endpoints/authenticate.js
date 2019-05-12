@@ -51,9 +51,12 @@ class Authentication extends Endpoint {
       user_key: credentials.user_key
     })
 
+    let validUser = false
     try {
-      await bcrypt.compare(credentials.user_secret, user.user_secret)
-    } catch (err) {
+      validUser = await bcrypt.compare(credentials.user_secret, user.user_secret)
+    } catch (err) {} // Errors occur for example, if the user is not in the database
+
+    if (!validUser) {
       auth.saveIP.bind(this)(credentials.user_key, ip, 'authenticate', false)
       this.res.status(403).send({
         error: 'Unauthorized.',
