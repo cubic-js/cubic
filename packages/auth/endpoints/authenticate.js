@@ -55,10 +55,11 @@ class Authentication extends Endpoint {
       await bcrypt.compare(credentials.user_secret, user.user_secret)
     } catch (err) {
       auth.saveIP.bind(this)(credentials.user_key, ip, 'authenticate', false)
-      return this.res.status(403).send({
-        error: 'Unauhtorized.',
+      this.res.status(403).send({
+        error: 'Unauthorized.',
         reason: 'Credentials not recognized.'
       })
+      return false
     }
 
     // Valid User Found
