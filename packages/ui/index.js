@@ -1,3 +1,5 @@
+const Transformer = require('./transformer')
+
 class Ui {
   constructor (options) {
     const local = require('./config/local.js')
@@ -11,6 +13,8 @@ class Ui {
     const API = require('cubic-api')
     const WebpackServer = require('./webpack/webpack.js')
     const ui = await cubic.use(new API(cubic.config.ui.api))
+    const transformer = new Transformer()
+    await transformer.apply(ui)
     ui.webpackServer = new WebpackServer()
   }
 }
