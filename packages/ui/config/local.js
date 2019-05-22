@@ -22,7 +22,7 @@ module.exports = {
      * Error handling
      * If undefined, standard json is sent, if not it is redirected to the errorUrl page
      */
-    errorUrl: '/error/generic' //TODO: SET BACK TO UNDEFINED FOR COMMIT
+    errorUrl: undefined // Don't change this currently, the feature is broken
   },
 
   /**

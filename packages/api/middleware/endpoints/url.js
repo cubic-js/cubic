@@ -18,7 +18,7 @@ class Url {
     for (let i = 0; i < eurl.length; i++) {
       let fragment = eurl[i]
       if (fragment.includes(':')) {
-        req.params[fragment.replace(':', '')] = curl[i]
+        req.params[fragment.replace(':', '')] = decodeURIComponent(curl[i])
       }
     }
   }
@@ -37,7 +37,7 @@ class Url {
       let key = matching[2]
       for (let i = 0; i < endpoint.query.length; i++) {
         if (key === endpoint.query[i].name) {
-          req.query[key] = matching[3]
+          req.query[key] = decodeURIComponent(matching[3])
         }
       }
       url = url.replace(matching[0], '').replace('&', '?')
