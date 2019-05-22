@@ -10,7 +10,6 @@ class Query {
           reason: `Expected ${param.name} param. Your URL should look something like: ${req.url}${req.url.includes('?') ? '&' : '?'}${param.name}=${param.default ? param.default : 'value'}`
         })
       }
-      param = decodeURIComponent(param)
     }
   }
 }
