@@ -37,6 +37,9 @@ export default function (context) {
       await callAsyncRecursive(root, store, router)
       await Promise.all(routerView.map(component => callAsyncRecursive(component, store, router, router.currentRoute)))
 
+      // Check if error was received
+      if (context.req.errorData) store.state.errorData = context.req.errorData
+
       // After all asyncData hooks are resolved, our store is now
       // filled with the state needed to render the app.
       // Expose the state on the render context, and let the request handler

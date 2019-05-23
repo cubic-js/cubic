@@ -42,7 +42,7 @@ class Auth {
     }
 
     // Ensure write_test scope
-    this.db.collection('users').updateOne({ user_id: 'cubic-client-test' }, { $set: { scope: 'write_test' } })
+    await this.db.collection('users').updateOne({ user_id: 'cubic-client-test' }, { $set: { scope: 'write_test' } })
     return user_key
   }
 
