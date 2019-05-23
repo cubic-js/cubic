@@ -62,7 +62,27 @@ class EndpointController {
         const options = { url: req.url, cache: this.cache, ws: this.ws, db }
         const Endpoint = require(endpoint.file)
         const component = new Endpoint(options)
-        await component.main(req, res)
+
+        try {
+          await component.main(req, res)
+        } catch (err) {
+          res.status(500).send({
+            error: 'Internal Server Error',
+            reason: 'Something went wrong on our side.'
+          })
+          db.collection('cubicServerErrors').updateOne({
+            endpoint: req.url,
+            error: err.message
+          }, {
+            $setOnInsert: {
+              endpoint: req.url,
+              error: err.message,
+              trace: err.stack
+            }
+          }, {
+            upsert: true
+          })
+        }
       }
     })
   }
