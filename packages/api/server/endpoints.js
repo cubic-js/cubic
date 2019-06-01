@@ -9,6 +9,7 @@ const Limiter = require('../middleware/endpoints/limiter.js')
 const url = require('../middleware/endpoints/url.js')
 const query = require('../middleware/endpoints/query.js')
 const auth = require('../middleware/endpoints/auth.js')
+const prod = process.env.NODE_ENV === 'production'
 
 /**
  * Handles files in /api/ folder so they're automatically routed as API endpoints.
@@ -63,25 +64,33 @@ class EndpointController {
         const Endpoint = require(endpoint.file)
         const component = new Endpoint(options)
 
+        // Handle errors thrown inside API Endpoint
         try {
           await component.main(req, res)
         } catch (err) {
-          res.status(500).send({
-            error: 'Internal Server Error',
-            reason: 'Something went wrong on our side.'
-          })
-          db.collection('cubicServerErrors').updateOne({
-            endpoint: req.url,
-            error: err.message
-          }, {
-            $setOnInsert: {
+          if (prod) {
+            res.status(500).send({
+              error: 'Internal Server Error',
+              reason: 'Something went wrong on our side.'
+            })
+            db.collection('cubicServerErrors').updateOne({
               endpoint: req.url,
-              error: err.message,
-              trace: err.stack
-            }
-          }, {
-            upsert: true
-          })
+              error: err.message
+            }, {
+              $setOnInsert: {
+                endpoint: req.url,
+                error: err.message,
+                trace: err.stack
+              }
+            }, {
+              upsert: true
+            })
+          }
+
+          // In dev, just throw so we can debug directly
+          else {
+            throw err
+          }
         }
       }
     })
