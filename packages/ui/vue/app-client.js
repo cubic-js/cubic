@@ -43,7 +43,7 @@ router.onReady(() => {
   // the data that we already have. Using router.beforeResolve() so that all
   // async components are resolved.
   router.beforeResolve(async (to, from, next) => {
-    if (to.matched.some(record => !store.state.$user.scp.includes(record.meta.scope) && !store.state.$user.scp.includes('write_root'))) {
+    if (to.matched.find(record => !store.state.$user.scp.includes(record.meta.scope) && !store.state.$user.scp.includes('write_root'))) {
       next(false)
     } else {
       const matched = router.getMatchedComponents(to)
