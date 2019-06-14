@@ -39,9 +39,9 @@ module.exports = {
   cacheExp: 60,
 
   /**
-   * Cookie Authorization settings
+   * Authorization and Cookie settings
    */
-  authCookie: 'cubic-auth-cookie',
+  authCookie: undefined, // set this only in ui node
   authCookieExpire: 30, // in days
   apiUrl: 'ws://localhost:3003/ws',
   authUrl: 'ws://localhost:3030/ws',
