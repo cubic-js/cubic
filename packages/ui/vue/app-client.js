@@ -53,8 +53,7 @@ router.onReady(() => {
       matched.map(component => registerStoreModules(component, store, true))
 
       // Call asyncData
-      let progressStarted
-      await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress, progressStarted)))
+      await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress)))
 
       // End loading bar
       progress.finish()
