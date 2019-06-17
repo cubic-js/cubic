@@ -2,7 +2,7 @@ pipeline:
   build:
     image: node:10
     commands:
-      - npm install
+      - npm ci
       - npx lerna bootstrap
       - bash link.sh
     when:
