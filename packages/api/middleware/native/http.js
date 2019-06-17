@@ -20,12 +20,14 @@ class ExpressMiddleware {
   }
 
   cookie (req, res, next) {
+    if (!this.config.authCookie) return next()
+
     const cookies = new Cookies(req, res)
 
     let cookie = {}
     try {
       // decode base64 to object
-      cookie = JSON.parse(Buffer.from(cookies.get(cubic.config.api.authCookie), 'base64').toString('ascii'))
+      cookie = JSON.parse(Buffer.from(cookies.get(this.config.authCookie), 'base64').toString('ascii'))
     } catch (err) {} // No cookie set, or not base64 encoded
 
     const accessToken = cookie.access_token
