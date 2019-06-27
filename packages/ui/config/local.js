@@ -17,6 +17,7 @@ module.exports = {
     endpointPath: [`${process.cwd()}/ui/endpoints`, `${process.cwd()}/ui/sites`],
     endpointExtension: /(\.js|\.vue)$/,
     endpointParent: `${__dirname}/../endpoint.js`,
+    publicPath: `${process.cwd()}/ui/assets`,
 
     /**
      * Error handling

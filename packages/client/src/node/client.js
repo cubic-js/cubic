@@ -86,8 +86,6 @@ class Client {
       setTimeout(() => {
         if (!this.connected) {
           this.connected = true // reconnect won't run otherwise
-          this.resolve()
-          this.resolve = null
           this.reconnect()
         }
       }, 500)

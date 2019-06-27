@@ -8,7 +8,6 @@ class WebpackServer {
       client: require(cubic.config.ui.webpack.clientConfig),
       server: require(cubic.config.ui.webpack.serverConfig)
     }
-    this.init()
   }
 
   /**

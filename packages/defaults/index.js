@@ -13,7 +13,6 @@ class Defaults {
       `${process.cwd()}/ui`,
       `${process.cwd()}/config`,
       `${process.cwd()}/api`,
-      `${process.cwd()}/assets`
     ]) {
       if (!await this.exists(path)) {
         await copy(path.replace(process.cwd(), __dirname), path)
