@@ -58,8 +58,7 @@ class Client {
       action: 'UNSUBSCRIBE',
       room
     }))
-    const i = this.connection.subscriptions.findIndex(s => s.room === room)
-    this.connection.subscriptions.splice(i, 1)
+    this.connection.subscriptions = this.connection.subscriptions.filter(s => s.room !== room)
   }
 
   /**
