@@ -43,7 +43,7 @@ router.onReady(() => {
   // the data that we already have. Using router.beforeResolve() so that all
   // async components are resolved.
   router.beforeResolve(async (to, from, next) => {
-    if (to.matched.some(record => !store.state.$user.scp.includes(record.meta.scope) && !store.state.$user.scp.includes('write_root'))) {
+    if (to.matched.find(record => !store.state.$user.scp.includes(record.meta.scope) && !store.state.$user.scp.includes('write_root'))) {
       next(false)
     } else {
       const matched = router.getMatchedComponents(to)
@@ -53,8 +53,7 @@ router.onReady(() => {
       matched.map(component => registerStoreModules(component, store, true))
 
       // Call asyncData
-      let progressStarted
-      await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress, progressStarted)))
+      await Promise.all(matched.map(c => callAsyncRecursive(c, store, router, to, progress)))
 
       // End loading bar
       progress.finish()

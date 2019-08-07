@@ -16,6 +16,7 @@ class Ui {
     const transformer = new Transformer()
     await transformer.apply(ui)
     ui.webpackServer = new WebpackServer()
+    await ui.webpackServer.init()
   }
 }
 

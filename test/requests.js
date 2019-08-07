@@ -6,10 +6,11 @@ const Endpoint = require('cubic-api/endpoint')
  * Tests for properly responding to usual requests.
  */
 describe('Requests', function () {
-  let client, options
+  let client, uiClient, options
 
   before(async function () {
     client = new Client()
+    uiClient = new Client({ api_url: 'ws://localhost:3000/ws' })
     const endpoints = cubic.nodes.api.server.ws.endpoints
     const db = this.db = (await endpoints.db).db(endpoints.config.mongoDb)
     options = { db, cache: endpoints.cache, ws: endpoints.ws }
@@ -31,7 +32,7 @@ describe('Requests', function () {
 
   // Raw file check
   it('should send buffer of guy fieri on GET /guy-fieri.jpg', async function () {
-    const guy = await client.get('/guy-fieri.jpg')
+    const guy = await uiClient.get('/guy-fieri.jpg')
     assert(guy.type === 'Buffer' || guy instanceof Buffer)
   })
 

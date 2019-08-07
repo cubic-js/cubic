@@ -76,8 +76,9 @@ class Client {
 
         // Subscriptions
         else if (data.action === 'PUBLISH') {
-          const sub = this.subscriptions.find(s => s.room === data.room)
-          sub.fn(data.data)
+          for (const sub of this.subscriptions) {
+            if (sub.room === data.room) sub.fn(data.data)
+          }
         }
       })
 

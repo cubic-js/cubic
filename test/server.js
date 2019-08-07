@@ -25,12 +25,10 @@ before(async function () {
   const redisUrl = 'redis://redis'
   const mongoUrl = 'mongodb://mongodb'
   const endpointPath = `${process.cwd()}/test/endpoints`
-  const parallel = []
   const cubic = new Cubic({ logLevel: 'silent' })
   await cubic.use(new Auth(ci ? { api: { redisUrl, mongoUrl } } : {}))
-  parallel.push(cubic.use(new Api(ci ? { redisUrl, mongoUrl, endpointPath } : { endpointPath })))
-  parallel.push(cubic.use(new Ui(ci ? { api: { redisUrl, mongoUrl } } : {})))
-  await Promise.all(parallel)
+  await cubic.use(new Api(ci ? { redisUrl, mongoUrl, endpointPath } : { endpointPath }))
+  await cubic.use(new Ui(ci ? { api: { redisUrl, mongoUrl } } : {}))
 })
 
 /**
@@ -39,7 +37,7 @@ before(async function () {
 describe('Server', function () {
   it('should create default files', async function () {
     assert(await fileExists(`${process.cwd()}/api`))
-    assert(await fileExists(`${process.cwd()}/assets`))
+    assert(await fileExists(`${process.cwd()}/config`))
     assert(await fileExists(`${process.cwd()}/ui`))
   })
 

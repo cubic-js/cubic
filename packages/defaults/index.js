@@ -12,8 +12,7 @@ class Defaults {
     for (let path of [
       `${process.cwd()}/ui`,
       `${process.cwd()}/config`,
-      `${process.cwd()}/api`,
-      `${process.cwd()}/assets`
+      `${process.cwd()}/api`
     ]) {
       if (!await this.exists(path)) {
         await copy(path.replace(process.cwd(), __dirname), path)

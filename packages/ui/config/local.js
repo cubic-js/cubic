@@ -17,12 +17,23 @@ module.exports = {
     endpointPath: [`${process.cwd()}/ui/endpoints`, `${process.cwd()}/ui/sites`],
     endpointExtension: /(\.js|\.vue)$/,
     endpointParent: `${__dirname}/../endpoint.js`,
+    publicPath: `${process.cwd()}/ui/assets`,
 
     /**
      * Error handling
      * If undefined, standard json is sent, if not it is redirected to the errorUrl page
      */
-    errorUrl: undefined // Don't change this currently, the feature is broken
+    errorUrl: undefined, // Don't change this currently, the feature is broken
+
+    /**
+     * Authorization and Cookie settings
+     */
+    authCookie: 'cubic-auth-cookie',
+    authCookieExpire: 30, // in days
+    apiUrl: 'ws://localhost:3003/ws',
+    authUrl: 'ws://localhost:3030/ws',
+    userKey: undefined,
+    userSecret: undefined
   },
 
   /**
