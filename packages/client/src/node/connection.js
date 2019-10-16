@@ -56,11 +56,6 @@ class Connection extends Client {
       return this.retry(res, verb, query)
     }
 
-    // Redirect. Assume res.body is redirect link
-    if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
-      return this.retry(res, verb, res.body)
-    }
-
     // Unhandled error
     if (parseInt(res.statusCode.toString()[0]) > 3) {
       throw new ServerError(res, query)
