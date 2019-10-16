@@ -28,7 +28,7 @@ var runtime = createCommonjsModule(function (module) {
 !(function(global) {
   var Op = Object.prototype;
   var hasOwn = Op.hasOwnProperty;
-  var undefined$1;
+  var undefined;
   var $Symbol = typeof Symbol === "function" ? Symbol : {};
   var iteratorSymbol = $Symbol.iterator || "@@iterator";
   var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
@@ -220,12 +220,12 @@ var runtime = createCommonjsModule(function (module) {
   }
   function maybeInvokeDelegate(delegate, context) {
     var method = delegate.iterator[context.method];
-    if (method === undefined$1) {
+    if (method === undefined) {
       context.delegate = null;
       if (context.method === "throw") {
         if (delegate.iterator.return) {
           context.method = "return";
-          context.arg = undefined$1;
+          context.arg = undefined;
           maybeInvokeDelegate(delegate, context);
           if (context.method === "throw") {
             return ContinueSentinel;
@@ -256,7 +256,7 @@ var runtime = createCommonjsModule(function (module) {
       context.next = delegate.nextLoc;
       if (context.method !== "return") {
         context.method = "next";
-        context.arg = undefined$1;
+        context.arg = undefined;
       }
     } else {
       return info;
@@ -331,7 +331,7 @@ var runtime = createCommonjsModule(function (module) {
               return next;
             }
           }
-          next.value = undefined$1;
+          next.value = undefined;
           next.done = true;
           return next;
         };
@@ -342,25 +342,25 @@ var runtime = createCommonjsModule(function (module) {
   }
   runtime.values = values;
   function doneResult() {
-    return { value: undefined$1, done: true };
+    return { value: undefined, done: true };
   }
   Context.prototype = {
     constructor: Context,
     reset: function(skipTempReset) {
       this.prev = 0;
       this.next = 0;
-      this.sent = this._sent = undefined$1;
+      this.sent = this._sent = undefined;
       this.done = false;
       this.delegate = null;
       this.method = "next";
-      this.arg = undefined$1;
+      this.arg = undefined;
       this.tryEntries.forEach(resetTryEntry);
       if (!skipTempReset) {
         for (var name in this) {
           if (name.charAt(0) === "t" &&
               hasOwn.call(this, name) &&
               !isNaN(+name.slice(1))) {
-            this[name] = undefined$1;
+            this[name] = undefined;
           }
         }
       }
@@ -385,7 +385,7 @@ var runtime = createCommonjsModule(function (module) {
         context.next = loc;
         if (caught) {
           context.method = "next";
-          context.arg = undefined$1;
+          context.arg = undefined;
         }
         return !! caught;
       }
@@ -492,7 +492,7 @@ var runtime = createCommonjsModule(function (module) {
         nextLoc: nextLoc
       };
       if (this.method === "next") {
-        this.arg = undefined$1;
+        this.arg = undefined;
       }
       return ContinueSentinel;
     }
@@ -902,13 +902,14 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     IteratorPrototype = _objectGpo($anyNative.call(new Base()));
     if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
       _setToStringTag(IteratorPrototype, TAG, true);
+      if (!_library && typeof IteratorPrototype[ITERATOR] != 'function') _hide(IteratorPrototype, ITERATOR, returnThis);
     }
   }
   if (DEF_VALUES && $native && $native.name !== VALUES) {
     VALUES_BUG = true;
     $default = function values() { return $native.call(this); };
   }
-  if ((FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+  if ((!_library || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
     _hide(proto, ITERATOR, $default);
   }
   _iterators[NAME] = $default;
@@ -1462,9 +1463,9 @@ _export(_export.S + _export.F * !USE_NATIVE, PROMISE, {
     return capability.promise;
   }
 });
-_export(_export.S + _export.F * (_library), PROMISE, {
+_export(_export.S + _export.F * (_library || !USE_NATIVE), PROMISE, {
   resolve: function resolve(x) {
-    return _promiseResolve(this === Wrapper ? $Promise : this, x);
+    return _promiseResolve(_library && this === Wrapper ? $Promise : this, x);
   }
 });
 _export(_export.S + _export.F * !(USE_NATIVE && _iterDetect(function (iter) {
@@ -1758,10 +1759,10 @@ var _meta_3 = _meta.fastKey;
 var _meta_4 = _meta.getWeak;
 var _meta_5 = _meta.onFreeze;
 
-var defineProperty$2 = _objectDp.f;
+var defineProperty$3 = _objectDp.f;
 var _wksDefine = function (name) {
   var $Symbol = _core.Symbol || (_core.Symbol = {});
-  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$2($Symbol, name, { value: _wksExt.f(name) });
+  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$3($Symbol, name, { value: _wksExt.f(name) });
 };
 
 var _enumKeys = function (it) {
@@ -2130,9 +2131,8 @@ var Client = function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.connecting) this.connecting = this.setClient();else this.setClient();
-                return _context.abrupt('return', this.connecting);
-              case 2:
+                return _context.abrupt('return', this.setConnection(this.setClient()));
+              case 1:
               case 'end':
                 return _context.stop();
             }
@@ -2143,6 +2143,28 @@ var Client = function () {
         return _ref.apply(this, arguments);
       }
       return connect;
+    }()
+  }, {
+    key: 'setConnection',
+    value: function () {
+      var _ref2 = _asyncToGenerator(regenerator.mark(function _callee2(promise) {
+        return regenerator.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!this.connecting) this.connecting = promise;
+                return _context2.abrupt('return', this.connecting);
+              case 2:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+      function setConnection(_x) {
+        return _ref2.apply(this, arguments);
+      }
+      return setConnection;
     }()
   }, {
     key: 'setClient',
@@ -2188,26 +2210,26 @@ var Client = function () {
             _this.connected = true;
             _this.reconnect();
           }
-        }, 5000);
+        }, 1000);
       });
     }
   }, {
     key: 'reconnect',
     value: function () {
-      var _ref2 = _asyncToGenerator(regenerator.mark(function _callee2() {
+      var _ref3 = _asyncToGenerator(regenerator.mark(function _callee3() {
         var i, request, req, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, sub;
-        return regenerator.wrap(function _callee2$(_context2) {
+        return regenerator.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 if (this.connected) {
-                  _context2.next = 2;
+                  _context3.next = 2;
                   break;
                 }
-                return _context2.abrupt('return');
+                return _context3.abrupt('return');
               case 2:
                 this.connected = false;
-                _context2.next = 5;
+                _context3.next = 5;
                 return this.connect();
               case 5:
                 for (i = 0; this.requests.length; i++) {
@@ -2219,7 +2241,7 @@ var Client = function () {
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context2.prev = 9;
+                _context3.prev = 9;
                 for (_iterator = _getIterator(this.subscriptions); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                   sub = _step.value;
                   this.client.send(_JSON$stringify({
@@ -2227,81 +2249,81 @@ var Client = function () {
                     room: sub.room
                   }));
                 }
-                _context2.next = 17;
+                _context3.next = 17;
                 break;
               case 13:
-                _context2.prev = 13;
-                _context2.t0 = _context2['catch'](9);
+                _context3.prev = 13;
+                _context3.t0 = _context3['catch'](9);
                 _didIteratorError = true;
-                _iteratorError = _context2.t0;
+                _iteratorError = _context3.t0;
               case 17:
-                _context2.prev = 17;
-                _context2.prev = 18;
+                _context3.prev = 17;
+                _context3.prev = 18;
                 if (!_iteratorNormalCompletion && _iterator.return) {
                   _iterator.return();
                 }
               case 20:
-                _context2.prev = 20;
+                _context3.prev = 20;
                 if (!_didIteratorError) {
-                  _context2.next = 23;
+                  _context3.next = 23;
                   break;
                 }
                 throw _iteratorError;
               case 23:
-                return _context2.finish(20);
+                return _context3.finish(20);
               case 24:
-                return _context2.finish(17);
+                return _context3.finish(17);
               case 25:
               case 'end':
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, this, [[9, 13, 17, 25], [18,, 20, 24]]);
+        }, _callee3, this, [[9, 13, 17, 25], [18,, 20, 24]]);
       }));
       function reconnect() {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       }
       return reconnect;
     }()
   }, {
     key: 'request',
     value: function () {
-      var _ref3 = _asyncToGenerator(regenerator.mark(function _callee3(verb, query) {
+      var _ref4 = _asyncToGenerator(regenerator.mark(function _callee4(verb, query) {
         var res;
-        return regenerator.wrap(function _callee3$(_context3) {
+        return regenerator.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context3.next = 2;
+                _context4.next = 2;
                 return this.req(verb, query);
               case 2:
-                res = _context3.sent;
-                return _context3.abrupt('return', this.errCheck(res, verb, query));
+                res = _context4.sent;
+                return _context4.abrupt('return', this.errCheck(res, verb, query));
               case 4:
               case 'end':
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
-      function request(_x, _x2) {
-        return _ref3.apply(this, arguments);
+      function request(_x2, _x3) {
+        return _ref4.apply(this, arguments);
       }
       return request;
     }()
   }, {
     key: 'req',
     value: function () {
-      var _ref4 = _asyncToGenerator(regenerator.mark(function _callee4(verb, query) {
+      var _ref5 = _asyncToGenerator(regenerator.mark(function _callee5(verb, query) {
         var _this2 = this;
-        return regenerator.wrap(function _callee4$(_context4) {
+        return regenerator.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context4.next = 2;
+                _context5.next = 2;
                 return this.connecting;
               case 2:
-                return _context4.abrupt('return', new _Promise(function (resolve) {
+                return _context5.abrupt('return', new _Promise(function (resolve) {
                   var id = _this2.requestIds++;
                   var payload = { action: verb, id: id };
                   if (typeof query === 'string') {
@@ -2320,77 +2342,77 @@ var Client = function () {
                 }));
               case 3:
               case 'end':
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
-      function req(_x3, _x4) {
-        return _ref4.apply(this, arguments);
+      function req(_x4, _x5) {
+        return _ref5.apply(this, arguments);
       }
       return req;
     }()
   }, {
     key: 'retry',
     value: function () {
-      var _ref5 = _asyncToGenerator(regenerator.mark(function _callee5(res, verb, query) {
+      var _ref6 = _asyncToGenerator(regenerator.mark(function _callee6(res, verb, query) {
         var _this3 = this;
         var delay, reres;
-        return regenerator.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay;
-                delay = isNaN(delay) ? this.delay : delay;
-                _context5.next = 4;
-                return this.queue.delay(function () {
-                  return _this3.req(verb, query);
-                }, delay, 1000 * 5, 'unshift');
-              case 4:
-                reres = _context5.sent;
-                return _context5.abrupt('return', this.errCheck(reres, verb, query));
-              case 6:
-              case 'end':
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this);
-      }));
-      function retry(_x5, _x6, _x7) {
-        return _ref5.apply(this, arguments);
-      }
-      return retry;
-    }()
-  }, {
-    key: 'errCheck',
-    value: function () {
-      var _ref6 = _asyncToGenerator(regenerator.mark(function _callee6(res, verb, query) {
         return regenerator.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                if (!(typeof res === 'string' && res.includes('timed out'))) {
-                  _context6.next = 2;
-                  break;
-                }
-                return _context6.abrupt('return', this.retry(res, verb, query));
-              case 2:
-                if (!res.body.error) {
-                  _context6.next = 6;
-                  break;
-                }
-                throw res;
+                delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay;
+                delay = isNaN(delay) ? this.delay : delay;
+                _context6.next = 4;
+                return this.queue.delay(function () {
+                  return _this3.req(verb, query);
+                }, delay, 1000 * 5, 'unshift');
+              case 4:
+                reres = _context6.sent;
+                return _context6.abrupt('return', this.errCheck(reres, verb, query));
               case 6:
-                return _context6.abrupt('return', res.body);
-              case 7:
               case 'end':
                 return _context6.stop();
             }
           }
         }, _callee6, this);
       }));
-      function errCheck(_x8, _x9, _x10) {
+      function retry(_x6, _x7, _x8) {
         return _ref6.apply(this, arguments);
+      }
+      return retry;
+    }()
+  }, {
+    key: 'errCheck',
+    value: function () {
+      var _ref7 = _asyncToGenerator(regenerator.mark(function _callee7(res, verb, query) {
+        return regenerator.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                if (!(typeof res === 'string' && res.includes('timed out'))) {
+                  _context7.next = 2;
+                  break;
+                }
+                return _context7.abrupt('return', this.retry(res, verb, query));
+              case 2:
+                if (!res.body.error) {
+                  _context7.next = 6;
+                  break;
+                }
+                throw res;
+              case 6:
+                return _context7.abrupt('return', res.body);
+              case 7:
+              case 'end':
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this);
+      }));
+      function errCheck(_x9, _x10, _x11) {
+        return _ref7.apply(this, arguments);
       }
       return errCheck;
     }()
@@ -2667,20 +2689,14 @@ var Connection = function (_Client) {
                 }
                 return _context3.abrupt('return', this.retry(res, verb, query));
               case 13:
-                if (![301, 302, 303, 307, 308].includes(res.statusCode)) {
+                if (!(parseInt(res.statusCode.toString()[0]) > 3)) {
                   _context3.next = 15;
                   break;
                 }
-                return _context3.abrupt('return', this.retry(res, verb, res.body));
-              case 15:
-                if (!(parseInt(res.statusCode.toString()[0]) > 3)) {
-                  _context3.next = 17;
-                  break;
-                }
                 throw new ServerError(res, query);
-              case 17:
+              case 15:
                 return _context3.abrupt('return', res.body);
-              case 18:
+              case 16:
               case 'end':
                 return _context3.stop();
             }
