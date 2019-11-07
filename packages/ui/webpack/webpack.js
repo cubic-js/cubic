@@ -27,6 +27,15 @@ class WebpackServer {
    */
   async registerEndpoints () {
     const routes = await this.getViewConstants()
+
+    // Order parameterized url's so they can't replace already defined routes.
+    // e.g. /something/:param/:param must not be routed before /something/whatever/:param
+    routes.sort((a, b) => {
+      const aCount = (a.path.split(':')[0].match(/\//g) || []).length
+      const bCount = (b.path.split(':')[0].match(/\//g) || []).length
+      return bCount - aCount
+    })
+
     const writeFile = promisify(fs.writeFile)
     let routeOutput = `/**
                     * Auto-generated routes from cubic view node. We can't
