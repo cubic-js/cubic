@@ -272,6 +272,14 @@ class EndpointController {
       // Remove trailing empty el from `/` at end of route, but not if url is
       // '/' (index)
       if (!route[route.length - 1] && route.length > 2) route.pop()
+
+      // Remove optional params until length matches
+      while (route.length > reqUrl.length) {
+        const optionalParam = route.findIndex(x => x.includes('?'))
+        if (optionalParam < 0) break
+        route.splice(optionalParam, 1)
+      }
+
       if (route.length === reqUrl.length) {
         for (let i = 0; i < reqUrl.length; i++) {
           // Current element doesn't match and isn't placeholder?
