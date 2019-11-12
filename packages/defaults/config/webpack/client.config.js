@@ -24,12 +24,7 @@ module.exports = merge(baseConfig, {
     rules: [
       {
         test: /(\.s?[a|c]ss|\.css)$/,
-        use: (isProd ? [MiniCss.loader] : ['vue-style-loader']).concat([{
-          loader: 'css-loader',
-          options: {
-            minimize: isProd
-          }
-        }, 'sass-loader'])
+        use: (isProd ? [MiniCss.loader] : ['vue-style-loader']).concat(['css-loader', 'sass-loader'])
       },
       // Transpile ES6/7 into older versions for better browser support
       {

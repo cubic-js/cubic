@@ -23,7 +23,8 @@ class EndpointController {
       auto_reconnect: true,
       keepAlive: 1,
       connectTimeoutMS: 60000,
-      socketTimeoutMS: 60000
+      socketTimeoutMS: 60000,
+      useUnifiedTopology: true
     })
     this.stack = new Stack(config)
     this.limiter = new Limiter(config)
@@ -59,7 +60,37 @@ class EndpointController {
 
       if (passed) {
         if (this.dev) this.deleteRequireCache(endpoint.file)
-        const db = (await this.db).db(this.config.mongoDb)
+
+        // A lot of code right now for only a db override, but may come handy in the future
+        const config = this.config
+        if (this.config.overrideEndpoint) {
+          const overrides = Object.keys(this.config.overrideEndpoint)
+          let match
+          for (const override of overrides) {
+            if (override.length <= req.url.length) {
+              let overrideMatch = true
+              for (let i = 0; i < override.length; i++) {
+                if (override[i] !== req.url[i]) {
+                  overrideMatch = false
+                  break
+                }
+              }
+              if (overrideMatch) {
+                match = this.config.overrideEndpoint[override]
+                break
+              }
+            }
+          }
+
+          if (match) {
+            const properties = Object.keys(match)
+            for (const p of properties) {
+              config[p] = match[p]
+            }
+          }
+        }
+
+        const db = (await this.db).db(config.mongoDb)
         const options = { url: req.url, cache: this.cache, ws: this.ws, db }
         const Endpoint = require(endpoint.file)
         const component = new Endpoint(options)
@@ -242,6 +273,14 @@ class EndpointController {
       // Remove trailing empty el from `/` at end of route, but not if url is
       // '/' (index)
       if (!route[route.length - 1] && route.length > 2) route.pop()
+
+      // Remove optional params until length matches
+      while (route.length > reqUrl.length) {
+        const optionalParam = route.findIndex(x => x.includes('?'))
+        if (optionalParam < 0) break
+        route.splice(optionalParam, 1)
+      }
+
       if (route.length === reqUrl.length) {
         for (let i = 0; i < reqUrl.length; i++) {
           // Current element doesn't match and isn't placeholder?

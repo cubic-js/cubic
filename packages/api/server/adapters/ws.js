@@ -12,6 +12,7 @@ class WsAdapter extends Adapter {
     this.nodes = [] // Cubic nodes to contact in request handler
     this.app = new Primus(server, {
       pathname: '/ws',
+      pingInterval: 1000 * 10,
       redis: {
         host: this.config.redisUrl.replace('redis://', ''),
         port: 6379,

@@ -7,11 +7,11 @@ const fileExists = promisify(fs.lstat)
 const removeFile = promisify(rmrf)
 const moveFile = promisify(fs.rename)
 const Cubic = require(cwd)
-const defaults = require(`${cwd}/packages/defaults`)
-const Auth = require(`${cwd}/packages/auth`)
-const Api = require(`${cwd}/packages/api`)
-const Ui = require(`${cwd}/packages/ui`)
-const Client = require(`${cwd}/packages/client`)
+const defaults = require('cubic-defaults')
+const Auth = require('cubic-auth')
+const Api = require('cubic-api')
+const Ui = require('cubic-ui')
+const Client = require('cubic-client')
 const get = require('./lib/get.js')
 
 /**
@@ -19,26 +19,23 @@ const get = require('./lib/get.js')
  * databases in drone-ci
  */
 before(async function () {
-  await moveFile(`${process.cwd()}/test/config`, `${process.cwd()}/config`)
+  await moveFile(`${cwd}/packages/defaults/config`, `${cwd}/config`)
   await defaults.verify()
   const ci = process.env.DRONE
   const redisUrl = 'redis://redis'
   const mongoUrl = 'mongodb://mongodb'
-  const endpointPath = `${process.cwd()}/test/endpoints`
+  const endpointPath = `${cwd}/test/endpoints`
   const cubic = new Cubic({ logLevel: 'silent' })
   await cubic.use(new Auth(ci ? { api: { redisUrl, mongoUrl } } : {}))
   await cubic.use(new Api(ci ? { redisUrl, mongoUrl, endpointPath } : { endpointPath }))
   await cubic.use(new Ui(ci ? { api: { redisUrl, mongoUrl } } : {}))
 })
 
-/**
- * Test for endpoint parent class functionality
- */
 describe('Server', function () {
   it('should create default files', async function () {
-    assert(await fileExists(`${process.cwd()}/api`))
-    assert(await fileExists(`${process.cwd()}/config`))
-    assert(await fileExists(`${process.cwd()}/ui`))
+    assert(await fileExists(`${cwd}/api`))
+    assert(await fileExists(`${cwd}/config`))
+    assert(await fileExists(`${cwd}/ui`))
   })
 
   it('should load up API node - GET /foo (http/ws)', async function () {
@@ -52,10 +49,9 @@ describe('Server', function () {
   })
 })
 
-// Remove default files
 after(async function () {
-  await moveFile(`${process.cwd()}/config`, `${process.cwd()}/test/config`)
-  await removeFile(`${process.cwd()}/ui`)
-  await removeFile(`${process.cwd()}/api`)
-  await removeFile(`${process.cwd()}/assets`)
+  await moveFile(`${cwd}/config`, `${cwd}/packages/defaults/config`)
+  await removeFile(`${cwd}/ui`)
+  await removeFile(`${cwd}/api`)
+  await removeFile(`${cwd}/assets`)
 })
