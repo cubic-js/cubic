@@ -27,7 +27,7 @@ module.exports = merge(baseConfig, {
     rules: [
       {
         test: /(\.s?[a|c]ss|\.css)$/,
-        use: (prod ? [] : ['vue-style-loader']).concat(['css-loader/locals', 'sass-loader'])
+        use: (prod ? [] : ['vue-style-loader']).concat(['css-loader', 'sass-loader'])
       }
     ]
   },
