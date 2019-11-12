@@ -26,6 +26,7 @@ ln -s "$root/packages/ui" "$root/node_modules/cubic-ui" 2>/dev/null
 ln -s "$root/packages/api" "$root/node_modules/cubic-api" 2>/dev/null
 ln -s "$root/packages/auth" "$root/node_modules/cubic-auth" 2>/dev/null
 ln -s "$root/packages/client" "$root/node_modules/cubic-client" 2>/dev/null
+ln -s "$root/packages/defaults" "$root/node_modules/cubic-defaults" 2>/dev/null
 
 for package in `find $root/packages/ui/node_modules -maxdepth 1 -mindepth 1 -type d`; do
   ln -s "$package" "$root/node_modules/" 2>/dev/null
