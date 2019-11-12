@@ -23,7 +23,8 @@ class EndpointController {
       auto_reconnect: true,
       keepAlive: 1,
       connectTimeoutMS: 60000,
-      socketTimeoutMS: 60000
+      socketTimeoutMS: 60000,
+      useUnifiedTopology: true
     })
     this.stack = new Stack(config)
     this.limiter = new Limiter(config)

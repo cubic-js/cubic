@@ -60,7 +60,8 @@ class Auth {
    * particularily important for cubic-ui
    */
   async createSystemUser (api) {
-    const mongo = await mongodb.connect(cubic.config.auth.api.mongoUrl, { useNewUrlParser: true })
+    const mongo = await mongodb.connect(cubic.config.auth.api.mongoUrl,
+      { useNewUrlParser: true, useUnifiedTopology: true })
     const db = mongo.db(cubic.config.auth.api.mongoDb)
     const key = randtoken.uid(32)
     const secret = randtoken.uid(32)
