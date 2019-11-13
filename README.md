@@ -65,6 +65,5 @@ You'll now find your web-app on `localhost:3000` 🎉
 
 <br>
 
-
 ## License
 [MIT](/LICENSE)
