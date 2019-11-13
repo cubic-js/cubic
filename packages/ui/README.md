@@ -11,7 +11,6 @@
 <br>
 <br>
 
-
 ## Scope authentication
 UI endpoints can be protected in the same way as regular API endpoints, via the `this.schema.scope` option, they also behave the same way (see [cubic-api](/packages/api)).
 
