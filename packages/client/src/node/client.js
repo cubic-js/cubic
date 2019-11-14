@@ -8,9 +8,18 @@ class Client {
     this.subscriptions = []
     this.queue = queue
     this.delay = options.delay || 500
+    this.timeout = 1000 * 15
     this.requestIds = 1
     this.requests = []
     this.connected = false
+
+    // Init heartbeat check. If the heartbeat takes too long
+    // we can assume the connection died without an error.
+    setInterval(() => {
+      if (this.lastHeartbeat && new Date() - this.lastHeartbeat > this.timeout) {
+        this.reconnect()
+      }
+    }, this.timeout)
   }
 
   /**
@@ -53,34 +62,7 @@ class Client {
       })
       this.client.on('close', e => this.reconnect())
       this.client.on('error', e => this.reconnect())
-
-      // Message handling. Mostly internal stuff with primus.
-      this.client.on('message', data => {
-        data = JSON.parse(data)
-
-        // Heartbeat
-        if (typeof data === 'string' && data.startsWith('primus::ping::')) {
-          this.client.send(JSON.stringify(data.replace('ping', 'pong')))
-        }
-
-        // Resolve requests
-        else if (data.action === 'RES' && data.id) {
-          const i = this.requests.findIndex(r => r.id === data.id)
-          const pending = this.requests[i]
-
-          if (pending) {
-            pending.resolve(data)
-            this.requests.splice(i, 1)
-          }
-        }
-
-        // Subscriptions
-        else if (data.action === 'PUBLISH') {
-          for (const sub of this.subscriptions) {
-            if (sub.room === data.room) sub.fn(data.data)
-          }
-        }
-      })
+      this.client.on('message', data => this.onMessage(data))
 
       // There's a chance the connection attempt gets "lost" when the API server
       // isn't up in time, so just retry if that happens.
@@ -93,13 +75,45 @@ class Client {
     })
   }
 
+  onMessage (data) {
+    data = JSON.parse(data)
+
+    // Heartbeat
+    if (typeof data === 'string' && data.startsWith('primus::ping::')) {
+      this.lastHeartbeat = new Date()
+      this.client.send(JSON.stringify(data.replace('ping', 'pong')))
+    }
+
+    // Resolve requests
+    else if (data.action === 'RES' && data.id) {
+      const i = this.requests.findIndex(r => r.id === data.id)
+      const pending = this.requests[i]
+
+      if (pending) {
+        pending.resolve(data)
+        this.requests.splice(i, 1)
+      }
+    }
+
+    // Subscriptions
+    else if (data.action === 'PUBLISH') {
+      for (const sub of this.subscriptions) {
+        if (sub.room === data.room) sub.fn(data.data)
+      }
+    }
+  }
+
   /**
    * Reconnect if connection is lost or the server goes down.
    */
   async reconnect () {
-    if (!this.connected) return // Dont' reconnect multiple times at once
+    // Dont' reconnect multiple times at once
+    if (!this.connected) return
 
-    this.client.removeAllListeners()
+    // Browser WS clients may not have this function
+    if (this.client.removeAllListeners) {
+      this.client.removeAllListeners()
+    }
     this.connected = false
     await this.connect()
 

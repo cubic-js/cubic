@@ -1,34 +1,25 @@
-'use strict';
+var WS = {};
 
 function unwrapExports (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
 }
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var _core = createCommonjsModule(function (module) {
-var core = module.exports = { version: '2.5.7' };
-if (typeof __e == 'number') __e = core;
-});
-var _core_1 = _core.version;
-
-var $JSON = _core.JSON || (_core.JSON = { stringify: JSON.stringify });
-var stringify = function stringify(it) {
-  return $JSON.stringify.apply($JSON, arguments);
-};
-
-var stringify$1 = createCommonjsModule(function (module) {
-module.exports = { "default": stringify, __esModule: true };
-});
-var _JSON$stringify = unwrapExports(stringify$1);
-
+var lib = createCommonjsModule(function (module) {
+function unwrapExports (x) {
+	return x && x.__esModule ? x['default'] : x;
+}
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
 var runtime = createCommonjsModule(function (module) {
 !(function(global) {
   var Op = Object.prototype;
   var hasOwn = Op.hasOwnProperty;
-  var undefined;
+  var undefined$1;
   var $Symbol = typeof Symbol === "function" ? Symbol : {};
   var iteratorSymbol = $Symbol.iterator || "@@iterator";
   var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
@@ -40,7 +31,7 @@ var runtime = createCommonjsModule(function (module) {
     }
     return;
   }
-  runtime = global.regeneratorRuntime = module.exports;
+  runtime = global.regeneratorRuntime =  module.exports ;
   function wrap(innerFn, outerFn, self, tryLocsList) {
     var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
     var generator = Object.create(protoGenerator.prototype);
@@ -220,12 +211,12 @@ var runtime = createCommonjsModule(function (module) {
   }
   function maybeInvokeDelegate(delegate, context) {
     var method = delegate.iterator[context.method];
-    if (method === undefined) {
+    if (method === undefined$1) {
       context.delegate = null;
       if (context.method === "throw") {
         if (delegate.iterator.return) {
           context.method = "return";
-          context.arg = undefined;
+          context.arg = undefined$1;
           maybeInvokeDelegate(delegate, context);
           if (context.method === "throw") {
             return ContinueSentinel;
@@ -256,7 +247,7 @@ var runtime = createCommonjsModule(function (module) {
       context.next = delegate.nextLoc;
       if (context.method !== "return") {
         context.method = "next";
-        context.arg = undefined;
+        context.arg = undefined$1;
       }
     } else {
       return info;
@@ -331,7 +322,7 @@ var runtime = createCommonjsModule(function (module) {
               return next;
             }
           }
-          next.value = undefined;
+          next.value = undefined$1;
           next.done = true;
           return next;
         };
@@ -342,25 +333,25 @@ var runtime = createCommonjsModule(function (module) {
   }
   runtime.values = values;
   function doneResult() {
-    return { value: undefined, done: true };
+    return { value: undefined$1, done: true };
   }
   Context.prototype = {
     constructor: Context,
     reset: function(skipTempReset) {
       this.prev = 0;
       this.next = 0;
-      this.sent = this._sent = undefined;
+      this.sent = this._sent = undefined$1;
       this.done = false;
       this.delegate = null;
       this.method = "next";
-      this.arg = undefined;
+      this.arg = undefined$1;
       this.tryEntries.forEach(resetTryEntry);
       if (!skipTempReset) {
         for (var name in this) {
           if (name.charAt(0) === "t" &&
               hasOwn.call(this, name) &&
               !isNaN(+name.slice(1))) {
-            this[name] = undefined;
+            this[name] = undefined$1;
           }
         }
       }
@@ -385,7 +376,7 @@ var runtime = createCommonjsModule(function (module) {
         context.next = loc;
         if (caught) {
           context.method = "next";
-          context.arg = undefined;
+          context.arg = undefined$1;
         }
         return !! caught;
       }
@@ -492,7 +483,7 @@ var runtime = createCommonjsModule(function (module) {
         nextLoc: nextLoc
       };
       if (this.method === "next") {
-        this.arg = undefined;
+        this.arg = undefined$1;
       }
       return ContinueSentinel;
     }
@@ -501,7 +492,6 @@ var runtime = createCommonjsModule(function (module) {
   (function() { return this })() || Function("return this")()
 );
 });
-
 var g = (function() { return this })() || Function("return this")();
 var hadRuntime = g.regeneratorRuntime &&
   Object.getOwnPropertyNames(g).indexOf("regeneratorRuntime") >= 0;
@@ -517,20 +507,16 @@ if (hadRuntime) {
     g.regeneratorRuntime = undefined;
   }
 }
-
 var regenerator = runtimeModule;
-
 var ceil = Math.ceil;
 var floor = Math.floor;
 var _toInteger = function (it) {
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
-
 var _defined = function (it) {
   if (it == undefined) throw TypeError("Can't call method on  " + it);
   return it;
 };
-
 var _stringAt = function (TO_STRING) {
   return function (that, pos) {
     var s = String(_defined(that));
@@ -544,21 +530,21 @@ var _stringAt = function (TO_STRING) {
       : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-
 var _library = true;
-
 var _global = createCommonjsModule(function (module) {
 var global = module.exports = typeof window != 'undefined' && window.Math == Math
   ? window : typeof self != 'undefined' && self.Math == Math ? self
   : Function('return this')();
 if (typeof __g == 'number') __g = global;
 });
-
+var _core = createCommonjsModule(function (module) {
+var core = module.exports = { version: '2.5.1' };
+if (typeof __e == 'number') __e = core;
+});
 var _aFunction = function (it) {
   if (typeof it != 'function') throw TypeError(it + ' is not a function!');
   return it;
 };
-
 var _ctx = function (fn, that, length) {
   _aFunction(fn);
   if (that === undefined) return fn;
@@ -577,16 +563,13 @@ var _ctx = function (fn, that, length) {
     return fn.apply(that, arguments);
   };
 };
-
 var _isObject = function (it) {
   return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
-
 var _anObject = function (it) {
   if (!_isObject(it)) throw TypeError(it + ' is not an object!');
   return it;
 };
-
 var _fails = function (exec) {
   try {
     return !!exec();
@@ -594,21 +577,17 @@ var _fails = function (exec) {
     return true;
   }
 };
-
 var _descriptors = !_fails(function () {
   return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
 });
-
 var document$1 = _global.document;
 var is = _isObject(document$1) && _isObject(document$1.createElement);
 var _domCreate = function (it) {
   return is ? document$1.createElement(it) : {};
 };
-
 var _ie8DomDefine = !_descriptors && !_fails(function () {
   return Object.defineProperty(_domCreate('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
-
 var _toPrimitive = function (it, S) {
   if (!_isObject(it)) return it;
   var fn, val;
@@ -617,7 +596,6 @@ var _toPrimitive = function (it, S) {
   if (!S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) return val;
   throw TypeError("Can't convert object to primitive value");
 };
-
 var dP = Object.defineProperty;
 var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes) {
   _anObject(O);
@@ -633,7 +611,6 @@ var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Att
 var _objectDp = {
 	f: f
 };
-
 var _propertyDesc = function (bitmap, value) {
   return {
     enumerable: !(bitmap & 1),
@@ -642,19 +619,12 @@ var _propertyDesc = function (bitmap, value) {
     value: value
   };
 };
-
 var _hide = _descriptors ? function (object, key, value) {
   return _objectDp.f(object, key, _propertyDesc(1, value));
 } : function (object, key, value) {
   object[key] = value;
   return object;
 };
-
-var hasOwnProperty = {}.hasOwnProperty;
-var _has = function (it, key) {
-  return hasOwnProperty.call(it, key);
-};
-
 var PROTOTYPE = 'prototype';
 var $export = function (type, name, source) {
   var IS_FORCED = type & $export.F;
@@ -670,7 +640,7 @@ var $export = function (type, name, source) {
   if (IS_GLOBAL) source = name;
   for (key in source) {
     own = !IS_FORCED && target && target[key] !== undefined;
-    if (own && _has(exports, key)) continue;
+    if (own && key in exports) continue;
     out = own ? target[key] : source[key];
     exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
     : IS_BIND && own ? _ctx(out, _global)
@@ -702,36 +672,32 @@ $export.W = 32;
 $export.U = 64;
 $export.R = 128;
 var _export = $export;
-
 var _redefine = _hide;
-
+var hasOwnProperty = {}.hasOwnProperty;
+var _has = function (it, key) {
+  return hasOwnProperty.call(it, key);
+};
 var _iterators = {};
-
 var toString = {}.toString;
 var _cof = function (it) {
   return toString.call(it).slice(8, -1);
 };
-
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return _cof(it) == 'String' ? it.split('') : Object(it);
 };
-
 var _toIobject = function (it) {
   return _iobject(_defined(it));
 };
-
 var min = Math.min;
 var _toLength = function (it) {
   return it > 0 ? min(_toInteger(it), 0x1fffffffffffff) : 0;
 };
-
 var max = Math.max;
 var min$1 = Math.min;
 var _toAbsoluteIndex = function (index, length) {
   index = _toInteger(index);
   return index < 0 ? max(index + length, 0) : min$1(index, length);
 };
-
 var _arrayIncludes = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = _toIobject($this);
@@ -746,52 +712,39 @@ var _arrayIncludes = function (IS_INCLUDES) {
     } return !IS_INCLUDES && -1;
   };
 };
-
-var _shared = createCommonjsModule(function (module) {
 var SHARED = '__core-js_shared__';
 var store = _global[SHARED] || (_global[SHARED] = {});
-(module.exports = function (key, value) {
-  return store[key] || (store[key] = value !== undefined ? value : {});
-})('versions', []).push({
-  version: _core.version,
-  mode: 'pure',
-  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
-});
-});
-
+var _shared = function (key) {
+  return store[key] || (store[key] = {});
+};
 var id = 0;
 var px = Math.random();
 var _uid = function (key) {
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
-
 var shared = _shared('keys');
 var _sharedKey = function (key) {
   return shared[key] || (shared[key] = _uid(key));
 };
-
 var arrayIndexOf = _arrayIncludes(false);
-var IE_PROTO = _sharedKey('IE_PROTO');
+var IE_PROTO$1 = _sharedKey('IE_PROTO');
 var _objectKeysInternal = function (object, names) {
   var O = _toIobject(object);
   var i = 0;
   var result = [];
   var key;
-  for (key in O) if (key != IE_PROTO) _has(O, key) && result.push(key);
+  for (key in O) if (key != IE_PROTO$1) _has(O, key) && result.push(key);
   while (names.length > i) if (_has(O, key = names[i++])) {
     ~arrayIndexOf(result, key) || result.push(key);
   }
   return result;
 };
-
 var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
-
 var _objectKeys = Object.keys || function keys(O) {
   return _objectKeysInternal(O, _enumBugKeys);
 };
-
 var _objectDps = _descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
   _anObject(O);
   var keys = _objectKeys(Properties);
@@ -801,11 +754,9 @@ var _objectDps = _descriptors ? Object.defineProperties : function definePropert
   while (length > i) _objectDp.f(O, P = keys[i++], Properties[P]);
   return O;
 };
-
 var document$2 = _global.document;
 var _html = document$2 && document$2.documentElement;
-
-var IE_PROTO$1 = _sharedKey('IE_PROTO');
+var IE_PROTO = _sharedKey('IE_PROTO');
 var Empty = function () {             };
 var PROTOTYPE$1 = 'prototype';
 var createDict = function () {
@@ -831,11 +782,10 @@ var _objectCreate = Object.create || function create(O, Properties) {
     Empty[PROTOTYPE$1] = _anObject(O);
     result = new Empty();
     Empty[PROTOTYPE$1] = null;
-    result[IE_PROTO$1] = O;
+    result[IE_PROTO] = O;
   } else result = createDict();
   return Properties === undefined ? result : _objectDps(result, Properties);
 };
-
 var _wks = createCommonjsModule(function (module) {
 var store = _shared('wks');
 var Symbol = _global.Symbol;
@@ -846,24 +796,20 @@ var $exports = module.exports = function (name) {
 };
 $exports.store = store;
 });
-
 var def = _objectDp.f;
 var TAG = _wks('toStringTag');
 var _setToStringTag = function (it, tag, stat) {
   if (it && !_has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
 };
-
 var IteratorPrototype = {};
 _hide(IteratorPrototype, _wks('iterator'), function () { return this; });
 var _iterCreate = function (Constructor, NAME, next) {
   Constructor.prototype = _objectCreate(IteratorPrototype, { next: _propertyDesc(1, next) });
   _setToStringTag(Constructor, NAME + ' Iterator');
 };
-
 var _toObject = function (it) {
   return Object(_defined(it));
 };
-
 var IE_PROTO$2 = _sharedKey('IE_PROTO');
 var ObjectProto = Object.prototype;
 var _objectGpo = Object.getPrototypeOf || function (O) {
@@ -873,7 +819,6 @@ var _objectGpo = Object.getPrototypeOf || function (O) {
     return O.constructor.prototype;
   } return O instanceof Object ? ObjectProto : null;
 };
-
 var ITERATOR = _wks('iterator');
 var BUGGY = !([].keys && 'next' in [].keys());
 var FF_ITERATOR = '@@iterator';
@@ -902,14 +847,13 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     IteratorPrototype = _objectGpo($anyNative.call(new Base()));
     if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
       _setToStringTag(IteratorPrototype, TAG, true);
-      if (!_library && typeof IteratorPrototype[ITERATOR] != 'function') _hide(IteratorPrototype, ITERATOR, returnThis);
     }
   }
   if (DEF_VALUES && $native && $native.name !== VALUES) {
     VALUES_BUG = true;
     $default = function values() { return $native.call(this); };
   }
-  if ((!_library || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+  if (( FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
     _hide(proto, ITERATOR, $default);
   }
   _iterators[NAME] = $default;
@@ -926,7 +870,6 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
   }
   return methods;
 };
-
 var $at = _stringAt(true);
 _iterDefine(String, 'String', function (iterated) {
   this._t = String(iterated);
@@ -940,11 +883,9 @@ _iterDefine(String, 'String', function (iterated) {
   this._i += point.length;
   return { value: point, done: false };
 });
-
 var _iterStep = function (done, value) {
   return { value: value, done: !!done };
 };
-
 var es6_array_iterator = _iterDefine(Array, 'Array', function (iterated, kind) {
   this._t = _toIobject(iterated);
   this._i = 0;
@@ -962,7 +903,6 @@ var es6_array_iterator = _iterDefine(Array, 'Array', function (iterated, kind) {
   return _iterStep(0, [index, O[index]]);
 }, 'values');
 _iterators.Arguments = _iterators.Array;
-
 var TO_STRING_TAG = _wks('toStringTag');
 var DOMIterables = ('CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,' +
   'DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,' +
@@ -976,7 +916,6 @@ for (var i = 0; i < DOMIterables.length; i++) {
   if (proto && !proto[TO_STRING_TAG]) _hide(proto, TO_STRING_TAG, NAME);
   _iterators[NAME] = _iterators.Array;
 }
-
 var TAG$1 = _wks('toStringTag');
 var ARG = _cof(function () { return arguments; }()) == 'Arguments';
 var tryGet = function (it, key) {
@@ -991,13 +930,11 @@ var _classof = function (it) {
     : ARG ? _cof(O)
     : (B = _cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-
 var _anInstance = function (it, Constructor, name, forbiddenField) {
   if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
     throw TypeError(name + ': incorrect invocation!');
   } return it;
 };
-
 var _iterCall = function (iterator, fn, value, entries) {
   try {
     return entries ? fn(_anObject(value)[0], value[1]) : fn(value);
@@ -1007,20 +944,17 @@ var _iterCall = function (iterator, fn, value, entries) {
     throw e;
   }
 };
-
 var ITERATOR$1 = _wks('iterator');
 var ArrayProto = Array.prototype;
 var _isArrayIter = function (it) {
   return it !== undefined && (_iterators.Array === it || ArrayProto[ITERATOR$1] === it);
 };
-
 var ITERATOR$2 = _wks('iterator');
 var core_getIteratorMethod = _core.getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR$2]
     || it['@@iterator']
     || _iterators[_classof(it)];
 };
-
 var _forOf = createCommonjsModule(function (module) {
 var BREAK = {};
 var RETURN = {};
@@ -1041,14 +975,12 @@ var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) 
 exports.BREAK = BREAK;
 exports.RETURN = RETURN;
 });
-
 var SPECIES = _wks('species');
 var _speciesConstructor = function (O, D) {
   var C = _anObject(O).constructor;
   var S;
   return C === undefined || (S = _anObject(C)[SPECIES]) == undefined ? D : _aFunction(S);
 };
-
 var _invoke = function (fn, args, that) {
   var un = that === undefined;
   switch (args.length) {
@@ -1064,8 +996,7 @@ var _invoke = function (fn, args, that) {
                       : fn.call(that, args[0], args[1], args[2], args[3]);
   } return fn.apply(that, args);
 };
-
-var process = _global.process;
+var process$1 = _global.process;
 var setTask = _global.setImmediate;
 var clearTask = _global.clearImmediate;
 var MessageChannel = _global.MessageChannel;
@@ -1073,7 +1004,9 @@ var Dispatch = _global.Dispatch;
 var counter = 0;
 var queue = {};
 var ONREADYSTATECHANGE = 'onreadystatechange';
-var defer, channel, port;
+var defer;
+var channel;
+var port;
 var run = function () {
   var id = +this;
   if (queue.hasOwnProperty(id)) {
@@ -1099,9 +1032,9 @@ if (!setTask || !clearTask) {
   clearTask = function clearImmediate(id) {
     delete queue[id];
   };
-  if (_cof(process) == 'process') {
+  if (_cof(process$1) == 'process') {
     defer = function (id) {
-      process.nextTick(_ctx(run, id, 1));
+      process$1.nextTick(_ctx(run, id, 1));
     };
   } else if (Dispatch && Dispatch.now) {
     defer = function (id) {
@@ -1134,17 +1067,16 @@ var _task = {
   set: setTask,
   clear: clearTask
 };
-
 var macrotask = _task.set;
 var Observer = _global.MutationObserver || _global.WebKitMutationObserver;
-var process$1 = _global.process;
+var process$2 = _global.process;
 var Promise$1 = _global.Promise;
-var isNode = _cof(process$1) == 'process';
+var isNode$1 = _cof(process$2) == 'process';
 var _microtask = function () {
   var head, last, notify;
   var flush = function () {
     var parent, fn;
-    if (isNode && (parent = process$1.domain)) parent.exit();
+    if (isNode$1 && (parent = process$2.domain)) parent.exit();
     while (head) {
       fn = head.fn;
       head = head.next;
@@ -1158,11 +1090,11 @@ var _microtask = function () {
     } last = undefined;
     if (parent) parent.enter();
   };
-  if (isNode) {
+  if (isNode$1) {
     notify = function () {
-      process$1.nextTick(flush);
+      process$2.nextTick(flush);
     };
-  } else if (Observer && !(_global.navigator && _global.navigator.standalone)) {
+  } else if (Observer) {
     var toggle = true;
     var node = document.createTextNode('');
     new Observer(flush).observe(node, { characterData: true });
@@ -1170,7 +1102,7 @@ var _microtask = function () {
       node.data = toggle = !toggle;
     };
   } else if (Promise$1 && Promise$1.resolve) {
-    var promise = Promise$1.resolve(undefined);
+    var promise = Promise$1.resolve();
     notify = function () {
       promise.then(flush);
     };
@@ -1188,7 +1120,6 @@ var _microtask = function () {
     } last = task;
   };
 };
-
 function PromiseCapability(C) {
   var resolve, reject;
   this.promise = new C(function ($$resolve, $$reject) {
@@ -1205,7 +1136,6 @@ var f$1 = function (C) {
 var _newPromiseCapability = {
 	f: f$1
 };
-
 var _perform = function (exec) {
   try {
     return { e: false, v: exec() };
@@ -1213,10 +1143,6 @@ var _perform = function (exec) {
     return { e: true, v: e };
   }
 };
-
-var navigator = _global.navigator;
-var _userAgent = navigator && navigator.userAgent || '';
-
 var _promiseResolve = function (C, x) {
   _anObject(C);
   if (_isObject(x) && x.constructor === C) return x;
@@ -1225,14 +1151,12 @@ var _promiseResolve = function (C, x) {
   resolve(x);
   return promiseCapability.promise;
 };
-
 var _redefineAll = function (target, src, safe) {
   for (var key in src) {
     if (safe && target[key]) target[key] = src[key];
     else _hide(target, key, src[key]);
   } return target;
 };
-
 var SPECIES$1 = _wks('species');
 var _setSpecies = function (KEY) {
   var C = typeof _core[KEY] == 'function' ? _core[KEY] : _global[KEY];
@@ -1241,7 +1165,6 @@ var _setSpecies = function (KEY) {
     get: function () { return this; }
   });
 };
-
 var ITERATOR$3 = _wks('iterator');
 var SAFE_CLOSING = false;
 try {
@@ -1260,18 +1183,18 @@ var _iterDetect = function (exec, skipClosing) {
   } catch (e) {             }
   return safe;
 };
-
 var task = _task.set;
 var microtask = _microtask();
 var PROMISE = 'Promise';
 var TypeError$1 = _global.TypeError;
-var process$2 = _global.process;
-var versions = process$2 && process$2.versions;
-var v8 = versions && versions.v8 || '';
+var process = _global.process;
 var $Promise = _global[PROMISE];
-var isNode$1 = _classof(process$2) == 'process';
+var isNode = _classof(process) == 'process';
 var empty = function () {             };
-var Internal, newGenericPromiseCapability, OwnPromiseCapability, Wrapper;
+var Internal;
+var newGenericPromiseCapability;
+var OwnPromiseCapability;
+var Wrapper;
 var newPromiseCapability = newGenericPromiseCapability = _newPromiseCapability.f;
 var USE_NATIVE = !!function () {
   try {
@@ -1279,10 +1202,7 @@ var USE_NATIVE = !!function () {
     var FakePromise = (promise.constructor = {})[_wks('species')] = function (exec) {
       exec(empty, empty);
     };
-    return (isNode$1 || typeof PromiseRejectionEvent == 'function')
-      && promise.then(empty) instanceof FakePromise
-      && v8.indexOf('6.6') !== 0
-      && _userAgent.indexOf('Chrome/66') === -1;
+    return (isNode || typeof PromiseRejectionEvent == 'function') && promise.then(empty) instanceof FakePromise;
   } catch (e) {             }
 }();
 var isThenable = function (it) {
@@ -1302,7 +1222,7 @@ var notify = function (promise, isReject) {
       var resolve = reaction.resolve;
       var reject = reaction.reject;
       var domain = reaction.domain;
-      var result, then, exited;
+      var result, then;
       try {
         if (handler) {
           if (!ok) {
@@ -1313,10 +1233,7 @@ var notify = function (promise, isReject) {
           else {
             if (domain) domain.enter();
             result = handler(value);
-            if (domain) {
-              domain.exit();
-              exited = true;
-            }
+            if (domain) domain.exit();
           }
           if (result === reaction.promise) {
             reject(TypeError$1('Promise-chain cycle'));
@@ -1325,7 +1242,6 @@ var notify = function (promise, isReject) {
           } else resolve(result);
         } else reject(value);
       } catch (e) {
-        if (domain && !exited) domain.exit();
         reject(e);
       }
     };
@@ -1342,27 +1258,34 @@ var onUnhandled = function (promise) {
     var result, handler, console;
     if (unhandled) {
       result = _perform(function () {
-        if (isNode$1) {
-          process$2.emit('unhandledRejection', value, promise);
+        if (isNode) {
+          process.emit('unhandledRejection', value, promise);
         } else if (handler = _global.onunhandledrejection) {
           handler({ promise: promise, reason: value });
         } else if ((console = _global.console) && console.error) {
           console.error('Unhandled promise rejection', value);
         }
       });
-      promise._h = isNode$1 || isUnhandled(promise) ? 2 : 1;
+      promise._h = isNode || isUnhandled(promise) ? 2 : 1;
     } promise._a = undefined;
     if (unhandled && result.e) throw result.v;
   });
 };
 var isUnhandled = function (promise) {
-  return promise._h !== 1 && (promise._a || promise._c).length === 0;
+  if (promise._h == 1) return false;
+  var chain = promise._a || promise._c;
+  var i = 0;
+  var reaction;
+  while (chain.length > i) {
+    reaction = chain[i++];
+    if (reaction.fail || !isUnhandled(reaction.promise)) return false;
+  } return true;
 };
 var onHandleUnhandled = function (promise) {
   task.call(_global, function () {
     var handler;
-    if (isNode$1) {
-      process$2.emit('rejectionHandled', promise);
+    if (isNode) {
+      process.emit('rejectionHandled', promise);
     } else if (handler = _global.onrejectionhandled) {
       handler({ promise: promise, reason: promise._v });
     }
@@ -1429,7 +1352,7 @@ if (!USE_NATIVE) {
       var reaction = newPromiseCapability(_speciesConstructor(this, $Promise));
       reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
       reaction.fail = typeof onRejected == 'function' && onRejected;
-      reaction.domain = isNode$1 ? process$2.domain : undefined;
+      reaction.domain = isNode ? process.domain : undefined;
       this._c.push(reaction);
       if (this._a) this._a.push(reaction);
       if (this._s) notify(this, false);
@@ -1463,9 +1386,9 @@ _export(_export.S + _export.F * !USE_NATIVE, PROMISE, {
     return capability.promise;
   }
 });
-_export(_export.S + _export.F * (_library || !USE_NATIVE), PROMISE, {
+_export(_export.S + _export.F * (_library ), PROMISE, {
   resolve: function resolve(x) {
-    return _promiseResolve(_library && this === Wrapper ? $Promise : this, x);
+    return _promiseResolve( this === Wrapper ? $Promise : this, x);
   }
 });
 _export(_export.S + _export.F * !(USE_NATIVE && _iterDetect(function (iter) {
@@ -1510,7 +1433,6 @@ _export(_export.S + _export.F * !(USE_NATIVE && _iterDetect(function (iter) {
     return capability.promise;
   }
 });
-
 _export(_export.P + _export.R, 'Promise', { 'finally': function (onFinally) {
   var C = _speciesConstructor(this, _core.Promise || _global.Promise);
   var isFunction = typeof onFinally == 'function';
@@ -1523,24 +1445,20 @@ _export(_export.P + _export.R, 'Promise', { 'finally': function (onFinally) {
     } : onFinally
   );
 } });
-
 _export(_export.S, 'Promise', { 'try': function (callbackfn) {
   var promiseCapability = _newPromiseCapability.f(this);
   var result = _perform(callbackfn);
   (result.e ? promiseCapability.reject : promiseCapability.resolve)(result.v);
   return promiseCapability.promise;
 } });
-
-var promise = _core.Promise;
-
-var promise$1 = createCommonjsModule(function (module) {
-module.exports = { "default": promise, __esModule: true };
+var promise$1 = _core.Promise;
+var promise = createCommonjsModule(function (module) {
+module.exports = { "default": promise$1, __esModule: true };
 });
-var _Promise = unwrapExports(promise$1);
-
+var _Promise = unwrapExports(promise);
 var asyncToGenerator = createCommonjsModule(function (module, exports) {
 exports.__esModule = true;
-var _promise2 = _interopRequireDefault(promise$1);
+var _promise2 = _interopRequireDefault(promise);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 exports.default = function (fn) {
   return function () {
@@ -1570,69 +1488,6 @@ exports.default = function (fn) {
 };
 });
 var _asyncToGenerator = unwrapExports(asyncToGenerator);
-
-var f$2 = Object.getOwnPropertySymbols;
-var _objectGops = {
-	f: f$2
-};
-
-var f$3 = {}.propertyIsEnumerable;
-var _objectPie = {
-	f: f$3
-};
-
-var $assign = Object.assign;
-var _objectAssign = !$assign || _fails(function () {
-  var A = {};
-  var B = {};
-  var S = Symbol();
-  var K = 'abcdefghijklmnopqrst';
-  A[S] = 7;
-  K.split('').forEach(function (k) { B[k] = k; });
-  return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
-}) ? function assign(target, source) {
-  var T = _toObject(target);
-  var aLen = arguments.length;
-  var index = 1;
-  var getSymbols = _objectGops.f;
-  var isEnum = _objectPie.f;
-  while (aLen > index) {
-    var S = _iobject(arguments[index++]);
-    var keys = getSymbols ? _objectKeys(S).concat(getSymbols(S)) : _objectKeys(S);
-    var length = keys.length;
-    var j = 0;
-    var key;
-    while (length > j) if (isEnum.call(S, key = keys[j++])) T[key] = S[key];
-  } return T;
-} : $assign;
-
-_export(_export.S + _export.F, 'Object', { assign: _objectAssign });
-
-var assign = _core.Object.assign;
-
-var assign$1 = createCommonjsModule(function (module) {
-module.exports = { "default": assign, __esModule: true };
-});
-unwrapExports(assign$1);
-
-var _extends = createCommonjsModule(function (module, exports) {
-exports.__esModule = true;
-var _assign2 = _interopRequireDefault(assign$1);
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-exports.default = _assign2.default || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-  return target;
-};
-});
-var _extends$1 = unwrapExports(_extends);
-
 var classCallCheck = createCommonjsModule(function (module, exports) {
 exports.__esModule = true;
 exports.default = function (instance, Constructor) {
@@ -1642,22 +1497,18 @@ exports.default = function (instance, Constructor) {
 };
 });
 var _classCallCheck = unwrapExports(classCallCheck);
-
 _export(_export.S + _export.F * !_descriptors, 'Object', { defineProperty: _objectDp.f });
-
 var $Object = _core.Object;
-var defineProperty = function defineProperty(it, key, desc) {
+var defineProperty$2 = function defineProperty(it, key, desc) {
   return $Object.defineProperty(it, key, desc);
 };
-
-var defineProperty$1 = createCommonjsModule(function (module) {
-module.exports = { "default": defineProperty, __esModule: true };
+var defineProperty = createCommonjsModule(function (module) {
+module.exports = { "default": defineProperty$2, __esModule: true };
 });
-unwrapExports(defineProperty$1);
-
+unwrapExports(defineProperty);
 var createClass = createCommonjsModule(function (module, exports) {
 exports.__esModule = true;
-var _defineProperty2 = _interopRequireDefault(defineProperty$1);
+var _defineProperty2 = _interopRequireDefault(defineProperty);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 exports.default = function () {
   function defineProperties(target, props) {
@@ -1677,1347 +1528,466 @@ exports.default = function () {
 }();
 });
 var _createClass = unwrapExports(createClass);
-
-var _objectSap = function (KEY, exec) {
-  var fn = (_core.Object || {})[KEY] || Object[KEY];
-  var exp = {};
-  exp[KEY] = exec(fn);
-  _export(_export.S + _export.F * _fails(function () { fn(1); }), 'Object', exp);
-};
-
-_objectSap('getPrototypeOf', function () {
-  return function getPrototypeOf(it) {
-    return _objectGpo(_toObject(it));
-  };
-});
-
-var getPrototypeOf = _core.Object.getPrototypeOf;
-
-var getPrototypeOf$1 = createCommonjsModule(function (module) {
-module.exports = { "default": getPrototypeOf, __esModule: true };
-});
-var _Object$getPrototypeOf = unwrapExports(getPrototypeOf$1);
-
-var f$4 = _wks;
-var _wksExt = {
-	f: f$4
-};
-
-var iterator = _wksExt.f('iterator');
-
-var iterator$1 = createCommonjsModule(function (module) {
-module.exports = { "default": iterator, __esModule: true };
-});
-unwrapExports(iterator$1);
-
-var _meta = createCommonjsModule(function (module) {
-var META = _uid('meta');
-var setDesc = _objectDp.f;
-var id = 0;
-var isExtensible = Object.isExtensible || function () {
-  return true;
-};
-var FREEZE = !_fails(function () {
-  return isExtensible(Object.preventExtensions({}));
-});
-var setMeta = function (it) {
-  setDesc(it, META, { value: {
-    i: 'O' + ++id,
-    w: {}
-  } });
-};
-var fastKey = function (it, create) {
-  if (!_isObject(it)) return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
-  if (!_has(it, META)) {
-    if (!isExtensible(it)) return 'F';
-    if (!create) return 'E';
-    setMeta(it);
-  } return it[META].i;
-};
-var getWeak = function (it, create) {
-  if (!_has(it, META)) {
-    if (!isExtensible(it)) return true;
-    if (!create) return false;
-    setMeta(it);
-  } return it[META].w;
-};
-var onFreeze = function (it) {
-  if (FREEZE && meta.NEED && isExtensible(it) && !_has(it, META)) setMeta(it);
-  return it;
-};
-var meta = module.exports = {
-  KEY: META,
-  NEED: false,
-  fastKey: fastKey,
-  getWeak: getWeak,
-  onFreeze: onFreeze
-};
-});
-var _meta_1 = _meta.KEY;
-var _meta_2 = _meta.NEED;
-var _meta_3 = _meta.fastKey;
-var _meta_4 = _meta.getWeak;
-var _meta_5 = _meta.onFreeze;
-
-var defineProperty$3 = _objectDp.f;
-var _wksDefine = function (name) {
-  var $Symbol = _core.Symbol || (_core.Symbol = {});
-  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$3($Symbol, name, { value: _wksExt.f(name) });
-};
-
-var _enumKeys = function (it) {
-  var result = _objectKeys(it);
-  var getSymbols = _objectGops.f;
-  if (getSymbols) {
-    var symbols = getSymbols(it);
-    var isEnum = _objectPie.f;
-    var i = 0;
-    var key;
-    while (symbols.length > i) if (isEnum.call(it, key = symbols[i++])) result.push(key);
-  } return result;
-};
-
-var _isArray = Array.isArray || function isArray(arg) {
-  return _cof(arg) == 'Array';
-};
-
-var hiddenKeys = _enumBugKeys.concat('length', 'prototype');
-var f$5 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
-  return _objectKeysInternal(O, hiddenKeys);
-};
-var _objectGopn = {
-	f: f$5
-};
-
-var gOPN = _objectGopn.f;
-var toString$1 = {}.toString;
-var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
-  ? Object.getOwnPropertyNames(window) : [];
-var getWindowNames = function (it) {
-  try {
-    return gOPN(it);
-  } catch (e) {
-    return windowNames.slice();
-  }
-};
-var f$6 = function getOwnPropertyNames(it) {
-  return windowNames && toString$1.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(_toIobject(it));
-};
-var _objectGopnExt = {
-	f: f$6
-};
-
-var gOPD = Object.getOwnPropertyDescriptor;
-var f$7 = _descriptors ? gOPD : function getOwnPropertyDescriptor(O, P) {
-  O = _toIobject(O);
-  P = _toPrimitive(P, true);
-  if (_ie8DomDefine) try {
-    return gOPD(O, P);
-  } catch (e) {             }
-  if (_has(O, P)) return _propertyDesc(!_objectPie.f.call(O, P), O[P]);
-};
-var _objectGopd = {
-	f: f$7
-};
-
-var META = _meta.KEY;
-var gOPD$1 = _objectGopd.f;
-var dP$1 = _objectDp.f;
-var gOPN$1 = _objectGopnExt.f;
-var $Symbol = _global.Symbol;
-var $JSON$1 = _global.JSON;
-var _stringify = $JSON$1 && $JSON$1.stringify;
-var PROTOTYPE$2 = 'prototype';
-var HIDDEN = _wks('_hidden');
-var TO_PRIMITIVE = _wks('toPrimitive');
-var isEnum = {}.propertyIsEnumerable;
-var SymbolRegistry = _shared('symbol-registry');
-var AllSymbols = _shared('symbols');
-var OPSymbols = _shared('op-symbols');
-var ObjectProto$1 = Object[PROTOTYPE$2];
-var USE_NATIVE$1 = typeof $Symbol == 'function';
-var QObject = _global.QObject;
-var setter = !QObject || !QObject[PROTOTYPE$2] || !QObject[PROTOTYPE$2].findChild;
-var setSymbolDesc = _descriptors && _fails(function () {
-  return _objectCreate(dP$1({}, 'a', {
-    get: function () { return dP$1(this, 'a', { value: 7 }).a; }
-  })).a != 7;
-}) ? function (it, key, D) {
-  var protoDesc = gOPD$1(ObjectProto$1, key);
-  if (protoDesc) delete ObjectProto$1[key];
-  dP$1(it, key, D);
-  if (protoDesc && it !== ObjectProto$1) dP$1(ObjectProto$1, key, protoDesc);
-} : dP$1;
-var wrap = function (tag) {
-  var sym = AllSymbols[tag] = _objectCreate($Symbol[PROTOTYPE$2]);
-  sym._k = tag;
-  return sym;
-};
-var isSymbol = USE_NATIVE$1 && typeof $Symbol.iterator == 'symbol' ? function (it) {
-  return typeof it == 'symbol';
-} : function (it) {
-  return it instanceof $Symbol;
-};
-var $defineProperty = function defineProperty(it, key, D) {
-  if (it === ObjectProto$1) $defineProperty(OPSymbols, key, D);
-  _anObject(it);
-  key = _toPrimitive(key, true);
-  _anObject(D);
-  if (_has(AllSymbols, key)) {
-    if (!D.enumerable) {
-      if (!_has(it, HIDDEN)) dP$1(it, HIDDEN, _propertyDesc(1, {}));
-      it[HIDDEN][key] = true;
-    } else {
-      if (_has(it, HIDDEN) && it[HIDDEN][key]) it[HIDDEN][key] = false;
-      D = _objectCreate(D, { enumerable: _propertyDesc(0, false) });
-    } return setSymbolDesc(it, key, D);
-  } return dP$1(it, key, D);
-};
-var $defineProperties = function defineProperties(it, P) {
-  _anObject(it);
-  var keys = _enumKeys(P = _toIobject(P));
-  var i = 0;
-  var l = keys.length;
-  var key;
-  while (l > i) $defineProperty(it, key = keys[i++], P[key]);
-  return it;
-};
-var $create = function create(it, P) {
-  return P === undefined ? _objectCreate(it) : $defineProperties(_objectCreate(it), P);
-};
-var $propertyIsEnumerable = function propertyIsEnumerable(key) {
-  var E = isEnum.call(this, key = _toPrimitive(key, true));
-  if (this === ObjectProto$1 && _has(AllSymbols, key) && !_has(OPSymbols, key)) return false;
-  return E || !_has(this, key) || !_has(AllSymbols, key) || _has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
-};
-var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key) {
-  it = _toIobject(it);
-  key = _toPrimitive(key, true);
-  if (it === ObjectProto$1 && _has(AllSymbols, key) && !_has(OPSymbols, key)) return;
-  var D = gOPD$1(it, key);
-  if (D && _has(AllSymbols, key) && !(_has(it, HIDDEN) && it[HIDDEN][key])) D.enumerable = true;
-  return D;
-};
-var $getOwnPropertyNames = function getOwnPropertyNames(it) {
-  var names = gOPN$1(_toIobject(it));
-  var result = [];
-  var i = 0;
-  var key;
-  while (names.length > i) {
-    if (!_has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META) result.push(key);
-  } return result;
-};
-var $getOwnPropertySymbols = function getOwnPropertySymbols(it) {
-  var IS_OP = it === ObjectProto$1;
-  var names = gOPN$1(IS_OP ? OPSymbols : _toIobject(it));
-  var result = [];
-  var i = 0;
-  var key;
-  while (names.length > i) {
-    if (_has(AllSymbols, key = names[i++]) && (IS_OP ? _has(ObjectProto$1, key) : true)) result.push(AllSymbols[key]);
-  } return result;
-};
-if (!USE_NATIVE$1) {
-  $Symbol = function Symbol() {
-    if (this instanceof $Symbol) throw TypeError('Symbol is not a constructor!');
-    var tag = _uid(arguments.length > 0 ? arguments[0] : undefined);
-    var $set = function (value) {
-      if (this === ObjectProto$1) $set.call(OPSymbols, value);
-      if (_has(this, HIDDEN) && _has(this[HIDDEN], tag)) this[HIDDEN][tag] = false;
-      setSymbolDesc(this, tag, _propertyDesc(1, value));
-    };
-    if (_descriptors && setter) setSymbolDesc(ObjectProto$1, tag, { configurable: true, set: $set });
-    return wrap(tag);
-  };
-  _redefine($Symbol[PROTOTYPE$2], 'toString', function toString() {
-    return this._k;
+var timeout = function timeout(fn, s) {
+  return new _Promise(function (resolve) {
+    return setTimeout(function () {
+      return resolve(fn());
+    }, s);
   });
-  _objectGopd.f = $getOwnPropertyDescriptor;
-  _objectDp.f = $defineProperty;
-  _objectGopn.f = _objectGopnExt.f = $getOwnPropertyNames;
-  _objectPie.f = $propertyIsEnumerable;
-  _objectGops.f = $getOwnPropertySymbols;
-  if (_descriptors && !_library) {
-    _redefine(ObjectProto$1, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+};
+var Queue = function () {
+  function Queue() {
+    _classCallCheck(this, Queue);
+    this.stack = [];
+    this.executing = null;
+    this.throwOnTimeout = false;
   }
-  _wksExt.f = function (name) {
-    return wrap(_wks(name));
-  };
-}
-_export(_export.G + _export.W + _export.F * !USE_NATIVE$1, { Symbol: $Symbol });
-for (var es6Symbols = (
-  'hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables'
-).split(','), j = 0; es6Symbols.length > j;)_wks(es6Symbols[j++]);
-for (var wellKnownSymbols = _objectKeys(_wks.store), k = 0; wellKnownSymbols.length > k;) _wksDefine(wellKnownSymbols[k++]);
-_export(_export.S + _export.F * !USE_NATIVE$1, 'Symbol', {
-  'for': function (key) {
-    return _has(SymbolRegistry, key += '')
-      ? SymbolRegistry[key]
-      : SymbolRegistry[key] = $Symbol(key);
-  },
-  keyFor: function keyFor(sym) {
-    if (!isSymbol(sym)) throw TypeError(sym + ' is not a symbol!');
-    for (var key in SymbolRegistry) if (SymbolRegistry[key] === sym) return key;
-  },
-  useSetter: function () { setter = true; },
-  useSimple: function () { setter = false; }
-});
-_export(_export.S + _export.F * !USE_NATIVE$1, 'Object', {
-  create: $create,
-  defineProperty: $defineProperty,
-  defineProperties: $defineProperties,
-  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
-  getOwnPropertyNames: $getOwnPropertyNames,
-  getOwnPropertySymbols: $getOwnPropertySymbols
-});
-$JSON$1 && _export(_export.S + _export.F * (!USE_NATIVE$1 || _fails(function () {
-  var S = $Symbol();
-  return _stringify([S]) != '[null]' || _stringify({ a: S }) != '{}' || _stringify(Object(S)) != '{}';
-})), 'JSON', {
-  stringify: function stringify(it) {
-    var args = [it];
-    var i = 1;
-    var replacer, $replacer;
-    while (arguments.length > i) args.push(arguments[i++]);
-    $replacer = replacer = args[1];
-    if (!_isObject(replacer) && it === undefined || isSymbol(it)) return;
-    if (!_isArray(replacer)) replacer = function (key, value) {
-      if (typeof $replacer == 'function') value = $replacer.call(this, key, value);
-      if (!isSymbol(value)) return value;
-    };
-    args[1] = replacer;
-    return _stringify.apply($JSON$1, args);
-  }
-});
-$Symbol[PROTOTYPE$2][TO_PRIMITIVE] || _hide($Symbol[PROTOTYPE$2], TO_PRIMITIVE, $Symbol[PROTOTYPE$2].valueOf);
-_setToStringTag($Symbol, 'Symbol');
-_setToStringTag(Math, 'Math', true);
-_setToStringTag(_global.JSON, 'JSON', true);
-
-_wksDefine('asyncIterator');
-
-_wksDefine('observable');
-
-var symbol = _core.Symbol;
-
-var symbol$1 = createCommonjsModule(function (module) {
-module.exports = { "default": symbol, __esModule: true };
-});
-unwrapExports(symbol$1);
-
-var _typeof_1 = createCommonjsModule(function (module, exports) {
-exports.__esModule = true;
-var _iterator2 = _interopRequireDefault(iterator$1);
-var _symbol2 = _interopRequireDefault(symbol$1);
-var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj; };
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.default) === "symbol" ? function (obj) {
-  return typeof obj === "undefined" ? "undefined" : _typeof(obj);
-} : function (obj) {
-  return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
-};
-});
-unwrapExports(_typeof_1);
-
-var possibleConstructorReturn = createCommonjsModule(function (module, exports) {
-exports.__esModule = true;
-var _typeof3 = _interopRequireDefault(_typeof_1);
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-exports.default = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-  return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
-};
-});
-var _possibleConstructorReturn = unwrapExports(possibleConstructorReturn);
-
-var check = function (O, proto) {
-  _anObject(O);
-  if (!_isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
-};
-var _setProto = {
-  set: Object.setPrototypeOf || ('__proto__' in {} ?
-    function (test, buggy, set) {
-      try {
-        set = _ctx(Function.call, _objectGopd.f(Object.prototype, '__proto__').set, 2);
-        set(test, []);
-        buggy = !(test instanceof Array);
-      } catch (e) { buggy = true; }
-      return function setPrototypeOf(O, proto) {
-        check(O, proto);
-        if (buggy) O.__proto__ = proto;
-        else set(O, proto);
-        return O;
-      };
-    }({}, false) : undefined),
-  check: check
-};
-
-_export(_export.S, 'Object', { setPrototypeOf: _setProto.set });
-
-var setPrototypeOf = _core.Object.setPrototypeOf;
-
-var setPrototypeOf$1 = createCommonjsModule(function (module) {
-module.exports = { "default": setPrototypeOf, __esModule: true };
-});
-unwrapExports(setPrototypeOf$1);
-
-_export(_export.S, 'Object', { create: _objectCreate });
-
-var $Object$1 = _core.Object;
-var create = function create(P, D) {
-  return $Object$1.create(P, D);
-};
-
-var create$1 = createCommonjsModule(function (module) {
-module.exports = { "default": create, __esModule: true };
-});
-unwrapExports(create$1);
-
-var inherits = createCommonjsModule(function (module, exports) {
-exports.__esModule = true;
-var _setPrototypeOf2 = _interopRequireDefault(setPrototypeOf$1);
-var _create2 = _interopRequireDefault(create$1);
-var _typeof3 = _interopRequireDefault(_typeof_1);
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-exports.default = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : (0, _typeof3.default)(superClass)));
-  }
-  subClass.prototype = (0, _create2.default)(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) _setPrototypeOf2.default ? (0, _setPrototypeOf2.default)(subClass, superClass) : subClass.__proto__ = superClass;
-};
-});
-var _inherits = unwrapExports(inherits);
-
-var core_getIterator = _core.getIterator = function (it) {
-  var iterFn = core_getIteratorMethod(it);
-  if (typeof iterFn != 'function') throw TypeError(it + ' is not iterable!');
-  return _anObject(iterFn.call(it));
-};
-
-var getIterator = core_getIterator;
-
-var getIterator$1 = createCommonjsModule(function (module) {
-module.exports = { "default": getIterator, __esModule: true };
-});
-var _getIterator = unwrapExports(getIterator$1);
-
-var queue$1 = require('async-delay-queue');
-var Client = function () {
-  function Client(url, options) {
-    _classCallCheck(this, Client);
-    this.url = url;
-    this.options = options;
-    this.subscriptions = [];
-    this.queue = queue$1;
-    this.delay = options.delay || 500;
-    this.requestIds = 1;
-    this.requests = [];
-  }
-  _createClass(Client, [{
-    key: 'connect',
-    value: function () {
-      var _ref = _asyncToGenerator(regenerator.mark(function _callee() {
-        return regenerator.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                return _context.abrupt('return', this.setConnection(this.setClient()));
-              case 1:
-              case 'end':
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-      function connect() {
-        return _ref.apply(this, arguments);
-      }
-      return connect;
-    }()
-  }, {
-    key: 'setConnection',
-    value: function () {
-      var _ref2 = _asyncToGenerator(regenerator.mark(function _callee2(promise) {
-        return regenerator.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!this.connecting) this.connecting = promise;
-                return _context2.abrupt('return', this.connecting);
-              case 2:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-      function setConnection(_x) {
-        return _ref2.apply(this, arguments);
-      }
-      return setConnection;
-    }()
-  }, {
-    key: 'setClient',
-    value: function setClient() {
+  _createClass(Queue, [{
+    key: 'delay',
+    value: function delay(fn, _delay) {
       var _this = this;
-      var WS = WebSocket;
-      return new _Promise(function (resolve) {
-        if (!_this.resolve) _this.resolve = resolve;
-        var url = _this.auth && _this.auth.access_token ? _this.url + '?bearer=' + _this.auth.access_token : _this.url;
-        _this.client = new WS(url);
-        _this.client.onopen = function () {
-          _this.connected = true;
-          _this.resolve();
-        };
-        _this.client.onclose = function (e) {
-          return _this.reconnect();
-        };
-        _this.client.onerror = function (e) {
-          return _this.reconnect();
-        };
-        _this.client.onmessage = function (data) {
-          data = JSON.parse(data.data);
-          if (typeof data === 'string' && data.startsWith('primus::ping::')) {
-            _this.client.send(_JSON$stringify(data.replace('ping', 'pong')));
-          } else if (data.action === 'RES' && data.id) {
-              var i = _this.requests.findIndex(function (r) {
-                return r.id === data.id;
-              });
-              var pending = _this.requests[i];
-              if (pending) {
-                pending.resolve(data);
-                _this.requests.splice(i, 1);
-              }
-            } else if (data.action === 'PUBLISH') {
-                var sub = _this.subscriptions.find(function (s) {
-                  return s.room === data.room;
-                });
-                sub.fn(data.data);
-              }
-        };
-        setTimeout(function () {
-          if (!_this.connected) {
-            _this.connected = true;
-            _this.reconnect();
-          }
-        }, 1000);
+      var timer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 60000;
+      var add = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'push';
+      return new _Promise(function (resolve, reject) {
+        var modFn = _this.modFunction(fn, _delay, timer, resolve, reject);
+        if (_this.stack[0] && add === 'unshift') {
+          _this.stack.splice(1, 0, modFn);
+        } else {
+          _this.stack[add](modFn);
+        }
+        _this.run();
       });
     }
   }, {
-    key: 'reconnect',
-    value: function () {
-      var _ref3 = _asyncToGenerator(regenerator.mark(function _callee3() {
-        var i, request, req, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, sub;
-        return regenerator.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                if (this.connected) {
-                  _context3.next = 2;
-                  break;
-                }
-                return _context3.abrupt('return');
-              case 2:
-                this.connected = false;
-                _context3.next = 5;
-                return this.connect();
-              case 5:
-                for (i = 0; this.requests.length; i++) {
-                  request = this.requests[0];
-                  req = this.req(request.verb, request.query);
-                  request.resolve(req);
-                  this.requests.shift();
-                }
-                _iteratorNormalCompletion = true;
-                _didIteratorError = false;
-                _iteratorError = undefined;
-                _context3.prev = 9;
-                for (_iterator = _getIterator(this.subscriptions); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                  sub = _step.value;
-                  this.client.send(_JSON$stringify({
-                    action: 'SUBSCRIBE',
-                    room: sub.room
-                  }));
-                }
-                _context3.next = 17;
-                break;
-              case 13:
-                _context3.prev = 13;
-                _context3.t0 = _context3['catch'](9);
-                _didIteratorError = true;
-                _iteratorError = _context3.t0;
-              case 17:
-                _context3.prev = 17;
-                _context3.prev = 18;
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                  _iterator.return();
-                }
-              case 20:
-                _context3.prev = 20;
-                if (!_didIteratorError) {
-                  _context3.next = 23;
-                  break;
-                }
-                throw _iteratorError;
-              case 23:
-                return _context3.finish(20);
-              case 24:
-                return _context3.finish(17);
-              case 25:
-              case 'end':
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this, [[9, 13, 17, 25], [18,, 20, 24]]);
-      }));
-      function reconnect() {
-        return _ref3.apply(this, arguments);
-      }
-      return reconnect;
-    }()
-  }, {
-    key: 'request',
-    value: function () {
-      var _ref4 = _asyncToGenerator(regenerator.mark(function _callee4(verb, query) {
-        var res;
-        return regenerator.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _context4.next = 2;
-                return this.req(verb, query);
-              case 2:
-                res = _context4.sent;
-                return _context4.abrupt('return', this.errCheck(res, verb, query));
-              case 4:
-              case 'end':
-                return _context4.stop();
-            }
-          }
-        }, _callee4, this);
-      }));
-      function request(_x2, _x3) {
-        return _ref4.apply(this, arguments);
-      }
-      return request;
-    }()
-  }, {
-    key: 'req',
-    value: function () {
-      var _ref5 = _asyncToGenerator(regenerator.mark(function _callee5(verb, query) {
-        var _this2 = this;
-        return regenerator.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return this.connecting;
-              case 2:
-                return _context5.abrupt('return', new _Promise(function (resolve) {
-                  var id = _this2.requestIds++;
-                  var payload = { action: verb, id: id };
-                  if (typeof query === 'string') {
-                    payload.url = query;
-                  } else {
-                    payload.url = query.url;
-                    payload.body = query.body;
-                  }
-                  _this2.requests.push({ id: id, resolve: resolve, verb: verb, query: query });
-                  try {
-                    _this2.client.send(_JSON$stringify(payload));
-                  } catch (err) {
-                    _this2.client.emit('error', err);
-                    _this2.requests.pop();
-                  }
-                }));
-              case 3:
-              case 'end':
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this);
-      }));
-      function req(_x4, _x5) {
-        return _ref5.apply(this, arguments);
-      }
-      return req;
-    }()
-  }, {
-    key: 'retry',
-    value: function () {
-      var _ref6 = _asyncToGenerator(regenerator.mark(function _callee6(res, verb, query) {
-        var _this3 = this;
-        var delay, reres;
-        return regenerator.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay;
-                delay = isNaN(delay) ? this.delay : delay;
-                _context6.next = 4;
-                return this.queue.delay(function () {
-                  return _this3.req(verb, query);
-                }, delay, 1000 * 5, 'unshift');
-              case 4:
-                reres = _context6.sent;
-                return _context6.abrupt('return', this.errCheck(reres, verb, query));
-              case 6:
-              case 'end':
-                return _context6.stop();
-            }
-          }
-        }, _callee6, this);
-      }));
-      function retry(_x6, _x7, _x8) {
-        return _ref6.apply(this, arguments);
-      }
-      return retry;
-    }()
-  }, {
-    key: 'errCheck',
-    value: function () {
-      var _ref7 = _asyncToGenerator(regenerator.mark(function _callee7(res, verb, query) {
-        return regenerator.wrap(function _callee7$(_context7) {
-          while (1) {
-            switch (_context7.prev = _context7.next) {
-              case 0:
-                if (!(typeof res === 'string' && res.includes('timed out'))) {
-                  _context7.next = 2;
-                  break;
-                }
-                return _context7.abrupt('return', this.retry(res, verb, query));
-              case 2:
-                if (!res.body.error) {
-                  _context7.next = 6;
-                  break;
-                }
-                throw res;
-              case 6:
-                return _context7.abrupt('return', res.body);
-              case 7:
-              case 'end':
-                return _context7.stop();
-            }
-          }
-        }, _callee7, this);
-      }));
-      function errCheck(_x9, _x10, _x11) {
-        return _ref7.apply(this, arguments);
-      }
-      return errCheck;
-    }()
-  }]);
-  return Client;
-}();
-
-var Auth = function (_Client) {
-  _inherits(Auth, _Client);
-  function Auth() {
-    _classCallCheck(this, Auth);
-    return _possibleConstructorReturn(this, (Auth.__proto__ || _Object$getPrototypeOf(Auth)).apply(this, arguments));
-  }
-  _createClass(Auth, [{
-    key: 'authorize',
-    value: function () {
-      var _ref = _asyncToGenerator(regenerator.mark(function _callee() {
-        var refresh = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.refresh_token;
+    key: 'modFunction',
+    value: function modFunction(fn, delay, timer, resolve, reject) {
+      var _this2 = this;
+      return _asyncToGenerator(regenerator.mark(function _callee() {
+        var runFunction, data;
         return regenerator.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!(this.options.user_key && this.options.user_secret || refresh)) {
-                  _context.next = 2;
-                  break;
+                runFunction = new _Promise(function (res) {
+                  timeout(fn, delay).then(res);
+                  setTimeout(function () {
+                    var err = 'Queued function timed out! (' + (fn.name || 'anonymous') + ')';
+                    _this2.throwOnTimeout ? reject(err) : 0;
+                    res(err);
+                  }, timer);
+                });
+                _context.next = 3;
+                return runFunction;
+              case 3:
+                data = _context.sent;
+                _this2.stack.shift();
+                if (_this2.stack[0]) {
+                  _this2.executing = true;
+                  resolve(data);
+                  _this2.stack[0]();
+                } else {
+                  _this2.executing = false;
+                  resolve(data);
                 }
-                return _context.abrupt('return', refresh ? this.refreshToken() : this.getToken());
-              case 2:
+              case 6:
               case 'end':
                 return _context.stop();
             }
           }
-        }, _callee, this);
+        }, _callee, _this2);
       }));
-      function authorize() {
-        return _ref.apply(this, arguments);
-      }
-      return authorize;
-    }()
+    }
   }, {
-    key: 'getToken',
-    value: function () {
-      var _ref2 = _asyncToGenerator(regenerator.mark(function _callee2() {
-        var body, res;
-        return regenerator.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                body = {
-                  user_key: this.options.user_key,
-                  user_secret: this.options.user_secret
-                };
-                _context2.next = 3;
-                return this.request('POST', {
-                  url: '/authenticate',
-                  body: body
-                });
-              case 3:
-                res = _context2.sent;
-                this.access_token = res.access_token;
-                this.refresh_token = res.refresh_token;
-              case 6:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-      function getToken() {
-        return _ref2.apply(this, arguments);
+    key: 'run',
+    value: function run() {
+      if (!this.executing) {
+        this.executing = true;
+        this.stack[0]();
       }
-      return getToken;
-    }()
-  }, {
-    key: 'refreshToken',
-    value: function () {
-      var _ref3 = _asyncToGenerator(regenerator.mark(function _callee3() {
-        var body, res;
-        return regenerator.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                if (this.refreshing) {
-                  _context3.next = 8;
-                  break;
-                }
-                this.refreshing = true;
-                body = {
-                  refresh_token: this.refresh_token
-                };
-                _context3.next = 5;
-                return this.request('POST', {
-                  url: '/refresh',
-                  body: body
-                });
-              case 5:
-                res = _context3.sent;
-                this.access_token = res.access_token;
-                this.refreshing = false;
-              case 8:
-              case 'end':
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-      function refreshToken() {
-        return _ref3.apply(this, arguments);
-      }
-      return refreshToken;
-    }()
-  }, {
-    key: 'errCheck',
-    value: function () {
-      var _ref4 = _asyncToGenerator(regenerator.mark(function _callee4(res, verb, query) {
-        return regenerator.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                if (!(typeof res === 'string' && res.includes('timed out'))) {
-                  _context4.next = 2;
-                  break;
-                }
-                return _context4.abrupt('return', this.retry(res, verb, query));
-              case 2:
-                if (!(res.statusCode >= 400)) {
-                  _context4.next = 7;
-                  break;
-                }
-                if (res.statusCode !== 503 && res.statusCode !== 404 && res.statusCode !== 429) {
-                  console.error('cubic-client encountered an error while authenticating:');
-                  console.error(res.body);
-                  console.error('retrying... \n');
-                }
-                return _context4.abrupt('return', this.retry(res, verb, query));
-              case 7:
-                return _context4.abrupt('return', res.body);
-              case 8:
-              case 'end':
-                return _context4.stop();
-            }
-          }
-        }, _callee4, this);
-      }));
-      function errCheck(_x2, _x3, _x4) {
-        return _ref4.apply(this, arguments);
-      }
-      return errCheck;
-    }()
+    }
   }]);
-  return Auth;
-}(Client);
+  return Queue;
+}();
+module.exports = new Queue();
+});
+unwrapExports(lib);
 
-var ServerError = function (_Error) {
-  _inherits(ServerError, _Error);
-  function ServerError(_ref, query) {
-    var statusCode = _ref.statusCode,
-        body = _ref.body;
-    _classCallCheck(this, ServerError);
-    var error = body.error ? body.error + ("(" + body.reason + ")") : body;
-    var _this = _possibleConstructorReturn(this, (ServerError.__proto__ || _Object$getPrototypeOf(ServerError)).call(this, "Cubic-client encountered an error while requesting " + (query.url || query) + ": " + statusCode + " - " + error));
-    _this.statusCode = statusCode;
-    _this.reason = body.reason;
-    _this.error = body.error;
-    return _this;
+class Client {
+  constructor (url, options) {
+    this.url = url;
+    this.options = options;
+    this.subscriptions = [];
+    this.queue = lib;
+    this.delay = options.delay || 500;
+    this.timeout = 1000 * 15;
+    this.requestIds = 1;
+    this.requests = [];
+    this.connected = false;
+    setInterval(() => {
+      if (this.lastHeartbeat && new Date() - this.lastHeartbeat > this.timeout) {
+        this.reconnect();
+      }
+    }, this.timeout);
   }
-  return ServerError;
-}(Error);
+  async connect () {
+    return this.setConnection(this.setClient())
+  }
+  async setConnection (promise) {
+    if (!this.connecting) this.connecting = promise;
+    return this.connecting
+  }
+  setClient () {
+    return new Promise(resolve => {
+      if (!this.resolve) this.resolve = resolve;
+      const options = this.auth && this.auth.access_token ? {
+        headers: {
+          authorization: `bearer ${this.auth.access_token}`
+        }
+      } : {};
+      this.client = new WS(this.url, options);
+      this.client.on('open', () => {
+        this.connected = true;
+        this.resolve();
+        this.resolve = null;
+        this.connecting = null;
+      });
+      this.client.on('close', e => this.reconnect());
+      this.client.on('error', e => this.reconnect());
+      this.client.on('message', data => this.onMessage(data));
+      setTimeout(() => {
+        if (!this.connected) {
+          this.connected = true;
+          this.reconnect();
+        }
+      }, 500);
+    })
+  }
+  onMessage (data) {
+    data = JSON.parse(data);
+    if (typeof data === 'string' && data.startsWith('primus::ping::')) {
+      this.lastHeartbeat = new Date();
+      this.client.send(JSON.stringify(data.replace('ping', 'pong')));
+    }
+    else if (data.action === 'RES' && data.id) {
+      const i = this.requests.findIndex(r => r.id === data.id);
+      const pending = this.requests[i];
+      if (pending) {
+        pending.resolve(data);
+        this.requests.splice(i, 1);
+      }
+    }
+    else if (data.action === 'PUBLISH') {
+      for (const sub of this.subscriptions) {
+        if (sub.room === data.room) sub.fn(data.data);
+      }
+    }
+  }
+  async reconnect () {
+    if (!this.connected) return
+    if (this.client.removeAllListeners) {
+      this.client.removeAllListeners();
+    }
+    this.connected = false;
+    await this.connect();
+    for (let i = 0; this.requests.length; i++) {
+      const request = this.requests[0];
+      const req = this.req(request.verb, request.query);
+      request.resolve(req);
+      this.requests.shift();
+    }
+    for (const sub of this.subscriptions) {
+      this.client.send(JSON.stringify({
+        action: 'SUBSCRIBE',
+        room: sub.room
+      }));
+    }
+  }
+  async request (verb, query) {
+    let res = await this.req(verb, query);
+    return this.errCheck(res, verb, query)
+  }
+  async req (verb, query) {
+    await this.connecting;
+    return new Promise(resolve => {
+      const id = this.requestIds++;
+      const payload = { action: verb, id };
+      if (typeof query === 'string') {
+        payload.url = query;
+      } else {
+        payload.url = query.url;
+        payload.body = query.body;
+      }
+      this.requests.push({ id, resolve, verb, query });
+      try {
+        this.client.send(JSON.stringify(payload));
+      } catch (err) {
+        this.client.emit('error', err);
+        this.requests.pop();
+      }
+    })
+  }
+  async retry (res, verb, query) {
+    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay;
+    delay = isNaN(delay) ? this.delay : delay;
+    let reres = await this.queue.delay(() => this.req(verb, query), delay, 1000 * 5, 'unshift');
+    return this.errCheck(reres, verb, query)
+  }
+  async errCheck (res, verb, query) {
+    if (typeof res === 'string' && res.includes('timed out')) {
+      return this.retry(res, verb, query)
+    }
+    if (res.body.error) {
+      throw res
+    } else {
+      return res.body
+    }
+  }
+}
+var client = Client;
 
-var Connection = function (_Client) {
-  _inherits(Connection, _Client);
-  function Connection(url, options) {
-    _classCallCheck(this, Connection);
-    var _this = _possibleConstructorReturn(this, (Connection.__proto__ || _Object$getPrototypeOf(Connection)).call(this, url, options));
-    _this.auth = new Auth(options.auth_url, {
+class Client$1 extends client {
+  setClient () {
+    const WS = WebSocket;
+    return new Promise(resolve => {
+      if (!this.resolve) this.resolve = resolve;
+      const url = this.auth && this.auth.access_token
+        ? `${this.url}?bearer=${this.auth.access_token}`
+        : this.url;
+      this.client = new WS(url);
+      this.client.onopen = () => {
+        this.connected = true;
+        this.resolve();
+        this.resolve = null;
+        this.connecting = null;
+      };
+      this.client.onclose = e => this.reconnect();
+      this.client.onerror = e => this.reconnect();
+      this.client.onmessage = m => this.onMessage(m);
+      setTimeout(() => {
+        if (!this.connected) {
+          this.connected = true;
+          this.reconnect();
+        }
+      }, 1000);
+    })
+  }
+}
+
+class Auth extends client {
+  async authorize (refresh = this.refresh_token) {
+    if ((this.options.user_key && this.options.user_secret) || refresh) {
+      return (refresh ? this.refreshToken() : this.getToken())
+    }
+  }
+  async getToken () {
+    const body = {
+      user_key: this.options.user_key,
+      user_secret: this.options.user_secret
+    };
+    const res = await this.request('POST', {
+      url: '/authenticate',
+      body
+    });
+    this.access_token = res.access_token;
+    this.refresh_token = res.refresh_token;
+  }
+  async refreshToken () {
+    if (!this.refreshing) {
+      this.refreshing = true;
+      const body = {
+        refresh_token: this.refresh_token
+      };
+      const res = await this.request('POST', {
+        url: '/refresh',
+        body
+      });
+      this.access_token = res.access_token;
+      this.refreshing = false;
+    }
+  }
+  async errCheck (res, verb, query) {
+    if (typeof res === 'string' && res.includes('timed out')) {
+      return this.retry(res, verb, query)
+    }
+    if (res.statusCode >= 400) {
+      if (res.statusCode !== 503 && res.statusCode !== 404 && res.statusCode !== 429) {
+        console.error('cubic-client encountered an error while authenticating:');
+        console.error(res.body);
+        console.error(`retrying... \n`);
+      }
+      return this.retry(res, verb, query)
+    } else {
+      return res.body
+    }
+  }
+}
+var auth = Auth;
+
+class ServerError extends Error {
+  constructor ({ statusCode, body }, query) {
+    const error = body.error ? body.error + `(${body.reason})` : body;
+    super(`Cubic-client encountered an error while requesting ${query.url || query}: ${statusCode} - ${error}`);
+    this.statusCode = statusCode;
+    this.reason = body.reason;
+    this.error = body.error;
+  }
+}
+var serverError = ServerError;
+
+class Connection extends client {
+  constructor (url, options) {
+    super(url, options);
+    this.auth = new auth(options.auth_url, {
       user_key: options.user_key,
       user_secret: options.user_secret,
       delay: 100
     });
-    _this.auth.connect();
-    return _this;
+    this.auth.connect();
   }
-  _createClass(Connection, [{
-    key: 'connect',
-    value: function () {
-      var _ref = _asyncToGenerator(regenerator.mark(function _callee2() {
-        var _this2 = this;
-        var authAndConnect;
-        return regenerator.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                authAndConnect = function () {
-                  var _ref2 = _asyncToGenerator(regenerator.mark(function _callee() {
-                    return regenerator.wrap(function _callee$(_context) {
-                      while (1) {
-                        switch (_context.prev = _context.next) {
-                          case 0:
-                            _context.next = 2;
-                            return _this2.auth.authorize();
-                          case 2:
-                            _context.next = 4;
-                            return _this2.setClient();
-                          case 4:
-                          case 'end':
-                            return _context.stop();
-                        }
-                      }
-                    }, _callee, _this2);
-                  }));
-                  return function authAndConnect() {
-                    return _ref2.apply(this, arguments);
-                  };
-                }();
-                if (!this.connecting) this.connecting = authAndConnect();else authAndConnect();
-                return _context2.abrupt('return', this.connecting);
-              case 3:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-      function connect() {
-        return _ref.apply(this, arguments);
+  async connect () {
+    const authAndConnect = async () => {
+      await this.auth.authorize();
+      await this.setClient();
+    };
+    return this.setConnection(authAndConnect())
+  }
+  async errCheck (res = {}, verb, query) {
+    if (typeof res === 'string' && res.includes('timed out')) {
+      return this.retry(res, verb, query)
+    }
+    if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
+      await this.reconnect();
+      return this.retry(res, verb, query)
+    }
+    if (!res.statusCode) {
+      if (res.includes('timed out')) {
+        return this.retry(res, verb, query)
       }
-      return connect;
-    }()
-  }, {
-    key: 'errCheck',
-    value: function () {
-      var _ref3 = _asyncToGenerator(regenerator.mark(function _callee3() {
-        var res = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        var verb = arguments[1];
-        var query = arguments[2];
-        return regenerator.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                if (!(typeof res === 'string' && res.includes('timed out'))) {
-                  _context3.next = 2;
-                  break;
-                }
-                return _context3.abrupt('return', this.retry(res, verb, query));
-              case 2:
-                if (!(res.body && res.body.reason && res.body.reason.includes('jwt expired'))) {
-                  _context3.next = 6;
-                  break;
-                }
-                _context3.next = 5;
-                return this.reconnect();
-              case 5:
-                return _context3.abrupt('return', this.retry(res, verb, query));
-              case 6:
-                if (res.statusCode) {
-                  _context3.next = 9;
-                  break;
-                }
-                if (!res.includes('timed out')) {
-                  _context3.next = 9;
-                  break;
-                }
-                return _context3.abrupt('return', this.retry(res, verb, query));
-              case 9:
-                if (!(res.statusCode === 429)) {
-                  _context3.next = 11;
-                  break;
-                }
-                return _context3.abrupt('return', this.retry(res, verb, query));
-              case 11:
-                if (!(res.statusCode === 503)) {
-                  _context3.next = 13;
-                  break;
-                }
-                return _context3.abrupt('return', this.retry(res, verb, query));
-              case 13:
-                if (!(parseInt(res.statusCode.toString()[0]) > 3)) {
-                  _context3.next = 15;
-                  break;
-                }
-                throw new ServerError(res, query);
-              case 15:
-                return _context3.abrupt('return', res.body);
-              case 16:
-              case 'end':
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-      function errCheck() {
-        return _ref3.apply(this, arguments);
-      }
-      return errCheck;
-    }()
-  }]);
-  return Connection;
-}(Client);
+    }
+    if (res.statusCode === 429) {
+      return this.retry(res, verb, query)
+    }
+    if (res.statusCode === 503) {
+      return this.retry(res, verb, query)
+    }
+    if (parseInt(res.statusCode.toString()[0]) > 3) {
+      throw new serverError(res, query)
+    }
+    return res.body
+  }
+}
+var connection = Connection;
 
-var Client$1 = function () {
-  function Client(options) {
-    _classCallCheck(this, Client);
-    this.options = _extends$1({
-      api_url: 'ws://localhost:3003/ws',
-      auth_url: 'ws://localhost:3030/ws',
-      user_key: null,
-      user_secret: null
-    }, options);
-    var api = this.options.api_url;
-    var auth = this.options.auth_url;
+class Connection$1 extends connection {}
+Connection$1.prototype.setClient = Client$1.prototype.setClient;
+
+class Client$2 {
+  constructor (options) {
+    this.options = {
+      ...{
+        api_url: 'ws://localhost:3003/ws',
+        auth_url: 'ws://localhost:3030/ws',
+        user_key: null,
+        user_secret: null
+      },
+      ...options
+    };
+    let api = this.options.api_url;
+    let auth = this.options.auth_url;
     this.options.api_url = api[api.length - 1] === '/' ? api.slice(0, -1) : api;
     this.options.auth_url = auth[auth.length - 1] === '/' ? auth.slice(0, -1) : auth;
     this.connect();
   }
-  _createClass(Client, [{
-    key: 'connect',
-    value: function () {
-      var _ref = _asyncToGenerator(regenerator.mark(function _callee() {
-        return regenerator.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                this.connection = new Connection(this.options.api_url, this.options);
-                this.connection.connect();
-                _context.next = 4;
-                return this.connecting();
-              case 4:
-              case 'end':
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-      function connect() {
-        return _ref.apply(this, arguments);
-      }
-      return connect;
-    }()
-  }, {
-    key: 'connecting',
-    value: function () {
-      var _ref2 = _asyncToGenerator(regenerator.mark(function _callee2() {
-        return regenerator.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                return _context2.abrupt('return', this.connection.connecting);
-              case 1:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-      function connecting() {
-        return _ref2.apply(this, arguments);
-      }
-      return connecting;
-    }()
-  }, {
-    key: 'subscribe',
-    value: function () {
-      var _ref3 = _asyncToGenerator(regenerator.mark(function _callee3(room, fn) {
-        return regenerator.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return this.connecting();
-              case 2:
-                this.connection.client.send(_JSON$stringify({
-                  action: 'SUBSCRIBE',
-                  room: room
-                }));
-                this.connection.subscriptions.push({ room: room, fn: fn });
-              case 4:
-              case 'end':
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-      function subscribe(_x, _x2) {
-        return _ref3.apply(this, arguments);
-      }
-      return subscribe;
-    }()
-  }, {
-    key: 'unsubscribe',
-    value: function () {
-      var _ref4 = _asyncToGenerator(regenerator.mark(function _callee4(room) {
-        var i;
-        return regenerator.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _context4.next = 2;
-                return this.connecting();
-              case 2:
-                this.connection.client.send(_JSON$stringify({
-                  action: 'UNSUBSCRIBE',
-                  room: room
-                }));
-                i = this.connection.subscriptions.findIndex(function (s) {
-                  return s.room === room;
-                });
-                this.connection.subscriptions.splice(i, 1);
-              case 5:
-              case 'end':
-                return _context4.stop();
-            }
-          }
-        }, _callee4, this);
-      }));
-      function unsubscribe(_x3) {
-        return _ref4.apply(this, arguments);
-      }
-      return unsubscribe;
-    }()
-  }, {
-    key: 'query',
-    value: function () {
-      var _ref5 = _asyncToGenerator(regenerator.mark(function _callee5(verb, _query) {
-        return regenerator.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return this.connecting();
-              case 2:
-                return _context5.abrupt('return', this.connection.request(verb, _query));
-              case 3:
-              case 'end':
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this);
-      }));
-      function query(_x4, _x5) {
-        return _ref5.apply(this, arguments);
-      }
-      return query;
-    }()
-  }, {
-    key: 'get',
-    value: function get(query) {
-      return this.query('GET', query);
-    }
-  }, {
-    key: 'post',
-    value: function post(url, body) {
-      var query = {
-        url: url,
-        body: body
-      };
-      return this.query('POST', query);
-    }
-  }, {
-    key: 'put',
-    value: function put(url, body) {
-      var query = {
-        url: url,
-        body: body
-      };
-      return this.query('PUT', query);
-    }
-  }, {
-    key: 'patch',
-    value: function patch(url, body) {
-      var query = {
-        url: url,
-        body: body
-      };
-      return this.query('PATCH', query);
-    }
-  }, {
-    key: 'delete',
-    value: function _delete(url, body) {
-      var query = {
-        url: url,
-        body: body
-      };
-      return this.query('DELETE', query);
-    }
-  }, {
-    key: 'login',
-    value: function () {
-      var _ref6 = _asyncToGenerator(regenerator.mark(function _callee6(user, secret) {
-        return regenerator.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _context6.next = 2;
-                return this.connecting();
-              case 2:
-                this.connection.auth.options.user_key = user;
-                this.connection.auth.options.user_secret = secret;
-                return _context6.abrupt('return', this.connection.reconnect());
-              case 5:
-              case 'end':
-                return _context6.stop();
-            }
-          }
-        }, _callee6, this);
-      }));
-      function login(_x6, _x7) {
-        return _ref6.apply(this, arguments);
-      }
-      return login;
-    }()
-  }, {
-    key: 'setRefreshToken',
-    value: function () {
-      var _ref7 = _asyncToGenerator(regenerator.mark(function _callee7(token) {
-        return regenerator.wrap(function _callee7$(_context7) {
-          while (1) {
-            switch (_context7.prev = _context7.next) {
-              case 0:
-                _context7.next = 2;
-                return this.connecting();
-              case 2:
-                this.connection.auth.refresh_token = token;
-              case 3:
-              case 'end':
-                return _context7.stop();
-            }
-          }
-        }, _callee7, this);
-      }));
-      function setRefreshToken(_x8) {
-        return _ref7.apply(this, arguments);
-      }
-      return setRefreshToken;
-    }()
-  }, {
-    key: 'getRefreshToken',
-    value: function () {
-      var _ref8 = _asyncToGenerator(regenerator.mark(function _callee8() {
-        return regenerator.wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                return _context8.abrupt('return', this.connection.auth.refresh_token);
-              case 1:
-              case 'end':
-                return _context8.stop();
-            }
-          }
-        }, _callee8, this);
-      }));
-      function getRefreshToken() {
-        return _ref8.apply(this, arguments);
-      }
-      return getRefreshToken;
-    }()
-  }, {
-    key: 'setAccessToken',
-    value: function () {
-      var _ref9 = _asyncToGenerator(regenerator.mark(function _callee9(token) {
-        return regenerator.wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                _context9.next = 2;
-                return this.connecting();
-              case 2:
-                this.connection.auth.access_token = token;
-                _context9.next = 5;
-                return this.connection.reconnect();
-              case 5:
-              case 'end':
-                return _context9.stop();
-            }
-          }
-        }, _callee9, this);
-      }));
-      function setAccessToken(_x9) {
-        return _ref9.apply(this, arguments);
-      }
-      return setAccessToken;
-    }()
-  }, {
-    key: 'getAccessToken',
-    value: function () {
-      var _ref10 = _asyncToGenerator(regenerator.mark(function _callee10() {
-        return regenerator.wrap(function _callee10$(_context10) {
-          while (1) {
-            switch (_context10.prev = _context10.next) {
-              case 0:
-                return _context10.abrupt('return', this.connection.auth.access_token);
-              case 1:
-              case 'end':
-                return _context10.stop();
-            }
-          }
-        }, _callee10, this);
-      }));
-      function getAccessToken() {
-        return _ref10.apply(this, arguments);
-      }
-      return getAccessToken;
-    }()
-  }]);
-  return Client;
-}();
+  async connect () {
+    this.connection = new connection(this.options.api_url, this.options);
+    this.connection.connect();
+    await this.connecting();
+  }
+  async connecting () {
+    return this.connection.connecting
+  }
+  async subscribe (room, fn) {
+    await this.connecting();
+    this.connection.client.send(JSON.stringify({
+      action: 'SUBSCRIBE',
+      room
+    }));
+    this.connection.subscriptions.push({ room, fn });
+  }
+  async unsubscribe (room) {
+    await this.connecting();
+    this.connection.client.send(JSON.stringify({
+      action: 'UNSUBSCRIBE',
+      room
+    }));
+    this.connection.subscriptions = this.connection.subscriptions.filter(s => s.room !== room);
+  }
+  async query (verb, query) {
+    await this.connecting();
+    return this.connection.request(verb, query)
+  }
+  get (query) {
+    return this.query('GET', query)
+  }
+  post (url, body) {
+    let query = {
+      url: url,
+      body: body
+    };
+    return this.query('POST', query)
+  }
+  put (url, body) {
+    let query = {
+      url: url,
+      body: body
+    };
+    return this.query('PUT', query)
+  }
+  patch (url, body) {
+    let query = {
+      url: url,
+      body: body
+    };
+    return this.query('PATCH', query)
+  }
+  delete (url, body) {
+    let query = {
+      url: url,
+      body: body
+    };
+    return this.query('DELETE', query)
+  }
+  async login (user, secret) {
+    await this.connecting();
+    this.connection.auth.options.user_key = user;
+    this.connection.auth.options.user_secret = secret;
+    return this.connection.reconnect()
+  }
+  async setRefreshToken (token) {
+    await this.connecting();
+    this.connection.auth.refresh_token = token;
+  }
+  async getRefreshToken () {
+    return this.connection.auth.refresh_token
+  }
+  async setAccessToken (token) {
+    await this.connecting();
+    this.connection.auth.access_token = token;
+    await this.connection.reconnect();
+  }
+  async getAccessToken () {
+    return this.connection.auth.access_token
+  }
+}
+var node = Client$2;
 
-module.exports = Client$1;
+class Client$3 extends node {
+  async connect () {
+    this.connection = new Connection$1(this.options.api_url, this.options);
+    this.connection.connect();
+    await this.connecting();
+  }
+}
+
+export default Client$3;
 //# sourceMappingURL=browser.js.map
