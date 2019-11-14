@@ -1,3 +1,5 @@
+'use strict';
+
 var WS = {};
 
 function unwrapExports (x) {
@@ -1989,5 +1991,5 @@ class Client$3 extends node {
   }
 }
 
-export default Client$3;
+module.exports = Client$3;
 //# sourceMappingURL=browser.js.map

@@ -8,7 +8,7 @@ import hypothetical from 'rollup-plugin-hypothetical'
 export default {
   input: './src/browser/index.js',
   output: {
-    format: 'es',
+    format: 'cjs',
     file: './browser.js'
   },
   plugins: [
