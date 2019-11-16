@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint --ignore-path .gitignore --ignore-pattern browser.js --ignore-pattern browser.js.map .",
     "test": "mocha --exit -s 60000 --timeout 60000 test/server.js test/client.js test/auth.js test/requests.js test/middleware.js test/exceptions.js",
-    "release": "lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo --no-ci"
+    "release": "lerna exec --concurrency 1 -- npx --no-install semantic-release -e @kaptard/semantic-release-monorepo --no-ci"
   },
   "author": "Kaptard",
   "license": "MIT",
