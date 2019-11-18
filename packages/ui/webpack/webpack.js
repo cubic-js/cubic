@@ -31,8 +31,8 @@ class WebpackServer {
     // Order parameterized url's so they can't replace already defined routes.
     // e.g. /something/:param/:param must not be routed before /something/whatever/:param
     routes.sort((a, b) => {
-      const aCount = (a.path.split(':')[0].match(/\//g) || []).length
-      const bCount = (b.path.split(':')[0].match(/\//g) || []).length
+      const aCount = a.path.split('/').filter(r => r.charAt(0) !== ':').length
+      const bCount = b.path.split('/').filter(r => r.charAt(0) !== ':').length
       return bCount - aCount
     })
 
