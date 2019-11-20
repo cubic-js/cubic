@@ -7,6 +7,8 @@ pipeline:
       - bash link.sh
     when:
       event: [ push, tag, deployment ]
+      branch:
+        exclude: [ master ]
 
   lint:
     image: node:10
