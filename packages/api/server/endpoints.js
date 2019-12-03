@@ -62,30 +62,25 @@ class EndpointController {
         if (this.dev) this.deleteRequireCache(endpoint.file)
 
         // A lot of code right now for only a db override, but may come handy in the future
-        const config = this.config
+        // Overrides config properties if the replace route matches
+        let config = this.config
         if (this.config.overrideEndpoint) {
-          const overrides = Object.keys(this.config.overrideEndpoint)
-          let match
-          for (const override of overrides) {
-            if (override.length <= req.url.length) {
-              let overrideMatch = true
-              for (let i = 0; i < override.length; i++) {
-                if (override[i] !== req.url[i]) {
-                  overrideMatch = false
-                  break
-                }
-              }
-              if (overrideMatch) {
-                match = this.config.overrideEndpoint[override]
+          for (const override of Object.keys(this.config.overrideEndpoint)) {
+            const overrideArgs = override.split('/')
+            const routeArgs = req.url.split('/')
+            if (overrideArgs.length > routeArgs.length) continue
+
+            let matchFound = true
+            for (let i = 0; i < overrideArgs.length; i++) {
+              if (routeArgs[i] !== overrideArgs[i]) {
+                matchFound = false
                 break
               }
             }
-          }
 
-          if (match) {
-            const properties = Object.keys(match)
-            for (const p of properties) {
-              config[p] = match[p]
+            if (matchFound) {
+              config = { ...config, ...this.config.overrideEndpoint[override] }
+              break
             }
           }
         }
