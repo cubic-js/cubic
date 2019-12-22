@@ -19,7 +19,7 @@ class API {
   }
 
   /**
-   * Convenience methods that can be called from other nodes more easily
+   * Convenience methods that can be called from other nodes more easily.
    */
   use (route, fn, verb) {
     return this.server.use(route, fn, verb)
