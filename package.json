@@ -18,7 +18,7 @@
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.1",
     "lodash": "^4.17.15",
-    "mongodb": "^3.1.8",
+    "mongodb": "^3.4.1",
     "rand-token": "^0.4.0"
   },
   "devDependencies": {
