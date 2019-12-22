@@ -57,7 +57,7 @@ class Auth {
 
   /**
    * Generates API user without rate limits for use within cubic. This is
-   * particularily important for cubic-ui
+   * particularily important for cubic-ui.
    */
   async createSystemUser (api) {
     const mongo = await mongodb.connect(cubic.config.auth.api.mongoUrl,
