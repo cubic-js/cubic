@@ -31,9 +31,9 @@ class WebpackServer {
     // Order parameterized url's so they can't replace already defined routes.
     // e.g. /something/:param/:param must not be routed before /something/whatever/:param
     routes.sort((a, b) => {
-      const aCount = a.path.split('/').filter(r => r.charAt(0) !== ':').length
-      const bCount = b.path.split('/').filter(r => r.charAt(0) !== ':').length
-      return bCount - aCount
+      const aCount = a.path.split(':').length
+      const bCount = b.path.split(':').length
+      return aCount - bCount
     })
 
     const writeFile = promisify(fs.writeFile)
