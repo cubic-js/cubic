@@ -193,6 +193,15 @@ class EndpointController {
       if (endpoint.route.includes(':')) pushToEnd.push(endpoint)
       else pushToStart.push(endpoint)
     })
+
+    // Order parameterized url's so they can't replace already defined routes.
+    // e.g. /something/:param/:param must not be routed before /something/whatever/:param
+    pushToEnd.sort((a, b) => {
+      const aCount = a.route.split(':').length
+      const bCount = b.route.split(':').length
+      return aCount - bCount
+    })
+
     this.endpoints = pushToStart.concat(pushToEnd)
   }
 
