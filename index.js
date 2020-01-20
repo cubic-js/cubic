@@ -21,7 +21,6 @@ class Cubic extends Loader {
       const defaults = require('cubic-defaults')
       const parallel = []
 
-      this.init()
       await defaults.verify()
       await cubic.use(new Auth())
       parallel.push(cubic.use(new Api()))
