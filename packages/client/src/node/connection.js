@@ -5,12 +5,14 @@ const Client = require('./client.js')
 class Connection extends Client {
   constructor (url, options) {
     super(url, options)
-    this.auth = new Auth(options.auth_url, {
-      user_key: options.user_key,
-      user_secret: options.user_secret,
-      delay: 100
-    })
-    this.auth.connect()
+    if (!options.isBrowser) {
+      this.auth = new Auth(options.auth_url, {
+        user_key: options.user_key,
+        user_secret: options.user_secret,
+        delay: 100
+      })
+      this.auth.connect()
+    }
   }
 
   /**

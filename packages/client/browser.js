@@ -1764,7 +1764,7 @@ class Client$1 extends client {
       };
       this.client.onclose = e => this.reconnect();
       this.client.onerror = e => this.reconnect();
-      this.client.onmessage = m => this.onMessage(m);
+      this.client.onmessage = m => this.onMessage(m.data);
       setTimeout(() => {
         if (!this.connected) {
           this.connected = true;
@@ -1825,6 +1825,9 @@ class Auth extends client {
 }
 var auth = Auth;
 
+class Auth$1 extends auth {}
+Auth$1.prototype.setClient = Client$1.prototype.setClient;
+
 class ServerError extends Error {
   constructor ({ statusCode, body }, query) {
     const error = body.error ? body.error + `(${body.reason})` : body;
@@ -1839,12 +1842,14 @@ var serverError = ServerError;
 class Connection extends client {
   constructor (url, options) {
     super(url, options);
-    this.auth = new auth(options.auth_url, {
-      user_key: options.user_key,
-      user_secret: options.user_secret,
-      delay: 100
-    });
-    this.auth.connect();
+    if (!options.isBrowser) {
+      this.auth = new auth(options.auth_url, {
+        user_key: options.user_key,
+        user_secret: options.user_secret,
+        delay: 100
+      });
+      this.auth.connect();
+    }
   }
   async connect () {
     const authAndConnect = async () => {
@@ -1880,7 +1885,18 @@ class Connection extends client {
 }
 var connection = Connection;
 
-class Connection$1 extends connection {}
+class Connection$1 extends connection {
+  constructor (url, options) {
+    options.isBrowser = true;
+    super(url, options);
+    this.auth = new Auth$1(options.auth_url, {
+      user_key: options.user_key,
+      user_secret: options.user_secret,
+      delay: 100
+    });
+    this.auth.connect();
+  }
+}
 Connection$1.prototype.setClient = Client$1.prototype.setClient;
 
 class Client$2 {
