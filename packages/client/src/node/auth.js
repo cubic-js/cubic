@@ -62,6 +62,7 @@ class Auth extends Client {
       }
       return this.retry(res, verb, query)
     } else {
+      this.delayCounter = 0
       return res.body
     }
   }
