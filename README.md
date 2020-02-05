@@ -26,7 +26,7 @@ modern standards:
 - Full OAuth2 integration
 - Pub/Sub model for real-time data
 - Rate limits and caching on a per-endpoint basis
-- Clear endpoint schema for automated unit tests
+- Concise endpoint schema for automated unit tests
 
 We provide all of these features regardless of which http/ws server you choose to use under the hood.
 
