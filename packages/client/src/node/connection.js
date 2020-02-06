@@ -23,7 +23,7 @@ class Connection extends Client {
       await this.auth.authorize()
       await this.setClient()
     }
-    return this.setConnection(authAndConnect)
+    return this.setConnection(authAndConnect())
   }
 
   /**

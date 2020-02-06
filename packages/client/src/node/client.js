@@ -27,7 +27,7 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    return this.setConnection(this.setClient)
+    return this.setConnection(this.setClient())
   }
 
   /**
@@ -36,8 +36,8 @@ class Client {
    * this.resolve = resolve the promise above
    * this.connected = does the client still think it's connected
    */
-  async setConnection (fn) {
-    if (!this.connecting) this.connecting = fn.call(this)
+  async setConnection (promise) {
+    if (!this.connecting) this.connecting = promise
     return this.connecting
   }
 
