@@ -93,6 +93,7 @@ class EndpointController {
         // Handle errors thrown inside API Endpoint
         try {
           await component.main(req, res)
+          return component
         } catch (err) {
           if (prod) {
             res.status(500).send({
@@ -111,6 +112,7 @@ class EndpointController {
             }, {
               upsert: true
             })
+            return component
           }
 
           // In dev, just throw so we can debug directly

@@ -4,10 +4,11 @@ class Auth extends Endpoint {
   constructor (options) {
     super(options)
     this.schema.scope = 'read_contacts'
+    this.hasBeenHere = false
   }
 
   async main (req, res) {
-    res.send('You\'re not supposed to be in here!')
+    this.hasBeenHere = true
   }
 }
 
