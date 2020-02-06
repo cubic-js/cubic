@@ -8,6 +8,7 @@ class Client {
     this.subscriptions = []
     this.queue = queue
     this.delay = options.delay || 500
+    this.delayCounter = 0
     this.timeout = 1000 * 15
     this.requestIds = 1
     this.requests = []
@@ -26,7 +27,7 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    return this.setConnection(this.setClient())
+    return this.setConnection(this.setClient)
   }
 
   /**
@@ -35,8 +36,8 @@ class Client {
    * this.resolve = resolve the promise above
    * this.connected = does the client still think it's connected
    */
-  async setConnection (promise) {
-    if (!this.connecting) this.connecting = promise
+  async setConnection (fn) {
+    if (!this.connecting) this.connecting = fn.call(this)
     return this.connecting
   }
 
@@ -174,13 +175,15 @@ class Client {
   async retry (res, verb, query) {
     let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay
     delay = isNaN(delay) ? this.delay : delay
-    let reres = await this.queue.delay(() => this.req(verb, query), delay, 1000 * 5, 'unshift')
+    let reres = await this.queue.delay(() => this.req(verb, query), delay * Math.pow(2, this.delayCounter), 1000 * 5, 'unshift')
+    this.delayCounter++
     return this.errCheck(reres, verb, query)
   }
 
   /**
    * Handle error responses. It's expected that you override this in a child
    * class for more fine-grained error control.
+   * Make sure to reset the delay counter!
    */
   async errCheck (res, verb, query) {
     if (typeof res === 'string' && res.includes('timed out')) {
@@ -189,6 +192,7 @@ class Client {
     if (res.body.error) {
       throw res
     } else {
+      this.delayCounter = 0
       return res.body
     }
   }

@@ -23,7 +23,7 @@ class Connection extends Client {
       await this.auth.authorize()
       await this.setClient()
     }
-    return this.setConnection(authAndConnect())
+    return this.setConnection(authAndConnect)
   }
 
   /**
@@ -64,6 +64,7 @@ class Connection extends Client {
     }
 
     // No Error
+    this.delayCounter = 0
     return res.body
   }
 }
