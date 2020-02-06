@@ -21,6 +21,7 @@ Cubic-auth then sets a cookie which contains the user's access and refresh token
 #### Dealing with scoped api endpoints
 Sometimes, you want to access a scoped API endpoint on a non-scoped UI endpoint. The default behaviour, when a non-authorized user connects, is to terminate the entire page like an entire endpoint would.  
 However, you still want to sometimes show the ui, with the scoped API content removed or edited. If you want to do something like that, add try/catch blocks in your `asyncData` hooks:
+
 ```js
 try {
     cubic.get('/scoped_api_endpoint')
