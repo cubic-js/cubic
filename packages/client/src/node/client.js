@@ -8,6 +8,7 @@ class Client {
     this.subscriptions = []
     this.queue = queue
     this.delay = options.delay || 500
+    this.delayCounter = 0
     this.timeout = 1000 * 15
     this.requestIds = 1
     this.requests = []
@@ -107,6 +108,20 @@ class Client {
    * Reconnect if connection is lost or the server goes down.
    */
   async reconnect () {
+    const delay = (t) => { // Helper function to await time-outed reconnect
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(), t)
+      })
+    }
+    await delay(this.delay * Math.pow(2, this.delayCounter))
+    this.delayCounter++
+    await this.reconn()
+  }
+
+  /**
+   * Actual reconnection logic
+   */
+  async reconn () {
     // Dont' reconnect multiple times at once
     if (!this.connected) return
 
@@ -116,6 +131,7 @@ class Client {
     }
     this.connected = false
     await this.connect()
+    this.delayCounter = 0
 
     // Resume requests that were not completed before the disconnect
     for (let i = 0; this.requests.length; i++) {
@@ -174,13 +190,15 @@ class Client {
   async retry (res, verb, query) {
     let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay
     delay = isNaN(delay) ? this.delay : delay
-    let reres = await this.queue.delay(() => this.req(verb, query), delay, 1000 * 5, 'unshift')
+    let reres = await this.queue.delay(() => this.req(verb, query), delay * Math.pow(2, this.delayCounter), 1000 * 5, 'unshift')
+    this.delayCounter++
     return this.errCheck(reres, verb, query)
   }
 
   /**
    * Handle error responses. It's expected that you override this in a child
    * class for more fine-grained error control.
+   * Make sure to reset the delay counter!
    */
   async errCheck (res, verb, query) {
     if (typeof res === 'string' && res.includes('timed out')) {
@@ -189,6 +207,7 @@ class Client {
     if (res.body.error) {
       throw res
     } else {
+      this.delayCounter = 0
       return res.body
     }
   }

@@ -20,7 +20,7 @@ class Limiter {
     if (req.user.scp.includes('write_root') ||
         req.user.scp.includes('ignore_rate_limit') ||
         (endpoint.limit && endpoint.limit.disable)) {
-      return
+      return // skip to next middleware
     }
 
     // Limit with rate specified in endpoint

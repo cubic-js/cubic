@@ -1621,6 +1621,7 @@ class Client {
     this.subscriptions = [];
     this.queue = lib;
     this.delay = options.delay || 500;
+    this.delayCounter = 0;
     this.timeout = 1000 * 15;
     this.requestIds = 1;
     this.requests = [];
@@ -1685,12 +1686,23 @@ class Client {
     }
   }
   async reconnect () {
+    const delay = (t) => {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(), t);
+      })
+    };
+    await delay(this.delay * Math.pow(2, this.delayCounter));
+    this.delayCounter++;
+    await this.reconn();
+  }
+  async reconn () {
     if (!this.connected) return
     if (this.client.removeAllListeners) {
       this.client.removeAllListeners();
     }
     this.connected = false;
     await this.connect();
+    this.delayCounter = 0;
     for (let i = 0; this.requests.length; i++) {
       const request = this.requests[0];
       const req = this.req(request.verb, request.query);
@@ -1731,7 +1743,8 @@ class Client {
   async retry (res, verb, query) {
     let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay;
     delay = isNaN(delay) ? this.delay : delay;
-    let reres = await this.queue.delay(() => this.req(verb, query), delay, 1000 * 5, 'unshift');
+    let reres = await this.queue.delay(() => this.req(verb, query), delay * Math.pow(2, this.delayCounter), 1000 * 5, 'unshift');
+    this.delayCounter++;
     return this.errCheck(reres, verb, query)
   }
   async errCheck (res, verb, query) {
@@ -1741,6 +1754,7 @@ class Client {
     if (res.body.error) {
       throw res
     } else {
+      this.delayCounter = 0;
       return res.body
     }
   }
@@ -1819,6 +1833,7 @@ class Auth extends client {
       }
       return this.retry(res, verb, query)
     } else {
+      this.delayCounter = 0;
       return res.body
     }
   }
@@ -1880,6 +1895,7 @@ class Connection extends client {
     if (parseInt(res.statusCode.toString()[0]) > 3) {
       throw new serverError(res, query)
     }
+    this.delayCounter = 0;
     return res.body
   }
 }

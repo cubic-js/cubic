@@ -64,6 +64,7 @@ class Connection extends Client {
     }
 
     // No Error
+    this.delayCounter = 0
     return res.body
   }
 }

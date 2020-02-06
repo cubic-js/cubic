@@ -29,13 +29,14 @@ describe('Exceptions', function () {
 
   // Unauthorized
   it('should respond with 403 when lacking access scope to endpoint', async function () {
-    const response = await new Promise(resolve => {
+    const response = await new Promise(async resolve => {
       const _res = { ...res, ...{ send (data) { resolve(data) } } }
-      cubic.nodes.api.server.ws.endpoints.getResponse({
+      const endpoint = await cubic.nodes.api.server.ws.endpoints.getResponse({
         method: 'GET',
         url: '/nonauth',
         user
       }, _res)
+      assert(endpoint.hasBeenHere === false)
     })
     assert(response.error.includes('Unauthorized'))
   })
