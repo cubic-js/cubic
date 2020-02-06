@@ -108,6 +108,20 @@ class Client {
    * Reconnect if connection is lost or the server goes down.
    */
   async reconnect () {
+    const delay = (t) => { // Helper function to await time-outed reconnect
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(), t)
+      })
+    }
+    await delay(this.delay * Math.pow(2, this.delayCounter))
+    this.delayCounter++
+    await this.reconn()
+  }
+
+  /**
+   * Actual reconnection logic
+   */
+  async reconn () {
     // Dont' reconnect multiple times at once
     if (!this.connected) return
 
@@ -117,6 +131,7 @@ class Client {
     }
     this.connected = false
     await this.connect()
+    this.delayCounter = 0
 
     // Resume requests that were not completed before the disconnect
     for (let i = 0; this.requests.length; i++) {
