@@ -1655,7 +1655,7 @@ class Client {
         this.connecting = null;
       });
       this.client.on('close', e => this.reconnect());
-      this.client.on('error', e => this.reconnect());
+      this.client.on('error', e => console.log(`WebSocket Error: ${e}`));
       this.client.on('message', data => this.onMessage(data));
       setTimeout(() => {
         if (!this.connected) {
@@ -1691,8 +1691,8 @@ class Client {
         setTimeout(() => resolve(), t);
       })
     };
-    await delay(this.delay * Math.pow(2, this.delayCounter));
     this.delayCounter++;
+    await delay(this.delay * Math.pow(2, this.delayCounter));
     await this.reconn();
   }
   async reconn () {
@@ -1777,7 +1777,7 @@ class Client$1 extends client {
         this.connecting = null;
       };
       this.client.onclose = e => this.reconnect();
-      this.client.onerror = e => this.reconnect();
+      this.client.onerror = e => console.log(`WebSocket Error: ${e}`);
       this.client.onmessage = m => this.onMessage(m.data);
       setTimeout(() => {
         if (!this.connected) {

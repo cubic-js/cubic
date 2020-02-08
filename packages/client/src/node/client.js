@@ -62,7 +62,7 @@ class Client {
         this.connecting = null
       })
       this.client.on('close', e => this.reconnect())
-      this.client.on('error', e => this.reconnect())
+      this.client.on('error', e => console.log(`WebSocket Error: ${e}`))
       this.client.on('message', data => this.onMessage(data))
 
       // There's a chance the connection attempt gets "lost" when the API server

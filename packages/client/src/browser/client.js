@@ -18,7 +18,7 @@ class Client extends NodeClient {
         this.connecting = null
       }
       this.client.onclose = e => this.reconnect()
-      this.client.onerror = e => this.reconnect()
+      this.client.onerror = e => console.log(`WebSocket Error: ${e}`)
       this.client.onmessage = m => this.onMessage(m.data)
 
       // There's a chance the connection attempt gets "lost" when the API server
