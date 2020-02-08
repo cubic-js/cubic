@@ -113,8 +113,8 @@ class Client {
         setTimeout(() => resolve(), t)
       })
     }
+    this.delayCounter++ // Placed before to increase delay faster
     await delay(this.delay * Math.pow(2, this.delayCounter))
-    this.delayCounter++
     await this.reconn()
   }
 
