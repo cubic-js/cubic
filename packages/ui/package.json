@@ -30,7 +30,7 @@
     "sass-loader": "^8.0.0",
     "tween.js": "^16.6.0",
     "vue": "^2.6.10",
-    "vue-analytics": "^5.17.3",
+    "vue-analytics": "^5.22.1",
     "vue-loader": "^15.7.2",
     "vue-meta": "^2.3.1",
     "vue-observe-visibility": "^0.4.6",
@@ -50,7 +50,7 @@
   },
   "peerDependencies": {
     "cubic-api": "^3.2.3",
-    "cubic-client": "^3.2.1"
+    "cubic-client": "^3.2.4"
   },
   "description": "UI node for Cubic.",
   "license": "MIT",
