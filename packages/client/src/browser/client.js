@@ -1,34 +1,46 @@
 import NodeClient from '../node/client.js'
 
 class Client extends NodeClient {
-  setClient () {
+  async setClient () {
     const WS = WebSocket
+    const url = this.auth && this.auth.access_token
+      ? `${this.url}?bearer=${this.auth.access_token}`
+      : this.url
+    this.client = new WS(url)
+    this.client.onopen = () => {
+      this.state = this.states.connected
+      this.reconnectCounter = 0
+    }
+    this.client.onclose = () => {
+      this.state = this.states.disconnected
+      this.reconnect()
+    }
+    this.client.onerror = e => {
+      this.state = this.states.disconnected
+      this.reconnect()
+    }
+    this.client.onmessage = data => this.onMessage(data)
+
+    // There's a chance the connection attempt gets "lost" when the API server
+    // isn't up in time, so just retry if that happens.
     return new Promise(resolve => {
-      // Resolve the initial promise, even when reconnecting
-      if (!this.resolve) this.resolve = resolve
-
-      const url = this.auth && this.auth.access_token
-        ? `${this.url}?bearer=${this.auth.access_token}`
-        : this.url
-      this.client = new WS(url)
-      this.client.onopen = () => {
-        this.connected = true
-        this.resolve()
-        this.resolve = null
-        this.connecting = null
-      }
-      this.client.onclose = e => this.reconnect()
-      this.client.onerror = e => this.reconnect()
-      this.client.onmessage = m => this.onMessage(m.data)
-
-      // There's a chance the connection attempt gets "lost" when the API server
-      // isn't up in time, so just retry if that happens.
-      setTimeout(() => {
-        if (!this.connected) {
-          this.connected = true // reconnect won't run otherwise
-          this.reconnect()
+      setTimeout(async () => {
+        switch (this.state) {
+          case 'connecting':
+            await this.reconnect()
+            resolve()
+            break
+          case 'reconnecting':
+            await this.reconnect()
+            resolve()
+            break
+          case 'connected':
+            resolve()
+            break
+          default:
+            return this._connecting()
         }
-      }, 1000)
+      }, 500 + 500 * this.reconnectCounter)
     })
   }
 }

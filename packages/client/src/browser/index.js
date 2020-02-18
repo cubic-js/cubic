@@ -6,7 +6,7 @@ class Client extends NodeIndex {
   async connect () {
     this.connection = new Connection(this.options.api_url, this.options)
     this.connection.connect()
-    await this.connecting()
+    return this.connection._connecting()
   }
 }
 

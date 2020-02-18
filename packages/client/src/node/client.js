@@ -5,14 +5,21 @@ class Client {
   constructor (url, options) {
     this.url = url
     this.options = options
+    this.states = {
+      disconnected: 'disconnected',
+      connected: 'connected',
+      connecting: 'connecting',
+      reconnecting: 'reconnecting'
+    }
+    this.state = this.states.disconnected
     this.subscriptions = []
     this.queue = queue
     this.delay = options.delay || 500
-    this.delayCounter = 0
-    this.timeout = 1000 * 15
+    this.reconnectCounter = 0
+    this.reRequestCounter = 0
+    this.timeout = options.timeout || 1000 * 10
     this.requestIds = 1
     this.requests = []
-    this.connected = false
 
     // Init heartbeat check. If the heartbeat takes too long
     // we can assume the connection died without an error.
@@ -27,57 +34,134 @@ class Client {
    * Get Tokens and build client
    */
   async connect () {
-    return this.setConnection(this.setClient())
+    switch (this.state) {
+      case 'disconnected':
+      case 'reconnecting':
+      case 'connected':
+        this.setClient()
+        this.state = this.states.connecting
+        try {
+          await this._connecting()
+          return
+        } catch (e) {
+          return this.reconnect()
+        }
+      default:
+        break
+    }
+  }
+
+  close () {
+    // Browser WS clients may not have this function
+    if (this.client.removeAllListeners) {
+      this.client.removeAllListeners()
+    }
+    if (this.client.readyState === 1) {
+      this.client.close()
+    }
   }
 
   /**
-   * Helper function to deal with the connection state of the client.
-   * this.connecting = initial promise of connection
-   * this.resolve = resolve the promise above
-   * this.connected = does the client still think it's connected
+   * Helper function to get current connection state
    */
-  async setConnection (promise) {
-    if (!this.connecting) this.connecting = promise
-    return this.connecting
+  async _connecting () {
+    if (this.state === this.states.connected) return
+
+    return new Promise(resolve => {
+      let i = setInterval(() => {
+        if (this.state === this.states.connected) {
+          clearInterval(i)
+          resolve()
+        }
+      }, 50)
+    })
   }
 
   /**
    * WS client with currently stored tokens
    */
-  setClient () {
+  async setClient () {
+    const options = this.auth && this.auth.access_token ? {
+      headers: {
+        authorization: `bearer ${this.auth.access_token}`
+      }
+    } : {}
+    this.client = new WS(this.url, options)
+    this.client.on('open', () => {
+      this.state = this.states.connected
+      this.reconnectCounter = 0
+    })
+    this.client.on('close', () => {
+      this.state = this.states.disconnected
+      this.reconnect()
+    })
+    this.client.on('error', e => {
+      this.state = this.states.disconnected
+      this.reconnect()
+    })
+    this.client.on('message', data => this.onMessage(data))
+
+    // There's a chance the connection attempt gets "lost" when the API server
+    // isn't up in time, so just retry if that happens.
     return new Promise(resolve => {
-      // Resolve the initial promise, even when reconnecting
-      if (!this.resolve) this.resolve = resolve
-
-      const options = this.auth && this.auth.access_token ? {
-        headers: {
-          authorization: `bearer ${this.auth.access_token}`
+      setTimeout(async () => {
+        switch (this.state) {
+          case 'connecting':
+            await this.reconnect()
+            resolve()
+            break
+          case 'reconnecting':
+            await this.reconnect()
+            resolve()
+            break
+          case 'connected':
+            resolve()
+            break
+          default:
+            return this._connecting()
         }
-      } : {}
-      this.client = new WS(this.url, options)
-      this.client.on('open', () => {
-        this.connected = true
-        this.resolve()
-        this.resolve = null
-        this.connecting = null
-      })
-      this.client.on('close', e => this.reconnect())
-      this.client.on('error', e => this.reconnect())
-      this.client.on('message', data => this.onMessage(data))
-
-      // There's a chance the connection attempt gets "lost" when the API server
-      // isn't up in time, so just retry if that happens.
-      setTimeout(() => {
-        if (!this.connected) {
-          this.connected = true // reconnect won't run otherwise
-          this.reconnect()
-        }
-      }, 500)
+      }, 500 + 500 * this.reconnectCounter)
     })
   }
 
+  /**
+   * Reconnect if connection is lost or the server goes down.
+   */
+  async reconnect () {
+    if (this.state === this.states.reconnecting) return
+    this.state = this.states.reconnecting
+    this.reconnectCounter++
+    this.close()
+    await this.connect()
+    this.resumeRequests()
+    this.reSubscribe()
+  }
+
+  resumeRequests () {
+    for (let i = 0; this.requests.length; i++) {
+      const request = this.requests[0] // always take the first because we'll remove these at the end
+      const req = this._request(request.verb, request.query)
+      request.resolve(req)
+      this.requests.shift()
+    }
+  }
+
+  reSubscribe () {
+    for (const sub of this.subscriptions) {
+      this.client.send(JSON.stringify({
+        action: 'SUBSCRIBE',
+        room: sub.room
+      }))
+    }
+  }
+
   onMessage (data) {
+    this.state = this.states.connected
+    this.reconnectCounter = 0
     data = JSON.parse(data)
+
+    // Technically we receive a hello on handshake
+    // but connected state is set on all messages
 
     // Heartbeat
     if (typeof data === 'string' && data.startsWith('primus::ping::')) {
@@ -105,64 +189,18 @@ class Client {
   }
 
   /**
-   * Reconnect if connection is lost or the server goes down.
-   */
-  async reconnect () {
-    const delay = (t) => { // Helper function to await time-outed reconnect
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(), t)
-      })
-    }
-    await delay(this.delay * Math.pow(2, this.delayCounter))
-    this.delayCounter++
-    await this.reconn()
-  }
-
-  /**
-   * Actual reconnection logic
-   */
-  async reconn () {
-    // Dont' reconnect multiple times at once
-    if (!this.connected) return
-
-    // Browser WS clients may not have this function
-    if (this.client.removeAllListeners) {
-      this.client.removeAllListeners()
-    }
-    this.connected = false
-    await this.connect()
-    this.delayCounter = 0
-
-    // Resume requests that were not completed before the disconnect
-    for (let i = 0; this.requests.length; i++) {
-      const request = this.requests[0] // always take the first because we'll remove these at the end
-      const req = this.req(request.verb, request.query)
-      request.resolve(req)
-      this.requests.shift()
-    }
-
-    // Re-subscribe to rooms
-    for (const sub of this.subscriptions) {
-      this.client.send(JSON.stringify({
-        action: 'SUBSCRIBE',
-        room: sub.room
-      }))
-    }
-  }
-
-  /**
    * Send Request with Err Check
    */
   async request (verb, query) {
-    let res = await this.req(verb, query)
+    let res = await this._request(verb, query)
     return this.errCheck(res, verb, query)
   }
 
   /**
    * Actual Request Logic
    */
-  async req (verb, query) {
-    await this.connecting
+  async _request (verb, query) {
+    await this._connecting()
     return new Promise(resolve => {
       const id = this.requestIds++
       const payload = { action: verb, id }
@@ -190,9 +228,9 @@ class Client {
   async retry (res, verb, query) {
     let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay
     delay = isNaN(delay) ? this.delay : delay
-    let reres = await this.queue.delay(() => this.req(verb, query), delay * Math.pow(2, this.delayCounter), 1000 * 5, 'unshift')
-    this.delayCounter++
-    return this.errCheck(reres, verb, query)
+    let retry = await this.queue.delay(() => this._request(verb, query), delay * Math.pow(2, this.reRequestCounter), 1000 * 5, 'unshift')
+    this.reRequestCounter++
+    return this.errCheck(retry, verb, query)
   }
 
   /**
@@ -207,7 +245,7 @@ class Client {
     if (res.body.error) {
       throw res
     } else {
-      this.delayCounter = 0
+      this.reRequestCounter = 0
       return res.body
     }
   }
