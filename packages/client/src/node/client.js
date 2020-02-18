@@ -106,19 +106,16 @@ class Client {
     return new Promise(resolve => {
       setTimeout(async () => {
         switch (this.state) {
+          case 'disconnected':
+          case 'reconnecting':
           case 'connecting':
             await this.reconnect()
             resolve()
             break
-          case 'reconnecting':
-            await this.reconnect()
-            resolve()
-            break
           case 'connected':
+          default:
             resolve()
             break
-          default:
-            return this._connecting()
         }
       }, 500 + 500 * this.reconnectCounter)
     })
