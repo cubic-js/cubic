@@ -33,6 +33,9 @@ We provide all of these features regardless of which http/ws server you choose t
 <br>
 
 ## Usage
+Before you get started, make sure you have [redis](https://redis.io/) and
+[mongodb](https://www.mongodb.com/download-center?jmp=nav#community) running on their default ports.<br>
+
 To install cubic to your project:
 ```sh
 npm init
