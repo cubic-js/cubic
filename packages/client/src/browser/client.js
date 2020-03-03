@@ -40,7 +40,7 @@ class Client extends NodeClient {
           default:
             return this._connecting()
         }
-      }, this.connectionTimeout * Math.pow(2, this.reconnectCounter))
+      }, 500)
     })
   }
 }

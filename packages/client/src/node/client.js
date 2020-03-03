@@ -118,7 +118,7 @@ class Client {
             resolve()
             break
         }
-      }, this.connectionTimeout * Math.pow(2, this.reconnectCounter))
+      }, 500)
     })
   }
 
@@ -128,6 +128,7 @@ class Client {
   async reconnect () {
     if (this.state === this.states.reconnecting) return
     this.state = this.states.reconnecting
+    if (this.reconnectCounter > 0) await new Promise(resolve => setTimeout(resolve, this.connectionTimeout * Math.pow(2, this.reconnectCounter - 1)))
     this.reconnectCounter++
     this.close()
     await this.connect()
