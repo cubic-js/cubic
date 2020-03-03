@@ -16,14 +16,14 @@ describe('Client', function () {
 
   it('should connect to API node with default config', async function () {
     global.clientDefault = new Client()
-    await clientDefault.connecting()
+    await clientDefault.connection._connecting()
   })
 
   it('should connect to API node with registered user', async function () {
     await auth.init()
     const user_key = await auth.getUserKey()
     global.clientAuth = new Client({ user_key, user_secret: 'test' })
-    await clientAuth.connecting()
+    await clientAuth.connection._connecting()
   })
 
   // There's a weird bug where the old cubic instance wouldn't close, or at least

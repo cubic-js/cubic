@@ -11,6 +11,7 @@ class WsListener {
   }
 
   default (spark) {
+    spark.write('Cubic hello!') // Tell client we're connected
     const { user } = spark.request
     user.isRoot = () => user.scp.includes('write_root')
     const RESTful = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']

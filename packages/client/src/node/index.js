@@ -21,27 +21,21 @@ class Client {
     this.connect()
   }
 
-  /**
-   * Connect by getting tokens and setting up clients
-   */
   async connect () {
     this.connection = new Connection(this.options.api_url, this.options)
     this.connection.connect()
-    await this.connecting()
+    return this.connection._connecting()
   }
 
-  /**
-   * Helper function to get current connection state
-   */
-  async connecting () {
-    return this.connection.connecting
+  close () {
+    this.connection.close()
   }
 
   /**
    * Subscribe to certain endpoints
    */
   async subscribe (room, fn) {
-    await this.connecting()
+    await this.connection._connecting()
     this.connection.client.send(JSON.stringify({
       action: 'SUBSCRIBE',
       room
@@ -53,7 +47,7 @@ class Client {
    * Unsubscribe from endpoints again
    */
   async unsubscribe (room) {
-    await this.connecting()
+    await this.connection._connecting()
     this.connection.client.send(JSON.stringify({
       action: 'UNSUBSCRIBE',
       room
@@ -65,7 +59,7 @@ class Client {
    * RESTful methods for manual interaction
    */
   async query (verb, query) {
-    await this.connecting()
+    await this.connection._connecting()
     return this.connection.request(verb, query)
   }
 
@@ -109,7 +103,7 @@ class Client {
    * Change user at runtime. Automatically reloads connection.
    */
   async login (user, secret) {
-    await this.connecting()
+    await this.connection._connecting()
     this.connection.auth.options.user_key = user
     this.connection.auth.options.user_secret = secret
     return this.connection.reconnect()
@@ -120,7 +114,7 @@ class Client {
    * to this package.
    */
   async setRefreshToken (token) {
-    await this.connecting()
+    await this.connection._connecting()
     this.connection.auth.refresh_token = token
   }
 
@@ -137,7 +131,7 @@ class Client {
    * Manually set access token.
    */
   async setAccessToken (token) {
-    await this.connecting()
+    await this.connection._connecting()
     this.connection.auth.access_token = token
     await this.connection.reconnect()
   }

@@ -9,7 +9,7 @@ class Connection extends Client {
       this.auth = new Auth(options.auth_url, {
         user_key: options.user_key,
         user_secret: options.user_secret,
-        delay: 100
+        requestDelay: 100
       })
       this.auth.connect()
     }
@@ -19,11 +19,22 @@ class Connection extends Client {
    * Get Tokens and build client
    */
   async connect () {
-    const authAndConnect = async () => {
-      await this.auth.authorize()
-      await this.setClient()
+    await this.auth.authorize()
+    switch (this.state) {
+      case 'disconnected':
+      case 'reconnecting':
+      case 'connected':
+        this.setClient()
+        this.state = this.states.connecting
+        try {
+          await this._connecting()
+          return
+        } catch (e) {
+          return this.reconnect()
+        }
+      default:
+        break
     }
-    return this.setConnection(authAndConnect())
   }
 
   /**
@@ -64,7 +75,7 @@ class Connection extends Client {
     }
 
     // No Error
-    this.delayCounter = 0
+    this.reRequestCounter = 0
     return res.body
   }
 }

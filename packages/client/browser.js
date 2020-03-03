@@ -1618,14 +1618,22 @@ class Client {
   constructor (url, options) {
     this.url = url;
     this.options = options;
+    this.states = {
+      disconnected: 'disconnected',
+      connected: 'connected',
+      connecting: 'connecting',
+      reconnecting: 'reconnecting'
+    };
+    this.state = this.states.disconnected;
     this.subscriptions = [];
     this.queue = lib;
-    this.delay = options.delay || 500;
-    this.delayCounter = 0;
-    this.timeout = 1000 * 15;
+    this.requestDelay = options.requestDelay || options.delay || 500;
+    this.connectionTimeout = options.connectionTimeout || 500;
+    this.reconnectCounter = 0;
+    this.reRequestCounter = 0;
+    this.timeout = options.timeout || 1000 * 10;
     this.requestIds = 1;
     this.requests = [];
-    this.connected = false;
     setInterval(() => {
       if (this.lastHeartbeat && new Date() - this.lastHeartbeat > this.timeout) {
         this.reconnect();
@@ -1633,39 +1641,104 @@ class Client {
     }, this.timeout);
   }
   async connect () {
-    return this.setConnection(this.setClient())
+    switch (this.state) {
+      case 'disconnected':
+      case 'reconnecting':
+      case 'connected':
+        this.setClient();
+        this.state = this.states.connecting;
+        try {
+          await this._connecting();
+          return
+        } catch (e) {
+          return this.reconnect()
+        }
+    }
   }
-  async setConnection (promise) {
-    if (!this.connecting) this.connecting = promise;
-    return this.connecting
+  close () {
+    if (this.client.removeAllListeners) {
+      this.client.removeAllListeners();
+    }
+    if (this.client.readyState === 1) {
+      this.client.close();
+    }
   }
-  setClient () {
+  async _connecting () {
+    if (this.state === this.states.connected) return
     return new Promise(resolve => {
-      if (!this.resolve) this.resolve = resolve;
-      const options = this.auth && this.auth.access_token ? {
-        headers: {
-          authorization: `bearer ${this.auth.access_token}`
+      let i = setInterval(() => {
+        if (this.state === this.states.connected) {
+          clearInterval(i);
+          resolve();
         }
-      } : {};
-      this.client = new WS(this.url, options);
-      this.client.on('open', () => {
-        this.connected = true;
-        this.resolve();
-        this.resolve = null;
-        this.connecting = null;
-      });
-      this.client.on('close', e => this.reconnect());
-      this.client.on('error', e => this.reconnect());
-      this.client.on('message', data => this.onMessage(data));
-      setTimeout(() => {
-        if (!this.connected) {
-          this.connected = true;
-          this.reconnect();
-        }
-      }, 500);
+      }, 50);
     })
   }
+  async setClient () {
+    const options = this.auth && this.auth.access_token ? {
+      headers: {
+        authorization: `bearer ${this.auth.access_token}`
+      }
+    } : {};
+    this.client = new WS(this.url, options);
+    this.client.on('open', () => {
+      this.state = this.states.connected;
+      this.reconnectCounter = 0;
+    });
+    this.client.on('close', () => {
+      this.state = this.states.disconnected;
+      this.reconnect();
+    });
+    this.client.on('error', e => {
+      this.state = this.states.disconnected;
+      this.reconnect();
+    });
+    this.client.on('message', data => this.onMessage(data));
+    return new Promise(resolve => {
+      setTimeout(async () => {
+        switch (this.state) {
+          case 'disconnected':
+          case 'reconnecting':
+          case 'connecting':
+            await this.reconnect();
+            resolve();
+            break
+          case 'connected':
+          default:
+            resolve();
+            break
+        }
+      }, this.connectionTimeout * Math.pow(2, this.reconnectCounter));
+    })
+  }
+  async reconnect () {
+    if (this.state === this.states.reconnecting) return
+    this.state = this.states.reconnecting;
+    this.reconnectCounter++;
+    this.close();
+    await this.connect();
+    this.resumeRequests();
+    this.reSubscribe();
+  }
+  resumeRequests () {
+    for (let i = 0; this.requests.length; i++) {
+      const request = this.requests[0];
+      const req = this._request(request.verb, request.query);
+      request.resolve(req);
+      this.requests.shift();
+    }
+  }
+  reSubscribe () {
+    for (const sub of this.subscriptions) {
+      this.client.send(JSON.stringify({
+        action: 'SUBSCRIBE',
+        room: sub.room
+      }));
+    }
+  }
   onMessage (data) {
+    this.state = this.states.connected;
+    this.reconnectCounter = 0;
     data = JSON.parse(data);
     if (typeof data === 'string' && data.startsWith('primus::ping::')) {
       this.lastHeartbeat = new Date();
@@ -1685,43 +1758,12 @@ class Client {
       }
     }
   }
-  async reconnect () {
-    const delay = (t) => {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(), t);
-      })
-    };
-    await delay(this.delay * Math.pow(2, this.delayCounter));
-    this.delayCounter++;
-    await this.reconn();
-  }
-  async reconn () {
-    if (!this.connected) return
-    if (this.client.removeAllListeners) {
-      this.client.removeAllListeners();
-    }
-    this.connected = false;
-    await this.connect();
-    this.delayCounter = 0;
-    for (let i = 0; this.requests.length; i++) {
-      const request = this.requests[0];
-      const req = this.req(request.verb, request.query);
-      request.resolve(req);
-      this.requests.shift();
-    }
-    for (const sub of this.subscriptions) {
-      this.client.send(JSON.stringify({
-        action: 'SUBSCRIBE',
-        room: sub.room
-      }));
-    }
-  }
   async request (verb, query) {
-    let res = await this.req(verb, query);
+    let res = await this._request(verb, query);
     return this.errCheck(res, verb, query)
   }
-  async req (verb, query) {
-    await this.connecting;
+  async _request (verb, query) {
+    await this._connecting();
     return new Promise(resolve => {
       const id = this.requestIds++;
       const payload = { action: verb, id };
@@ -1741,11 +1783,11 @@ class Client {
     })
   }
   async retry (res, verb, query) {
-    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay;
-    delay = isNaN(delay) ? this.delay : delay;
-    let reres = await this.queue.delay(() => this.req(verb, query), delay * Math.pow(2, this.delayCounter), 1000 * 5, 'unshift');
-    this.delayCounter++;
-    return this.errCheck(reres, verb, query)
+    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.requestDelay;
+    delay = isNaN(delay) ? this.requestDelay : delay;
+    let retry = await this.queue.delay(() => this._request(verb, query), delay * Math.pow(2, this.reRequestCounter), 1000 * 5, 'unshift');
+    this.reRequestCounter++;
+    return this.errCheck(retry, verb, query)
   }
   async errCheck (res, verb, query) {
     if (typeof res === 'string' && res.includes('timed out')) {
@@ -1754,7 +1796,7 @@ class Client {
     if (res.body.error) {
       throw res
     } else {
-      this.delayCounter = 0;
+      this.reRequestCounter = 0;
       return res.body
     }
   }
@@ -1762,29 +1804,43 @@ class Client {
 var client = Client;
 
 class Client$1 extends client {
-  setClient () {
+  async setClient () {
     const WS = WebSocket;
+    const url = this.auth && this.auth.access_token
+      ? `${this.url}?bearer=${this.auth.access_token}`
+      : this.url;
+    this.client = new WS(url);
+    this.client.onopen = () => {
+      this.state = this.states.connected;
+      this.reconnectCounter = 0;
+    };
+    this.client.onclose = () => {
+      this.state = this.states.disconnected;
+      this.reconnect();
+    };
+    this.client.onerror = e => {
+      this.state = this.states.disconnected;
+      this.reconnect();
+    };
+    this.client.onmessage = data => this.onMessage(data);
     return new Promise(resolve => {
-      if (!this.resolve) this.resolve = resolve;
-      const url = this.auth && this.auth.access_token
-        ? `${this.url}?bearer=${this.auth.access_token}`
-        : this.url;
-      this.client = new WS(url);
-      this.client.onopen = () => {
-        this.connected = true;
-        this.resolve();
-        this.resolve = null;
-        this.connecting = null;
-      };
-      this.client.onclose = e => this.reconnect();
-      this.client.onerror = e => this.reconnect();
-      this.client.onmessage = m => this.onMessage(m.data);
-      setTimeout(() => {
-        if (!this.connected) {
-          this.connected = true;
-          this.reconnect();
+      setTimeout(async () => {
+        switch (this.state) {
+          case 'connecting':
+            await this.reconnect();
+            resolve();
+            break
+          case 'reconnecting':
+            await this.reconnect();
+            resolve();
+            break
+          case 'connected':
+            resolve();
+            break
+          default:
+            return this._connecting()
         }
-      }, 1000);
+      }, this.connectionTimeout * Math.pow(2, this.reconnectCounter));
     })
   }
 }
@@ -1833,7 +1889,7 @@ class Auth extends client {
       }
       return this.retry(res, verb, query)
     } else {
-      this.delayCounter = 0;
+      this.reRequestCounter = 0;
       return res.body
     }
   }
@@ -1861,17 +1917,26 @@ class Connection extends client {
       this.auth = new auth(options.auth_url, {
         user_key: options.user_key,
         user_secret: options.user_secret,
-        delay: 100
+        requestDelay: 100
       });
       this.auth.connect();
     }
   }
   async connect () {
-    const authAndConnect = async () => {
-      await this.auth.authorize();
-      await this.setClient();
-    };
-    return this.setConnection(authAndConnect())
+    await this.auth.authorize();
+    switch (this.state) {
+      case 'disconnected':
+      case 'reconnecting':
+      case 'connected':
+        this.setClient();
+        this.state = this.states.connecting;
+        try {
+          await this._connecting();
+          return
+        } catch (e) {
+          return this.reconnect()
+        }
+    }
   }
   async errCheck (res = {}, verb, query) {
     if (typeof res === 'string' && res.includes('timed out')) {
@@ -1895,7 +1960,7 @@ class Connection extends client {
     if (parseInt(res.statusCode.toString()[0]) > 3) {
       throw new serverError(res, query)
     }
-    this.delayCounter = 0;
+    this.reRequestCounter = 0;
     return res.body
   }
 }
@@ -1908,7 +1973,7 @@ class Connection$1 extends connection {
     this.auth = new Auth$1(options.auth_url, {
       user_key: options.user_key,
       user_secret: options.user_secret,
-      delay: 100
+      requestDelay: 100
     });
     this.auth.connect();
   }
@@ -1935,13 +2000,13 @@ class Client$2 {
   async connect () {
     this.connection = new connection(this.options.api_url, this.options);
     this.connection.connect();
-    await this.connecting();
+    return this.connection._connecting()
   }
-  async connecting () {
-    return this.connection.connecting
+  close () {
+    this.connection.close();
   }
   async subscribe (room, fn) {
-    await this.connecting();
+    await this.connection._connecting();
     this.connection.client.send(JSON.stringify({
       action: 'SUBSCRIBE',
       room
@@ -1949,7 +2014,7 @@ class Client$2 {
     this.connection.subscriptions.push({ room, fn });
   }
   async unsubscribe (room) {
-    await this.connecting();
+    await this.connection._connecting();
     this.connection.client.send(JSON.stringify({
       action: 'UNSUBSCRIBE',
       room
@@ -1957,7 +2022,7 @@ class Client$2 {
     this.connection.subscriptions = this.connection.subscriptions.filter(s => s.room !== room);
   }
   async query (verb, query) {
-    await this.connecting();
+    await this.connection._connecting();
     return this.connection.request(verb, query)
   }
   get (query) {
@@ -1992,20 +2057,20 @@ class Client$2 {
     return this.query('DELETE', query)
   }
   async login (user, secret) {
-    await this.connecting();
+    await this.connection._connecting();
     this.connection.auth.options.user_key = user;
     this.connection.auth.options.user_secret = secret;
     return this.connection.reconnect()
   }
   async setRefreshToken (token) {
-    await this.connecting();
+    await this.connection._connecting();
     this.connection.auth.refresh_token = token;
   }
   async getRefreshToken () {
     return this.connection.auth.refresh_token
   }
   async setAccessToken (token) {
-    await this.connecting();
+    await this.connection._connecting();
     this.connection.auth.access_token = token;
     await this.connection.reconnect();
   }
@@ -2019,7 +2084,7 @@ class Client$3 extends node {
   async connect () {
     this.connection = new Connection$1(this.options.api_url, this.options);
     this.connection.connect();
-    await this.connecting();
+    return this.connection._connecting()
   }
 }
 
