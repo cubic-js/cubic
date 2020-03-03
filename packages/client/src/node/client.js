@@ -14,7 +14,8 @@ class Client {
     this.state = this.states.disconnected
     this.subscriptions = []
     this.queue = queue
-    this.delay = options.delay || 500
+    this.requestDelay = options.requestDelay || options.delay || 500 // options.delay for backwards compatible reasons
+    this.connectionTimeout = options.connectionTimeout || 500
     this.reconnectCounter = 0
     this.reRequestCounter = 0
     this.timeout = options.timeout || 1000 * 10
@@ -117,7 +118,7 @@ class Client {
             resolve()
             break
         }
-      }, 500 + 500 * this.reconnectCounter)
+      }, this.connectionTimeout * Math.pow(2, this.reconnectCounter))
     })
   }
 
@@ -223,8 +224,8 @@ class Client {
    * Retry failed requests
    */
   async retry (res, verb, query) {
-    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.delay
-    delay = isNaN(delay) ? this.delay : delay
+    let delay = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : this.requestDelay
+    delay = isNaN(delay) ? this.requestDelay : delay
     let retry = await this.queue.delay(() => this._request(verb, query), delay * Math.pow(2, this.reRequestCounter), 1000 * 5, 'unshift')
     this.reRequestCounter++
     return this.errCheck(retry, verb, query)
