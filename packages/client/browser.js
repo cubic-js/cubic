@@ -1708,12 +1708,13 @@ class Client {
             resolve();
             break
         }
-      }, this.connectionTimeout * Math.pow(2, this.reconnectCounter));
+      }, 500);
     })
   }
   async reconnect () {
     if (this.state === this.states.reconnecting) return
     this.state = this.states.reconnecting;
+    await new Promise(resolve => setTimeout(resolve, this.connectionTimeout * Math.pow(2, this.reconnectCounter)));
     this.reconnectCounter++;
     this.close();
     await this.connect();
@@ -1822,7 +1823,7 @@ class Client$1 extends client {
       this.state = this.states.disconnected;
       this.reconnect();
     };
-    this.client.onmessage = data => this.onMessage(data);
+    this.client.onmessage = m => this.onMessage(m.data);
     return new Promise(resolve => {
       setTimeout(async () => {
         switch (this.state) {
@@ -1840,7 +1841,7 @@ class Client$1 extends client {
           default:
             return this._connecting()
         }
-      }, this.connectionTimeout * Math.pow(2, this.reconnectCounter));
+      }, 500);
     })
   }
 }

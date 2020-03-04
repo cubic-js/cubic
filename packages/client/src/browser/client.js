@@ -19,7 +19,7 @@ class Client extends NodeClient {
       this.state = this.states.disconnected
       this.reconnect()
     }
-    this.client.onmessage = data => this.onMessage(data)
+    this.client.onmessage = m => this.onMessage(m.data)
 
     // There's a chance the connection attempt gets "lost" when the API server
     // isn't up in time, so just retry if that happens.
