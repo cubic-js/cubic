@@ -46,8 +46,22 @@ class Connection {
     if (typeof data === 'string' && data.startsWith('primus::ping::')) {
       this.lastHeartbeat = new Date()
       this.connection.send(JSON.stringify(data.replace('ping', 'pong')))
-      console.log(`sending ${JSON.stringify(data.replace('ping', 'pong'))}`)
     }
+
+    // Request
+    // TODO: Implement
+    else if (data.action === 'RES' && data.id) {
+
+    }
+
+    // Publish
+    // TODO: Implement
+    else if (data.action === 'PUBLISH') {
+
+    }
+
+    // Unknown message type
+    else console.log(`Couldn't process message: ${data}`)
   }
 }
 
