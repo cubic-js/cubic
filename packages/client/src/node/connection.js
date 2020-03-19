@@ -9,9 +9,9 @@ class Connection {
   constructor (url, options) {
     this.url = url
     this.options = options
-    this.timeout = 1000 * 30 || options.timeout
+    this.timeout = 1000 * 15 || options.timeout
     // this.request = { delay: this.options.requestDelay || 500, counter: 0 }
-    // this.reconnect = { delay: this.options.reconnectDelay || 500, counter: 0 }
+    this.reconnect = { delay: this.options.reconnectDelay || 500, counter: 0 }
     this.lastHeartbeat = new Date()
     this.mutex = new Mutex()
 
@@ -28,16 +28,30 @@ class Connection {
     release()
   }
 
+  async _reconnect () {
+    // Return if connection is connecting or already open
+    if (this.connection && this.connection.readyState <= 1) return
+    const release = await this.mutex.acquire()
+
+    // Wait reconnection delay
+    await new Promise((resolve) => setTimeout(() => resolve(), this.reconnect.delay * Math.pow(2, this.reconnect.counter)))
+    this.reconnect.counter++
+    await this._createConnection()
+
+    release()
+  }
+
   /**
    * Create WebSocket connection
    */
   async _createConnection () {
     const wss = new WebSocket(this.url)
-    wss.onopen = () => console.log('connection open')
+    wss.onopen = () => console.log('Connection open')
     wss.onerror = (error) => console.log(`WebSocket Error: ${error.message}`)
-    // TODO: Implement reconnect https://github.com/websockets/ws/blob/HEAD/doc/ws.md#event-close-1
-    // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
-    wss.onclose = (close) => console.log(`connection closed with code ${close.code}`)
+    wss.onclose = (close) => {
+      console.log(`Connection closed with code ${close.code}. Reconnecting...`)
+      this._reconnect()
+    }
     wss.onmessage = (message) => this._onMessage(message.data)
     this.connection = wss
   }
@@ -47,12 +61,13 @@ class Connection {
    */
   async _onMessage (data) {
     data = JSON.parse(data)
-    console.log(`connection received message: ${data}`)
+    console.log(`Connection received message: ${data}`)
 
     // Heartbeat
     if (typeof data === 'string' && data.startsWith('primus::ping::')) {
       this.lastHeartbeat = new Date()
       this.connection.send(JSON.stringify(data.replace('ping', 'pong')))
+      this.reconnect.counter = 0 // Assume stable connection if heartbeat is received
     }
 
     // Request
