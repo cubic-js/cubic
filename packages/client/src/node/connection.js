@@ -1,5 +1,6 @@
 const WebSocket = require('isomorphic-ws')
 const Mutex = require('async-mutex').Mutex
+const queue = require('async-delay-queue')
 
 // Pseudo helper enum for Websocket states
 const state = {
@@ -18,12 +19,13 @@ class Connection {
     this.url = url
     this.options = options
     this.timeout = 1000 * 30 || options.timeout
-    // this.request = { delay: this.options.requestDelay || 500, counter: 0 }
+    this.req = { delay: this.options.requestDelay || 500, counter: 0 }
     this.reconnect = { delay: this.options.reconnectDelay || 500, counter: 0 }
 
     this.lastHeartbeat = new Date()
     this.requests = []
     this.requestIds = 1
+    this.queue = queue
     this.mutex = new Mutex()
 
     // Heartbeat check. If the heartbeat takes too long we can assume the connection died.
@@ -54,7 +56,7 @@ class Connection {
    */
   async request (verb, query) {
     await this.awaitConnection()
-    return new Promise((resolve) => {
+    const res = await new Promise((resolve) => {
       const id = this.requestIds++
       const payload = { action: verb, id }
       if (typeof query === 'string') payload.url = query
@@ -71,6 +73,18 @@ class Connection {
         this.client.emit('error', err)
       }
     })
+    return this._errCheck(res, verb, query)
+  }
+
+  /**
+   * Retry a failed request
+   */
+  async _retry (res, verb, query) {
+    const ratelimit = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : null
+    const delay = isNaN(ratelimit) ? this.req.delay : ratelimit
+    const retry = this.queue.delay(() => this.request(verb, query), delay * Math.pow(2, this.req.counter), 1000 * 5, 'unshift')
+    this.req.counter++
+    return retry
   }
 
   /**
@@ -135,6 +149,24 @@ class Connection {
 
     // Unknown message type
     else console.log(`Couldn't process message`)
+  }
+
+  /**
+   * Handle error responses.
+   * It's expected that you override this in a child class for more fine-grained error control.
+   * Make sure to reset the delay counter!
+   */
+  async _errCheck (res, verb, query) {
+    // Retry on timeout
+    if (typeof res === 'string' && res.includes('timed out')) {
+      return this._retry(res, verb, query)
+    }
+
+    if (res.body.error) throw res
+    else {
+      this.req.counter = 0
+      return res.body
+    }
   }
 }
 
