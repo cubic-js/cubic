@@ -15,7 +15,7 @@ class Connection {
   }
 
   async connect () {
-    const release = await this.mutex.aquire()
+    const release = await this.mutex.acquire()
     await this._createConnection()
     release()
   }
@@ -29,8 +29,8 @@ class Connection {
     wss.onerror = (error) => console.log(`WebSocket Error: ${error.message}`) // https://developer.mozilla.org/en-US/docs/Web/API/ErrorEvent
     // TODO: Implement reconnect https://github.com/websockets/ws/blob/HEAD/doc/ws.md#event-close-1
     // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
-    wss.onclose = (close) => {}
-    wss.onmessage = (message) => console.log(message.data) // https://developer.mozilla.org/de/docs/Web/API/MessageEvent
+    wss.onclose = (close) => console.log(`connection closed with code ${close.code}`)
+    wss.onmessage = (message) => console.log(`connection received message: ${message.data}`) // https://developer.mozilla.org/de/docs/Web/API/MessageEvent
     this.connection = wss
   }
 }
