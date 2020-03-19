@@ -1,5 +1,6 @@
-const Connection = require('./connection.js')
-
+/**
+ * CLient API
+ */
 class Client {
   constructor (options) {
     this.options = {
@@ -17,130 +18,79 @@ class Client {
     let auth = this.options.auth_url
     this.options.api_url = api[api.length - 1] === '/' ? api.slice(0, -1) : api
     this.options.auth_url = auth[auth.length - 1] === '/' ? auth.slice(0, -1) : auth
-
-    this.connect()
-  }
-
-  async connect () {
-    this.connection = new Connection(this.options.api_url, this.options)
-    this.connection.connect()
-    return this.connection._connecting()
-  }
-
-  close () {
-    this.connection.close()
   }
 
   /**
    * Subscribe to certain endpoints
+   * TODO: Implement
    */
   async subscribe (room, fn) {
-    await this.connection._connecting()
-    this.connection.client.send(JSON.stringify({
-      action: 'SUBSCRIBE',
-      room
-    }))
-    this.connection.subscriptions.push({ room, fn })
   }
 
   /**
    * Unsubscribe from endpoints again
+   * TODO: Implement
    */
   async unsubscribe (room) {
-    await this.connection._connecting()
-    this.connection.client.send(JSON.stringify({
-      action: 'UNSUBSCRIBE',
-      room
-    }))
-    this.connection.subscriptions = this.connection.subscriptions.filter(s => s.room !== room)
   }
 
   /**
    * RESTful methods for manual interaction
+   * TODO: Implement
    */
   async query (verb, query) {
-    await this.connection._connecting()
-    return this.connection.request(verb, query)
   }
 
   get (query) {
-    return this.query('GET', query)
   }
 
   post (url, body) {
-    let query = {
-      url: url,
-      body: body
-    }
-    return this.query('POST', query)
   }
 
   put (url, body) {
-    let query = {
-      url: url,
-      body: body
-    }
-    return this.query('PUT', query)
   }
 
   patch (url, body) {
-    let query = {
-      url: url,
-      body: body
-    }
-    return this.query('PATCH', query)
   }
 
   delete (url, body) {
-    let query = {
-      url: url,
-      body: body
-    }
-    return this.query('DELETE', query)
   }
 
   /**
    * Change user at runtime. Automatically reloads connection.
+   * TODO: Implement
    */
   async login (user, secret) {
-    await this.connection._connecting()
-    this.connection.auth.options.user_key = user
-    this.connection.auth.options.user_secret = secret
-    return this.connection.reconnect()
   }
 
   /**
-   * Manually set refresh token. This way user credentials won't be exposed
-   * to this package.
+   * Manually set refresh token. This way user credentials won't be exposed to this package.
+   * TODO: Implement
    */
   async setRefreshToken (token) {
-    await this.connection._connecting()
-    this.connection.auth.refresh_token = token
   }
 
   /**
    * Retrieve current refresh token. Will await any existing authentication
    * processes. Useful if the initial login can be done through user/pass but
    * the refresh token needs to be stored for subsequent logins.
+   * TODO: Implement
    */
   async getRefreshToken () {
-    return this.connection.auth.refresh_token
   }
 
   /**
    * Manually set access token.
+   * TODO: Implement
    */
   async setAccessToken (token) {
-    await this.connection._connecting()
-    this.connection.auth.access_token = token
-    await this.connection.reconnect()
   }
 
   /**
    * Retrieve current access token.
+   * TODO: Implement
    */
   async getAccessToken () {
-    return this.connection.auth.access_token
   }
 }
 
