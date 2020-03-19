@@ -9,16 +9,15 @@ class Connection {
   constructor (url, options) {
     this.url = url
     this.options = options
-    this.timeout = 1000 * 15 || options.timeout
+    this.timeout = 1000 * 30 || options.timeout
     // this.request = { delay: this.options.requestDelay || 500, counter: 0 }
     this.reconnect = { delay: this.options.reconnectDelay || 500, counter: 0 }
     this.lastHeartbeat = new Date()
     this.mutex = new Mutex()
 
     // Heartbeat check. If the heartbeat takes too long we can assume the connection died.
-    // TODO: Implement
-    setInterval(() => {
-      if (new Date() - this.lastHeartbeat > this.timeout) {}
+    setInterval(async () => {
+      if (new Date() - this.lastHeartbeat > this.timeout && this.connection && this.connection.readyState === 1) this.connection.close(1001)
     }, this.timeout)
   }
 
@@ -28,6 +27,9 @@ class Connection {
     release()
   }
 
+  /**
+   * Reconnection logic
+   */
   async _reconnect () {
     // Return if connection is connecting or already open
     if (this.connection && this.connection.readyState <= 1) return
@@ -49,8 +51,8 @@ class Connection {
     wss.onopen = () => console.log('Connection open')
     wss.onerror = (error) => console.log(`WebSocket Error: ${error.message}`)
     wss.onclose = (close) => {
-      console.log(`Connection closed with code ${close.code}. Reconnecting...`)
-      this._reconnect()
+      console.log(`Connection closed with code ${close.code}.`)
+      if (close.code !== 1000) this._reconnect() // Not closed deliberately
     }
     wss.onmessage = (message) => this._onMessage(message.data)
     this.connection = wss
