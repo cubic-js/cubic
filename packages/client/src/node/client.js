@@ -10,6 +10,10 @@ class Client {
     this.api = new API(this.options.api_url, this.options)
     this.api.connect()
   }
+
+  async query (verb, query) {
+    return this.api.request(verb, query)
+  }
 }
 
 module.exports = Client

@@ -41,24 +41,25 @@ class Interface {
 
   /**
    * RESTful methods for manual interaction
-   * TODO: Implement
    */
-  async query (verb, query) {
-  }
-
   get (query) {
+    return this.client.query('GET', query)
   }
 
   post (url, body) {
+    return this.client.query('POST', { url, body })
   }
 
   put (url, body) {
+    return this.client.query('PUT', { url, body })
   }
 
   patch (url, body) {
+    return this.client.query('PATCH', { url, body })
   }
 
   delete (url, body) {
+    return this.client.query('DELETE', { url, body })
   }
 
   /**

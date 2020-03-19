@@ -20,7 +20,10 @@ class Connection {
     this.timeout = 1000 * 30 || options.timeout
     // this.request = { delay: this.options.requestDelay || 500, counter: 0 }
     this.reconnect = { delay: this.options.reconnectDelay || 500, counter: 0 }
+
     this.lastHeartbeat = new Date()
+    this.requests = []
+    this.requestIds = 1
     this.mutex = new Mutex()
 
     // Heartbeat check. If the heartbeat takes too long we can assume the connection died.
@@ -39,7 +42,35 @@ class Connection {
    * Helper function to wait for connection to go up
    */
   async awaitConnection () {
-    while (true) if (this.connection.readyState === state.OPEN) return
+    const poll = (resolve) => {
+      if (this.connection && this.connection.readyState === state.OPEN) resolve()
+      else setTimeout(_ => poll(resolve), 100)
+    }
+    return new Promise(poll)
+  }
+
+  /**
+   * Make a request
+   */
+  async request (verb, query) {
+    await this.awaitConnection()
+    return new Promise((resolve) => {
+      const id = this.requestIds++
+      const payload = { action: verb, id }
+      if (typeof query === 'string') payload.url = query
+      else {
+        payload.url = query.url
+        payload.body = query.body
+      }
+
+      this.requests.push({ id, resolve, verb, query })
+      try {
+        this.connection.send(JSON.stringify(payload))
+      } catch (err) {
+        this.requests.pop()
+        this.client.emit('error', err)
+      }
+    })
   }
 
   /**
@@ -78,7 +109,7 @@ class Connection {
    */
   async _onMessage (data) {
     data = JSON.parse(data)
-    console.log(`Connection received message: ${data}`)
+    console.log(`Connection received message: ${JSON.stringify(data)}`)
 
     // Heartbeat
     if (typeof data === 'string' && data.startsWith('primus::ping::')) {
@@ -88,9 +119,12 @@ class Connection {
     }
 
     // Request
-    // TODO: Implement
     else if (data.action === 'RES' && data.id) {
-
+      const request = this.requests.find(r => r.id === data.id)
+      if (request) {
+        this.requests = this.requests.filter(r => r.id === data.id)
+        request.resolve(data)
+      }
     }
 
     // Publish
@@ -100,7 +134,7 @@ class Connection {
     }
 
     // Unknown message type
-    else console.log(`Couldn't process message: ${data}`)
+    else console.log(`Couldn't process message`)
   }
 }
 
