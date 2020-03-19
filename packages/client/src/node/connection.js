@@ -157,7 +157,7 @@ class Connection {
    * Make sure to reset the delay counter!
    */
   async _errCheck (res, verb, query) {
-    // Retry on timeout
+    // Queued function timed out
     if (typeof res === 'string' && res.includes('timed out')) {
       return this._retry(res, verb, query)
     }
