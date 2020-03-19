@@ -1,6 +1,14 @@
 const WebSocket = require('isomorphic-ws')
 const Mutex = require('async-mutex').Mutex
 
+// Pseudo helper enum for Websocket states
+const state = {
+  CONNECTING: 0,
+  OPEN: 1,
+  CLOSING: 2,
+  CLOSED: 3
+}
+
 /**
  * Connection class.
  * Here is where the actual WebSocket connection and logic gets handled.
@@ -17,7 +25,7 @@ class Connection {
 
     // Heartbeat check. If the heartbeat takes too long we can assume the connection died.
     setInterval(async () => {
-      if (new Date() - this.lastHeartbeat > this.timeout && this.connection && this.connection.readyState === 1) this.connection.close(1001)
+      if (new Date() - this.lastHeartbeat > this.timeout && this.connection && this.connection.readyState === state.OPEN) this.connection.close(1001, 'Heartbeat took too long.')
     }, this.timeout)
   }
 
@@ -28,11 +36,18 @@ class Connection {
   }
 
   /**
+   * Helper function to wait for connection to go up
+   */
+  async awaitConnection () {
+    while (true) if (this.connection.readyState === state.OPEN) return
+  }
+
+  /**
    * Reconnection logic
    */
   async _reconnect () {
     // Return if connection is connecting or already open
-    if (this.connection && this.connection.readyState <= 1) return
+    if (this.connection && this.connection.readyState <= state.OPEN) return
     const release = await this.mutex.acquire()
 
     // Wait reconnection delay
