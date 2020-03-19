@@ -9,10 +9,17 @@ class Connection {
   constructor (url, options) {
     this.url = url
     this.options = options
+    this.timeout = 1000 * 30 || options.timeout
     // this.request = { delay: this.options.requestDelay || 500, counter: 0 }
     // this.reconnect = { delay: this.options.reconnectDelay || 500, counter: 0 }
     this.lastHeartbeat = new Date()
     this.mutex = new Mutex()
+
+    // Heartbeat check. If the heartbeat takes too long we can assume the connection died.
+    // TODO: Implement
+    setInterval(() => {
+      if (new Date() - this.lastHeartbeat > this.timeout) {}
+    }, this.timeout)
   }
 
   async connect () {
