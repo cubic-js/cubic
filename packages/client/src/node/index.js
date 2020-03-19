@@ -1,7 +1,7 @@
 const Client = require('./client.js')
 
 /**
- * CLient API. Provides a public interface for the actual client.
+ * Client API. Provides a public interface for the actual client.
  */
 class Interface {
   constructor (options) {
@@ -21,8 +21,8 @@ class Interface {
     this.options.api_url = api[api.length - 1] === '/' ? api.slice(0, -1) : api
     this.options.auth_url = auth[auth.length - 1] === '/' ? auth.slice(0, -1) : auth
 
-    // Create connection
-    this.connection = new Client(this.options)
+    // Create client
+    this.client = new Client(this.options)
   }
 
   /**
