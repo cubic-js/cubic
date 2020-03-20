@@ -11,7 +11,7 @@ class Client {
     this.api.connect()
   }
 
-  async query (verb, query) {
+  query (verb, query) {
     return this.api.request(verb, query)
   }
 }

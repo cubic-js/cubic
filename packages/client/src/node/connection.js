@@ -43,7 +43,7 @@ class Connection {
   /**
    * Helper function to wait for connection to go up
    */
-  async awaitConnection () {
+  awaitConnection () {
     const poll = (resolve) => {
       if (this.connection && this.connection.readyState === state.OPEN) resolve()
       else setTimeout(_ => poll(resolve), 100)
@@ -82,7 +82,7 @@ class Connection {
   async _retry (res, verb, query) {
     const ratelimit = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : null
     const delay = isNaN(ratelimit) ? this.req.delay : ratelimit
-    const retry = this.queue.delay(() => this.request(verb, query), delay * Math.pow(2, this.req.counter), 1000 * 5, 'unshift')
+    const retry = this.queue.delay(this.request.bind(this, verb, query), delay * Math.pow(2, this.req.counter), 1000 * 5, 'unshift')
     this.req.counter++
     return retry
   }
@@ -101,6 +101,12 @@ class Connection {
     await this._createConnection()
 
     release()
+
+    // Resume requests that were not completed before disconnect
+    for (let i = this.requests.length - 1; i >= 0; i--) {
+      const request = this.requests.pop()
+      request.resolve(this._retry({}, request.verb, request.query))
+    }
   }
 
   /**
