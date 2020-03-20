@@ -37,6 +37,30 @@ class Client {
   }
 
   /**
+   * Subscribe to certain endpoints
+   */
+  async subscribe (room, fn) {
+    await this.api.awaitConnection()
+    this.api.connection.send(JSON.stringify({
+      action: 'SUBSCRIBE',
+      room
+    }))
+    this.api.subscriptions.push({ room, fn })
+  }
+
+  /**
+   * Unsubscribe from endpoints again
+   */
+  async unsubscribe (room) {
+    await this.api.awaitConnection()
+    this.api.connection.send(JSON.stringify({
+      action: 'UNSUBSCRIBE',
+      room
+    }))
+    this.api.subscriptions = this.api.subscriptions.filter(s => s.room !== room)
+  }
+
+  /**
    * Change auth user and reload api
    */
   async login (user, secret) {

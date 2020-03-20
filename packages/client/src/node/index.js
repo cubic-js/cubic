@@ -28,16 +28,16 @@ class Interface {
 
   /**
    * Subscribe to certain endpoints
-   * TODO: Implement
    */
-  async subscribe (room, fn) {
+  subscribe (room, fn) {
+    return this.client.subscribe(room, fn)
   }
 
   /**
    * Unsubscribe from endpoints again
-   * TODO: Implement
    */
-  async unsubscribe (room) {
+  unsubscribe (room) {
+    return this.client.subscribe(room)
   }
 
   /**
