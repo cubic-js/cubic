@@ -113,7 +113,13 @@ class Connection {
    * Create WebSocket connection
    */
   async _createConnection () {
-    const wss = new WebSocket(this.url)
+    const options = this.apiAccessToken ? {
+      headers: {
+        authorization: `bearer ${this.apiAccessToken}`
+      }
+    } : {}
+
+    const wss = new WebSocket(this.url, options)
     wss.onopen = () => console.log('Connection open')
     wss.onerror = (error) => console.log(`WebSocket Error: ${error.message}`)
     wss.onclose = (close) => {

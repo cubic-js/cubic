@@ -10,17 +10,30 @@ class Client {
     this.options = options
 
     this.api = new API(this.options.api_url, this.options)
-    this.api.connect()
-
     this.auth = new Auth(this.options.auth_url, {
       user_key: this.options.user_key,
       user_secret: this.options.user_secret
     })
-    this.auth.connect()
   }
 
-  query (verb, query) {
-    return this.api.request(verb, query)
+  async connect () {
+    await this.auth.connect()
+    await this.auth.authorize()
+    await this.api.setAccessToken(this.auth.access_token)
+    await this.api.connect()
+  }
+
+  async query (verb, query) {
+    const res = await this.api.request(verb, query)
+
+    // Refresh token if expired
+    if (res.EXPIRED) {
+      await this.auth.authorize()
+      await this.api.setAccessToken(this.auth.access_token)
+      return res.fn()
+    }
+
+    return res
   }
 }
 

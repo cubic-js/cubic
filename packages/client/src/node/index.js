@@ -23,6 +23,7 @@ class Interface {
 
     // Create client
     this.client = new Client(this.options)
+    this.client.connect()
   }
 
   /**

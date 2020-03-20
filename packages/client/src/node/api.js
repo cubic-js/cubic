@@ -6,15 +6,20 @@ const ServerError = require('./serverError.js')
  * Handles the connection to the API server.
  */
 class API extends Connection {
+  /**
+   * Sets access token for API
+   */
+  async setAccessToken (token) {
+    this.apiAccessToken = token
+  }
+
   async _errCheck (res, verb, query) {
     // Queued function timed out
     if (typeof res === 'string' && res.includes('timed out')) return this._retry(res, verb, query)
 
-    // If expired: Get new token w/ refresh token & retry method
-    // TODO: Implement
+    // If expired: return custom object to so parent client can refresh token
     else if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
-      // await this.reconnect()
-      return this._retry(res, verb, query)
+      return { EXPIRED: true, fn: this._retry.bind(this, res, verb, query) }
     }
 
     // Request timed out in queue stack -> push it back to the end
