@@ -41,6 +41,16 @@ class Client {
    */
   async login (user, secret) {
     await this.auth.login(user, secret)
+    await this.api.setAccessToken(this.auth.access_token)
+    await this.api.reloadConnection()
+  }
+
+  /**
+   * Set access token and reload api
+   */
+  async setAccessToken (token) {
+    this.auth.access_token = token
+    await this.api.setAccessToken(this.auth.access_token)
     await this.api.reloadConnection()
   }
 }

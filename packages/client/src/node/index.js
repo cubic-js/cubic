@@ -72,32 +72,32 @@ class Interface {
 
   /**
    * Manually set refresh token. This way user credentials won't be exposed to this package.
-   * TODO: Implement
    */
   async setRefreshToken (token) {
+    this.client.auth.refresh_token = token
   }
 
   /**
    * Retrieve current refresh token. Will await any existing authentication
    * processes. Useful if the initial login can be done through user/pass but
    * the refresh token needs to be stored for subsequent logins.
-   * TODO: Implement
    */
   async getRefreshToken () {
+    return this.client.auth.refresh_token
   }
 
   /**
    * Manually set access token.
-   * TODO: Implement
    */
-  async setAccessToken (token) {
+  setAccessToken (token) {
+    return this.client.setAccessToken(token)
   }
 
   /**
    * Retrieve current access token.
-   * TODO: Implement
    */
   async getAccessToken () {
+    return this.client.auth.access_token
   }
 }
 
