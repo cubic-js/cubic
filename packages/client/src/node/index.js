@@ -37,7 +37,7 @@ class Interface {
    * Unsubscribe from endpoints again
    */
   unsubscribe (room) {
-    return this.client.subscribe(room)
+    return this.client.unsubscribe(room)
   }
 
   /**
