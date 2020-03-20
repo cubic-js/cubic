@@ -9,11 +9,13 @@ class Client {
   constructor (options) {
     this.options = options
 
-    this.api = new API(this.options.api_url, this.options)
-    this.auth = new Auth(this.options.auth_url, {
-      user_key: this.options.user_key,
-      user_secret: this.options.user_secret
-    })
+    if (!this.options.isBrowser) {
+      this.api = new API(this.options.api_url, this.options)
+      this.auth = new Auth(this.options.auth_url, {
+        user_key: this.options.user_key,
+        user_secret: this.options.user_secret
+      })
+    }
   }
 
   async connect () {

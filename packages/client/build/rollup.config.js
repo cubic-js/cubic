@@ -1,9 +1,7 @@
-import commonjs from 'rollup-plugin-commonjs'
-import nodeResolve from 'rollup-plugin-node-resolve'
-import cleanup from 'rollup-plugin-cleanup'
-// import babel from 'rollup-plugin-babel'
-// import babelrc from '../.babelrc.json'
+import commonjs from '@rollup/plugin-commonjs'
+import nodeResolve from '@rollup/plugin-node-resolve'
 import hypothetical from 'rollup-plugin-hypothetical'
+import { terser } from 'rollup-plugin-terser'
 
 export default {
   input: './src/browser/index.js',
@@ -20,7 +18,6 @@ export default {
     }),
     nodeResolve(),
     commonjs(),
-    // babel(babelrc),
-    cleanup()
+    terser()
   ]
 }

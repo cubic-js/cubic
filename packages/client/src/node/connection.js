@@ -1,4 +1,4 @@
-const WebSocket = require('isomorphic-ws')
+const WebSocket = require('ws')
 const Mutex = require('async-mutex').Mutex
 const queue = require('async-delay-queue')
 

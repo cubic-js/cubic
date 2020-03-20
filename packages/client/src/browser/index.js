@@ -1,13 +1,5 @@
-import Connection from './connection.js'
 import NodeIndex from '../node/index.js'
 
-class Client extends NodeIndex {
-  // Use custom Connection (Client) for Browsers
-  async connect () {
-    this.connection = new Connection(this.options.api_url, this.options)
-    this.connection.connect()
-    return this.connection._connecting()
-  }
-}
+class Interface extends NodeIndex {}
 
-export default Client
+export default Interface
