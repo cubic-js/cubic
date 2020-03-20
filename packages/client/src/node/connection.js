@@ -23,6 +23,7 @@ class Connection {
     this.reconnect = { delay: this.options.reconnectDelay || 500, counter: 0 }
 
     this.lastHeartbeat = new Date()
+    this.subscriptions = []
     this.requests = []
     this.requestIds = 1
     this.queue = queue
@@ -115,6 +116,14 @@ class Connection {
       const request = this.requests.pop()
       request.resolve(this._retry({}, request.verb, request.query))
     }
+
+    // Re-subscribe
+    for (const sub of this.subscriptions) {
+      this.client.send(JSON.stringify({
+        action: 'SUBSCRIBE',
+        room: sub.room
+      }))
+    }
   }
 
   /**
@@ -161,10 +170,11 @@ class Connection {
       }
     }
 
-    // Publish
-    // TODO: Implement
+    // Publish to subscriptions
     else if (data.action === 'PUBLISH') {
-
+      for (const sub of this.subscriptions) {
+        if (sub.room === data.room) sub.fn(data.data)
+      }
     }
 
     // Unknown message type
