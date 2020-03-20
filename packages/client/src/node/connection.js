@@ -77,6 +77,14 @@ class Connection {
   }
 
   /**
+   * Reload the websocket connection
+   */
+  async reloadConnection () {
+    await this.awaitConnection()
+    return this.connection.close(1001, 'Reloading connection.')
+  }
+
+  /**
    * Retry a failed request
    */
   async _retry (res, verb, query) {

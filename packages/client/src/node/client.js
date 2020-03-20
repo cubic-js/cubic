@@ -35,6 +35,14 @@ class Client {
 
     return res
   }
+
+  /**
+   * Change auth user and reload api
+   */
+  async login (user, secret) {
+    await this.auth.login(user, secret)
+    await this.api.reloadConnection()
+  }
 }
 
 module.exports = Client

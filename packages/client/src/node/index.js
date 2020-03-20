@@ -65,9 +65,9 @@ class Interface {
 
   /**
    * Change user at runtime. Automatically reloads connection.
-   * TODO: Implement
    */
-  async login (user, secret) {
+  login (user, secret) {
+    return this.client.login(user, secret)
   }
 
   /**
