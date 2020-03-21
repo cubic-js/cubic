@@ -85,7 +85,7 @@ class Connection {
    */
   async reloadConnection () {
     await this.awaitConnection()
-    return this.connection.close(1001, 'Reloading connection.')
+    await this.connection.close(1001, 'Reloading connection.')
   }
 
   /**

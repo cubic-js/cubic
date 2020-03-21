@@ -24,7 +24,7 @@ class Auth extends Connection {
   /**
    * Runtime login
    */
-  async login (user, secret) {
+  login (user, secret) {
     this.options.user_key = user
     this.options.user_secret = secret
     return this._getTokens()

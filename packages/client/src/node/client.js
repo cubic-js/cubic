@@ -73,6 +73,7 @@ class Client {
    * Change auth user and reload api
    */
   async login (user, secret) {
+    await this.awaitConnection()
     await this.auth.login(user, secret)
     await this.api.setAccessToken(this.auth.access_token)
     await this.api.reloadConnection()
