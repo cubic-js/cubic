@@ -3,9 +3,9 @@ import BrowserAuth from './auth.js'
 import BrowserAPI from './api.js'
 
 class Client extends NodeClient {
-  constructor (url, options) {
+  constructor (options) {
     options.isBrowser = true // Won't init node auth and API
-    super(url, options)
+    super(options)
 
     this.api = new BrowserAPI(this.options.api_url, this.options)
     this.auth = new BrowserAuth(this.options.auth_url, {

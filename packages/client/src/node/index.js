@@ -22,8 +22,7 @@ class Interface {
     this.options.auth_url = auth[auth.length - 1] === '/' ? auth.slice(0, -1) : auth
 
     // Create client
-    this.client = new Client(this.options)
-    this.client.connect()
+    this._createClient()
   }
 
   /**
@@ -105,6 +104,14 @@ class Interface {
    */
   async getAccessToken () {
     return this.client.auth.access_token
+  }
+
+  /**
+   * This function is only there so it can be overwritten by the browser build
+   */
+  _createClient () {
+    this.client = new Client(this.options)
+    this.client.connect()
   }
 }
 
