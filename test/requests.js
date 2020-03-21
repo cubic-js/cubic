@@ -14,7 +14,7 @@ describe('Requests', function () {
     const endpoints = cubic.nodes.api.server.ws.endpoints
     const db = this.db = (await endpoints.db).db(endpoints.config.mongoDb)
     options = { db, cache: endpoints.cache, ws: endpoints.ws }
-    await client.connection._connecting()
+    await client.awaitConnection()
   })
 
   // GET check

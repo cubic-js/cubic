@@ -48,7 +48,7 @@ class Auth extends Connection {
    * Generate new access token
    */
   async _refreshToken () {
-    const release = this.authMutex.acquire()
+    const release = await this.authMutex.acquire()
 
     const body = { refresh_token: this.refresh_token }
     const res = await this.request('POST', { url: '/refresh', body })

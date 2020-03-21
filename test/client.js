@@ -16,14 +16,14 @@ describe('Client', function () {
 
   it('should connect to API node with default config', async function () {
     global.clientDefault = new Client()
-    await clientDefault.connection._connecting()
+    await clientDefault.awaitConnection()
   })
 
   it('should connect to API node with registered user', async function () {
     await auth.init()
     const user_key = await auth.getUserKey()
     global.clientAuth = new Client({ user_key, user_secret: 'test' })
-    await clientAuth.connection._connecting()
+    await clientAuth.awaitConnection()
   })
 
   // There's a weird bug where the old cubic instance wouldn't close, or at least
@@ -59,8 +59,8 @@ describe('Client', function () {
     const client = new Client()
     const refresh_token = await auth.getRefreshToken()
     await client.setRefreshToken(refresh_token)
-    await client.connection.reconnect()
-    assert(client.connection.auth.access_token)
+    await client.client.auth.authorize()
+    assert(client.client.auth.access_token)
   })
 
   it('should return refresh token on getRefreshToken()', async function () {
