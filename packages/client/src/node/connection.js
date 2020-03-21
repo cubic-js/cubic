@@ -45,11 +45,14 @@ class Connection {
    * Helper function to wait for connection to go up
    */
   awaitConnection () {
-    const poll = (resolve) => {
-      if (this.connection && this.connection.readyState === state.OPEN) resolve()
-      else setTimeout(_ => poll(resolve), 100)
-    }
-    return new Promise(poll)
+    return new Promise((resolve) => {
+      const poll = setInterval(() => {
+        if (this.connection && this.connection.readyState === state.OPEN) {
+          clearInterval(poll)
+          resolve()
+        }
+      }, 100)
+    })
   }
 
   /**

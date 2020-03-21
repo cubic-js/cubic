@@ -27,6 +27,13 @@ class Interface {
   }
 
   /**
+   * Helper functions to wait for connection to go up
+   */
+  awaitConnection () {
+    return this.client.awaitConnection()
+  }
+
+  /**
    * Subscribe to certain endpoints
    */
   subscribe (room, fn) {

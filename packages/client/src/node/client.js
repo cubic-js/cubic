@@ -18,6 +18,13 @@ class Client {
     }
   }
 
+  /**
+   * Helper functions to wait for connection to go up
+   */
+  awaitConnection () {
+    return Promise.all([this.api.awaitConnection(), this.auth.awaitConnection()])
+  }
+
   async connect () {
     await this.auth.connect()
     await this.auth.authorize()
