@@ -45,6 +45,13 @@ const client = new Client({key: value})
 
 ## API
 
+```js
+client.awaitConnection()
+```
+>Returns a promise that resolves once the client is fully connected.
+
+<br>
+
 ### RESTful methods
 ```js
 client.get(url)
@@ -116,6 +123,17 @@ client.subscribe(endpoint, fn)
 |:------------- |:------------- |:------------- |
 | endpoint | URL to listen for updates on, without domain. e.g. `'/foo'` | None |
 | fn | Function to run when updates are received. Takes the new data as argument. | None |
+
+<br>
+
+```js
+client.unsubscribe(endpoint)
+```
+>Unsubscribe to updates on a specific endpoint.
+
+| Argument | Description | Default |
+|:------------- |:------------- |:------------- |
+| endpoint | URL that you are currently subscribed to, without domain. e.g. `'/foo'` | None |
 
 <br>
 
