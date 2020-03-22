@@ -52,6 +52,13 @@ client.awaitConnection()
 
 <br>
 
+```js
+client.isConnected()
+```
+>Returns a boolean wether the connection is up or not.
+
+<br>
+
 ### RESTful methods
 ```js
 client.query(verb, query)
