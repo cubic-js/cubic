@@ -49,24 +49,28 @@ class Interface {
   /**
    * RESTful methods for manual interaction
    */
+  query (verb, query) {
+    return this.client.query(verb, query)
+  }
+
   get (query) {
-    return this.client.query('GET', query)
+    return this.query('GET', query)
   }
 
   post (url, body) {
-    return this.client.query('POST', { url, body })
+    return this.query('POST', { url, body })
   }
 
   put (url, body) {
-    return this.client.query('PUT', { url, body })
+    return this.query('PUT', { url, body })
   }
 
   patch (url, body) {
-    return this.client.query('PATCH', { url, body })
+    return this.query('PATCH', { url, body })
   }
 
   delete (url, body) {
-    return this.client.query('DELETE', { url, body })
+    return this.query('DELETE', { url, body })
   }
 
   /**
