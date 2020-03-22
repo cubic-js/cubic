@@ -31,7 +31,7 @@ class Connection {
 
     // Heartbeat check. If the heartbeat takes too long we can assume the connection died.
     setInterval(async () => {
-      if (new Date() - this.lastHeartbeat > this.timeout && this.connection && this.connection.readyState === state.OPEN) this.connection.close(1001, 'Heartbeat took too long.')
+      if (new Date() - this.lastHeartbeat > this.timeout && this.isConnected()) this.connection.close(1001, 'Heartbeat took too long.')
     }, this.timeout)
   }
 
@@ -53,6 +53,13 @@ class Connection {
         }
       }, 100)
     })
+  }
+
+  /**
+   * Helper function to see if connection is open
+   */
+  isConnected () {
+    return this.connection && this.connection.readyState === state.OPEN
   }
 
   /**

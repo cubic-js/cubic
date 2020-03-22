@@ -33,6 +33,13 @@ class Interface {
   }
 
   /**
+   * Helper function to see if connection is up
+   */
+  isConnected () {
+    return this.client.api.isConnected()
+  }
+
+  /**
    * Subscribe to certain endpoints
    */
   subscribe (room, fn) {
