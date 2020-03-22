@@ -48,4 +48,11 @@ describe('Requests', function () {
     // after a full second.
     setTimeout(() => endpoint.publish('foo'), 1000)
   })
+
+  it('should correctly process multiple parallel requests', async function () {
+    const parallel = []
+    for (let i = 0; i < 10; i++) parallel.push(client.get('/foo'))
+    const res = await Promise.all(parallel)
+    assert(res.filter(r => r !== 'bar').length === 0)
+  })
 })

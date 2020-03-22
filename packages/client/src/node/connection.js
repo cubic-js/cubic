@@ -163,7 +163,7 @@ class Connection {
     else if (data.action === 'RES' && data.id) {
       const request = this.requests.find(r => r.id === data.id)
       if (request) {
-        this.requests = this.requests.filter(r => r.id === data.id)
+        this.requests = this.requests.filter(r => r.id !== data.id)
         request.resolve(data)
       }
     }
