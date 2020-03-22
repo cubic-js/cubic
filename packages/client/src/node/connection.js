@@ -81,7 +81,7 @@ class Connection {
         this.connection.send(JSON.stringify(payload))
       } catch (err) {
         this.requests.pop()
-        this.client.emit('error', err)
+        this.connection.emit('error', err)
       }
     })
     return this._errCheck(res, verb, query)
@@ -129,7 +129,7 @@ class Connection {
 
     // Re-subscribe
     for (const sub of this.subscriptions) {
-      this.client.send(JSON.stringify({
+      this.connection.send(JSON.stringify({
         action: 'SUBSCRIBE',
         room: sub.room
       }))
