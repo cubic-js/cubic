@@ -54,6 +54,18 @@ client.awaitConnection()
 
 ### RESTful methods
 ```js
+client.query(verb, query)
+```
+>Sends a GET request to the API-Node
+
+| Argument | Description | Default |
+|:------------- |:------------- |:------------- |
+| verb | RESTful verb. e.g. `GET`. | None |
+| query | Request query, either string or body object. | None |
+
+<br>
+
+```js
 client.get(url)
 ```
 >Sends a GET request to the API-Node
