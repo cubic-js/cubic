@@ -32,7 +32,7 @@ class API extends Connection {
     else if (res.statusCode === 503) return this._retry(res, verb, query)
 
     // Unhandled error
-    else if (parseInt(res.statusCode.toString()[0]) > 3) throw new ServerError(res, query)
+    else if (parseInt(res.statusCode.toString().charAt(0)) > 3) throw new ServerError(res, query)
 
     // No error
     this.req.counter = 0

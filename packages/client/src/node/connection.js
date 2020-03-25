@@ -124,10 +124,7 @@ class Connection {
     await this.awaitConnection()
 
     // Resume requests that were not completed before disconnect
-    for (let i = this.requests.length - 1; i >= 0; i--) {
-      const request = this.requests.pop()
-      request.resolve(this._retry({}, request.verb, request.query))
-    }
+    for (const req of this.requests) this.request(req.verb, req.query)
 
     // Re-subscribe
     for (const sub of this.subscriptions) {
