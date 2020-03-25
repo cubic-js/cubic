@@ -121,6 +121,8 @@ class Connection {
 
     release()
 
+    await this.awaitConnection()
+
     // Resume requests that were not completed before disconnect
     for (let i = this.requests.length - 1; i >= 0; i--) {
       const request = this.requests.pop()
