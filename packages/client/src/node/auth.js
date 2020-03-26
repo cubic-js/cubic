@@ -58,21 +58,17 @@ class Auth extends Connection {
   }
 
   async _errCheck (res, verb, query) {
-    // Queued function timed out
-    if (typeof res === 'string' && res.includes('timed out')) return this._retry(res, verb, query)
-
     // Auth error
-    else if (res.statusCode >= 400) {
+    if (res.statusCode >= 400) {
       if (res.statusCode !== 503 && res.statusCode !== 404 && res.statusCode !== 429) {
         console.error('Cubic-client encountered an error while authenticating:')
         console.error(res.body)
         console.error(`retrying... \n`)
-        return this._retry(res, verb, query)
+        return false
       }
     }
 
     // No error
-    this.req.counter = 0
     return res.body
   }
 }

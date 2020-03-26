@@ -14,28 +14,24 @@ class API extends Connection {
   }
 
   async _errCheck (res, verb, query) {
-    // Queued function timed out
-    if (typeof res === 'string' && res.includes('timed out')) return this._retry(res, verb, query)
-
     // If expired: return custom object to so parent client can refresh token
-    else if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
-      return { EXPIRED: true, fn: this._retry.bind(this, res, verb, query) }
+    if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
+      return { EXPIRED: true, fn: this.request.bind(this, verb, query) }
     }
 
     // Request timed out in queue stack -> push it back to the end
-    else if (!res.statusCode && res.includes('timed out')) return this._retry(res, verb, query)
+    else if (!res.statusCode && res.includes('timed out')) return false
 
     // Rate Limited
-    else if (res.statusCode === 429) return this._retry(res, verb, query)
+    else if (res.statusCode === 429) return false
 
     // Nodes are busy -> retry
-    else if (res.statusCode === 503) return this._retry(res, verb, query)
+    else if (res.statusCode === 503) return false
 
     // Unhandled error
-    else if (parseInt(res.statusCode.toString()[0]) > 3) throw new ServerError(res, query)
+    else if (parseInt(res.statusCode.toString().charAt(0)) > 3) throw new ServerError(res, query)
 
     // No error
-    this.req.counter = 0
     return res.body
   }
 }

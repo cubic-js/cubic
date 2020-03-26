@@ -1,6 +1,5 @@
 const WebSocket = require('ws')
 const Mutex = require('async-mutex').Mutex
-const queue = require('async-delay-queue')
 
 // Pseudo helper enum for Websocket states
 const state = {
@@ -25,14 +24,17 @@ class Connection {
     this.lastHeartbeat = new Date()
     this.subscriptions = []
     this.requests = []
+    this.retryQueue = []
     this.requestIds = 1
-    this.queue = queue
     this.mutex = new Mutex()
 
     // Heartbeat check. If the heartbeat takes too long we can assume the connection died.
     setInterval(async () => {
       if (new Date() - this.lastHeartbeat > this.timeout && this.isConnected()) this.connection.close(1001, 'Heartbeat took too long.')
     }, this.timeout)
+
+    // Call once to start processing retry queue
+    this._processRetryQueue()
   }
 
   async connect () {
@@ -46,8 +48,9 @@ class Connection {
    */
   awaitConnection () {
     return new Promise((resolve) => {
+      if (this.isConnected()) resolve()
       const poll = setInterval(() => {
-        if (this.connection && this.connection.readyState === state.OPEN) {
+        if (this.isConnected()) {
           clearInterval(poll)
           resolve()
         }
@@ -65,9 +68,9 @@ class Connection {
   /**
    * Make a request
    */
-  async request (verb, query) {
+  async request (verb, query, retry = false) {
     await this.awaitConnection()
-    const res = await new Promise((resolve) => {
+    return new Promise((resolve) => {
       const id = this.requestIds++
       const payload = { action: verb, id }
       if (typeof query === 'string') payload.url = query
@@ -76,7 +79,7 @@ class Connection {
         payload.body = query.body
       }
 
-      this.requests.push({ id, resolve, verb, query })
+      this.requests.push({ id, resolve, verb, query, retry })
       try {
         this.connection.send(JSON.stringify(payload))
       } catch (err) {
@@ -84,7 +87,6 @@ class Connection {
         this.connection.emit('error', err)
       }
     })
-    return this._errCheck(res, verb, query)
   }
 
   /**
@@ -96,23 +98,41 @@ class Connection {
   }
 
   /**
-   * Retry a failed request
+   * Push a retry into the retry queue
    */
-  async _retry (res, verb, query) {
-    const ratelimit = res.body && res.body.reason ? parseInt(res.body.reason.replace(/[^0-9]+/g, '')) : null
-    const delay = isNaN(ratelimit) ? this.req.delay : ratelimit
-    const retry = this.queue.delay(this.request.bind(this, verb, query), delay * Math.pow(2, this.req.counter), 1000 * 5, 'unshift')
-    this.req.counter++
-    return retry
+  async retry (req) {
+    this.retryQueue.push({
+      verb: req.verb,
+      query: req.query,
+      id: req.retry || req.id // Use retry id if retrying a retry, otherwise the original id
+    })
+  }
+
+  /**
+   * Processes the retry queue with the correct delay.
+   * Needs to be called once on startup.
+   */
+  async _processRetryQueue () {
+    setTimeout(() => this._processRetryQueue(), this.req.delay * Math.pow(2, this.req.counter))
+
+    const retry = this.retryQueue.shift()
+    if (retry) {
+      this.request(retry.verb, retry.query, retry.id)
+      this.req.counter++
+    }
   }
 
   /**
    * Reconnection logic
    */
   async _reconnect () {
-    // Return if connection is connecting or already open
-    if (this.connection && this.connection.readyState <= state.OPEN) return
     const release = await this.mutex.acquire()
+
+    // Return if connection is connecting or already open
+    if (this.connection && this.connection.readyState <= state.OPEN) {
+      release()
+      return
+    }
 
     // Wait reconnection delay
     await new Promise((resolve) => setTimeout(() => resolve(), this.reconnect.delay * Math.pow(2, this.reconnect.counter)))
@@ -120,12 +140,14 @@ class Connection {
     await this._createConnection()
 
     release()
+  }
 
+  /**
+   * Resume requests and rebuild subscriptions
+   */
+  async _resumeConnection () {
     // Resume requests that were not completed before disconnect
-    for (let i = this.requests.length - 1; i >= 0; i--) {
-      const request = this.requests.pop()
-      request.resolve(this._retry({}, request.verb, request.query))
-    }
+    for (const req of this.requests) this.retry(req)
 
     // Re-subscribe
     for (const sub of this.subscriptions) {
@@ -147,6 +169,7 @@ class Connection {
     } : {}
 
     const wss = new WebSocket(this.url, options)
+    wss.onopen = () => this._resumeConnection()
     wss.onerror = (error) => console.log(`WebSocket Error: ${error.message}`)
     wss.onclose = (close) => { if (close.code !== 1000) this._reconnect() } // Not closed deliberately
     wss.onmessage = (message) => this._onMessage(message.data)
@@ -168,11 +191,7 @@ class Connection {
 
     // Request
     else if (data.action === 'RES' && data.id) {
-      const request = this.requests.find(r => r.id === data.id)
-      if (request) {
-        this.requests = this.requests.filter(r => r.id !== data.id)
-        request.resolve(data)
-      }
+      this._processResponse(data)
     }
 
     // Publish to subscriptions
@@ -184,21 +203,39 @@ class Connection {
   }
 
   /**
-   * Handle error responses.
-   * It's expected that you override this in a child class for more fine-grained error control.
-   * Make sure to reset the delay counter!
+   * Processes incoming request response
    */
-  async _errCheck (res, verb, query) {
-    // Queued function timed out
-    if (typeof res === 'string' && res.includes('timed out')) {
-      return this._retry(res, verb, query)
+  async _processResponse (data) {
+    const request = this.requests.find(r => r.id === data.id)
+    if (!request) return
+
+    // Retry if error occurred
+    const response = await this._errCheck(data, request.verb, request.query)
+    if (!response) {
+      this.retry(request)
+      return
     }
 
+    // Reset req counter and resolve
+    this.req.counter = 0
+    request.resolve(response)
+    const originalRequest = request.retry ? this.requests.find(r => r.id === request.retry) : null
+    if (originalRequest) originalRequest.resolve(response)
+
+    // If original request: Filter original request and all that have the original req as retry target
+    // If retry request: Filter retried request and all that have the retried req as retry target
+    const originalFilter = (r) => r.id !== request.id && r.retry !== request.id
+    const retryFilter = (r) => r.id !== request.retry && r.retry !== request.retry
+    this.requests = this.requests.filter(!request.retry ? originalFilter : retryFilter)
+  }
+
+  /**
+   * Handle error responses. Return false on error, otherwise some truthy value.
+   * It's expected that you override this in a child class for more fine-grained error control.
+   */
+  async _errCheck (res, verb, query) {
     if (res.body.error) throw res
-    else {
-      this.req.counter = 0
-      return res.body
-    }
+    else return res.body
   }
 }
 
