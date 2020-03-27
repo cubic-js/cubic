@@ -16,7 +16,7 @@ class API extends Connection {
   async _errCheck (res, verb, query) {
     // If expired: return custom object to so parent client can refresh token
     if (res.body && res.body.reason && res.body.reason.includes('jwt expired')) {
-      return { EXPIRED: true, fn: this.request.bind(this, verb, query) }
+      return { EXPIRED: true, verb, query }
     }
 
     // Request timed out in queue stack -> push it back to the end

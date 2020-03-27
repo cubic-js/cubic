@@ -39,7 +39,7 @@ class Client {
     if (res.EXPIRED) {
       await this.auth.authorize()
       await this.api.setAccessToken(this.auth.access_token)
-      return res.fn()
+      return this.query(res.verb, res.query)
     }
 
     return res
