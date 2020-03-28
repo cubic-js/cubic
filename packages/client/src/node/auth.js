@@ -64,8 +64,8 @@ class Auth extends Connection {
         console.error('Cubic-client encountered an error while authenticating:')
         console.error(res.body)
         console.error(`retrying... \n`)
-        return false
       }
+      return false
     }
 
     // No error
