@@ -104,7 +104,8 @@ class Connection {
     this.retryQueue.push({
       verb: req.verb,
       query: req.query,
-      id: req.retry || req.id // Use retry id if retrying a retry, otherwise the original id
+      id: req.retry || req.id, // Use retry id if retrying a retry, otherwise the original id,
+      customDelay: req.customDelay || null
     })
   }
 
@@ -113,13 +114,25 @@ class Connection {
    * Needs to be called once on startup.
    */
   async _processRetryQueue () {
-    setTimeout(() => this._processRetryQueue(), this.req.delay * Math.pow(2, this.req.counter))
+    const currentReqCount = this.req.counter
 
     const retry = this.retryQueue.shift()
+    let customDelay = false
     if (retry) {
-      this.request(retry.verb, retry.query, retry.id)
-      this.req.counter++
+      // If theres a custom delay, put back into queue and wait the custom delay
+      if (retry.customDelay) {
+        customDelay = retry.customDelay
+        delete retry.customDelay
+        this.retryQueue.unshift(retry)
+
+        // Otherwise make a request
+      } else {
+        this.request(retry.verb, retry.query, retry.id)
+        this.req.counter++
+      }
     }
+
+    setTimeout(() => this._processRetryQueue(), customDelay || this.req.delay * Math.pow(2, currentReqCount))
   }
 
   /**
@@ -212,6 +225,10 @@ class Connection {
     // Retry if error occurred
     const response = await this._errCheck(data, request.verb, request.query)
     if (!response) {
+      // Append custom wait delay
+      let customDelay = data.body && data.body.reason ? parseInt(data.body.reason.replace(/[^0-9]+/g, '')) : undefined
+      request.customDelay = isNaN(customDelay) ? undefined : customDelay
+
       this.retry(request)
       return
     }
