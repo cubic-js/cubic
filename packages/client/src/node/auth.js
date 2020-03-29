@@ -15,7 +15,7 @@ class Auth extends Connection {
   /**
    * Get tokens for API authentication if credentials are provided
    */
-  async authorize (refresh = this.refresh_token) {
+  authorize (refresh = this.refresh_token) {
     if (refresh || (this.options.user_key && this.options.user_secret)) {
       return refresh ? this._refreshToken() : this._getTokens()
     }
