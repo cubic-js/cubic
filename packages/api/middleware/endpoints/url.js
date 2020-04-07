@@ -12,13 +12,16 @@ class Url {
    * E.g. /users/:id/tasks -> req.params.id holds the data in place of :id
    */
   parseParams (req, endpoint) {
-    let eurl = endpoint.route.split('/')
-    let curl = req.url.split('/')
+    let eUrl = endpoint.route.split('/')
+    let reqUrl = req.url.split('/')
+    let difference = eUrl.length - reqUrl.length
 
-    for (let i = 0; i < eurl.length; i++) {
-      let fragment = eurl[i]
-      if (fragment.includes(':')) {
-        req.params[fragment.replace(':', '')] = decodeURIComponent(curl[i])
+    let i = 0
+    for (const fragment of eUrl) {
+      if (fragment.includes(':') && fragment.includes('?') && difference > 0) difference--
+      else {
+        if (fragment.includes(':')) req.params[fragment.replace(':', '').replace('?', '')] = decodeURIComponent(reqUrl[i])
+        i++
       }
     }
   }
