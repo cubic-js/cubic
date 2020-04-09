@@ -31,6 +31,7 @@
     "tween.js": "^16.6.0",
     "vue": "^2.6.10",
     "vue-analytics": "^5.22.1",
+    "vue-cookies": "^1.7.0",
     "vue-loader": "^15.7.2",
     "vue-meta": "^2.3.1",
     "vue-observe-visibility": "^0.4.6",
