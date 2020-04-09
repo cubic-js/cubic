@@ -204,6 +204,15 @@ class EndpointController {
       return aCount - bCount
     })
 
+    // Remove endpoints that would be overwritten by optional params (e.g. remove /wow-classic if /wow-classic/:slug? exists)
+    pushToStart = pushToStart.filter(endpoint => {
+      const route = endpoint.route.slice(-1) === '/' ? endpoint.route.slice(0, -1) : endpoint.route // Remove trailing slash
+      return !pushToEnd.find(e => {
+        const routeWithoutOptionals = e.route.split('/').filter(s => !s.includes('?')).join('/')
+        return routeWithoutOptionals === route
+      })
+    })
+
     this.endpoints = pushToStart.concat(pushToEnd)
   }
 
