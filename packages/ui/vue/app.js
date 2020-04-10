@@ -6,7 +6,6 @@
  */
 import Vue from 'vue'
 import VueTouch from 'vue-touch-hotfix'
-import VueCookies from 'vue-cookies'
 import App from 'src/app.vue'
 import Client from 'cubic-client/browser'
 import { createRouter } from './router'
@@ -35,9 +34,6 @@ export function createApp (context) {
 
   // Add vue-touch. Not sure if this should be added by default.
   Vue.use(VueTouch)
-
-  // Add vue-cookies
-  Vue.use(VueCookies)
 
   // create the app instance.
   // here we inject the router, store and ssr context to all child components,
