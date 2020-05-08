@@ -30,7 +30,12 @@ class CacheController {
     if (cached) {
       // Authorized
       if (!cached.scope || req.user.scp.includes(cached.scope)) {
-        res.send(cached.data, cached.headers)
+        // Enable CORS if endpoint is not scoped (ie not a protected resource)
+        // Enabling CORS for protected resources may pose a security risk
+        let cors
+        if (!cached.scope) cors = { 'Access-Control-Allow-Origin': '*' }
+
+        res.send(cached.data, cors || cached.headers ? { ...cors, ...cached.headers } : undefined)
         return true // break middleware stack
       }
 
