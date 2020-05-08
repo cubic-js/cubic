@@ -92,7 +92,6 @@ class EndpointController {
 
         // Enable CORS if endpoint is not scoped (ie not a protected resource)
         // Enabling CORS for protected resources may pose a security risk
-        console.log('DEV DEV DEV')
         if (!endpoint.scope) res.setHeader('Access-Control-Allow-Origin', '*')
 
         // Handle errors thrown inside API Endpoint
