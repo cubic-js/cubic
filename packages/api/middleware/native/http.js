@@ -16,6 +16,11 @@ class ExpressMiddleware {
 
   decode (req, res, next) {
     req.url = req.url === '' ? '/' : decodeURI(req.url)
+
+    // Interpret + after query as space
+    const urlSplit = req.url.split('?')
+    if (urlSplit.length === 2) req.url = urlSplit[0] + '?' + urlSplit[1].replace(/\+/g, ' ')
+
     next()
   }
 
