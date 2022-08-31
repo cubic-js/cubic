@@ -70,7 +70,7 @@ class Connection {
    */
   async request (verb, query, retry = false) {
     await this.awaitConnection()
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const id = this.requestIds++
       const payload = { action: verb, id }
       if (typeof query === 'string') payload.url = query
@@ -79,7 +79,7 @@ class Connection {
         payload.body = query.body
       }
 
-      this.requests.push({ id, resolve, verb, query, retry })
+      this.requests.push({ id, resolve, reject, verb, query, retry })
       try {
         this.connection.send(JSON.stringify(payload))
       } catch (err) {
@@ -223,21 +223,30 @@ class Connection {
     if (!request) return
 
     // Retry if error occurred
-    const response = await this._errCheck(data, request.verb, request.query)
-    if (!response) {
-      // Append custom wait delay
-      let customDelay = data.body && data.body.reason ? parseInt(data.body.reason.replace(/[^0-9]+/g, '')) : undefined
-      request.customDelay = isNaN(customDelay) ? undefined : customDelay
+    try {
+      const response = await this._errCheck(data, request.verb, request.query)
+      if (!response) {
+        // Append custom wait delay
+        let customDelay = data.body && data.body.reason ? parseInt(data.body.reason.replace(/[^0-9]+/g, '')) : undefined
+        request.customDelay = isNaN(customDelay) ? undefined : customDelay
 
-      this.retry(request)
-      return
+        this.retry(request)
+        return
+      }
+
+      // Resolve
+      request.resolve(response)
+      const originalRequest = request.retry ? this.requests.find(r => r.id === request.retry) : null
+      if (originalRequest) originalRequest.resolve(response)
+    } catch (err) {
+      // Reject
+      request.reject(err)
+      const originalRequest = request.retry ? this.requests.find(r => r.id === request.retry) : null
+      if (originalRequest) originalRequest.reject(err)
     }
 
-    // Reset req counter and resolve
+    // Reset req counter
     this.req.counter = 0
-    request.resolve(response)
-    const originalRequest = request.retry ? this.requests.find(r => r.id === request.retry) : null
-    if (originalRequest) originalRequest.resolve(response)
 
     // If original request: Filter original request and all that have the original req as retry target
     // If retry request: Filter retried request and all that have the retried req as retry target
